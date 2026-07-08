@@ -1,0 +1,151 @@
+/* Import Elegant Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600&display=swap');
+
+/* Animated Gradient Background */
+body {
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(-45deg, #f5f7fa, #c3cfe2, #e0c3fc, #8ec5fc);
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
+    color: #333;
+    min-height: 100vh;
+}
+
+@keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Frosted Glass Navigation Bar */
+nav {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 15px 0;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+}
+
+.nav-links {
+    max-width: 850px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #03045E;
+    font-weight: 600;
+    font-size: 1.1em;
+    transition: color 0.3s, transform 0.2s;
+}
+
+.nav-links a:hover {
+    color: #00B4D8;
+    transform: translateY(-2px);
+}
+
+/* Main Container Styling */
+.container {
+    max-width: 850px;
+    margin: 50px auto;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(16px);
+    padding: 50px;
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    border: 1px solid rgba(255,255,255,0.5);
+}
+
+/* Typography */
+h1 {
+    font-family: 'Lora', serif;
+    color: #03045E;
+    border-bottom: 3px solid #0077B6;
+    padding-bottom: 15px;
+    font-size: 3em;
+    margin-top: 0;
+}
+
+h2 {
+    font-family: 'Lora', serif;
+    color: #0077B6;
+    margin-top: 45px;
+    font-size: 2em;
+}
+
+p { 
+    line-height: 1.8; 
+    font-size: 1.1em; 
+    color: #444;
+}
+
+/* Resource & Music Cards */
+.card {
+    background: white;
+    border-left: 5px solid #00B4D8;
+    padding: 30px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+}
+
+.card:hover { 
+    transform: translateY(-5px); 
+    box-shadow: 0 15px 35px rgba(0,0,0,0.08); 
+}
+
+.card h3 { 
+    margin-top: 0; 
+    color: #023E8A; 
+    font-family: 'Lora', serif;
+    font-size: 1.5em;
+}
+
+/* Buttons */
+a.btn {
+    display: inline-block;
+    background: #0077B6;
+    color: white;
+    padding: 12px 24px;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    margin-top: 15px;
+    margin-right: 12px;
+    transition: all 0.3s ease;
+    font-size: 0.95em;
+    box-shadow: 0 4px 10px rgba(0, 119, 182, 0.2);
+}
+
+a.btn:hover { 
+    background: #03045E; 
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(3, 4, 94, 0.3);
+}
+
+.btn.secondary {
+    background: #e0fbfc;
+    color: #03045E;
+}
+
+.btn.secondary:hover {
+    background: #90e0ef;
+}
+
+/* Musescore iframe container */
+.musescore-embed {
+    width: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-top: 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
