@@ -2,114 +2,43 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Kevin Hu - Mathematics</title>
-  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;600&display=swap" rel="stylesheet">
-  <style>
-    body {
-      font-family: 'Inter', sans-serif;
-      margin: 0;
-      padding: 0;
-      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-      color: #333;
-      min-height: 100vh;
-    }
-    .container {
-      max-width: 850px;
-      margin: 60px auto;
-      background: white;
-      padding: 50px;
-      border-radius: 12px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-    }
-    h1 {
-      font-family: 'Lora', serif;
-      color: #03045E;
-      border-bottom: 3px solid #0077B6;
-      padding-bottom: 15px;
-      font-size: 2.8em;
-      margin-top: 0;
-    }
-    h2 {
-      font-family: 'Lora', serif;
-      color: #0077B6;
-      margin-top: 45px;
-      font-size: 1.8em;
-    }
-    p { 
-      line-height: 1.7; 
-      font-size: 1.05em; 
-      color: #444;
-    }
-    .resource-card {
-      background: #f8f9fa;
-      border-left: 5px solid #00B4D8;
-      padding: 25px;
-      border-radius: 6px;
-      margin-bottom: 25px;
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-    .resource-card:hover { 
-      transform: translateY(-3px); 
-      box-shadow: 0 8px 20px rgba(0,0,0,0.06); 
-    }
-    .resource-card h3 { 
-      margin-top: 0; 
-      color: #023E8A; 
-      font-family: 'Lora', serif;
-      font-size: 1.4em;
-    }
-    a.download-btn {
-      display: inline-block;
-      background: #0077B6;
-      color: white;
-      padding: 10px 20px;
-      text-decoration: none;
-      border-radius: 5px;
-      font-weight: 600;
-      margin-top: 15px;
-      margin-right: 10px;
-      transition: background 0.3s;
-      font-size: 0.9em;
-    }
-    a.download-btn:hover { 
-      background: #03045E; 
-    }
-    .secondary-btn {
-      background: #48CAE4 !important;
-      color: #03045E !important;
-    }
-    .secondary-btn:hover {
-      background: #00B4D8 !important;
-    }
-  </style>
+  <title>Kevin Hu - Mathematics & Music</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
+  <nav>
+    <div class="nav-links">
+      <a href="index.html">Mathematics</a>
+      <a href="music.html">Music & Piano</a>
+    </div>
+  </nav>
 
   <div class="container">
     <h1>Kevin Hu</h1>
     <p>I am a sixth-form student at Dubai College, a BMO1 Silver medalist, and an aspiring mathematician with a deep interest in Euclidean and projective geometry. This repository hosts my textbook sample alongside original mock Olympiad papers and solutions.</p>
 
     <h2>Publications</h2>
-    <div class="resource-card">
+    <div class="card">
       <h3>Beyond the Incenter</h3>
       <p><em>Beyond the Incenter</em> is an upcoming Olympiad geometry guide aimed at the BMO2/USAMO level. It focuses on the structural elegance of the triangle, covering projective methods, complete quadrilaterals, trigonometric approaches, and harmonic configurations without relying on computational algebra.</p>
-      
-      <a class="download-btn" href="cross-ratios.pdf" target="_blank">📄 Read Sample Chapter: Cross Ratios</a>
+      <a class="btn" href="cross-ratios.pdf" target="_blank">📄 Read Sample Chapter: Cross Ratios</a>
     </div>
 
     <h2>Mock Olympiad Papers</h2>
-    <div class="resource-card">
-      <h3>Kevin's Mathematical Olympiads</h3>
-      <p>Mock papers designed to test advanced problem-solving skills, focusing on synthetic geometry, number theory, and combinatorics.</p>
-      <a class="download-btn" href="Mock_BMO.pdf" target="_blank">📄 Mock BMO Round 1</a>
-      <a class="download-btn secondary-btn" href="KMO_solutions.pdf" target="_blank">📄 KMO Solutions</a>
+    <div class="card">
+      <h3>Kevin's Mathematical & Geometry Olympiads</h3>
+      <p>Original mock papers designed to test advanced problem-solving skills, focusing on synthetic geometry, number theory, and combinatorics.</p>
+      <a class="btn" href="KGO.pdf" target="_blank">📄 Kevin's Geometry Olympiad</a>
+      <a class="btn" href="Mock_BMO.pdf" target="_blank">📄 Mock BMO Round 1</a>
+      <a class="btn secondary" href="KMO_solutions.pdf" target="_blank">📄 KMO Solutions</a>
     </div>
 
-    <div class="resource-card">
-      <h3>UKMT SMC Papers</h3>
+    <div class="card">
+      <h3>UKMT SMC & S(A)MC Material</h3>
       <p>Practice materials and rigorous solutions tailored for the Senior Mathematical Challenge.</p>
-      <a class="download-btn" href="Mock_UKMT_SMC.pdf" target="_blank">📄 Mock UKMT SMC</a>
-      <a class="download-btn secondary-btn" href="S(A)MC_Solutions.pdf" target="_blank">📄 S(A)MC Solutions</a>
+      <a class="btn" href="Mock_UKMT_SMC.pdf" target="_blank">📄 Mock UKMT SMC</a>
+      <a class="btn secondary" href="S(A)MC_Solutions.pdf" target="_blank">📄 S(A)MC Solutions</a>
     </div>
   </div>
 
