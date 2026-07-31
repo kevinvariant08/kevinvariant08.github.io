@@ -28,7 +28,7 @@ I saw this reality reflected in my own environment. In a school of over 1,000 st
 ## Look Inside
 To review the full Table of Contents, the pedagogical introduction, and the foundational theorems covered in Chapter 1, you can access the digital sample below.
 
-**[Download the Sample Chapter (PDF) ➔](sample-chapter.pdf)**
+**[Download the Sample Chapter (PDF) ➔](cross-ratios.pdf)**
 
 ---
 
