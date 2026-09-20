@@ -89,7 +89,10 @@
       <a href="index.html">Mathematics</a>
       <a href="music.html">Music &amp; Piano</a>
       <a href="geometry.html">Geometry Lab</a>
+      <a href="sandbox.html">Sandbox</a>
       <a href="interviews.html" aria-current="page">Mock interviews</a>
+      <a href="techniques.html">Techniques</a>
+      <a href="results.html">Results</a>
     </div>
   </nav>
 
@@ -121,6 +124,10 @@
             <input type="text" id="proxy" placeholder="https://..." style="width:100%;max-width:32rem">
           </label>
         </div>
+        <label id="voicelab" style="display:flex;gap:.5rem;align-items:flex-start;margin-top:.9rem;color:var(--ink)">
+          <input type="checkbox" id="voice" style="margin-top:.3rem">
+          <span>Voice mode: speak your reasoning and hear the interviewer reply. Your silences are timed and count towards the score, exactly as in the room. <small style="color:var(--faint)">Chrome and Safari only; nothing is recorded or uploaded, transcription happens in the browser.</small></span>
+        </label>
         <p style="font-size:.88rem;color:var(--faint);margin:.7rem 0 0">Whichever mode you pick, the interviewer never gives answers. It asks you to justify what you claim, gives the smallest possible nudge when you ask for one, and moves you on only when you have earned it.</p>
         <div class="row"><button class="btn2 quiet" id="savecfg">Save settings</button><span id="cfgmsg" class="tally"></span></div>
       </div>
@@ -149,10 +156,12 @@
         <textarea id="input" placeholder="Say what you are trying, then try it. Short messages are fine; this is a conversation."></textarea>
         <div class="row">
           <button class="btn2" id="send">Send</button>
+          <button class="btn2 quiet hidden" id="mic">Start listening</button>
           <button class="btn2 quiet" id="nudge">Ask for a nudge</button>
           <button class="btn2 quiet" id="next">Move on to the next part</button>
           <button class="btn2 quiet" id="end">End and see the debrief</button>
           <span class="tally" id="tally">Nudges used: 0</span>
+          <span class="tally hidden" id="quiet"></span>
         </div>
         <p class="err" id="err"></p>
       </div>
@@ -249,7 +258,7 @@ var PROBLEMS = [
    Leave it empty and the page quietly falls back to self-guided.            */
 var FREE_PROXY = "";
 
-var cfg = {mode:"free", apikey:"", proxy:"", model:"claude-sonnet-5"};
+var cfg = {mode:"free", apikey:"", proxy:"", model:"claude-sonnet-5", voice:false};
 var st = null; // live interview state
 
 function loadCfg(){ try{ var c = JSON.parse(localStorage.getItem('hu_iv_cfg')||'null'); if(c) cfg = Object.assign(cfg,c);}catch(e){} }
@@ -265,6 +274,7 @@ function renderHub(){
   document.getElementById('apikey').value = cfg.apikey;
   document.getElementById('proxy').value = cfg.proxy;
   document.getElementById('model').value = cfg.model;
+  document.getElementById('voice').checked = !!cfg.voice;
   applyModeUI(cfg.mode);
   var pl = document.getElementById('plist'); pl.innerHTML = '';
   PROBLEMS.forEach(function(p){
@@ -281,6 +291,7 @@ function renderHub(){
 }
 function applyModeUI(m){
   document.getElementById('ownopts').classList.toggle('hidden', m !== 'own');
+  document.getElementById('voicelab').classList.toggle('hidden', m === 'self');
   var fn = document.getElementById('freenote');
   fn.classList.toggle('hidden', m !== 'free');
   if(m === 'free' && !FREE_PROXY){
@@ -294,6 +305,7 @@ document.getElementById('savecfg').addEventListener('click', function(){
   cfg.apikey = document.getElementById('apikey').value.trim();
   cfg.proxy = document.getElementById('proxy').value.trim();
   cfg.model = document.getElementById('model').value.trim() || 'claude-sonnet-5';
+  cfg.voice = document.getElementById('voice').checked;
   applyModeUI(cfg.mode);
   saveCfg(); document.getElementById('cfgmsg').textContent = 'Saved.';
   setTimeout(function(){ document.getElementById('cfgmsg').textContent=''; }, 1500);
@@ -366,10 +378,71 @@ function markingSystem(p){
   + '\nOutput ONLY JSON: {"score": integer 0-10, "band": short phrase, "headline": one sentence, "parts": [{"label": string, "comment": string}], "strengths": [string], "improve": [string], "practice": one concrete thing to do this week}.';
 }
 
+/* ================================================================ VOICE  */
+var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+var rec = null, listening = false, vbuf = '', vtimer = null, lastQuietStart = 0, ttsBusy = false;
+function voiceOK(){ return !!cfg.voice && !!SR; }
+function fmtQuiet(){
+  if(!st) return '';
+  return 'Quiet: ' + fmt(Math.round(st.quiet)) + (st.longestQuiet>=3 ? ' \u00b7 longest ' + fmt(Math.round(st.longestQuiet)) : '');
+}
+function markQuietStart(){ lastQuietStart = Date.now(); }
+function closeQuiet(){
+  if(!st || !lastQuietStart) return;
+  var gap = (Date.now() - lastQuietStart)/1000; lastQuietStart = 0;
+  if(gap >= 2){ st.quiet += gap; if(gap > st.longestQuiet) st.longestQuiet = gap; }
+  document.getElementById('quiet').textContent = fmtQuiet();
+}
+function startListening(){
+  if(!voiceOK() || listening) return;
+  rec = new SR(); rec.continuous = true; rec.interimResults = true; rec.lang = 'en-GB';
+  rec.onresult = function(e){
+    var interim = '';
+    for(var i = e.resultIndex; i < e.results.length; i++){
+      var t = e.results[i][0].transcript;
+      if(e.results[i].isFinal){ vbuf += (vbuf ? ' ' : '') + t.trim(); } else interim += t;
+    }
+    closeQuiet();
+    inputEl.value = vbuf + (interim ? ' ' + interim : '');
+    if(vtimer) clearTimeout(vtimer);
+    vtimer = setTimeout(function(){ flushVoice(); }, 2400);
+  };
+  rec.onspeechstart = function(){ closeQuiet(); };
+  rec.onspeechend = function(){ markQuietStart(); };
+  rec.onerror = function(e){ if(e.error === 'not-allowed'){ sysMsg('Microphone access was refused; continuing in text mode.'); stopListening(); } };
+  rec.onend = function(){ if(listening && !ttsBusy && st && !st.ended){ try{ rec.start(); }catch(x){} } };
+  try{ rec.start(); listening = true; markQuietStart(); }catch(e){ return; }
+  document.getElementById('mic').textContent = 'Stop listening';
+  document.getElementById('quiet').classList.remove('hidden');
+  document.getElementById('quiet').textContent = fmtQuiet();
+}
+function stopListening(){
+  listening = false; if(vtimer){ clearTimeout(vtimer); vtimer = null; }
+  if(rec){ try{ rec.onend = null; rec.stop(); }catch(e){} rec = null; }
+  document.getElementById('mic').textContent = 'Start listening';
+}
+function flushVoice(){
+  vtimer = null; var t = vbuf.trim(); vbuf = ''; inputEl.value = '';
+  if(!t || !st || st.ended) return;
+  candMsg(t); converse(t, false);
+}
+function speak(text){
+  if(!voiceOK() || !window.speechSynthesis) return;
+  try{
+    window.speechSynthesis.cancel();
+    var u = new SpeechSynthesisUtterance(text); u.lang = 'en-GB'; u.rate = 1.0;
+    var wasListening = listening;
+    u.onstart = function(){ ttsBusy = true; if(rec){ try{ rec.stop(); }catch(e){} } };
+    u.onend = function(){ ttsBusy = false; markQuietStart(); if(wasListening && st && !st.ended){ try{ rec && rec.start(); }catch(e){} } };
+    window.speechSynthesis.speak(u);
+  }catch(e){}
+}
+
 /* ================================================================ INTERVIEW */
 var clockEl, barEl, noteEl, partsEl, chatEl, inputEl, errEl, tallyEl;
 function startInterview(p){
-  st = {p:p, idx:0, left:25*60, nudges:0, hintLevel:[], transcript:[], tick:null, ended:false, ai:aiAvailable(), forced:0};
+  st = {p:p, idx:0, left:25*60, nudges:0, hintLevel:[], transcript:[], tick:null, ended:false, ai:aiAvailable(), forced:0, quiet:0, longestQuiet:0};
+  stopListening(); vbuf=''; lastQuietStart=0;
   p.parts.forEach(function(){ st.hintLevel.push(0); });
   document.getElementById('hub').classList.add('hidden');
   document.getElementById('stage').classList.remove('hidden');
@@ -386,6 +459,10 @@ function startInterview(p){
   inputEl.classList.toggle('hidden', !st.ai);
   noteEl.textContent = st.ai ? 'Say what you are trying before you try it. Silence is scored.' : 'Paper and pen. Speak every thought aloud, ideally recording yourself.';
   if(!st.ai && cfg.mode !== 'self') sysMsg('Running self-guided: the AI interviewer is unavailable, so nudges below are written ones.');
+  var micBtn = document.getElementById('mic'); micBtn.classList.toggle('hidden', !(st.ai && voiceOK())); micBtn.textContent = 'Start listening';
+  document.getElementById('quiet').classList.add('hidden');
+  if(st.ai && cfg.voice && !SR) sysMsg('Voice mode needs Chrome or Safari; running in text mode.');
+  if(st.ai && voiceOK()) sysMsg('Voice is on. Press Start listening, then talk; a pause of a couple of seconds sends what you said.');
   showPart(0);
   if(st.ai) sysMsg('The interviewer is listening. Begin with part (a) whenever you are ready.');
   st.tick = setInterval(function(){
@@ -434,7 +511,7 @@ async function converse(userText, isNudge){
   try{
     var raw = await callAI(interviewerSystem(st.p), msgs, 500);
     var j = parseJSON(raw) || {say: raw.slice(0,600), advance:false, hinted:isNudge};
-    tutorMsg(j.say); st.transcript.push({role:'assistant', text:j.say});
+    tutorMsg(j.say); st.transcript.push({role:'assistant', text:j.say}); speak(j.say);
     if(j.hinted){ st.nudges++; st.hintLevel[st.idx]=Math.min(st.hintLevel[st.idx]+1,q.hints.length); tallyEl.textContent='Nudges used: '+st.nudges; }
     if(j.advance && st.idx < st.p.parts.length-1){ st.idx++; showPart(st.idx); }
     else if(j.advance){ sysMsg('That was the last part. End the session when you are ready for the debrief.'); }
@@ -449,21 +526,24 @@ inputEl = document.getElementById('input');
 inputEl.addEventListener('keydown', function(e){ if((e.metaKey||e.ctrlKey)&&e.key==='Enter'){ document.getElementById('send').click(); } });
 document.getElementById('nudge').addEventListener('click', function(){ if(!st||st.ended) return; if(st.ai){ candMsg('Could I have a nudge?'); converse('',true); } else staticHint(); });
 document.getElementById('next').addEventListener('click', function(){ if(!st||st.ended||st.idx>=st.p.parts.length-1) return; st.forced++; if(st.ai) sysMsg('You moved on without the interviewer\'s agreement; this is noted.'); st.idx++; showPart(st.idx); });
+document.getElementById('mic').addEventListener('click', function(){ if(!st||st.ended) return; if(listening) stopListening(); else startListening(); });
 document.getElementById('end').addEventListener('click', endInterview);
 
 async function endInterview(){
   if(!st||st.ended) return; st.ended=true;
   if(st.tick){clearInterval(st.tick);st.tick=null;}
-  ['send','nudge','next','end'].forEach(function(id){ document.getElementById(id).disabled=true; });
+  closeQuiet(); stopListening(); if(window.speechSynthesis) try{ window.speechSynthesis.cancel(); }catch(e){}
+  ['send','nudge','next','end','mic'].forEach(function(id){ document.getElementById(id).disabled=true; });
   var used = 25*60-Math.max(st.left,0), reached = st.idx+1, p = st.p;
+  var quietNote = st.quiet>0 ? ' &nbsp;&nbsp; Quiet time: <b>'+fmt(Math.round(st.quiet))+'</b> (longest '+fmt(Math.round(st.longestQuiet))+')' : '';
   var box = document.getElementById('debrief'); box.classList.remove('hidden');
-  var head = '<div class="stats">Time used: <b>'+fmt(used)+'</b> of 25:00 &nbsp;&nbsp; Parts reached: <b>'+reached+' of 5</b> &nbsp;&nbsp; Nudges used: <b>'+st.nudges+'</b>'+(st.forced?' &nbsp;&nbsp; Moved on unprompted: <b>'+st.forced+'</b>':'')+'</div>';
+  var head = '<div class="stats">Time used: <b>'+fmt(used)+'</b> of 25:00 &nbsp;&nbsp; Parts reached: <b>'+reached+' of 5</b> &nbsp;&nbsp; Nudges used: <b>'+st.nudges+'</b>'+(st.forced?' &nbsp;&nbsp; Moved on unprompted: <b>'+st.forced+'</b>':'')+quietNote+'</div>';
   var score = null, report = '';
   if(st.ai){
     box.innerHTML = head + '<p class="msg sys">The interviewer is writing your report.</p>';
     try{
       var tr = st.transcript.map(function(m){return (m.role==='assistant'?'TUTOR: ':m.role==='user'?'CANDIDATE: ':'')+m.text;}).join('\n');
-      var raw = await callAI(markingSystem(p), [{role:'user',content:'TRANSCRIPT:\n'+tr+'\n\nParts reached: '+reached+' of 5. Nudges: '+st.nudges+'. Moved on without agreement: '+st.forced+'. Time used: '+fmt(used)+'.'}], 1200);
+      var raw = await callAI(markingSystem(p), [{role:'user',content:'TRANSCRIPT:\n'+tr+'\n\nParts reached: '+reached+' of 5. Nudges: '+st.nudges+'. Moved on without agreement: '+st.forced+'. Time used: '+fmt(used)+'.'+(st.quiet>0?' Voice mode was on: total silence '+fmt(Math.round(st.quiet))+', longest silent stretch '+fmt(Math.round(st.longestQuiet))+'. Treat silences over 45 seconds as a significant negative, as a real interviewer would.':'')}], 1200);
       var j = parseJSON(raw);
       if(j){ score = j.score;
         report = '<h2>Report</h2><div class="score"><span class="big">'+esc(j.score)+'<span style="font-size:1.2rem;color:var(--faint)">/10</span></span><span class="band">'+esc(j.band||'')+'</span></div><p>'+esc(j.headline||'')+'</p>'
