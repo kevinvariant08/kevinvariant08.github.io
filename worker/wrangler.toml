@@ -1,0 +1,12 @@
+name = "hu-interviewer"
+main = "interview-proxy-worker.js"
+compatibility_date = "2026-09-20"
+
+# wrangler kv namespace create IV   →   paste the returned id below
+[[kv_namespaces]]
+binding = "IV"
+id = "PASTE_YOUR_KV_NAMESPACE_ID_HERE"
+
+# Secrets are not stored here. Set them once each:
+#   wrangler secret put ANTHROPIC_API_KEY
+#   wrangler secret put GEMINI_API_KEY      (only if CONFIG.backend = "gemini")
