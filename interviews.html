@@ -242,7 +242,7 @@ var PROBLEMS = [
 /* ================================================================ STATE  */
 /* Paste your deployed Cloudflare Worker URL here to switch the free mode on.
    Leave it empty and the page quietly falls back to self-guided.            */
-var FREE_PROXY = "";
+var FREE_PROXY = "https://hu-interviewer.kevinvariant08.workers.dev";
 
 var cfg = {mode:"free", apikey:"", proxy:"", model:"claude-sonnet-5"};
 var st = null; // live interview state
@@ -382,7 +382,7 @@ function startInterview(p){
   noteEl.textContent = st.ai ? 'Say what you are trying before you try it. Silence is scored.' : 'Paper and pen. Speak every thought aloud, ideally recording yourself.';
   if(!st.ai && cfg.mode !== 'self') sysMsg('Running self-guided: the AI interviewer is unavailable, so nudges below are written ones.');
   showPart(0);
-  if(st.ai) sysMsg('The interviewer is listening. Begin with part (a) whenever you are ready.');
+  if(st.ai) sysMsg('The interviewer is listening. Begin varwith part (a) whenever you are ready.');
   st.tick = setInterval(function(){
     st.left--; paint();
     if(st.left<=0){ clearInterval(st.tick); st.tick=null; noteEl.textContent='Time is up. Finish the sentence you are on, then end the session.'; }
