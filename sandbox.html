@@ -14,32 +14,30 @@
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono&display=swap" rel="stylesheet">
   <style>
     .sb{--ink:#1A2230;--soft:#586374;--faint:#8A93A1;--rule:#D9D6CC;--paper:#FBFAF6;--grid:rgba(40,70,120,.09);
-        --stable:#2C5545;--maybe:#8A5A12;--free:#1A2230;--derived:#534AB7;--circ:#993C1D;
+        --stable:#2C5545;--maybe:#8A5A12;--derived:#534AB7;--circ:#993C1D;--dline:#0F6E56;
         --serif:"IBM Plex Serif",Georgia,serif;--sans:"IBM Plex Sans",system-ui,sans-serif;--mono:"IBM Plex Mono",monospace;
         font-family:var(--sans);color:var(--ink);line-height:1.55}
     .sb h2{font-family:var(--serif);font-weight:600}
     .sb p{max-width:68ch}
     .sb .lead{font-size:1.05rem;color:var(--soft)}
-    .sb .layout{display:grid;grid-template-columns:150px 1fr 270px;gap:1.2rem;align-items:start;margin-top:1.4rem}
-    @media (max-width:900px){.sb .layout{grid-template-columns:1fr}}
-    .sb .tools{display:flex;flex-direction:column;gap:.35rem}
-    .sb .tool{font-family:var(--sans);font-size:.92rem;text-align:left;background:transparent;border:1px solid var(--rule);border-radius:2px;padding:.45rem .7rem;cursor:pointer;color:var(--ink)}
+    .sb .layout{display:grid;grid-template-columns:168px 1fr 270px;gap:1.2rem;align-items:start;margin-top:1.4rem}
+    @media (max-width:960px){.sb .layout{grid-template-columns:1fr}}
+    .sb .tools{display:flex;flex-direction:column;gap:.25rem}
+    .sb .tools h4{font-size:.74rem;font-weight:500;letter-spacing:.03em;color:var(--faint);margin:.7rem 0 .15rem}
+    .sb .tool{font-family:var(--sans);font-size:.88rem;text-align:left;background:transparent;border:1px solid var(--rule);border-radius:2px;padding:.35rem .6rem;cursor:pointer;color:var(--ink);line-height:1.25}
     .sb .tool:hover{border-color:var(--ink)}
     .sb .tool.on{background:var(--ink);color:#fff;border-color:var(--ink)}
-    .sb .tool small{display:block;color:var(--faint);font-size:.78rem}
+    .sb .tool small{display:block;color:var(--faint);font-size:.74rem}
     .sb .tool.on small{color:#cfd3da}
-    .sb .tools hr{border:0;border-top:1px solid var(--rule);margin:.5rem 0}
     .sb .canvaswrap{border:1px solid var(--rule);background-color:var(--paper);
         background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:30px 30px;position:relative}
     .sb svg{display:block;width:100%;height:auto;touch-action:none;cursor:crosshair}
-    .sb .status{position:absolute;left:.8rem;bottom:.6rem;font-size:.85rem;color:var(--soft);pointer-events:none;background:rgba(251,250,246,.85);padding:.15rem .5rem}
+    .sb .status{position:absolute;left:.8rem;bottom:.6rem;font-size:.85rem;color:var(--soft);pointer-events:none;background:rgba(251,250,246,.88);padding:.15rem .5rem;max-width:80%}
     .sb .panel{border:1px solid var(--rule);padding:.9rem 1rem;font-size:.93rem}
     .sb .panel h3{font-family:var(--serif);font-weight:600;font-size:1rem;margin:0 0 .4rem}
-    .sb .panel h4{font-size:.8rem;font-weight:500;letter-spacing:.02em;color:var(--faint);margin:.9rem 0 .3rem}
+    .sb .panel h4{font-size:.78rem;font-weight:500;letter-spacing:.02em;color:var(--faint);margin:.9rem 0 .3rem}
     .sb .rel{font-family:var(--serif);padding:.2rem 0;border-bottom:1px dashed var(--rule)}
-    .sb .rel.stable{color:var(--stable)}
-    .sb .rel.maybe{color:var(--maybe)}
-    .sb .rel .k{font-family:var(--sans);font-size:.75rem;color:var(--faint);margin-left:.4rem}
+    .sb .rel.stable{color:var(--stable)} .sb .rel.maybe{color:var(--maybe)} .sb .rel.meas{color:var(--ink)}
     .sb .empty{color:var(--faint);font-style:italic}
     .sb .btn2{font-family:var(--sans);font-size:.9rem;font-weight:500;color:var(--ink);background:transparent;border:1px solid var(--ink);border-radius:2px;padding:.45rem .9rem;cursor:pointer}
     .sb .btn2:hover{background:var(--ink);color:#fff}
@@ -48,10 +46,12 @@
     .sb .row{display:flex;gap:.5rem;flex-wrap:wrap;align-items:center;margin-top:.8rem}
     .sb textarea{width:100%;min-height:12rem;font-family:var(--mono);font-size:.82rem;line-height:1.45;border:1px solid var(--rule);padding:.6rem;background:#fff;color:var(--ink);resize:vertical}
     .sb .export{margin-top:1.4rem}
-    .sb .legend{display:flex;gap:1.2rem;font-size:.82rem;color:var(--soft);margin-top:.5rem;flex-wrap:wrap}
+    .sb .legend{display:flex;gap:1.1rem;font-size:.82rem;color:var(--soft);margin-top:.5rem;flex-wrap:wrap}
     .sb .legend span::before{content:"";display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:.35rem;vertical-align:middle}
-    .sb .legend .f::before{background:var(--free)} .sb .legend .d::before{border:2px solid var(--derived);width:6px;height:6px}
+    .sb .legend .f::before{background:var(--ink)} .sb .legend .d::before{border:2px solid var(--derived);width:6px;height:6px}
+    .sb .legend .l::before{background:var(--dline);border-radius:0;height:2px;width:14px}
     .sb .legend .s::before{background:var(--stable)} .sb .legend .m::before{background:var(--maybe)}
+    .sb select{font-family:var(--sans);font-size:.85rem;padding:.3rem .5rem;border:1px solid var(--rule);border-radius:2px;background:#fff;color:var(--ink)}
   </style>
 </head>
 <body>
@@ -70,7 +70,7 @@
 
   <main class="container sb">
     <h1>Conjecture sandbox</h1>
-    <p class="lead">Build a configuration, drag it about, and let the page tell you what stays true. Every relation it spots is tested against random perturbations of the free points, so it can tell a theorem from a coincidence. When you have something, export it as tkz-euclide code ready for a write-up.</p>
+    <p class="lead">Build a configuration, drag it about, and let the page tell you what stays true. Every relation it spots is re-tested against random perturbations of the free points, so it can tell a theorem from a coincidence. Export the finished figure as tkz-euclide code that reconstructs every derived point rather than hard-coding it.</p>
 
     <div class="layout">
       <div class="tools" id="tools"></div>
@@ -80,16 +80,16 @@
           <svg id="cv" viewBox="0 0 760 520" role="img" aria-label="Geometry canvas"></svg>
           <div class="status" id="status">Choose a tool, then click on the canvas.</div>
         </div>
-        <div class="legend"><span class="f">free point (drag me)</span><span class="d">constructed point</span><span class="s">holds under perturbation</span><span class="m">true right now only</span></div>
+        <div class="legend"><span class="f">free point (drag)</span><span class="d">constructed point</span><span class="l">constructed line</span><span class="s">holds under perturbation</span><span class="m">true right now only</span></div>
         <div class="row">
           <button class="btn2 quiet" id="undo">Undo</button>
           <button class="btn2 quiet" id="clear">Clear</button>
           <button class="btn2" id="test">Run perturbation test</button>
-          <button class="btn2 quiet" id="demo">Load an example</button>
+          <select id="demo"><option value="">Load an example</option><option value="ortho">Orthocentre and nine-point circle</option><option value="euler">Euler line</option><option value="incircle">Incircle and angle bisectors</option><option value="tangents">Tangents and the chord of contact</option></select>
         </div>
         <div class="export">
           <h2 style="font-size:1.1rem;margin:0 0 .4rem">Export to tkz-euclide</h2>
-          <p style="font-size:.9rem;color:var(--soft)">Constructed points export as constructions, not coordinates, so the figure stays exact when you move a free point in LaTeX. Requires <code>\usepackage{tkz-euclide}</code>.</p>
+          <p style="font-size:.9rem;color:var(--soft)">Requires <code>\usepackage{tkz-euclide}</code>. Constructed objects come out as constructions, so the figure stays exact if you move a free point in LaTeX.</p>
           <textarea id="tex" readonly spellcheck="false"></textarea>
           <div class="row"><button class="btn2 quiet" id="copy">Copy code</button><span id="copied" style="font-size:.85rem;color:var(--faint)"></span></div>
         </div>
@@ -101,43 +101,52 @@
         <div id="stable"><div class="empty">Nothing yet.</div></div>
         <h4>True right now only</h4>
         <div id="maybe"><div class="empty">Nothing yet.</div></div>
-        <p style="font-size:.82rem;color:var(--faint);margin-top:1rem">A relation that survives twenty random nudges of every free point is a consequence of the construction. One that does not is an accident of where you put things, which is still useful: it tells you what to construct next.</p>
+        <h4>Measurements</h4>
+        <div id="meas"><div class="empty">Use the measure tools.</div></div>
+        <p style="font-size:.82rem;color:var(--faint);margin-top:1rem">A relation that survives twenty random nudges of every free point is a consequence of the construction. One that does not is an accident of placement, which tells you what to construct next. Relations that hold by construction are not listed.</p>
       </div>
     </div>
   </main>
 
 <script>
-/* ---------------------------------------------------------------- model */
-var W=760,H=520,objs=[],labels=0,tool='point',picks=[],drag=null,stableSet=null;
+var W=760,H=520,objs=[],labels=0,tool='point',picks=[],drag=null,stableSet=null,groups=[],nextId=1;
 var TOOLS=[
+ {h:'Points'},
  {id:'point',name:'Point',sub:'click empty space',need:[]},
+ {id:'mid',name:'Midpoint',sub:'two points',need:['point','point']},
+ {id:'inter',name:'Intersect lines',sub:'two lines',need:['line','line']},
+ {id:'ilc',name:'Intersect line, circle',sub:'line, then circle',need:['line','circle']},
+ {id:'icc',name:'Intersect circles',sub:'two circles',need:['circle','circle']},
+ {id:'foot',name:'Perpendicular foot',sub:'point, then line',need:['point','line']},
+ {id:'refl',name:'Reflect in line',sub:'point, then line',need:['point','line']},
+ {id:'reflp',name:'Reflect in point',sub:'point, then centre',need:['point','point']},
+ {h:'Lines'},
+ {id:'seg',name:'Segment',sub:'two points',need:['point','point']},
+ {id:'ray',name:'Ray',sub:'from, through',need:['point','point']},
  {id:'line',name:'Line',sub:'two points',need:['point','point']},
+ {id:'pbis',name:'Perpendicular bisector',sub:'two points',need:['point','point']},
+ {id:'perp',name:'Perpendicular through',sub:'point, then line',need:['point','line']},
+ {id:'par',name:'Parallel through',sub:'point, then line',need:['point','line']},
+ {id:'abis',name:'Angle bisector',sub:'A, vertex B, C',need:['point','point','point']},
+ {id:'tan',name:'Tangents from point',sub:'point, then circle',need:['point','circle']},
+ {h:'Circles and centres'},
  {id:'circle',name:'Circle',sub:'centre, then a point',need:['point','point']},
  {id:'circum',name:'Circumcircle',sub:'three points',need:['point','point','point']},
- {id:'mid',name:'Midpoint',sub:'two points',need:['point','point']},
- {id:'inter',name:'Intersection',sub:'two lines',need:['line','line']},
- {id:'foot',name:'Perpendicular foot',sub:'point, then a line',need:['point','line']},
+ {id:'incircle',name:'Incircle',sub:'three points',need:['point','point','point']},
+ {id:'inc',name:'Incentre',sub:'three points',need:['point','point','point']},
+ {id:'ccen',name:'Circumcentre',sub:'three points',need:['point','point','point']},
+ {id:'cent',name:'Centroid',sub:'three points',need:['point','point','point']},
+ {id:'orth',name:'Orthocentre',sub:'three points',need:['point','point','point']},
+ {h:'Measure'},
+ {id:'dist',name:'Distance',sub:'two points',need:['point','point']},
+ {id:'angle',name:'Angle',sub:'A, vertex B, C',need:['point','point','point']},
+ {h:''},
  {id:'move',name:'Move',sub:'drag free points',need:[]}
 ];
 function nextLabel(){ var s='ABCDEFGHJKLMNPQRSTUVWXYZ'; var i=labels++; return i<s.length?s[i]:s[i%s.length]+Math.floor(i/s.length); }
 function byId(id){ for(var i=0;i<objs.length;i++) if(objs[i].id===id) return objs[i]; return null; }
+function P(id){ return byId(id).g; }
 
-/* ------------------------------------------------------------- geometry */
-function compute(){
-  objs.forEach(function(o){
-    if(o.type==='point'){
-      if(o.kind==='free'){ o.g={x:o.x,y:o.y}; }
-      else if(o.kind==='mid'){ var a=byId(o.of[0]).g,b=byId(o.of[1]).g; o.g={x:(a.x+b.x)/2,y:(a.y+b.y)/2}; }
-      else if(o.kind==='inter'){ var l1=byId(o.of[0]).g,l2=byId(o.of[1]).g; o.g=lineLine(l1,l2); }
-      else if(o.kind==='foot'){ var p=byId(o.of[0]).g,l=byId(o.of[1]).g; o.g=footOf(p,l); }
-    } else if(o.type==='line'){
-      var a=byId(o.a).g,b=byId(o.b).g; o.g={x1:a.x,y1:a.y,x2:b.x,y2:b.y};
-    } else if(o.type==='circle'){
-      if(o.kind==='cp'){ var c=byId(o.c).g,t=byId(o.t).g; o.g={cx:c.x,cy:c.y,r:Math.hypot(t.x-c.x,t.y-c.y)}; }
-      else { var A=byId(o.of[0]).g,B=byId(o.of[1]).g,C=byId(o.of[2]).g; o.g=circum(A,B,C); }
-    }
-  });
-}
 function lineLine(l1,l2){
   var d=(l1.x1-l1.x2)*(l2.y1-l2.y2)-(l1.y1-l1.y2)*(l2.x1-l2.x2);
   if(Math.abs(d)<1e-9) return {x:NaN,y:NaN};
@@ -154,90 +163,191 @@ function circum(A,B,C){
   var ux=(a2*(B.y-C.y)+b2*(C.y-A.y)+c2*(A.y-B.y))/d, uy=(a2*(C.x-B.x)+b2*(A.x-C.x)+c2*(B.x-A.x))/d;
   return {cx:ux,cy:uy,r:Math.hypot(A.x-ux,A.y-uy)};
 }
+function incentre(A,B,C){
+  var a=Math.hypot(B.x-C.x,B.y-C.y),b=Math.hypot(C.x-A.x,C.y-A.y),c=Math.hypot(A.x-B.x,A.y-B.y),s=a+b+c; if(s<1e-9) return {x:NaN,y:NaN,r:NaN};
+  var I={x:(a*A.x+b*B.x+c*C.x)/s,y:(a*A.y+b*B.y+c*C.y)/s};
+  var area=Math.abs((B.x-A.x)*(C.y-A.y)-(C.x-A.x)*(B.y-A.y))/2; I.r=2*area/s; return I;
+}
+function nearPar(l1,l2){ var u=[l1.x2-l1.x1,l1.y2-l1.y1],v=[l2.x2-l2.x1,l2.y2-l2.y1]; var n=Math.hypot(u[0],u[1])*Math.hypot(v[0],v[1]); return n<1e-9||Math.abs(u[0]*v[1]-u[1]*v[0])/n<0.01; }
 function distPL(p,l){ var dx=l.x2-l.x1,dy=l.y2-l.y1; return Math.abs(dy*p.x-dx*p.y+l.x2*l.y1-l.y2*l.x1)/Math.hypot(dx,dy); }
+function lineCircle(l,c,idx){
+  var dx=l.x2-l.x1,dy=l.y2-l.y1,fx=l.x1-c.cx,fy=l.y1-c.cy;
+  var A=dx*dx+dy*dy,B=2*(fx*dx+fy*dy),C=fx*fx+fy*fy-c.r*c.r,D=B*B-4*A*C;
+  if(D<0||A<1e-9) return {x:NaN,y:NaN};
+  var t=(-B+(idx?1:-1)*Math.sqrt(D))/(2*A); return {x:l.x1+t*dx,y:l.y1+t*dy};
+}
+function circleCircle(c1,c2,idx){
+  var dx=c2.cx-c1.cx,dy=c2.cy-c1.cy,d=Math.hypot(dx,dy); if(d<1e-9||d>c1.r+c2.r+1e-9||d<Math.abs(c1.r-c2.r)-1e-9) return {x:NaN,y:NaN};
+  var a=(c1.r*c1.r-c2.r*c2.r+d*d)/(2*d),h=Math.sqrt(Math.max(0,c1.r*c1.r-a*a));
+  var mx=c1.cx+a*dx/d,my=c1.cy+a*dy/d,s=idx?-1:1;
+  return {x:mx+s*h*(-dy)/d,y:my+s*h*dx/d};
+}
+function tangentPt(p,c,idx){
+  var d=Math.hypot(p.x-c.cx,p.y-c.cy); if(d<=c.r) return {x:NaN,y:NaN};
+  return circleCircle(c,{cx:(p.x+c.cx)/2,cy:(p.y+c.cy)/2,r:d/2},idx);
+}
 
-/* --------------------------------------------------- construction facts */
+function compute(){
+  objs.forEach(function(o){
+    var a,b,c,l,pt,cr,tri;
+    if(o.type==='point'){
+      switch(o.kind){
+        case 'free': o.g={x:o.x,y:o.y}; break;
+        case 'mid': a=P(o.of[0]); b=P(o.of[1]); o.g={x:(a.x+b.x)/2,y:(a.y+b.y)/2}; break;
+        case 'inter': o.g=lineLine(P(o.of[0]),P(o.of[1])); break;
+        case 'foot': o.g=footOf(P(o.of[0]),P(o.of[1])); break;
+        case 'refl': pt=P(o.of[0]); var f=footOf(pt,P(o.of[1])); o.g={x:2*f.x-pt.x,y:2*f.y-pt.y}; break;
+        case 'reflp': pt=P(o.of[0]); c=P(o.of[1]); o.g={x:2*c.x-pt.x,y:2*c.y-pt.y}; break;
+        case 'ilc': o.g=lineCircle(P(o.of[0]),P(o.of[1]),o.idx); break;
+        case 'icc': o.g=circleCircle(P(o.of[0]),P(o.of[1]),o.idx); break;
+        case 'inc': tri=incentre(P(o.of[0]),P(o.of[1]),P(o.of[2])); o.g={x:tri.x,y:tri.y}; break;
+        case 'ccen': cr=circum(P(o.of[0]),P(o.of[1]),P(o.of[2])); o.g={x:cr.cx,y:cr.cy}; break;
+        case 'cent': a=P(o.of[0]); b=P(o.of[1]); c=P(o.of[2]); o.g={x:(a.x+b.x+c.x)/3,y:(a.y+b.y+c.y)/3}; break;
+        case 'orth': a=P(o.of[0]); b=P(o.of[1]); c=P(o.of[2]); cr=circum(a,b,c); o.g={x:a.x+b.x+c.x-2*cr.cx,y:a.y+b.y+c.y-2*cr.cy}; break;
+        case 'rot90': a=P(o.of[0]); c=P(o.of[1]); o.g={x:c.x-(a.y-c.y),y:c.y+(a.x-c.x)}; break;
+        case 'perpdir': pt=P(o.of[0]); l=P(o.of[1]); o.g={x:pt.x-(l.y2-l.y1),y:pt.y+(l.x2-l.x1)}; break;
+        case 'pardir': pt=P(o.of[0]); l=P(o.of[1]); o.g={x:pt.x+(l.x2-l.x1),y:pt.y+(l.y2-l.y1)}; break;
+        case 'bisdir': a=P(o.of[0]); b=P(o.of[1]); c=P(o.of[2]); var u=Math.hypot(a.x-b.x,a.y-b.y),v=Math.hypot(c.x-b.x,c.y-b.y);
+          o.g=(u<1e-9||v<1e-9)?{x:NaN,y:NaN}:{x:b.x+80*((a.x-b.x)/u+(c.x-b.x)/v),y:b.y+80*((a.y-b.y)/u+(c.y-b.y)/v)}; break;
+        case 'tanpt': o.g=tangentPt(P(o.of[0]),P(o.of[1]),o.idx); break;
+      }
+    } else if(o.type==='line'){ a=P(o.a); b=P(o.b); o.g={x1:a.x,y1:a.y,x2:b.x,y2:b.y}; }
+    else if(o.type==='circle'){
+      if(o.kind==='cp'){ c=P(o.c); var t=P(o.t); o.g={cx:c.x,cy:c.y,r:Math.hypot(t.x-c.x,t.y-c.y)}; }
+      else if(o.kind==='circum') o.g=circum(P(o.of[0]),P(o.of[1]),P(o.of[2]));
+      else { tri=incentre(P(o.of[0]),P(o.of[1]),P(o.of[2])); o.g={cx:tri.x,cy:tri.y,r:tri.r}; }
+    }
+  });
+}
+
+function sameSet(u,v){ if(u.length!==v.length) return false; var s=u.slice().sort(),t=v.slice().sort(); for(var i=0;i<s.length;i++) if(s[i]!==t[i]) return false; return true; }
 function pointParents(p){
-  if(p.kind==='mid') return p.of.slice();
-  if(p.kind==='inter'){ var l1=byId(p.of[0]),l2=byId(p.of[1]); return [l1.a,l1.b,l2.a,l2.b]; }
-  if(p.kind==='foot'){ var l=byId(p.of[1]); return [p.of[0],l.a,l.b]; }
-  return [];
+  var l;
+  switch(p.kind){
+    case 'mid': case 'reflp': return p.of.slice();
+    case 'inter': var l1=byId(p.of[0]),l2=byId(p.of[1]); return [l1.a,l1.b,l2.a,l2.b];
+    case 'foot': case 'refl': l=byId(p.of[1]); return [p.of[0],l.a,l.b];
+    default: return [];
+  }
 }
 function onLineByConstruction(p,l){
   if(p.id===l.a||p.id===l.b) return true;
   if(p.kind==='inter'&&p.of.indexOf(l.id)>=0) return true;
-  if(p.kind==='mid'&&((p.of[0]===l.a&&p.of[1]===l.b)||(p.of[0]===l.b&&p.of[1]===l.a))) return true;
+  if(p.kind==='ilc'&&p.of[0]===l.id) return true;
   if(p.kind==='foot'&&p.of[1]===l.id) return true;
+  if(p.kind==='mid'&&sameSet(p.of,[l.a,l.b])) return true;
+  if(l.kind==='pbis'){
+    if(p.kind==='mid'&&sameSet(p.of,l.of)) return true;
+    if(p.kind==='ccen'&&l.of.every(function(id){return p.of.indexOf(id)>=0;})) return true;
+  }
+  if(l.kind==='abis'&&p.kind==='inc'&&sameSet(p.of,l.of)) return true;
+  if(l.kind==='perp'){
+    var base=byId(l.of[1]);
+    if(p.kind==='foot'&&p.of[0]===l.of[0]&&p.of[1]===base.id) return true;
+    if(p.kind==='orth'&&p.of.indexOf(l.of[0])>=0&&p.of.indexOf(base.a)>=0&&p.of.indexOf(base.b)>=0) return true;
+  }
+  if(l.kind==='two'&&p.kind==='cent'){
+    var chk=function(v,m){ var M=byId(m); return p.of.indexOf(v)>=0&&M.kind==='mid'&&sameSet(M.of,p.of.filter(function(id){return id!==v;})); };
+    if(chk(l.a,l.b)||chk(l.b,l.a)) return true;
+  }
   return false;
 }
 function onCircleByConstruction(p,c){
-  if(c.kind==='cp') return p.id===c.t;
-  return c.of.indexOf(p.id)>=0;
+  if(c.kind==='cp'&&p.id===c.t) return true;
+  if(c.kind==='circum'&&c.of.indexOf(p.id)>=0) return true;
+  if(p.kind==='ilc'&&p.of[1]===c.id) return true;
+  if(p.kind==='icc'&&p.of.indexOf(c.id)>=0) return true;
+  if(p.kind==='tanpt'&&p.of[1]===c.id) return true;
+  return false;
 }
 function perpByConstruction(l1,l2){
-  var chk=function(la,lb){ var pts=[la.a,la.b]; for(var i=0;i<2;i++){ var p=byId(pts[i]); if(p.kind==='foot'&&p.of[1]===lb.id&&(pts[1-i]===p.of[0])) return true; } return false; };
+  var chk=function(la,lb){
+    if(la.kind==='perp'&&la.of[1]===lb.id) return true;
+    if(la.kind==='pbis'&&lb.kind==='two'&&sameSet(la.of,[lb.a,lb.b])) return true;
+    var pts=[la.a,la.b]; for(var i=0;i<2;i++){ var p=byId(pts[i]); if(p.kind==='foot'&&p.of[1]===lb.id&&pts[1-i]===p.of[0]) return true; }
+    return false;
+  };
   return chk(l1,l2)||chk(l2,l1);
 }
+function parByConstruction(l1,l2){ return (l1.kind==='par'&&l1.of[1]===l2.id)||(l2.kind==='par'&&l2.of[1]===l1.id); }
+function tanByConstruction(l,c){
+  if(l.kind==='tan'&&l.of[1]===c.id) return true;
+  if(c.kind==='inc'&&l.kind==='two'&&c.of.indexOf(l.a)>=0&&c.of.indexOf(l.b)>=0) return true;
+  return false;
+}
+function ln(l){ return l.kind==='two'?byId(l.a).label+byId(l.b).label:l.label; }
+function cn(c){ return c.kind==='cp'?'circle centre '+byId(c.c).label:(c.kind==='circum'?'circle ':'incircle ')+c.of.map(function(id){return byId(id).label;}).join(''); }
 
-/* --------------------------------------------------------- relations */
 function relations(){
-  var P=objs.filter(function(o){return o.type==='point'&&isFinite(o.g.x);}),
-      L=objs.filter(function(o){return o.type==='line';}),
+  var Pts=objs.filter(function(o){return o.type==='point'&&!o.hidden&&isFinite(o.g.x);}),
+      L=objs.filter(function(o){return o.type==='line'&&isFinite(o.g.x1)&&isFinite(o.g.x2);}),
       C=objs.filter(function(o){return o.type==='circle'&&isFinite(o.g.r);});
-  if(P.length<2) return {};
-  var xs=P.map(function(p){return p.g.x;}),ys=P.map(function(p){return p.g.y;});
+  if(Pts.length<2) return {};
+  var xs=Pts.map(function(p){return p.g.x;}),ys=Pts.map(function(p){return p.g.y;});
   var D=Math.max(30,Math.max.apply(null,xs)-Math.min.apply(null,xs),Math.max.apply(null,ys)-Math.min.apply(null,ys));
-  var tol=D*0.004, out={};
-  var i,j,k,m;
-  for(i=0;i<P.length;i++)for(j=i+1;j<P.length;j++)for(k=j+1;k<P.length;k++){
-    var a=P[i],b=P[j],c=P[k];
+  var tol=D*0.004, out={}, i,j,k,m;
+  var dup={};
+  for(i=0;i<Pts.length;i++)for(j=i+1;j<Pts.length;j++){
+    if(dup[Pts[j].id]) continue;
+    if(Math.hypot(Pts[i].g.x-Pts[j].g.x,Pts[i].g.y-Pts[j].g.y)<tol){ dup[Pts[j].id]=1; out['same:'+Pts[i].label+','+Pts[j].label]=Pts[j].label+' coincides with '+Pts[i].label; }
+  }
+  Pts=Pts.filter(function(p){return !dup[p.id];});
+  for(i=0;i<Pts.length;i++)for(j=0;j<L.length;j++){
+    if(L[j].kind==='two'||onLineByConstruction(Pts[i],L[j])) continue;
+    if(distPL(Pts[i].g,L[j].g)<tol) out['onl:'+Pts[i].label+':'+L[j].id]=Pts[i].label+' lies on '+ln(L[j]);
+  }
+  for(i=0;i<Pts.length;i++)for(j=i+1;j<Pts.length;j++)for(k=j+1;k<Pts.length;k++){
+    var a=Pts[i],b=Pts[j],c=Pts[k];
     var cr=Math.abs((b.g.x-a.g.x)*(c.g.y-a.g.y)-(b.g.y-a.g.y)*(c.g.x-a.g.x))/Math.max(1,Math.hypot(b.g.x-a.g.x,b.g.y-a.g.y));
     if(cr<tol){
       var triv=[a,b,c].some(function(p){var pp=pointParents(p);return [a,b,c].filter(function(q){return q!==p;}).every(function(q){return pp.indexOf(q.id)>=0;});})
              || L.some(function(l){return onLineByConstruction(a,l)&&onLineByConstruction(b,l)&&onLineByConstruction(c,l);});
-      if(!triv) out['col:'+[a.label,b.label,c.label].join(', ')]=a.label+', '+b.label+', '+c.label+' are collinear';
+      if(!triv) out['col:'+[a.label,b.label,c.label].join(',')]=a.label+', '+b.label+', '+c.label+' are collinear';
     }
   }
   for(i=0;i<L.length;i++)for(j=i+1;j<L.length;j++)for(k=j+1;k<L.length;k++){
+    if(nearPar(L[i].g,L[j].g)||nearPar(L[j].g,L[k].g)||nearPar(L[i].g,L[k].g)) continue;
     var X=lineLine(L[i].g,L[j].g); if(!isFinite(X.x)) continue;
     if(distPL(X,L[k].g)<tol){
       var t3=objs.some(function(p){return p.type==='point'&&onLineByConstruction(p,L[i])&&onLineByConstruction(p,L[j])&&onLineByConstruction(p,L[k]);});
-      if(!t3) out['con:'+[i,j,k].join(',')]='lines '+ln(L[i])+', '+ln(L[j])+', '+ln(L[k])+' are concurrent';
+      if(!t3) out['con:'+[L[i].id,L[j].id,L[k].id].join(',')]='lines '+ln(L[i])+', '+ln(L[j])+', '+ln(L[k])+' are concurrent';
     }
   }
-  for(i=0;i<P.length;i++)for(j=i+1;j<P.length;j++)for(k=j+1;k<P.length;k++)for(m=k+1;m<P.length;m++){
-    var cc=circum(P[i].g,P[j].g,P[k].g); if(!isFinite(cc.r)||cc.r>D*20) continue;
-    if(Math.abs(Math.hypot(P[m].g.x-cc.cx,P[m].g.y-cc.cy)-cc.r)<tol)
-      out['cyc:'+[P[i].label,P[j].label,P[k].label,P[m].label].join(', ')]=[P[i].label,P[j].label,P[k].label,P[m].label].join(', ')+' are concyclic';
+  for(i=0;i<Pts.length;i++)for(j=i+1;j<Pts.length;j++)for(k=j+1;k<Pts.length;k++)for(m=k+1;m<Pts.length;m++){
+    var cc=circum(Pts[i].g,Pts[j].g,Pts[k].g); if(!isFinite(cc.r)||cc.r>D*20) continue;
+    if(Math.abs(Math.hypot(Pts[m].g.x-cc.cx,Pts[m].g.y-cc.cy)-cc.r)<tol){
+      var quad=[Pts[i],Pts[j],Pts[k],Pts[m]];
+      var trivc=C.some(function(circ){return quad.every(function(p){return onCircleByConstruction(p,circ);});});
+      if(!trivc) out['cyc:'+quad.map(function(p){return p.label;}).join(',')]=quad.map(function(p){return p.label;}).join(', ')+' are concyclic';
+    }
   }
-  for(i=0;i<P.length;i++)for(j=0;j<C.length;j++){
-    if(onCircleByConstruction(P[i],C[j])) continue;
-    if(Math.abs(Math.hypot(P[i].g.x-C[j].g.cx,P[i].g.y-C[j].g.cy)-C[j].g.r)<tol) out['onc:'+P[i].label+':'+C[j].id]=P[i].label+' lies on '+cn(C[j]);
+  for(i=0;i<Pts.length;i++)for(j=0;j<C.length;j++){
+    if(onCircleByConstruction(Pts[i],C[j])) continue;
+    if(Math.abs(Math.hypot(Pts[i].g.x-C[j].g.cx,Pts[i].g.y-C[j].g.cy)-C[j].g.r)<tol) out['onc:'+Pts[i].label+':'+C[j].id]=Pts[i].label+' lies on '+cn(C[j]);
   }
   for(i=0;i<L.length;i++)for(j=i+1;j<L.length;j++){
     var u=[L[i].g.x2-L[i].g.x1,L[i].g.y2-L[i].g.y1],v=[L[j].g.x2-L[j].g.x1,L[j].g.y2-L[j].g.y1];
     var nu=Math.hypot(u[0],u[1]),nv=Math.hypot(v[0],v[1]); if(nu<1||nv<1) continue;
     var cs=(u[0]*v[0]+u[1]*v[1])/(nu*nv), sn=(u[0]*v[1]-u[1]*v[0])/(nu*nv);
-    if(Math.abs(cs)<0.004&&!perpByConstruction(L[i],L[j])) out['perp:'+i+','+j]=ln(L[i])+' \u27C2 '+ln(L[j]);
-    if(Math.abs(sn)<0.004&&!(L[i].a===L[j].a||L[i].a===L[j].b||L[i].b===L[j].a||L[i].b===L[j].b)) out['par:'+i+','+j]=ln(L[i])+' \u2225 '+ln(L[j]);
-    var li=nu,lj=nv;
-    if(Math.abs(li-lj)<tol) out['eq:'+i+','+j]=ln(L[i])+' = '+ln(L[j]);
-    else if(Math.abs(li-2*lj)<tol) out['r2:'+i+','+j]=ln(L[i])+' = 2\u00B7'+ln(L[j]);
-    else if(Math.abs(lj-2*li)<tol) out['r2:'+j+','+i]=ln(L[j])+' = 2\u00B7'+ln(L[i]);
+    if(Math.abs(cs)<0.004&&!perpByConstruction(L[i],L[j])) out['perp:'+L[i].id+','+L[j].id]=ln(L[i])+' \u27C2 '+ln(L[j]);
+    if(Math.abs(sn)<0.004&&!parByConstruction(L[i],L[j])&&!(L[i].a===L[j].a||L[i].a===L[j].b||L[i].b===L[j].a||L[i].b===L[j].b)) out['par:'+L[i].id+','+L[j].id]=ln(L[i])+' \u2225 '+ln(L[j]);
+    if(L[i].kind==='two'&&L[j].kind==='two'){
+      if(Math.abs(nu-nv)<tol) out['eq:'+L[i].id+','+L[j].id]=ln(L[i])+' = '+ln(L[j]);
+      else if(Math.abs(nu-2*nv)<tol) out['r2:'+L[i].id+','+L[j].id]=ln(L[i])+' = 2\u00B7'+ln(L[j]);
+      else if(Math.abs(nv-2*nu)<tol) out['r2:'+L[j].id+','+L[i].id]=ln(L[j])+' = 2\u00B7'+ln(L[i]);
+    }
   }
   for(i=0;i<L.length;i++)for(j=0;j<C.length;j++){
-    if(Math.abs(distPL({x:C[j].g.cx,y:C[j].g.cy},L[i].g)-C[j].g.r)<tol) out['tan:'+i+','+C[j].id]=ln(L[i])+' is tangent to '+cn(C[j]);
+    if(tanByConstruction(L[i],C[j])) continue;
+    if(Math.abs(distPL({x:C[j].g.cx,y:C[j].g.cy},L[i].g)-C[j].g.r)<tol) out['tan:'+L[i].id+','+C[j].id]=ln(L[i])+' is tangent to '+cn(C[j]);
   }
   return out;
 }
-function ln(l){ return byId(l.a).label+byId(l.b).label; }
-function cn(c){ return c.kind==='cp'?'circle centre '+byId(c.c).label:'circle '+c.of.map(function(id){return byId(id).label;}).join('');}
-
 function perturbTest(){
   var free=objs.filter(function(o){return o.type==='point'&&o.kind==='free';});
+  compute(); var keep=Object.keys(relations());
   if(!free.length){ stableSet={}; return; }
   var saved=free.map(function(p){return [p.x,p.y];});
-  compute(); var keep=Object.keys(relations());
   var xs=free.map(function(p){return p.x;}),ys=free.map(function(p){return p.y;});
   var D=Math.max(60,Math.max.apply(null,xs)-Math.min.apply(null,xs),Math.max.apply(null,ys)-Math.min.apply(null,ys));
   for(var t=0;t<20&&keep.length;t++){
@@ -248,128 +358,190 @@ function perturbTest(){
   compute(); stableSet={}; keep.forEach(function(k){stableSet[k]=1;});
 }
 
-/* ---------------------------------------------------------------- draw */
 var svg=document.getElementById('cv');
-function clipLine(l){
+function clipLine(l,mode){
   var dx=l.x2-l.x1,dy=l.y2-l.y1,ts=[];
   if(Math.abs(dx)>1e-9){ ts.push((0-l.x1)/dx); ts.push((W-l.x1)/dx); }
   if(Math.abs(dy)>1e-9){ ts.push((0-l.y1)/dy); ts.push((H-l.y1)/dy); }
-  var pts=ts.map(function(t){return {x:l.x1+t*dx,y:l.y1+t*dy};}).filter(function(p){return p.x>-1&&p.x<W+1&&p.y>-1&&p.y<H+1;});
-  if(pts.length<2) return null; pts.sort(function(a,b){return (a.x-b.x)||(a.y-b.y);}); return [pts[0],pts[pts.length-1]];
+  ts=ts.filter(function(t){ var x=l.x1+t*dx,y=l.y1+t*dy; return x>-1&&x<W+1&&y>-1&&y<H+1; }).sort(function(a,b){return a-b;});
+  if(ts.length<2) return null;
+  var t0=ts[0],t1=ts[ts.length-1]; if(mode==='ray') t0=Math.max(0,t0);
+  return [{x:l.x1+t0*dx,y:l.y1+t0*dy},{x:l.x1+t1*dx,y:l.y1+t1*dy}];
 }
 function draw(){
-  compute();
-  var s='';
+  compute(); var s='';
   objs.forEach(function(o){ if(o.type!=='circle'||!isFinite(o.g.r)) return;
-    s+='<circle cx="'+o.g.cx+'" cy="'+o.g.cy+'" r="'+o.g.r+'" fill="none" stroke="#993C1D" stroke-width="1.3" opacity=".9" data-id="'+o.id+'"/>';
-    if(o.kind==='circum') s+='<circle cx="'+o.g.cx+'" cy="'+o.g.cy+'" r="2" fill="#993C1D" opacity=".6"/>';
+    s+='<circle cx="'+o.g.cx+'" cy="'+o.g.cy+'" r="'+o.g.r+'" fill="none" stroke="#993C1D" stroke-width="1.3" opacity=".9"/>';
+    if(o.kind!=='cp') s+='<circle cx="'+o.g.cx+'" cy="'+o.g.cy+'" r="2" fill="#993C1D" opacity=".6"/>';
   });
-  objs.forEach(function(o){ if(o.type!=='line') return; var c=clipLine(o.g);
-    if(c) s+='<line x1="'+c[0].x+'" y1="'+c[0].y+'" x2="'+c[1].x+'" y2="'+c[1].y+'" stroke="#1A2230" stroke-width="0.7" opacity=".45" data-id="'+o.id+'"/>';
-    s+='<line x1="'+o.g.x1+'" y1="'+o.g.y1+'" x2="'+o.g.x2+'" y2="'+o.g.y2+'" stroke="#1A2230" stroke-width="1.6" data-id="'+o.id+'"/>';
+  objs.forEach(function(o){ if(o.type!=='line'||!isFinite(o.g.x1)||!isFinite(o.g.x2)) return;
+    var sel=picks.indexOf(o.id)>=0, col=o.kind==='two'?'#1A2230':'#0F6E56';
+    if(o.kind==='two'){
+      if(o.style!=='segment'){ var c=clipLine(o.g,o.style); if(c) s+='<line x1="'+c[0].x+'" y1="'+c[0].y+'" x2="'+c[1].x+'" y2="'+c[1].y+'" stroke="'+col+'" stroke-width="'+(sel?1.6:0.7)+'" opacity=".45"/>'; }
+      s+='<line x1="'+o.g.x1+'" y1="'+o.g.y1+'" x2="'+o.g.x2+'" y2="'+o.g.y2+'" stroke="'+(sel?'#EF9F27':col)+'" stroke-width="1.6"/>';
+    } else { var c2=clipLine(o.g,'line'); if(c2) s+='<line x1="'+c2[0].x+'" y1="'+c2[0].y+'" x2="'+c2[1].x+'" y2="'+c2[1].y+'" stroke="'+(sel?'#EF9F27':col)+'" stroke-width="1.1" stroke-dasharray="6 3" opacity=".85"/>'; }
   });
-  objs.forEach(function(o){ if(o.type!=='point'||!isFinite(o.g.x)) return;
+  objs.forEach(function(o){ if(o.type!=='point'||o.hidden||!isFinite(o.g.x)) return;
     var sel=picks.indexOf(o.id)>=0;
-    if(o.kind==='free') s+='<circle class="pt" cx="'+o.g.x+'" cy="'+o.g.y+'" r="'+(sel?7:5)+'" fill="#1A2230" stroke="'+(sel?'#EF9F27':'#FBFAF6')+'" stroke-width="2" data-id="'+o.id+'" style="cursor:grab"/>';
-    else s+='<circle class="pt" cx="'+o.g.x+'" cy="'+o.g.y+'" r="'+(sel?6:4.5)+'" fill="#FBFAF6" stroke="'+(sel?'#EF9F27':'#534AB7')+'" stroke-width="2" data-id="'+o.id+'"/>';
+    if(o.kind==='free') s+='<circle cx="'+o.g.x+'" cy="'+o.g.y+'" r="'+(sel?7:5)+'" fill="#1A2230" stroke="'+(sel?'#EF9F27':'#FBFAF6')+'" stroke-width="2" style="cursor:grab"/>';
+    else s+='<circle cx="'+o.g.x+'" cy="'+o.g.y+'" r="'+(sel?6:4.5)+'" fill="#FBFAF6" stroke="'+(sel?'#EF9F27':'#534AB7')+'" stroke-width="2"/>';
     s+='<text x="'+(o.g.x+8)+'" y="'+(o.g.y-8)+'" font-family="IBM Plex Serif,serif" font-style="italic" font-size="15" fill="#1A2230">'+o.label+'</text>';
   });
-  svg.innerHTML=s;
-  renderRelations(); exportTex();
+  objs.forEach(function(o){ if(o.type!=='meas'||o.kind!=='angle') return; var a=P(o.of[0]),b=P(o.of[1]),c=P(o.of[2]);
+    var t1=Math.atan2(a.y-b.y,a.x-b.x),t2=Math.atan2(c.y-b.y,c.x-b.x),r=22,d=t2-t1; while(d<=-Math.PI)d+=2*Math.PI; while(d>Math.PI)d-=2*Math.PI;
+    var sw=d>0?1:0; s+='<path d="M'+(b.x+r*Math.cos(t1))+' '+(b.y+r*Math.sin(t1))+' A'+r+' '+r+' 0 0 '+sw+' '+(b.x+r*Math.cos(t2))+' '+(b.y+r*Math.sin(t2))+'" fill="none" stroke="#EF9F27" stroke-width="1.2"/>';
+  });
+  svg.innerHTML=s; renderRelations(); renderMeas(); exportTex();
 }
 function renderRelations(){
-  var now=relations(), st=document.getElementById('stable'), mb=document.getElementById('maybe');
-  var a='',b='';
-  Object.keys(now).forEach(function(k){
-    if(stableSet&&stableSet[k]) a+='<div class="rel stable">'+now[k]+'</div>';
-    else b+='<div class="rel maybe">'+now[k]+'</div>';
+  var now=relations(),a='',b='';
+  Object.keys(now).forEach(function(k){ if(stableSet&&stableSet[k]) a+='<div class="rel stable">'+now[k]+'</div>'; else b+='<div class="rel maybe">'+now[k]+'</div>'; });
+  document.getElementById('stable').innerHTML=a||'<div class="empty">Nothing yet.</div>';
+  document.getElementById('maybe').innerHTML=b||'<div class="empty">Nothing yet.</div>';
+}
+function renderMeas(){
+  var s='';
+  objs.forEach(function(o){ if(o.type!=='meas') return;
+    if(o.kind==='dist'){ var a=P(o.of[0]),b=P(o.of[1]); s+='<div class="rel meas">'+byId(o.of[0]).label+byId(o.of[1]).label+' = '+(Math.hypot(a.x-b.x,a.y-b.y)/60).toFixed(3)+'</div>'; }
+    else { var A=P(o.of[0]),B=P(o.of[1]),C=P(o.of[2]); var u=[A.x-B.x,A.y-B.y],v=[C.x-B.x,C.y-B.y]; var ang=Math.acos(Math.max(-1,Math.min(1,(u[0]*v[0]+u[1]*v[1])/(Math.hypot(u[0],u[1])*Math.hypot(v[0],v[1])))))*180/Math.PI;
+      s+='<div class="rel meas">\u2220'+byId(o.of[0]).label+byId(o.of[1]).label+byId(o.of[2]).label+' = '+ang.toFixed(2)+'\u00B0</div>'; }
   });
-  st.innerHTML=a||'<div class="empty">Nothing yet.</div>'; mb.innerHTML=b||'<div class="empty">Nothing yet.</div>';
+  document.getElementById('meas').innerHTML=s||'<div class="empty">Use the measure tools.</div>';
 }
 
-/* -------------------------------------------------------------- export */
 function exportTex(){
-  var sc=60, lines=['\\begin{tikzpicture}[scale=1]'];
-  var fx=function(v){return (v/sc).toFixed(2);}, fy=function(v){return ((H-v)/sc).toFixed(2);};
+  var sc=60,out=['\\begin{tikzpicture}[scale=1]'],done={};
+  var fx=function(v){return (v/sc).toFixed(2);},fy=function(v){return ((H-v)/sc).toFixed(2);};
+  var lab=function(id){var o=byId(id); return o.label||o.tk;};
+  var linePts=function(l){ return lab(l.a)+','+lab(l.b); };
+  var lineDash=function(l){ return lab(l.a)+'--'+lab(l.b); };
+  var circArgs=function(c){ if(c.kind==='cp') return {R:false,args:lab(c.c)+','+lab(c.t)}; if(c.kind==='circum') return {R:false,args:'O'+c.id+','+lab(c.of[0])}; return {R:true,args:'I'+c.id+',\\rIn'+c.id+' pt'}; };
   objs.forEach(function(o){
-    if(o.type==='point'){
-      if(o.kind==='free') lines.push('\\tkzDefPoint('+fx(o.x)+','+fy(o.y)+'){'+o.label+'}');
-      else if(o.kind==='mid') lines.push('\\tkzDefMidPoint('+byId(o.of[0]).label+','+byId(o.of[1]).label+') \\tkzGetPoint{'+o.label+'}');
-      else if(o.kind==='inter'){ var l1=byId(o.of[0]),l2=byId(o.of[1]); lines.push('\\tkzInterLL('+ln(l1).split('').join(',')+')('+ln(l2).split('').join(',')+') \\tkzGetPoint{'+o.label+'}'); }
-      else if(o.kind==='foot'){ var l=byId(o.of[1]); lines.push('\\tkzDefPointBy[projection=onto '+byId(l.a).label+'--'+byId(l.b).label+']('+byId(o.of[0]).label+') \\tkzGetPoint{'+o.label+'}'); }
-    } else if(o.type==='circle'&&o.kind==='circum'){
-      lines.push('\\tkzDefCircle[circum]('+o.of.map(function(id){return byId(id).label;}).join(',')+') \\tkzGetPoint{O'+o.id+'}');
-    }
+    if(o.type==='point'&&!o.hidden){
+      switch(o.kind){
+        case 'free': out.push('\\tkzDefPoint('+fx(o.x)+','+fy(o.y)+'){'+o.label+'}'); break;
+        case 'mid': out.push('\\tkzDefMidPoint('+lab(o.of[0])+','+lab(o.of[1])+') \\tkzGetPoint{'+o.label+'}'); break;
+        case 'inter': out.push('\\tkzInterLL('+linePts(byId(o.of[0]))+')('+linePts(byId(o.of[1]))+') \\tkzGetPoint{'+o.label+'}'); break;
+        case 'foot': out.push('\\tkzDefPointBy[projection=onto '+lineDash(byId(o.of[1]))+']('+lab(o.of[0])+') \\tkzGetPoint{'+o.label+'}'); break;
+        case 'refl': out.push('\\tkzDefPointBy[reflection=over '+lineDash(byId(o.of[1]))+']('+lab(o.of[0])+') \\tkzGetPoint{'+o.label+'}'); break;
+        case 'reflp': out.push('\\tkzDefPointBy[symmetry=center '+lab(o.of[1])+']('+lab(o.of[0])+') \\tkzGetPoint{'+o.label+'}'); break;
+        case 'inc': out.push('\\tkzDefTriangleCenter[in]('+o.of.map(lab).join(',')+') \\tkzGetPoint{'+o.label+'}'); break;
+        case 'ccen': out.push('\\tkzDefTriangleCenter[circum]('+o.of.map(lab).join(',')+') \\tkzGetPoint{'+o.label+'}'); break;
+        case 'cent': out.push('\\tkzDefTriangleCenter[centroid]('+o.of.map(lab).join(',')+') \\tkzGetPoint{'+o.label+'}'); break;
+        case 'orth': out.push('\\tkzDefTriangleCenter[ortho]('+o.of.map(lab).join(',')+') \\tkzGetPoint{'+o.label+'}'); break;
+        case 'ilc': { var key='ilc'+o.of.join('-'); if(!done[key]){ var pair=objs.filter(function(q){return q.kind==='ilc'&&q.of[0]===o.of[0]&&q.of[1]===o.of[1];}); var ca=circArgs(byId(o.of[1]));
+            out.push('\\tkzInterLC'+(ca.R?'[R]':'')+'('+linePts(byId(o.of[0]))+')('+ca.args+') \\tkzGetPoints{'+(pair[0]?pair[0].label:'tmp1')+'}{'+(pair[1]?pair[1].label:'tmp2')+'}'); done[key]=1; } break; }
+        case 'icc': { var key2='icc'+o.of.join('-'); if(!done[key2]){ var pair2=objs.filter(function(q){return q.kind==='icc'&&q.of[0]===o.of[0]&&q.of[1]===o.of[1];}); var c1=circArgs(byId(o.of[0])),c2=circArgs(byId(o.of[1]));
+            out.push('\\tkzInterCC'+((c1.R||c2.R)?'[R]':'')+'('+c1.args+')('+c2.args+') \\tkzGetPoints{'+(pair2[0]?pair2[0].label:'tmp1')+'}{'+(pair2[1]?pair2[1].label:'tmp2')+'}'); done[key2]=1; } break; }
+      }
+    } else if(o.type==='line'&&o.kind!=='two'){
+      var A=byId(o.a),B=byId(o.b);
+      switch(o.kind){
+        case 'pbis': out.push('\\tkzDefLine[mediator]('+lab(o.of[0])+','+lab(o.of[1])+') \\tkzGetPoints{'+A.tk+'}{'+B.tk+'}'); break;
+        case 'perp': out.push('\\tkzDefLine[perpendicular=through '+lab(o.of[0])+']('+linePts(byId(o.of[1]))+') \\tkzGetPoint{'+B.tk+'}'); break;
+        case 'par': out.push('\\tkzDefLine[parallel=through '+lab(o.of[0])+']('+linePts(byId(o.of[1]))+') \\tkzGetPoint{'+B.tk+'}'); break;
+        case 'abis': out.push('\\tkzDefLine[bisector]('+o.of.map(lab).join(',')+') \\tkzGetPoint{'+B.tk+'}'); break;
+        case 'tan': { var key3='tan'+o.of[0]+'-'+o.of[1]; if(!done[key3]){ var both=objs.filter(function(q){return q.type==='line'&&q.kind==='tan'&&q.of[0]===o.of[0]&&q.of[1]===o.of[1];}); var cc=circArgs(byId(o.of[1]));
+            out.push('\\tkzTangent[from'+(cc.R?' with R':'')+'='+lab(o.of[0])+']('+cc.args+') \\tkzGetPoints{'+(both[0]?lab(both[0].b):'t1')+'}{'+(both[1]?lab(both[1].b):'t2')+'}'); done[key3]=1; } break; }
+      }
+    } else if(o.type==='circle'&&o.kind==='circum'){ out.push('\\tkzDefCircle[circum]('+o.of.map(lab).join(',')+') \\tkzGetPoint{O'+o.id+'}'); }
+    else if(o.type==='circle'&&o.kind==='inc'){ out.push('\\tkzDefCircle[in]('+o.of.map(lab).join(',')+') \\tkzGetPoint{I'+o.id+'} \\tkzGetLength{rIn'+o.id+'}'); }
   });
-  var segs=objs.filter(function(o){return o.type==='line';}).map(function(o){return byId(o.a).label+','+byId(o.b).label;});
-  if(segs.length) lines.push('\\tkzDrawLines[add=0.2 and 0.2]('+segs.join(' ')+')');
+  var segs=[],lines=[],rays=[];
+  objs.forEach(function(o){ if(o.type!=='line') return; var pp=linePts(o);
+    if(o.kind!=='two') lines.push(pp); else if(o.style==='segment') segs.push(pp); else if(o.style==='ray') rays.push(pp); else lines.push(pp); });
+  if(segs.length) out.push('\\tkzDrawSegments('+segs.join(' ')+')');
+  if(lines.length) out.push('\\tkzDrawLines[add=0.3 and 0.3]('+lines.join(' ')+')');
+  if(rays.length) out.push('\\tkzDrawLines[add=0 and 0.6]('+rays.join(' ')+')');
   objs.forEach(function(o){ if(o.type!=='circle') return;
-    if(o.kind==='cp') lines.push('\\tkzDrawCircle('+byId(o.c).label+','+byId(o.t).label+')');
-    else lines.push('\\tkzDrawCircle(O'+o.id+','+byId(o.of[0]).label+')');
+    if(o.kind==='cp') out.push('\\tkzDrawCircle('+lab(o.c)+','+lab(o.t)+')');
+    else if(o.kind==='circum') out.push('\\tkzDrawCircle(O'+o.id+','+lab(o.of[0])+')');
+    else out.push('\\tkzDrawCircle[R](I'+o.id+',\\rIn'+o.id+' pt)');
   });
-  var pts=objs.filter(function(o){return o.type==='point';}).map(function(o){return o.label;});
-  if(pts.length){ lines.push('\\tkzDrawPoints('+pts.join(',')+')'); lines.push('\\tkzLabelPoints('+pts.join(',')+')'); }
-  lines.push('\\end{tikzpicture}');
-  document.getElementById('tex').value=lines.join('\n');
+  objs.forEach(function(o){ if(o.type==='meas'&&o.kind==='angle') out.push('\\tkzMarkAngle[size=0.5]('+o.of.map(lab).join(',')+')'); });
+  var pts=objs.filter(function(o){return o.type==='point'&&!o.hidden;}).map(function(o){return o.label;});
+  if(pts.length){ out.push('\\tkzDrawPoints('+pts.join(',')+')'); out.push('\\tkzLabelPoints('+pts.join(',')+')'); }
+  out.push('\\end{tikzpicture}');
+  document.getElementById('tex').value=out.join('\n');
 }
 
-/* ------------------------------------------------------------ interact */
 function setStatus(t){ document.getElementById('status').textContent=t; }
 function renderTools(){
   var el=document.getElementById('tools'); el.innerHTML='';
-  TOOLS.forEach(function(t){ var b=document.createElement('button'); b.className='tool'+(tool===t.id?' on':''); b.innerHTML=t.name+'<small>'+t.sub+'</small>';
-    b.addEventListener('click',function(){tool=t.id;picks=[];renderTools();draw();setStatus(t.id==='point'?'Click empty space to place a point.':t.id==='move'?'Drag a filled point.':'Pick: '+t.sub+'.');});
-    el.appendChild(b); if(t.id==='foot') el.appendChild(document.createElement('hr')); });
+  TOOLS.forEach(function(t){
+    if(t.h!==undefined){ var h=document.createElement('h4'); h.textContent=t.h; el.appendChild(h); return; }
+    var b=document.createElement('button'); b.className='tool'+(tool===t.id?' on':''); b.innerHTML=t.name+'<small>'+t.sub+'</small>';
+    b.addEventListener('click',function(){tool=t.id;picks=[];renderTools();draw();setStatus(t.id==='point'?'Click empty space to place a point.':t.id==='move'?'Drag a filled point.':t.name+': '+t.sub+'.');});
+    el.appendChild(b);
+  });
 }
 function svgPoint(e){ var r=svg.getBoundingClientRect(); return {x:(e.clientX-r.left)*W/r.width,y:(e.clientY-r.top)*H/r.height}; }
-function hitPoint(pt){ var best=null,bd=12; objs.forEach(function(o){ if(o.type!=='point'||!isFinite(o.g.x)) return; var d=Math.hypot(o.g.x-pt.x,o.g.y-pt.y); if(d<bd){bd=d;best=o;} }); return best; }
-function hitLine(pt){ var best=null,bd=7; objs.forEach(function(o){ if(o.type!=='line') return; var d=distPL(pt,o.g); if(d<bd){bd=d;best=o;} }); return best; }
-function addObj(o){ o.id=objs.length+1; objs.push(o); picks=[]; stableSet=null; draw(); perturbTest(); renderRelations(); }
-
+function hitPoint(pt){ var best=null,bd=12; objs.forEach(function(o){ if(o.type!=='point'||o.hidden||!isFinite(o.g.x)) return; var d=Math.hypot(o.g.x-pt.x,o.g.y-pt.y); if(d<bd){bd=d;best=o;} }); return best; }
+function hitLine(pt){ var best=null,bd=7; objs.forEach(function(o){ if(o.type!=='line'||!isFinite(o.g.x1)) return; var d=distPL(pt,o.g); if(d<bd){bd=d;best=o;} }); return best; }
+function hitCircle(pt){ var best=null,bd=8; objs.forEach(function(o){ if(o.type!=='circle'||!isFinite(o.g.r)) return; var d=Math.abs(Math.hypot(o.g.cx-pt.x,o.g.cy-pt.y)-o.g.r); if(d<bd){bd=d;best=o;} }); return best; }
+function add(o){ o.id=nextId++; objs.push(o); return o; }
+function finish(n){ groups.push(n); picks=[]; stableSet=null; draw(); perturbTest(); renderRelations(); }
+function construct(kind,p){
+  var n=objs.length, o, aux, aux2;
+  switch(kind){
+    case 'seg': case 'ray': case 'line': add({type:'line',kind:'two',style:kind==='seg'?'segment':kind,a:p[0],b:p[1]}); break;
+    case 'circle': add({type:'circle',kind:'cp',c:p[0],t:p[1]}); break;
+    case 'circum': add({type:'circle',kind:'circum',of:p}); break;
+    case 'incircle': add({type:'circle',kind:'inc',of:p}); break;
+    case 'mid': case 'inter': case 'foot': case 'refl': case 'reflp': case 'inc': case 'ccen': case 'cent': case 'orth':
+      add({type:'point',kind:kind,of:p,label:nextLabel()}); break;
+    case 'ilc': add({type:'point',kind:'ilc',of:p,idx:0,label:nextLabel()}); add({type:'point',kind:'ilc',of:p,idx:1,label:nextLabel()}); break;
+    case 'icc': add({type:'point',kind:'icc',of:p,idx:0,label:nextLabel()}); add({type:'point',kind:'icc',of:p,idx:1,label:nextLabel()}); break;
+    case 'pbis': aux=add({type:'point',kind:'mid',of:p,hidden:true}); aux2=add({type:'point',kind:'rot90',of:[p[0],aux.id],hidden:true});
+      o=add({type:'line',kind:'pbis',of:p,a:aux.id,b:aux2.id,label:'pb('+byId(p[0]).label+byId(p[1]).label+')'}); aux.tk='m'+o.id+'a'; aux2.tk='m'+o.id+'b'; break;
+    case 'perp': aux=add({type:'point',kind:'perpdir',of:p,hidden:true}); o=add({type:'line',kind:'perp',of:p,a:p[0],b:aux.id,label:'\u27C2 through '+byId(p[0]).label}); aux.tk='q'+o.id; break;
+    case 'par': aux=add({type:'point',kind:'pardir',of:p,hidden:true}); o=add({type:'line',kind:'par',of:p,a:p[0],b:aux.id,label:'\u2225 through '+byId(p[0]).label}); aux.tk='q'+o.id; break;
+    case 'abis': aux=add({type:'point',kind:'bisdir',of:p,hidden:true}); o=add({type:'line',kind:'abis',of:p,a:p[1],b:aux.id,label:'bis('+p.map(function(id){return byId(id).label;}).join('')+')'}); aux.tk='bs'+o.id; break;
+    case 'tan': for(var i=0;i<2;i++){ aux=add({type:'point',kind:'tanpt',of:p,idx:i,label:nextLabel()}); add({type:'line',kind:'tan',of:p,a:p[0],b:aux.id,label:byId(p[0]).label+aux.label}); } break;
+    case 'dist': add({type:'meas',kind:'dist',of:p}); break;
+    case 'angle': add({type:'meas',kind:'angle',of:p}); break;
+  }
+  finish(objs.length-n);
+}
 svg.addEventListener('pointerdown',function(e){
   var pt=svgPoint(e), T=TOOLS.filter(function(t){return t.id===tool;})[0];
   if(tool==='move'||tool==='point'){
     var hp=hitPoint(pt);
     if(hp&&hp.kind==='free'){ drag=hp; svg.setPointerCapture(e.pointerId); return; }
-    if(tool==='point'&&!hp){ addObj({type:'point',kind:'free',x:pt.x,y:pt.y,label:nextLabel()}); setStatus('Placed '+objs[objs.length-1].label+'.'); }
+    if(tool==='point'&&!hp){ add({type:'point',kind:'free',x:pt.x,y:pt.y,label:nextLabel()}); finish(1); setStatus('Placed '+objs[objs.length-1].label+'.'); }
     return;
   }
-  var want=T.need[picks.length], got=(want==='point')?hitPoint(pt):hitLine(pt);
+  var want=T.need[picks.length], got=want==='point'?hitPoint(pt):want==='line'?hitLine(pt):hitCircle(pt);
   if(!got){ setStatus('Click a '+want+'.'); return; }
-  if(picks.indexOf(got.id)>=0) return;
+  if(picks.indexOf(got.id)>=0&&!(tool==='abis'||tool==='angle')) return;
   picks.push(got.id); draw();
   if(picks.length<T.need.length){ setStatus('Now pick a '+T.need[picks.length]+'.'); return; }
-  var p=picks.slice(), o;
-  if(tool==='line') o={type:'line',a:p[0],b:p[1]};
-  else if(tool==='circle') o={type:'circle',kind:'cp',c:p[0],t:p[1]};
-  else if(tool==='circum') o={type:'circle',kind:'circum',of:p};
-  else if(tool==='mid') o={type:'point',kind:'mid',of:p,label:nextLabel()};
-  else if(tool==='inter') o={type:'point',kind:'inter',of:p,label:nextLabel()};
-  else if(tool==='foot') o={type:'point',kind:'foot',of:p,label:nextLabel()};
-  addObj(o); setStatus('Added. Drag a free point to see what holds.');
+  construct(tool,picks.slice()); setStatus('Added. Drag a free point to see what holds.');
 });
 svg.addEventListener('pointermove',function(e){ if(!drag) return; var pt=svgPoint(e); drag.x=Math.max(6,Math.min(W-6,pt.x)); drag.y=Math.max(6,Math.min(H-6,pt.y)); draw(); });
 svg.addEventListener('pointerup',function(){ if(drag){ drag=null; perturbTest(); renderRelations(); } });
-document.getElementById('undo').addEventListener('click',function(){ if(!objs.length) return; var o=objs.pop(); if(o.type==='point') labels--; picks=[]; stableSet=null; draw(); perturbTest(); renderRelations(); });
-document.getElementById('clear').addEventListener('click',function(){ objs=[]; labels=0; picks=[]; stableSet=null; draw(); });
+document.getElementById('undo').addEventListener('click',function(){ if(!groups.length) return; var n=groups.pop(); for(var i=0;i<n;i++){ var o=objs.pop(); if(o.type==='point'&&!o.hidden) labels--; } picks=[]; stableSet=null; draw(); perturbTest(); renderRelations(); });
+document.getElementById('clear').addEventListener('click',function(){ objs=[]; labels=0; picks=[]; groups=[]; stableSet=null; nextId=1; draw(); });
 document.getElementById('test').addEventListener('click',function(){ perturbTest(); renderRelations(); setStatus('Tested against 20 perturbations.'); });
 document.getElementById('copy').addEventListener('click',function(){ var t=document.getElementById('tex'); t.select(); try{ navigator.clipboard.writeText(t.value); document.getElementById('copied').textContent='Copied.'; }catch(e){ document.execCommand('copy'); } setTimeout(function(){document.getElementById('copied').textContent='';},1500); });
-document.getElementById('demo').addEventListener('click',function(){
-  objs=[]; labels=0; picks=[]; stableSet=null;
-  addObj({type:'point',kind:'free',x:150,y:400,label:nextLabel()});
-  addObj({type:'point',kind:'free',x:560,y:420,label:nextLabel()});
-  addObj({type:'point',kind:'free',x:330,y:110,label:nextLabel()});
-  addObj({type:'line',a:1,b:2}); addObj({type:'line',a:2,b:3}); addObj({type:'line',a:3,b:1});
-  addObj({type:'point',kind:'foot',of:[3,4],label:nextLabel()});
-  addObj({type:'point',kind:'foot',of:[1,5],label:nextLabel()});
-  addObj({type:'line',a:3,b:7}); addObj({type:'line',a:1,b:8});
-  addObj({type:'point',kind:'inter',of:[9,10],label:nextLabel()});
-  addObj({type:'point',kind:'foot',of:[2,6],label:nextLabel()});
-  addObj({type:'line',a:2,b:12});
-  addObj({type:'circle',kind:'circum',of:[7,8,12]});
-  addObj({type:'point',kind:'mid',of:[1,2],label:nextLabel()});
-  setStatus('Three altitudes, their common point, the circle through the feet, and a midpoint. Drag A, B or C.');
-});
+
+function reset(){ objs=[]; labels=0; picks=[]; groups=[]; stableSet=null; nextId=1; }
+function tri(){ reset();
+  add({type:'point',kind:'free',x:150,y:400,label:nextLabel()}); add({type:'point',kind:'free',x:560,y:420,label:nextLabel()}); add({type:'point',kind:'free',x:330,y:110,label:nextLabel()}); groups.push(1,1,1);
+  construct('seg',[1,2]); construct('seg',[2,3]); construct('seg',[3,1]); }
+var DEMOS={
+  ortho:function(){ tri(); construct('foot',[3,4]); construct('foot',[1,5]); construct('foot',[2,6]); construct('seg',[3,7]); construct('seg',[1,8]); construct('seg',[2,9]); construct('inter',[10,11]); construct('circum',[7,8,9]); construct('mid',[1,2]);
+    setStatus('Three altitudes, their common point, the circle through the feet, and a midpoint. Drag A, B or C.'); },
+  euler:function(){ tri(); construct('ccen',[1,2,3]); construct('cent',[1,2,3]); construct('orth',[1,2,3]); construct('seg',[7,8]); construct('seg',[8,9]);
+    setStatus('Circumcentre O, centroid G, orthocentre H. The panel reports the collinearity and the 2:1 ratio.'); },
+  incircle:function(){ tri(); construct('abis',[2,1,3]); construct('abis',[1,2,3]); construct('abis',[1,3,2]); construct('incircle',[1,2,3]); construct('inc',[1,2,3]); construct('foot',[14,4]); construct('foot',[14,5]); construct('seg',[15,16]);
+    setStatus('Angle bisectors, incircle, and two feet from the incentre. The feet land on the incircle; that is reported because it was not built in.'); },
+  tangents:function(){ reset();
+    add({type:'point',kind:'free',x:330,y:280,label:nextLabel()}); add({type:'point',kind:'free',x:430,y:300,label:nextLabel()}); add({type:'point',kind:'free',x:620,y:120,label:nextLabel()}); groups.push(1,1,1);
+    construct('circle',[1,2]); construct('tan',[3,4]); construct('seg',[5,7]); construct('seg',[1,3]);
+    setStatus('Tangents from C, with the chord of contact DE and the segment to the centre. Drag C.'); }
+};
+document.getElementById('demo').addEventListener('change',function(e){ var k=e.target.value; if(k&&DEMOS[k]) DEMOS[k](); e.target.value=''; });
 renderTools(); draw();
 </script>
 </body>
