@@ -99,22 +99,24 @@
         <h2 style="margin:0 0 .3rem;font-size:1.1rem">Interviewer</h2>
         <label>Mode
           <select id="mode">
-            <option value="self">Self-guided: timer, staged parts, written nudges, self-marking</option>
-            <option value="ai">AI interviewer: type your reasoning, get probed, receive a marked report</option>
+            <option value="free">AI interviewer, free (no sign-up, no key)</option>
+            <option value="self">Self-guided (timer and written nudges, no AI)</option>
+            <option value="own">AI interviewer with your own API key (no daily limit)</option>
           </select>
         </label>
-        <div id="aiopts" class="hidden">
-          <label>Your Anthropic API key <small>(stays in this browser only; sent directly to api.anthropic.com, never to this site)</small>
+        <p id="freenote" style="font-size:.88rem;color:var(--faint);margin:.6rem 0 0">Free interviews are paid for by this site and capped each day so the budget lasts. If you hit the cap, switch to self-guided or use your own key.</p>
+        <div id="ownopts" class="hidden">
+          <label>Anthropic API key <small>(kept in this browser only, sent straight to api.anthropic.com, never to this site)</small>
             <input type="password" id="apikey" placeholder="sk-ant-..." style="width:100%;max-width:32rem">
-          </label>
-          <label>Or a proxy URL, if the site owner has set one up <small>(leave blank to use your key)</small>
-            <input type="text" id="proxy" placeholder="https://..." style="width:100%;max-width:32rem">
           </label>
           <label>Model
             <input type="text" id="model" value="claude-sonnet-5" style="width:16rem">
           </label>
-          <p style="font-size:.88rem;color:var(--faint);margin:.6rem 0 0">The interviewer never gives answers. It asks you to justify claims, gives the smallest possible nudge when you ask, and moves you on only when you have earned it. A full interview costs a few cents on your key.</p>
+          <label>Custom proxy URL <small>(optional; overrides the key field)</small>
+            <input type="text" id="proxy" placeholder="https://..." style="width:100%;max-width:32rem">
+          </label>
         </div>
+        <p style="font-size:.88rem;color:var(--faint);margin:.7rem 0 0">Whichever mode you pick, the interviewer never gives answers. It asks you to justify what you claim, gives the smallest possible nudge when you ask for one, and moves you on only when you have earned it.</p>
         <div class="row"><button class="btn2 quiet" id="savecfg">Save settings</button><span id="cfgmsg" class="tally"></span></div>
       </div>
 
@@ -238,7 +240,11 @@ var PROBLEMS = [
 ];
 
 /* ================================================================ STATE  */
-var cfg = {mode:"self", apikey:"", proxy:"", model:"claude-sonnet-5"};
+/* Paste your deployed Cloudflare Worker URL here to switch the free mode on.
+   Leave it empty and the page quietly falls back to self-guided.            */
+var FREE_PROXY = "";
+
+var cfg = {mode:"free", apikey:"", proxy:"", model:"claude-sonnet-5"};
 var st = null; // live interview state
 
 function loadCfg(){ try{ var c = JSON.parse(localStorage.getItem('hu_iv_cfg')||'null'); if(c) cfg = Object.assign(cfg,c);}catch(e){} }
@@ -254,7 +260,7 @@ function renderHub(){
   document.getElementById('apikey').value = cfg.apikey;
   document.getElementById('proxy').value = cfg.proxy;
   document.getElementById('model').value = cfg.model;
-  document.getElementById('aiopts').classList.toggle('hidden', cfg.mode !== 'ai');
+  applyModeUI(cfg.mode);
   var pl = document.getElementById('plist'); pl.innerHTML = '';
   PROBLEMS.forEach(function(p){
     var d = document.createElement('div'); d.className='prob';
@@ -268,26 +274,57 @@ function renderHub(){
   var rows = h.map(function(x){ return '<tr><td>'+esc(x.date)+'</td><td>'+esc(x.title)+'</td><td>'+esc(x.mode)+'</td><td>'+esc(x.parts)+'/5</td><td>'+esc(x.nudges)+'</td><td>'+(x.score==null?'&ndash;':esc(x.score)+'/10')+'</td></tr>'; }).join('');
   r.innerHTML = '<h2 style="font-size:1.1rem">Your record</h2><table><tr><th>Date</th><th>Problem</th><th>Mode</th><th>Parts</th><th>Nudges</th><th>Score</th></tr>'+rows+'</table>';
 }
-document.getElementById('mode').addEventListener('change', function(e){ document.getElementById('aiopts').classList.toggle('hidden', e.target.value !== 'ai'); });
+function applyModeUI(m){
+  document.getElementById('ownopts').classList.toggle('hidden', m !== 'own');
+  var fn = document.getElementById('freenote');
+  fn.classList.toggle('hidden', m !== 'free');
+  if(m === 'free' && !FREE_PROXY){
+    fn.classList.remove('hidden');
+    fn.innerHTML = 'The free interviewer is not switched on for this site yet, so this mode will run self-guided. Use your own key for the full conversation.';
+  }
+}
+document.getElementById('mode').addEventListener('change', function(e){ applyModeUI(e.target.value); });
 document.getElementById('savecfg').addEventListener('click', function(){
   cfg.mode = document.getElementById('mode').value;
   cfg.apikey = document.getElementById('apikey').value.trim();
   cfg.proxy = document.getElementById('proxy').value.trim();
   cfg.model = document.getElementById('model').value.trim() || 'claude-sonnet-5';
+  applyModeUI(cfg.mode);
   saveCfg(); document.getElementById('cfgmsg').textContent = 'Saved.';
   setTimeout(function(){ document.getElementById('cfgmsg').textContent=''; }, 1500);
 });
 
 /* ================================================================ AI     */
-function aiAvailable(){ return cfg.mode==='ai' && (cfg.proxy || cfg.apikey); }
+function aiAvailable(){
+  if(cfg.mode === 'free') return !!FREE_PROXY;
+  if(cfg.mode === 'own') return !!(cfg.proxy || cfg.apikey);
+  return false;
+}
 
 async function callAI(system, messages, maxTokens){
   var body = {model:cfg.model, max_tokens:maxTokens||600, system:system, messages:messages};
   var url, headers = {'content-type':'application/json'};
-  if(cfg.proxy){ url = cfg.proxy; }
-  else { url = 'https://api.anthropic.com/v1/messages'; headers['x-api-key']=cfg.apikey; headers['anthropic-version']='2023-06-01'; headers['anthropic-dangerous-direct-browser-access']='true'; }
-  var res = await fetch(url,{method:'POST',headers:headers,body:JSON.stringify(body)});
-  if(!res.ok){ var t = await res.text(); throw new Error('API error '+res.status+': '+t.slice(0,200)); }
+  if(cfg.mode === 'free'){
+    url = FREE_PROXY;                      // the worker picks and pays for the model
+    delete body.model;
+  } else if(cfg.proxy){
+    url = cfg.proxy;
+  } else {
+    url = 'https://api.anthropic.com/v1/messages';
+    headers['x-api-key'] = cfg.apikey;
+    headers['anthropic-version'] = '2023-06-01';
+    headers['anthropic-dangerous-direct-browser-access'] = 'true';
+  }
+  var res = await fetch(url, {method:'POST', headers:headers, body:JSON.stringify(body)});
+  if(res.status === 429){
+    var msg = 'The free interviewer has reached its limit for now. Switch to self-guided in settings, or add your own key to carry on.';
+    try{ var j429 = await res.json(); if(j429 && j429.message) msg = j429.message; }catch(e){}
+    throw new Error(msg);
+  }
+  if(!res.ok){
+    var t = await res.text();
+    throw new Error('API error ' + res.status + ': ' + t.slice(0,200));
+  }
   var data = await res.json();
   return (data.content||[]).filter(function(b){return b.type==='text';}).map(function(b){return b.text;}).join('\n');
 }
@@ -343,6 +380,7 @@ function startInterview(p){
   document.getElementById('send').classList.toggle('hidden', !st.ai);
   inputEl.classList.toggle('hidden', !st.ai);
   noteEl.textContent = st.ai ? 'Say what you are trying before you try it. Silence is scored.' : 'Paper and pen. Speak every thought aloud, ideally recording yourself.';
+  if(!st.ai && cfg.mode !== 'self') sysMsg('Running self-guided: the AI interviewer is unavailable, so nudges below are written ones.');
   showPart(0);
   if(st.ai) sysMsg('The interviewer is listening. Begin with part (a) whenever you are ready.');
   st.tick = setInterval(function(){
@@ -395,7 +433,7 @@ async function converse(userText, isNudge){
     if(j.hinted){ st.nudges++; st.hintLevel[st.idx]=Math.min(st.hintLevel[st.idx]+1,q.hints.length); tallyEl.textContent='Nudges used: '+st.nudges; }
     if(j.advance && st.idx < st.p.parts.length-1){ st.idx++; showPart(st.idx); }
     else if(j.advance){ sysMsg('That was the last part. End the session when you are ready for the debrief.'); }
-  }catch(e){ errEl.textContent = e.message + ' (check the key or proxy URL in settings)'; }
+  }catch(e){ errEl.textContent = e.message; }
   busy.disabled=false;
 }
 document.getElementById('send').addEventListener('click', function(){
