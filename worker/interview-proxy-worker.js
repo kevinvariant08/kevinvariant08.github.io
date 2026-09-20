@@ -1,4 +1,8 @@
-// Cloudflare Worker: the free AI interviewer for the mock interview page.
+// Cloudflare Worker: the free AI interviewer for the mock interview page,
+// plus the anonymous score log used by results.html.
+//   POST /            chat (interviewer)         body: {system, messages, max_tokens}
+//   POST /score       log a score                body: {paper, score}
+//   GET  /stats       read a distribution        ?paper=setB-p1
 //
 // It holds the API key server-side, so visitors need no key and no sign-up.
 // It caps spending three ways: a per-visitor daily limit, a site-wide daily
@@ -31,13 +35,16 @@ const CONFIG = {
   maxChars: 24000,             // reject oversized payloads
 };
 
+const PAPERS = { "setA-p1": 20, "setA-p2": 20, "setB-p1": 20, "setB-p2": 20 }; // id -> max score
+const SCORES_PER_IP_PER_DAY = 8;
+
 const DAY = () => new Date().toISOString().slice(0, 10);
 
 function corsFor(origin) {
   const allowed = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
   return {
     "Access-Control-Allow-Origin": allowed,
-    "Access-Control-Allow-Methods": "POST, OPTIONS",
+    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
     "Access-Control-Allow-Headers": "content-type",
     "Vary": "Origin",
   };
@@ -115,8 +122,40 @@ export default {
     const cors = corsFor(origin);
 
     if (request.method === "OPTIONS") return new Response(null, { headers: cors });
+    const path = new URL(request.url).pathname;
+
+    // ---- score distribution (read) ----
+    if (request.method === "GET" && path === "/stats") {
+      const paper = new URL(request.url).searchParams.get("paper");
+      if (!PAPERS[paper]) return refuse(400, "Unknown paper.", cors);
+      const raw = await env.IV.get(`stats:${paper}`);
+      const counts = raw ? JSON.parse(raw) : new Array(PAPERS[paper] + 1).fill(0);
+      return new Response(JSON.stringify({ paper, counts }), { headers: { ...cors, "content-type": "application/json", "cache-control": "no-store" } });
+    }
+
     if (request.method !== "POST") return refuse(405, "POST only", cors);
-    if (!ALLOWED_ORIGINS.includes(origin)) return refuse(403, "This interviewer only serves the site it was built for.", cors);
+    if (!ALLOWED_ORIGINS.includes(origin)) return refuse(403, "This service only serves the site it was built for.", cors);
+
+    // ---- score log (write) ----
+    if (path === "/score") {
+      let sb;
+      try { sb = await request.json(); } catch { return refuse(400, "Malformed request.", cors); }
+      const max = PAPERS[sb.paper];
+      const s = Number(sb.score);
+      if (!max) return refuse(400, "Unknown paper.", cors);
+      if (!Number.isInteger(s) || s < 0 || s > max) return refuse(400, "Score out of range.", cors);
+      const ip = request.headers.get("CF-Connecting-IP") || "unknown";
+      if (!(await bump(env.IV, `sc:${ip}:${DAY()}`, SCORES_PER_IP_PER_DAY)))
+        return refuse(429, "That is enough scores for one day from this connection.", cors);
+      const key = `stats:${sb.paper}`;
+      const raw = await env.IV.get(key);
+      const counts = raw ? JSON.parse(raw) : new Array(max + 1).fill(0);
+      counts[s] = (counts[s] || 0) + 1;
+      await env.IV.put(key, JSON.stringify(counts));
+      return new Response(JSON.stringify({ ok: true, counts }), { headers: { ...cors, "content-type": "application/json" } });
+    }
+
+    // ---- interviewer chat ----
 
     let body;
     try {
