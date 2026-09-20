@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kevin Hu - Results</title>
+  <link rel="icon" href="/favicon.ico" sizes="32x32">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#1A2230">
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    .rs{--ink:#1A2230;--soft:#586374;--faint:#8A93A1;--rule:#D9D6CC;--paper:#FBFAF6;--you:#8C2F2F;--bar:#AFA9EC;--barhi:#534AB7;
+        --serif:"IBM Plex Serif",Georgia,serif;--sans:"IBM Plex Sans",system-ui,sans-serif;font-family:var(--sans);color:var(--ink);line-height:1.55}
+    .rs h2{font-family:var(--serif);font-weight:600}
+    .rs p{max-width:68ch}
+    .rs .lead{font-size:1.05rem;color:var(--soft)}
+    .rs .panel{border:1px solid var(--rule);padding:1rem 1.2rem;margin:1.4rem 0}
+    .rs label{display:block;font-size:.9rem;color:var(--soft);margin-top:.6rem}
+    .rs select,.rs input[type=number]{font-family:var(--sans);font-size:.95rem;padding:.45rem .6rem;border:1px solid var(--rule);border-radius:2px;background:#fff;color:var(--ink)}
+    .rs .btn2{font-family:var(--sans);font-size:.95rem;font-weight:500;color:var(--ink);background:transparent;border:1px solid var(--ink);border-radius:2px;padding:.5rem 1rem;cursor:pointer}
+    .rs .btn2:hover{background:var(--ink);color:#fff}
+    .rs .btn2[disabled]{opacity:.35;cursor:default}
+    .rs .row{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;margin-top:.9rem}
+    .rs .msg{font-size:.9rem;color:var(--faint)}
+    .rs .msg.err{color:var(--you)}
+    .rs .stats{display:flex;gap:2.2rem;flex-wrap:wrap;margin:1rem 0 .4rem}
+    .rs .stat .big{font-family:var(--serif);font-weight:600;font-size:2rem;line-height:1}
+    .rs .stat .lab{font-size:.82rem;color:var(--faint)}
+    .rs svg{display:block;width:100%;height:auto}
+    .rs .hist{margin-top:.6rem}
+    .rs .note{font-size:.86rem;color:var(--faint);margin-top:.8rem}
+    .rs .mine{margin-top:1.6rem;font-size:.92rem;color:var(--soft)}
+    .rs .mine table{border-collapse:collapse;margin-top:.4rem}
+    .rs .mine td,.rs .mine th{border-bottom:1px solid var(--rule);padding:.3rem .9rem .3rem 0;text-align:left;font-weight:400}
+    .rs .mine th{color:var(--faint)}
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="nav-links">
+      <a href="index.html">Mathematics</a>
+      <a href="music.html">Music &amp; Piano</a>
+      <a href="geometry.html">Geometry Lab</a>
+      <a href="sandbox.html">Sandbox</a>
+      <a href="interviews.html">Mock interviews</a>
+      <a href="techniques.html">Techniques</a>
+      <a href="results.html" aria-current="page">Results</a>
+    </div>
+  </nav>
+
+  <main class="container rs">
+    <h1>Results</h1>
+    <p class="lead">Sit a paper under timed conditions, mark it, and log the score here. Scores are anonymous and pooled, so you can see how a mark compares with everyone else who has sat the same paper rather than staring at a number out of twenty. The distributions also tell me which questions are landing where I intended.</p>
+
+    <div class="panel">
+      <label>Paper
+        <select id="paper"></select>
+      </label>
+      <div class="row">
+        <label style="margin:0">Your score <input type="number" id="score" min="0" max="20" step="1" style="width:5.5rem"> <span style="color:var(--faint)">/ 20</span></label>
+        <button class="btn2" id="submit">Log score</button>
+        <span class="msg" id="msg"></span>
+      </div>
+    </div>
+
+    <div id="dist"></div>
+
+    <div class="mine" id="mine"></div>
+  </main>
+
+<script>
+/* The worker URL that also powers the interviewer. Score routes: POST /score, GET /stats?paper=... */
+var BACKEND = "https://hu-interviewer.kevinvariant08.workers.dev";
+
+var PAPERS = [
+  {id:'setB-p1', name:'Set B Paper 1'},
+  {id:'setB-p2', name:'Set B Paper 2'},
+  {id:'setA-p1', name:'Set A Paper 1'},
+  {id:'setA-p2', name:'Set A Paper 2'}
+];
+var MAX = 20;
+
+function esc(s){return String(s).replace(/[&<>]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c];});}
+function loadMine(){ try{ return JSON.parse(localStorage.getItem('hu_scores')||'[]'); }catch(e){ return []; } }
+function saveMine(rec){ try{ var m=loadMine(); m.unshift(rec); localStorage.setItem('hu_scores',JSON.stringify(m.slice(0,100))); }catch(e){} }
+function paperName(id){ for(var i=0;i<PAPERS.length;i++) if(PAPERS[i].id===id) return PAPERS[i].name; return id; }
+
+var sel=document.getElementById('paper');
+PAPERS.forEach(function(p){ var o=document.createElement('option'); o.value=p.id; o.textContent=p.name; sel.appendChild(o); });
+
+function median(counts){ var n=counts.reduce(function(a,b){return a+b;},0); if(!n) return null; var half=n/2, acc=0; for(var s=0;s<counts.length;s++){ acc+=counts[s]; if(acc>=half) return s; } return counts.length-1; }
+function mean(counts){ var n=0,t=0; counts.forEach(function(c,s){n+=c;t+=c*s;}); return n?t/n:null; }
+function percentileBelow(counts,score){ var n=0,b=0; counts.forEach(function(c,s){ n+=c; if(s<score) b+=c; }); return n?Math.round(100*b/n):null; }
+
+function renderDist(paper, counts, mine){
+  var n=counts.reduce(function(a,b){return a+b;},0), box=document.getElementById('dist');
+  if(!n){ box.innerHTML='<p class="note">No scores logged for '+esc(paperName(paper))+' yet. Yours would be the first.</p>'; return; }
+  var md=median(counts), mn=mean(counts), mx=Math.max.apply(null,counts);
+  var W=680,H=220,pad=36,bw=(W-2*pad)/(MAX+1), svg='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Score distribution">';
+  counts.forEach(function(c,s){
+    var h=mx?(c/mx)*(H-70):0, x=pad+s*bw, y=H-40-h, hi=(mine!=null&&s===mine);
+    svg+='<rect x="'+(x+2)+'" y="'+y+'" width="'+(bw-4)+'" height="'+h+'" fill="'+(hi?'#534AB7':'#AFA9EC')+'"/>';
+    if(c) svg+='<text x="'+(x+bw/2)+'" y="'+(y-5)+'" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#8A93A1">'+c+'</text>';
+    svg+='<text x="'+(x+bw/2)+'" y="'+(H-22)+'" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="'+(hi?'#534AB7':'#586374')+'">'+s+'</text>';
+  });
+  if(md!=null){ var mxp=pad+md*bw+bw/2; svg+='<line x1="'+mxp+'" y1="20" x2="'+mxp+'" y2="'+(H-40)+'" stroke="#8C2F2F" stroke-width="1" stroke-dasharray="4 3"/><text x="'+(mxp+5)+'" y="18" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#8C2F2F">median</text>'; }
+  svg+='<line x1="'+pad+'" y1="'+(H-40)+'" x2="'+(W-pad)+'" y2="'+(H-40)+'" stroke="#D9D6CC"/></svg>';
+  var pc = mine!=null ? percentileBelow(counts,mine) : null;
+  box.innerHTML='<h2 style="font-size:1.15rem;margin:1.4rem 0 .2rem">'+esc(paperName(paper))+'</h2>'
+    +'<div class="stats"><div class="stat"><div class="big">'+n+'</div><div class="lab">scores logged</div></div>'
+    +'<div class="stat"><div class="big">'+md+'</div><div class="lab">median</div></div>'
+    +'<div class="stat"><div class="big">'+mn.toFixed(1)+'</div><div class="lab">mean</div></div>'
+    +(pc!=null?'<div class="stat"><div class="big">'+pc+'%</div><div class="lab">scored below your '+mine+'</div></div>':'')
+    +'</div><div class="hist">'+svg+'</div>'
+    +'<p class="note">Bars show how many people logged each score. The dashed line is the median. Your most recent score on this paper is highlighted.</p>';
+}
+function renderMine(){
+  var m=loadMine(), box=document.getElementById('mine');
+  if(!m.length){ box.innerHTML=''; return; }
+  box.innerHTML='<h2 style="font-size:1.05rem;margin:0 0 .2rem">Your logged scores</h2><table><tr><th>Date</th><th>Paper</th><th>Score</th></tr>'+
+    m.map(function(r){return '<tr><td>'+esc(r.date)+'</td><td>'+esc(paperName(r.paper))+'</td><td>'+esc(r.score)+'/'+MAX+'</td></tr>';}).join('')+'</table>';
+}
+async function fetchStats(paper){
+  var res=await fetch(BACKEND+'/stats?paper='+encodeURIComponent(paper));
+  if(!res.ok) throw new Error('Could not load statistics ('+res.status+').');
+  return res.json();
+}
+async function refresh(){
+  var paper=sel.value, msg=document.getElementById('msg');
+  var mine=null; loadMine().some(function(r){ if(r.paper===paper){ mine=r.score; return true; } return false; });
+  try{ var st=await fetchStats(paper); renderDist(paper, st.counts||[], mine); }
+  catch(e){ document.getElementById('dist').innerHTML='<p class="note err">'+esc(e.message)+' The worker may not be deployed with the score routes yet.</p>'; }
+  renderMine();
+}
+sel.addEventListener('change',refresh);
+document.getElementById('submit').addEventListener('click',async function(){
+  var paper=sel.value, s=parseInt(document.getElementById('score').value,10), msg=document.getElementById('msg'), btn=this;
+  msg.className='msg';
+  if(isNaN(s)||s<0||s>MAX){ msg.className='msg err'; msg.textContent='Enter a whole number from 0 to '+MAX+'.'; return; }
+  btn.disabled=true; msg.textContent='Logging…';
+  try{
+    var res=await fetch(BACKEND+'/score',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({paper:paper,score:s})});
+    if(!res.ok){ var t=await res.json().catch(function(){return {};}); throw new Error(t.message||('Could not log the score ('+res.status+').')); }
+    saveMine({date:new Date().toISOString().slice(0,10),paper:paper,score:s});
+    msg.textContent='Logged. Thank you.';
+    await refresh();
+  }catch(e){ msg.className='msg err'; msg.textContent=e.message; }
+  btn.disabled=false;
+});
+refresh();
+</script>
+</body>
+</html>
