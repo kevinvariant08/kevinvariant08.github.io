@@ -1,0 +1,11 @@
+{
+  "name": "Kevin Hu, mathematics",
+  "short_name": "Kevin Hu",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ],
+  "theme_color": "#1A2230",
+  "background_color": "#FBFAF6",
+  "display": "standalone"
+}
