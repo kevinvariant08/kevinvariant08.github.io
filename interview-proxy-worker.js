@@ -1,52 +1,155 @@
-// Cloudflare Worker: forwards interview requests to the Anthropic API with your key.
-// Deploy: wrangler deploy, then `wrangler secret put ANTHROPIC_API_KEY`.
-// Then paste the worker URL into the Proxy field on interviews.html and leave the key blank.
-// Set a monthly spend limit in the Anthropic console as well; this worker only rate-limits per IP.
+// Cloudflare Worker: the free AI interviewer for the mock interview page.
+//
+// It holds the API key server-side, so visitors need no key and no sign-up.
+// It caps spending three ways: a per-visitor daily limit, a site-wide daily
+// limit, and a hard cap on tokens per request. It can run on Anthropic or on
+// Google's Gemini free tier, and returns the Anthropic response shape either
+// way, so the page needs no changes when you switch.
+//
+// SETUP
+//   1. npm i -g wrangler && wrangler login
+//   2. wrangler kv namespace create IV        (put the id in wrangler.toml)
+//   3. wrangler secret put ANTHROPIC_API_KEY  (and/or GEMINI_API_KEY)
+//   4. wrangler deploy
+//   5. Paste the deployed URL into FREE_PROXY at the top of the script in
+//      interviews.html, then push the site.
+//   6. Set a monthly spend limit in the Anthropic console as a backstop.
 
-const ALLOWED_ORIGINS = ["https://kevinvariant08.github.io"];   // add a custom domain here if you buy one
-const MODELS = ["claude-sonnet-5", "claude-haiku-4-5-20251001"]; // models callers may request
-const MAX_TOKENS_CAP = 1500;
-const PER_IP_PER_HOUR = 60;                                       // ~2 full interviews per hour per visitor
+const ALLOWED_ORIGINS = [
+  "https://kevinvariant08.github.io",
+  // add a custom domain here if you buy one
+];
+
+const CONFIG = {
+  backend: "anthropic",        // "anthropic" or "gemini"
+  anthropicModel: "claude-haiku-4-5-20251001",
+  geminiModel: "gemini-2.0-flash",
+  maxTokensCap: 900,           // per reply
+  perVisitorPerDay: 45,        // ~2 full interviews
+  sitePerDay: 1200,            // site-wide circuit breaker
+  maxMessages: 60,             // reject runaway conversations
+  maxChars: 24000,             // reject oversized payloads
+};
+
+const DAY = () => new Date().toISOString().slice(0, 10);
+
+function corsFor(origin) {
+  const allowed = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
+  return {
+    "Access-Control-Allow-Origin": allowed,
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+    "Access-Control-Allow-Headers": "content-type",
+    "Vary": "Origin",
+  };
+}
+
+function refuse(status, message, cors) {
+  return new Response(JSON.stringify({ message }), {
+    status,
+    headers: { ...cors, "content-type": "application/json" },
+  });
+}
+
+// Count a request against a KV counter that expires at the end of the day.
+async function bump(kv, key, limit) {
+  const current = parseInt((await kv.get(key)) || "0", 10);
+  if (current >= limit) return false;
+  await kv.put(key, String(current + 1), { expirationTtl: 60 * 60 * 26 });
+  return true;
+}
+
+async function callAnthropic(env, body) {
+  const res = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      "x-api-key": env.ANTHROPIC_API_KEY,
+      "anthropic-version": "2023-06-01",
+    },
+    body: JSON.stringify({
+      model: CONFIG.anthropicModel,
+      max_tokens: body.max_tokens,
+      system: body.system,
+      messages: body.messages,
+    }),
+  });
+  return { status: res.status, text: await res.text() };
+}
+
+// Gemini speaks a different dialect; translate in and out so the page sees
+// the Anthropic shape it already understands.
+async function callGemini(env, body) {
+  const contents = body.messages.map((m) => ({
+    role: m.role === "assistant" ? "model" : "user",
+    parts: [{ text: String(m.content) }],
+  }));
+  const payload = {
+    contents,
+    systemInstruction: { parts: [{ text: body.system }] },
+    generationConfig: { maxOutputTokens: body.max_tokens, temperature: 0.7 },
+  };
+  const url =
+    "https://generativelanguage.googleapis.com/v1beta/models/" +
+    CONFIG.geminiModel +
+    ":generateContent?key=" +
+    env.GEMINI_API_KEY;
+  const res = await fetch(url, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) return { status: res.status, text: await res.text() };
+  const data = await res.json();
+  const text = (data?.candidates?.[0]?.content?.parts || [])
+    .map((p) => p.text || "")
+    .join("\n");
+  return {
+    status: 200,
+    text: JSON.stringify({ content: [{ type: "text", text }] }),
+  };
+}
 
 export default {
   async fetch(request, env) {
     const origin = request.headers.get("Origin") || "";
-    const cors = {
-      "Access-Control-Allow-Origin": ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0],
-      "Access-Control-Allow-Methods": "POST, OPTIONS",
-      "Access-Control-Allow-Headers": "content-type",
-    };
-    if (request.method === "OPTIONS") return new Response(null, { headers: cors });
-    if (request.method !== "POST") return new Response("POST only", { status: 405, headers: cors });
-    if (!ALLOWED_ORIGINS.includes(origin)) return new Response("Forbidden origin", { status: 403, headers: cors });
+    const cors = corsFor(origin);
 
-    // Simple per-IP hourly limit using the cache API (good enough for a personal site).
-    const ip = request.headers.get("CF-Connecting-IP") || "unknown";
-    const hour = Math.floor(Date.now() / 3600000);
-    const key = new Request(`https://ratelimit.local/${ip}/${hour}`);
-    const cache = caches.default;
-    let count = 0;
-    const hit = await cache.match(key);
-    if (hit) count = parseInt(await hit.text(), 10) || 0;
-    if (count >= PER_IP_PER_HOUR) return new Response("Rate limit: try again in an hour", { status: 429, headers: cors });
-    await cache.put(key, new Response(String(count + 1), { headers: { "Cache-Control": "max-age=3600" } }));
+    if (request.method === "OPTIONS") return new Response(null, { headers: cors });
+    if (request.method !== "POST") return refuse(405, "POST only", cors);
+    if (!ALLOWED_ORIGINS.includes(origin)) return refuse(403, "This interviewer only serves the site it was built for.", cors);
 
     let body;
-    try { body = await request.json(); } catch { return new Response("Bad JSON", { status: 400, headers: cors }); }
-    if (!MODELS.includes(body.model)) body.model = MODELS[0];
-    body.max_tokens = Math.min(body.max_tokens || 600, MAX_TOKENS_CAP);
-    body.stream = false;
+    try {
+      body = await request.json();
+    } catch {
+      return refuse(400, "Malformed request.", cors);
+    }
+    if (!Array.isArray(body.messages) || !body.system) return refuse(400, "Missing system or messages.", cors);
+    if (body.messages.length > CONFIG.maxMessages) return refuse(400, "That conversation is longer than the interviewer accepts.", cors);
+    if (JSON.stringify(body).length > CONFIG.maxChars) return refuse(400, "That request is too large.", cors);
+    body.max_tokens = Math.min(Number(body.max_tokens) || 600, CONFIG.maxTokensCap);
 
-    const upstream = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-        "x-api-key": env.ANTHROPIC_API_KEY,
-        "anthropic-version": "2023-06-01",
-      },
-      body: JSON.stringify(body),
+    const day = DAY();
+    const ip = request.headers.get("CF-Connecting-IP") || "unknown";
+
+    if (!(await bump(env.IV, `site:${day}`, CONFIG.sitePerDay)))
+      return refuse(429, "The free interviewer has used up today's budget. Switch to self-guided in settings, or add your own key to carry on now.", cors);
+
+    if (!(await bump(env.IV, `ip:${ip}:${day}`, CONFIG.perVisitorPerDay)))
+      return refuse(429, "You have used today's free interviews. Come back tomorrow, run self-guided, or add your own key.", cors);
+
+    const useGemini = CONFIG.backend === "gemini" && env.GEMINI_API_KEY;
+    let out;
+    try {
+      out = useGemini ? await callGemini(env, body) : await callAnthropic(env, body);
+    } catch (e) {
+      return refuse(502, "The interviewer could not be reached. Try again in a moment.", cors);
+    }
+    if (out.status !== 200) return refuse(502, "The interviewer returned an error. Try again, or run self-guided.", cors);
+
+    return new Response(out.text, {
+      status: 200,
+      headers: { ...cors, "content-type": "application/json" },
     });
-    const text = await upstream.text();
-    return new Response(text, { status: upstream.status, headers: { ...cors, "content-type": "application/json" } });
   },
 };
