@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kevin Hu - Technique index</title>
+  <link rel="icon" href="/favicon.ico" sizes="32x32">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#1A2230">
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    .tx{--ink:#1A2230;--soft:#586374;--faint:#8A93A1;--rule:#D9D6CC;--paper:#FBFAF6;
+        --serif:"IBM Plex Serif",Georgia,serif;--sans:"IBM Plex Sans",system-ui,sans-serif;font-family:var(--sans);color:var(--ink);line-height:1.55}
+    .tx h2{font-family:var(--serif);font-weight:600}
+    .tx p{max-width:68ch}
+    .tx .lead{font-size:1.05rem;color:var(--soft)}
+    .tx .layout{display:grid;grid-template-columns:230px 1fr;gap:1.6rem;align-items:start;margin-top:1.4rem}
+    @media (max-width:800px){.tx .layout{grid-template-columns:1fr}}
+    .tx input[type=search]{width:100%;font-family:var(--sans);font-size:.95rem;padding:.5rem .7rem;border:1px solid var(--rule);border-radius:2px;background:#fff;color:var(--ink);margin-bottom:.8rem}
+    .tx .chips{display:flex;flex-direction:column;gap:.15rem}
+    .tx .chip{display:flex;justify-content:space-between;align-items:baseline;font-size:.92rem;text-align:left;background:transparent;border:0;border-left:2px solid transparent;padding:.3rem .6rem;cursor:pointer;color:var(--ink);font-family:var(--sans)}
+    .tx .chip:hover{border-left-color:var(--rule)}
+    .tx .chip.on{border-left-color:var(--ink);font-weight:500}
+    .tx .chip .n{color:var(--faint);font-size:.8rem}
+    .tx .tech{margin-bottom:2rem}
+    .tx .tech h3{font-family:var(--serif);font-weight:600;font-size:1.15rem;margin:0 0 .2rem}
+    .tx .tech .desc{font-family:var(--serif);color:var(--soft);font-size:.98rem;margin:0 0 .6rem}
+    .tx table{border-collapse:collapse;width:100%;font-size:.93rem}
+    .tx td{border-top:1px solid var(--rule);padding:.5rem .8rem .5rem 0;vertical-align:top}
+    .tx td.q{white-space:nowrap;color:var(--soft);width:9rem}
+    .tx td.q a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule)}
+    .tx td.q a:hover{border-bottom-color:var(--ink)}
+    .tx td.note{font-family:var(--serif)}
+    .tx .count{color:var(--faint);font-size:.88rem;margin:.5rem 0 1.2rem}
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="nav-links">
+      <a href="index.html">Mathematics</a>
+      <a href="music.html">Music &amp; Piano</a>
+      <a href="geometry.html">Geometry Lab</a>
+      <a href="sandbox.html">Sandbox</a>
+      <a href="interviews.html">Mock interviews</a>
+      <a href="techniques.html" aria-current="page">Techniques</a>
+      <a href="results.html">Results</a>
+    </div>
+  </nav>
+
+  <main class="container tx">
+    <h1>Technique index</h1>
+    <p class="lead">Every question published on this site, filed by the method that cracks it rather than the paper it sits in. Pick a technique to see all its instances across the TMUA sets and the interview problems, then open the paper at the question. The notes deliberately name the idea without giving the answer.</p>
+
+    <div class="layout">
+      <div>
+        <input type="search" id="q" placeholder="Search techniques or notes">
+        <div class="chips" id="chips"></div>
+      </div>
+      <div id="out"></div>
+    </div>
+  </main>
+
+<script>
+/* ---------------------------------------------------------------- data
+   Each entry: paper key, question, one-line note (idea, not answer), tags.
+   Add new questions here; the page builds itself. */
+var PAPERS={
+  A1:{name:'Set A Paper 1',url:'hu_mock_a_p1_with_solutions.pdf'},
+  A2:{name:'Set A Paper 2',url:'hu_mock_a_p2_with_solutions.pdf'},
+  B1:{name:'Set B Paper 1',url:'HU_Collection_TMUA_SetB_Paper1.pdf'},
+  B2:{name:'Set B Paper 2',url:'HU_Collection_TMUA_SetB_Paper2.pdf'},
+  IV:{name:'Mock interviews',url:'interviews.html'}
+};
+var TECH={
+  sym:{name:'Symmetry and substitution',desc:'Shift, reflect or rename the variable so that the ugly part cancels before any computation starts.'},
+  tel:{name:'Telescoping',desc:'Write each term as a difference of consecutive things so the sum survives only at the ends.'},
+  two:{name:'Counting two ways',desc:'Count one set along two different axes and set the results equal.'},
+  inv:{name:'Invariants',desc:'Find the quantity a move does not change; the answer is forced before any move is made.'},
+  pig:{name:'Pigeonhole',desc:'More objects than boxes. The work is choosing the boxes.'},
+  mod:{name:'Modular arithmetic',desc:'Reduce to remainders and let a finite check settle an infinite claim.'},
+  vie:{name:'Vieta and symmetric functions',desc:'Never find the roots; work with their sums and products instead.'},
+  trg:{name:'Trigonometric identities and bounds',desc:'Rewrite in terms of one quantity, or bound by a known range, rather than solving.'},
+  arint:{name:'Integrals as areas or by symmetry',desc:'Recognise a definite integral as a shape or an odd function before reaching for an antiderivative.'},
+  fint:{name:'Integral reasoning',desc:'Facts about integrals from continuity and sign, with no antiderivative available.'},
+  root:{name:'Root counting via monotonicity',desc:'Count solutions from the derivative and a few values, not from a formula.'},
+  ext:{name:'Extremal principle',desc:'Look at the largest, smallest or furthest object; it cannot satisfy the condition.'},
+  col:{name:'Colouring and parity',desc:'Two-colour the board or count parity to show an arrangement is impossible.'},
+  game:{name:'Games and losing positions',desc:'Classify positions as winning or losing from the end backwards and find the pattern.'},
+  log:{name:'Quantifiers, negation and vacuous truth',desc:'Read the logical form exactly; the trap is usually one word.'},
+  prf:{name:'Proof analysis',desc:'Decide whether an argument proves what it claims, and locate the gap if not.'},
+  ns:{name:'Necessary and sufficient',desc:'Test both directions separately; one of them usually fails for a reason nobody expects.'},
+  ineq:{name:'Inequalities',desc:'AM-GM, QM-AM, AM-HM and their equality cases, including the case that cannot be attained.'},
+  circ:{name:'Circle geometry',desc:'Power of a point, Ptolemy, circumradius from an inscribed angle, chord distances.'},
+  ser:{name:'Series and sequences',desc:'Periodicity, geometric structure, telescoping products and convergence conditions.'},
+  poly:{name:'Polynomials',desc:'Remainders, interpolation, factorisation into perfect squares, coefficient tricks.'},
+  cnt:{name:'Counting arguments',desc:'Bijections to subsets, inclusion-exclusion, and organised enumeration.'}
+};
+var Q=[
+ ['A1',1,'Two graphs, three crossings; the negative one is the easy one to miss.',['root']],
+ ['A1',2,'Power sums of x + 1/x built up by a recurrence.',['vie']],
+ ['A1',3,'A geometric series and the series of its cubes share a ratio relation.',['ser']],
+ ['A1',4,'Remainder on division by a quadratic from two substitutions.',['poly']],
+ ['A1',5,'Two contributions to one coefficient cancel exactly.',['poly']],
+ ['A1',6,'Square the given sum to reach the product, then a cubic identity.',['trg','vie']],
+ ['A1',7,'A circle touching both axes has one degree of freedom.',['circ']],
+ ['A1',8,'Change of base turns the equation into a quadratic in one log.',['sym']],
+ ['A1',9,'Split a modulus integral at the roots; a negative answer is impossible.',['arint']],
+ ['A1',10,'Rewrite cosine as a shifted sine and count both families of solutions.',['trg']],
+ ['A1',11,'Three AP terms in GP; the constant-sequence case must be excluded.',['ser','vie']],
+ ['A1',12,'Area between a power and its inverse power has a clean closed form.',['arint']],
+ ['A1',13,'Cosine rule twice, then a double-angle recognition.',['trg']],
+ ['A1',14,'Quartic in x squared; count solutions case by case in the substituted variable.',['root']],
+ ['A1',15,'Homogeneous in sine and cosine; divide through to reach tangent.',['trg']],
+ ['A1',16,'Take logs and read the reciprocals.',['sym']],
+ ['A1',17,'Subtracting two circle equations gives the common chord.',['circ']],
+ ['A1',18,'Tangents through a point on the curve; a cubic in the tangency parameter.',['poly','root']],
+ ['A1',19,'A line through the origin against a sine wave; count humps.',['root','trg']],
+ ['A1',20,'Sign of the derivative plus two values of the function count the roots.',['root','fint']],
+ ['A2',1,'Negating a universal statement produces an existential one.',['log']],
+ ['A2',2,'A counterexample must satisfy every hypothesis and break the conclusion.',['log']],
+ ['A2',3,'Contrapositive and disjunction are equivalent; the converse is not.',['log']],
+ ['A2',4,'Three quantified claims about x squared and x.',['log']],
+ ['A2',5,'Squaring is a one-way step; check candidates in the original.',['prf']],
+ ['A2',6,'Both directions of a divisibility claim hold, one by a small argument.',['ns','mod']],
+ ['A2',7,'Swapping the order of quantifiers changes the meaning.',['log']],
+ ['A2',8,'Squares modulo three settle an if-and-only-if.',['mod','ns']],
+ ['A2',9,'A syllogism about students; only one conclusion is forced.',['log']],
+ ['A2',10,'A formal antiderivative applied across a discontinuity gives nonsense.',['fint','prf']],
+ ['A2',11,'Continuity turns a zero integral into a zero of the function.',['fint']],
+ ['A2',12,'Strictly increasing does not mean unbounded.',['ser','log']],
+ ['A2',13,'Inclusion-exclusion with an exclusion afterwards.',['cnt']],
+ ['A2',14,'Rational sum and product do not force rational summands.',['log']],
+ ['A2',15,'Three trigonometric identities, one of which fails at a single point.',['trg']],
+ ['A2',16,'A polynomial that is prime for many n but not all.',['prf','poly']],
+ ['A2',17,'Which operations preserve an inequality.',['ineq','log']],
+ ['A2',18,'Which cards must be turned to test a rule.',['log']],
+ ['A2',19,'The second derivative test is sufficient, not necessary.',['ns']],
+ ['A2',20,'Three claims about a depressed cubic.',['root','ns']],
+ ['B1',1,'Multiply by a sine and fold three times; watch the sign on the last factor.',['trg','sym']],
+ ['B1',2,'Power sums via recurrence, then a reciprocal trap.',['vie']],
+ ['B1',3,'A quartic through five values of an exponential; the sixth value is not what the pattern says.',['poly']],
+ ['B1',4,'Evaluate the cubic at plus and minus root two instead of finding roots.',['vie','poly']],
+ ['B1',5,'Two inequalities stacked; the equality case is the whole question.',['ineq']],
+ ['B1',6,'Expand, then the range of sine times cosine.',['trg']],
+ ['B1',7,'Split the numerator against the geometric factor, not against n.',['tel','ser']],
+ ['B1',8,'Squaring introduces solutions; check them, and mind the endpoints.',['trg','prf']],
+ ['B1',9,'Ptolemy on four vertices of a regular polygon.',['circ']],
+ ['B1',10,'Product of roots is minus one, so reciprocals are negatives.',['vie']],
+ ['B1',11,'Two common tangents; Vieta on the tangency parameter gives the product of gradients.',['vie','poly']],
+ ['B1',12,'A geometric series formula is only a formula where the series converges.',['ser','log']],
+ ['B1',13,'A chord at a given distance cannot pass through a point closer than that.',['circ']],
+ ['B1',14,'A recurrence of order four; the product over one period is the invariant.',['ser','inv']],
+ ['B1',15,'Substitute t = 2^x + 2^-x and remember t is at least two.',['sym','root']],
+ ['B1',16,'A double root of the derivative is still a stationary point.',['root']],
+ ['B1',17,'Odd part vanishes; the rest is a semicircle.',['arint','sym']],
+ ['B1',18,'Fixed inscribed angle means fixed circumradius; maximise the height.',['circ']],
+ ['B1',19,'Three substitutions in three integrals, then subtract.',['arint','sym']],
+ ['B1',20,'Integral of an inverse function from the rectangle it completes.',['arint','sym']],
+ ['B2',1,'Reciprocal sum is preserved by the move.',['inv']],
+ ['B2',2,'Powers of two modulo 3, 5 and 7 have different cycle lengths.',['mod']],
+ ['B2',3,'Increasing-digit numbers are subsets of the nine nonzero digits.',['cnt']],
+ ['B2',4,'Exactly two of three order relations; one of them can never be the false one.',['log']],
+ ['B2',5,'Sum every entry by rows and by columns and compare parities.',['col','two']],
+ ['B2',6,'Rolle on the antiderivative, and an average over a sliding unit interval.',['fint']],
+ ['B2',7,'Factors of five in a factorial, with twenty-five counting twice.',['mod','cnt']],
+ ['B2',8,'Pair residues that sum to the modulus; one class per pair.',['pig','mod']],
+ ['B2',9,'Squares modulo eight rule out a whole equation.',['mod']],
+ ['B2',10,'Two pairs of equal sides give congruent triangles, not a parallelogram.',['circ','log']],
+ ['B2',11,'The midpoint quadrilateral is a parallelogram with sides parallel to the diagonals.',['ns','circ']],
+ ['B2',12,'A squaring recurrence read modulo several small numbers.',['mod','ser']],
+ ['B2',13,'Compare the integral of f squared with the integral of f and with its square.',['fint','ineq']],
+ ['B2',14,'Three triangle facts wearing trigonometric clothing.',['trg']],
+ ['B2',15,'One colouring impossible by double counting, two possible by construction.',['col','two']],
+ ['B2',16,'The argument proves at least one, then claims both.',['prf']],
+ ['B2',17,'The furthest point cannot be a midpoint of two others.',['ext']],
+ ['B2',18,'Multiply by a linear factor of one sign to force a second sign change.',['fint']],
+ ['B2',19,'Two perfect squares in arithmetic-looking form; mod 8 and mod 7.',['mod']],
+ ['B2',20,'Losing positions of a subtraction game repeat with a short period.',['game']],
+ ['IV','1','An unfamiliar operation on functions: reflection about a midpoint and a bound that is never attained.',['sym','fint','ineq']],
+ ['IV','2','Pairs with a small product: lattice points counted two ways, then a square-root shortcut.',['two','cnt','mod']],
+ ['IV','3','Tossing until something happens: geometric structure, first-step analysis, self-overlap.',['ser','cnt']]
+];
+
+/* ---------------------------------------------------------------- ui */
+var sel=null, q='';
+function esc(s){return String(s).replace(/[&<>]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c];});}
+function counts(){ var c={}; Q.forEach(function(e){ e[3].forEach(function(t){ c[t]=(c[t]||0)+1; }); }); return c; }
+function renderChips(){
+  var c=counts(), el=document.getElementById('chips'); el.innerHTML='';
+  var all=document.createElement('button'); all.className='chip'+(sel?'':' on'); all.innerHTML='<span>All techniques</span><span class="n">'+Q.length+'</span>';
+  all.addEventListener('click',function(){sel=null;render();}); el.appendChild(all);
+  Object.keys(TECH).sort(function(a,b){return TECH[a].name.localeCompare(TECH[b].name);}).forEach(function(k){
+    var b=document.createElement('button'); b.className='chip'+(sel===k?' on':''); b.innerHTML='<span>'+esc(TECH[k].name)+'</span><span class="n">'+(c[k]||0)+'</span>';
+    b.addEventListener('click',function(){sel=(sel===k)?null:k;render();}); el.appendChild(b);
+  });
+}
+function render(){
+  renderChips();
+  var out=document.getElementById('out'), keys=sel?[sel]:Object.keys(TECH).sort(function(a,b){return TECH[a].name.localeCompare(TECH[b].name);});
+  var ql=q.trim().toLowerCase(), html='', total=0;
+  keys.forEach(function(k){
+    var rows=Q.filter(function(e){ return e[3].indexOf(k)>=0 && (!ql || (TECH[k].name+' '+TECH[k].desc+' '+e[2]+' '+PAPERS[e[0]].name).toLowerCase().indexOf(ql)>=0); });
+    if(!rows.length) return; total+=rows.length;
+    html+='<div class="tech"><h3>'+esc(TECH[k].name)+'</h3><p class="desc">'+esc(TECH[k].desc)+'</p><table>';
+    rows.forEach(function(e){ var p=PAPERS[e[0]]; html+='<tr><td class="q"><a href="'+p.url+'" target="_blank">'+esc(p.name)+'</a> &nbsp;Q'+esc(e[1])+'</td><td class="note">'+esc(e[2])+'</td></tr>'; });
+    html+='</table></div>';
+  });
+  out.innerHTML='<p class="count">'+total+' question'+(total===1?'':'s')+'</p>'+(html||'<p class="desc" style="color:var(--faint)">Nothing matches.</p>');
+}
+document.getElementById('q').addEventListener('input',function(e){q=e.target.value;render();});
+render();
+</script>
+</body>
+</html>
