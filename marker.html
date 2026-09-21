@@ -2,119 +2,278 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Kevin Hu - Proof marker</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Proof marker</title>
   <link rel="icon" href="/favicon.ico" sizes="32x32">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-  <link rel="manifest" href="/site.webmanifest">
   <meta name="theme-color" content="#1A2230">
   <link rel="stylesheet" href="style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
-  <script>window.MathJax={tex:{inlineMath:[['$','$']],displayMath:[['\\[','\\]']],processEscapes:true},options:{skipHtmlTags:['script','noscript','style','textarea','pre']}};</script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+  <script>if(window.claude)document.documentElement.classList.add('standalone');window.MathJax={tex:{inlineMath:[['$','$']],displayMath:[['\\[','\\]']],processEscapes:true},options:{skipHtmlTags:['script','noscript','style','textarea','pre']}};</script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js" async></script>
   <style>
-    .hu{--ink:#1A2230;--soft:#586374;--faint:#8A93A1;--rule:#D9D6CC;--paper:#FBFAF6;--ok:#2C5545;--bad:#8C2F2F;--warn:#8A5A12;--acc:#534AB7;--acc2:#AFA9EC;
-        --serif:"IBM Plex Serif",Georgia,serif;--sans:"IBM Plex Sans",system-ui,sans-serif;font-family:var(--sans);color:var(--ink);line-height:1.55}
-    .hu h2{font-family:var(--serif);font-weight:600}
-    .hu h3{font-family:var(--serif);font-weight:600;font-size:1.05rem;margin:1.2rem 0 .4rem}
-    .hu p{max-width:70ch}
-    .hu .lead{font-size:1.05rem;color:var(--soft)}
-    .hu .hidden{display:none!important}
-    .hu .btn2{font-family:var(--sans);font-size:.95rem;font-weight:500;color:var(--ink);background:transparent;border:1px solid var(--ink);border-radius:2px;padding:.5rem 1rem;cursor:pointer}
-    .hu .btn2:hover{background:var(--ink);color:#fff}
-    .hu .btn2.quiet{border-color:var(--rule);color:var(--soft);font-weight:400}
-    .hu .btn2.quiet:hover{background:transparent;border-color:var(--ink);color:var(--ink)}
-    .hu .btn2[disabled]{opacity:.35;cursor:default}
-    .hu .row{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;margin-top:.9rem}
-    .hu .panel{border:1px solid var(--rule);padding:1rem 1.2rem;margin:1.2rem 0}
-    .hu select,.hu input[type=text],.hu textarea{font-family:var(--sans);font-size:.95rem;padding:.45rem .6rem;border:1px solid var(--rule);border-radius:2px;background:#fff;color:var(--ink)}
-    .hu textarea{width:100%;resize:vertical;line-height:1.5}
-    .hu .tally{color:var(--faint);font-size:.88rem}
-    .hu .err{color:var(--bad);font-size:.9rem}
-    .hu .ok{color:var(--ok)} .hu .bad{color:var(--bad)}
-    .hu label{display:block;font-size:.9rem;color:var(--soft);margin-top:.9rem}
-    .hu textarea{min-height:7rem;font-family:var(--serif);font-size:1rem}
-    .hu textarea#sol{min-height:16rem}
-    .hu .report{border-top:2px solid var(--ink);margin-top:2.2rem;padding-top:1.4rem}
-    .hu .report p,.hu .report li{font-family:var(--serif);font-size:1.02rem;line-height:1.7}
-    .hu .rhead{display:grid;grid-template-columns:auto 1fr;gap:1.6rem;align-items:center}
-    @media (max-width:600px){.hu .rhead{grid-template-columns:1fr}}
-    .hu .dial{position:relative;width:118px;height:118px}
-    .hu .dial svg{width:118px;height:118px;display:block;transform:rotate(-90deg)}
-    .hu .dial .num{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:var(--serif)}
-    .hu .dial .num b{font-size:2.3rem;font-weight:600;line-height:1}
-    .hu .dial .num span{font-size:.85rem;color:var(--faint)}
-    .hu .rmeta{font-family:var(--sans);font-size:.8rem;color:var(--faint);letter-spacing:.02em;margin:0 0 .3rem}
-    .hu .rverdict{font-family:var(--serif);font-size:1.18rem;line-height:1.5;margin:0 0 .6rem;color:var(--ink)}
-    .hu .status{display:inline-flex;align-items:center;gap:.45rem;font-family:var(--sans);font-size:.85rem;padding:.25rem .7rem;border-radius:2px}
-    .hu .status.ok{background:#E5F1EA;color:var(--ok)} .hu .status.bad{background:#F6E3E1;color:var(--bad)}
-    .hu .status::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
-    .hu .rsec{margin-top:1.8rem}
-    .hu .rsec h3{font-family:var(--sans);font-size:.8rem;font-weight:500;letter-spacing:.03em;color:var(--faint);margin:0 0 .7rem;padding-bottom:.35rem;border-bottom:1px solid var(--rule)}
-    .hu .gapcard{display:grid;grid-template-columns:5.2rem 1fr;gap:1rem;padding:.9rem 0;border-bottom:1px dashed var(--rule)}
-    .hu .gapcard:last-child{border-bottom:0}
-    .hu .sev{font-family:var(--sans);font-size:.74rem;font-weight:500;padding:.18rem .5rem;border-radius:2px;align-self:start;text-align:center}
-    .hu .sev.fatal{background:#8C2F2F;color:#fff} .hu .sev.major{background:#F6E3E1;color:var(--bad)} .hu .sev.minor{background:#F6EBD9;color:var(--warn)}
-    .hu .gapcard blockquote{margin:0 0 .45rem;padding:.1rem 0 .1rem .8rem;border-left:2px solid var(--rule);font-family:var(--serif);font-style:italic;color:var(--soft);font-size:.98rem;line-height:1.6}
-    .hu .gapcard .what{margin:0}
-    .hu .credit{list-style:none;padding:0;margin:0}
-    .hu .credit li{position:relative;padding:.3rem 0 .3rem 1.6rem}
-    .hu .credit li::before{content:"";position:absolute;left:.15rem;top:.95rem;width:.55rem;height:.3rem;border-left:2px solid var(--ok);border-bottom:2px solid var(--ok);transform:rotate(-45deg)}
-    .hu .fixfirst{margin-top:1.8rem;padding:1rem 1.2rem;border:1px solid var(--ink);display:grid;grid-template-columns:auto 1fr;gap:1rem;align-items:start}
-    .hu .fixfirst .k{font-family:var(--sans);font-size:.78rem;font-weight:500;color:#fff;background:var(--ink);padding:.2rem .55rem;border-radius:2px;white-space:nowrap}
-    .hu .fixfirst p{margin:0}
-    .hu .rfoot{margin-top:1.4rem;font-size:.82rem;color:var(--faint)}
+    :root{
+      --ink:#1A2230;--soft:#586374;--faint:#8A93A1;--rule:#D9D6CC;--paper:#FBFAF6;--card:#FFFFFF;
+      --ok:#2C5545;--okbg:#E5F1EA;--bad:#8C2F2F;--badbg:#F6E3E1;--warn:#8A5A12;--warnbg:#F6EBD9;--sel:#F1F0EA;
+      --serif:"IBM Plex Serif",Georgia,"Times New Roman",serif;--sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+    }
+    @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+      --ink:#E6E4DD;--soft:#A7AEBB;--faint:#737C8B;--rule:#2F3540;--paper:#12151B;--card:#1A1E26;
+      --ok:#7FBFA3;--okbg:#1C2C25;--bad:#E07A6F;--badbg:#2E1D1C;--warn:#D9A64E;--warnbg:#2C2416;--sel:#20252E;}}
+    :root[data-theme="dark"]{
+      --ink:#E6E4DD;--soft:#A7AEBB;--faint:#737C8B;--rule:#2F3540;--paper:#12151B;--card:#1A1E26;
+      --ok:#7FBFA3;--okbg:#1C2C25;--bad:#E07A6F;--badbg:#2E1D1C;--warn:#D9A64E;--warnbg:#2C2416;--sel:#20252E;}
+
+    /* Only when opened as the standalone claude.ai copy, where the site stylesheet is absent */
+    html.standalone{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);scroll-padding-top:env(safe-area-inset-top,0px)}
+    html.standalone *,html.standalone *::before,html.standalone *::after{box-sizing:inherit}
+    html.standalone body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans)}
+    html.standalone nav{border-bottom:1px solid var(--rule);padding:.8rem 1.2rem}
+    html.standalone .nav-links{display:flex;flex-wrap:wrap;gap:.3rem 1.1rem;max-width:52rem;margin:0 auto}
+    html.standalone .nav-links a{color:var(--soft);text-decoration:none;font-size:.9rem}
+    html.standalone .nav-links a[aria-current]{color:var(--ink);font-weight:500}
+    html.standalone .container{max-width:52rem;margin:0 auto;padding:1.8rem 1.2rem 4rem}
+
+    .mk{font-family:var(--sans);color:var(--ink);line-height:1.55}
+    .mk .hidden{display:none!important}
+    .mk h1{font-family:var(--serif);font-weight:600;font-size:1.9rem;line-height:1.2;margin:.2rem 0 .5rem}
+    .mk h2{font-family:var(--serif);font-weight:600;font-size:1.15rem;margin:1.8rem 0 .7rem}
+    .mk p{max-width:70ch}
+    .mk .lead{font-size:1.05rem;color:var(--soft);margin:0 0 1.4rem}
+    .mk label{display:block;font-size:.9rem;color:var(--soft);margin-top:1rem}
+    .mk label small{color:var(--faint)}
+    .mk textarea,.mk input[type=text],.mk input[type=password],.mk select{width:100%;font-family:var(--sans);font-size:.95rem;padding:.55rem .7rem;border:1px solid var(--rule);border-radius:2px;background:var(--card);color:var(--ink);margin-top:.3rem}
+    .mk textarea{resize:vertical;line-height:1.55;font-family:var(--serif);font-size:1rem}
+    .mk #prob{min-height:6rem} .mk #sol{min-height:14rem} .mk #reply{min-height:8rem;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85rem}
+    .mk #promptbox{min-height:9rem;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.8rem;color:var(--soft)}
+    .mk select{max-width:22rem}
+    .mk .btn{font-family:var(--sans);font-size:.95rem;font-weight:500;color:var(--ink);background:transparent;border:1px solid var(--ink);border-radius:2px;padding:.55rem 1.1rem;cursor:pointer;min-height:44px}
+    .mk .btn:hover{background:var(--ink);color:var(--paper)}
+    .mk .btn.quiet{border-color:var(--rule);color:var(--soft);font-weight:400}
+    .mk .btn.quiet:hover{background:transparent;border-color:var(--ink);color:var(--ink)}
+    .mk .btn[disabled]{opacity:.4;cursor:default}
+    .mk .btn:focus-visible,.mk .card:focus-visible{outline:2px solid var(--bad);outline-offset:2px}
+    .mk .row{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;margin-top:1rem}
+    .mk .msg{font-size:.9rem;color:var(--soft);min-height:1.3em;margin:.7rem 0 0}
+    .mk .tally{color:var(--faint);font-size:.88rem}
+    .mk .small{font-size:.92rem;font-family:var(--sans);margin:0 0 .3rem}
+    .mk .ok{color:var(--ok)} .mk .bad{color:var(--bad)}
+
+    .mk .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:.7rem}
+    @media (max-width:760px){.mk .cards{grid-template-columns:1fr}}
+    .mk .card{text-align:left;background:var(--card);border:1px solid var(--rule);border-radius:2px;padding:.9rem 1rem;cursor:pointer;color:var(--ink);font-family:var(--sans);display:flex;flex-direction:column;gap:.35rem}
+    .mk .card:hover{border-color:var(--soft)}
+    .mk .card[aria-pressed="true"]{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+    .mk .card.off{cursor:default;opacity:.75}
+    .mk .card .t{font-family:var(--serif);font-weight:600;font-size:1.02rem}
+    .mk .card .d{font-size:.86rem;color:var(--soft);line-height:1.45}
+    .mk .card .s{font-size:.78rem;color:var(--faint);margin-top:auto}
+    .mk .card .s a{color:var(--ink)}
+    .mk .pane{border:1px solid var(--rule);border-top:0;padding:1rem 1.1rem 1.1rem;background:var(--card)}
+    .mk .panehead{font-family:var(--serif);font-weight:600;margin:0 0 .5rem;font-size:1rem}
+    @media (max-width:760px){.mk .pane{border-top:1px solid var(--rule);margin-top:.7rem}}
+    .mk .steps{margin:.2rem 0 0;padding-left:1.2rem;font-size:.93rem;color:var(--soft)}
+    .mk .steps li{margin:.25rem 0}
+
+    .mk .report{border-top:2px solid var(--ink);margin-top:2.4rem;padding-top:1.4rem}
+    .mk .report p,.mk .report li{font-family:var(--serif);font-size:1.02rem;line-height:1.7}
+    .mk .rhead{display:grid;grid-template-columns:auto 1fr;gap:1.6rem;align-items:center}
+    @media (max-width:600px){.mk .rhead{grid-template-columns:1fr}}
+    .mk .dial{position:relative;width:118px;height:118px}
+    .mk .dial svg{width:118px;height:118px;display:block;transform:rotate(-90deg)}
+    .mk .dial .num{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:var(--serif)}
+    .mk .dial .num b{font-size:2.3rem;font-weight:600;line-height:1}
+    .mk .dial .num span{font-size:.85rem;color:var(--faint)}
+    .mk .rmeta{font-family:var(--sans)!important;font-size:.8rem!important;color:var(--faint);margin:0 0 .3rem}
+    .mk .rverdict{font-size:1.18rem!important;line-height:1.5!important;margin:0 0 .6rem}
+    .mk .status{display:inline-flex;align-items:center;gap:.45rem;font-family:var(--sans);font-size:.85rem;padding:.25rem .7rem;border-radius:2px}
+    .mk .status.ok{background:var(--okbg);color:var(--ok)} .mk .status.bad{background:var(--badbg);color:var(--bad)}
+    .mk .status::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+    .mk .rsec{margin-top:1.8rem}
+    .mk .rsec h3{font-family:var(--sans);font-size:.8rem;font-weight:500;letter-spacing:.03em;color:var(--faint);margin:0 0 .7rem;padding-bottom:.35rem;border-bottom:1px solid var(--rule)}
+    .mk .struck{margin:.15rem 0!important} .mk .struck s{text-decoration-color:var(--bad)}
+    .mk .gapcard{display:grid;grid-template-columns:5.2rem 1fr;gap:1rem;padding:.9rem 0;border-bottom:1px dashed var(--rule)}
+    .mk .gapcard:last-child{border-bottom:0}
+    .mk .sev{font-family:var(--sans);font-size:.74rem;font-weight:500;padding:.18rem .5rem;border-radius:2px;align-self:start;text-align:center}
+    .mk .sev.fatal{background:var(--bad);color:var(--paper)} .mk .sev.major{background:var(--badbg);color:var(--bad)} .mk .sev.minor{background:var(--warnbg);color:var(--warn)}
+    .mk .gapcard blockquote{margin:0 0 .45rem;padding:.1rem 0 .1rem .8rem;border-left:2px solid var(--rule);font-family:var(--serif);font-style:italic;color:var(--soft);font-size:.98rem;line-height:1.6}
+    .mk .gapcard .what{margin:0}
+    .mk .credit{list-style:none;padding:0;margin:0}
+    .mk .credit li{position:relative;padding:.3rem 0 .3rem 1.6rem}
+    .mk .credit li::before{content:"";position:absolute;left:.15rem;top:.95rem;width:.55rem;height:.3rem;border-left:2px solid var(--ok);border-bottom:2px solid var(--ok);transform:rotate(-45deg)}
+    .mk .fixfirst{margin-top:1.8rem;padding:1rem 1.2rem;border:1px solid var(--ink);display:grid;grid-template-columns:auto 1fr;gap:1rem;align-items:start}
+    .mk .fixfirst .k{font-family:var(--sans);font-size:.78rem;font-weight:500;color:var(--paper);background:var(--ink);padding:.2rem .55rem;border-radius:2px;white-space:nowrap}
+    .mk .fixfirst p{margin:0}
+    .mk .rfoot{margin-top:1.4rem;font-size:.84rem!important;color:var(--faint);font-family:var(--sans)!important}
   </style>
 </head>
 <body>
   <nav>
     <div class="nav-links">
-      <a href="index.html">Mathematics</a>
-      <a href="music.html">Music &amp; Piano</a>
-      <a href="geometry.html">Geometry Lab</a>
-      <a href="sandbox.html">Sandbox</a>
-      <a href="drill.html">Drill</a>
-      <a href="interviews.html">Mock interviews</a>
-      <a href="marker.html" aria-current="page">Marker</a>
-      <a href="techniques.html">Techniques</a>
-      <a href="progress.html">Progress</a>
+      <a href="https://kevinvariant08.github.io/index.html">Mathematics</a>
+      <a href="https://kevinvariant08.github.io/drill.html">Drill</a>
+      <a href="https://kevinvariant08.github.io/interviews.html">Mock interviews</a>
+      <a href="https://kevinvariant08.github.io/marker.html" aria-current="page">Marker</a>
+      <a href="https://kevinvariant08.github.io/techniques.html">Techniques</a>
+      <a href="https://kevinvariant08.github.io/sandbox.html">Sandbox</a>
+      <a href="https://kevinvariant08.github.io/progress.html">Progress</a>
     </div>
   </nav>
-  <main class="container hu">
-    <h1>Proof marker <span style="font-family:var(--sans);font-size:.8rem;font-weight:500;color:#8A5A12;background:#F6EBD9;padding:.15rem .5rem;border-radius:2px;vertical-align:middle">beta</span></h1>
-    <p class="lead">Paste a problem and your written solution, and get it marked the way an olympiad or STEP marker would: a score against a real scheme, every unjustified step named, and no help writing the proof. Marks are hard to get here on purpose. A solution that is correct but not proved scores like one that is wrong.</p>
 
-    <div class="panel">
-      <label>Problem statement <small class="tex2jax_ignore" style="color:var(--faint)">(LaTeX between dollar signs is fine)</small>
-        <textarea id="prob" placeholder="State the problem exactly as set."></textarea></label>
-      <label>Your solution
-        <textarea id="sol" placeholder="Write it as you would on paper: every step you would expect a marker to read."></textarea></label>
-      <div class="row">
-        <label style="margin:0">Scheme
-          <select id="scheme">
-            <option value="bmo">BMO round 1 style, out of 10</option>
-            <option value="bmo2">BMO round 2 style, out of 10, stricter</option>
-            <option value="step">STEP style, out of 20</option>
-            <option value="mat">MAT long question, out of 15</option>
-            <option value="interview">Interview whiteboard: is the argument sound?</option>
-          </select></label>
-        <button class="btn2" id="mark">Mark it</button>
-        <span class="tally" id="msg"></span>
-      </div>
-      <p class="tally" style="margin-top:.8rem">Uses the same free interviewer as the mock interviews, so the daily cap is shared. Nothing you paste is stored.</p>
+  <main class="container mk">
+    <h1>Proof marker</h1>
+    <p class="lead">Paste a problem and your written solution and have it marked against a BMO, STEP, MAT or interview scheme by the strongest model you have access to. Every numerical step is checked exactly by the page itself; the model judges the argument. Treat the result as a demanding second opinion, not an examiner's verdict.</p>
+
+    <label>Problem statement <small class="tex2jax_ignore">(LaTeX between dollar signs is fine)</small>
+      <textarea id="prob" placeholder="State the problem exactly as set."></textarea></label>
+    <label>Your solution
+      <textarea id="sol" placeholder="Write it as you would on paper: every step you would expect a marker to read."></textarea></label>
+    <label id="photorow" class="hidden">Or attach a photo of your handwritten solution <small>(Claude only)</small>
+      <input type="file" id="photo" multiple style="margin-top:.4rem"></label>
+    <label>Marking scheme <select id="scheme"></select></label>
+
+    <h2>Who marks it</h2>
+    <div class="cards" role="group" aria-label="Choose a marker">
+      <button type="button" class="card" id="card-claude" aria-pressed="false">
+        <span class="t">Claude, built in</span>
+        <span class="d" id="claude-note">Runs on your own Claude account, with no setup. Free accounts work.</span>
+        <span class="s" id="claude-state">Checking</span>
+      </button>
+      <button type="button" class="card" id="card-chat" aria-pressed="true">
+        <span class="t">Any chatbot</span>
+        <span class="d">ChatGPT, Gemini, Claude or another. Copy a prompt into it, paste its reply back here. Uses the plan you already have.</span>
+        <span class="s">Works everywhere</span>
+      </button>
+      <button type="button" class="card" id="card-key" aria-pressed="false">
+        <span class="t">Your API key</span>
+        <span class="d">OpenAI, Google Gemini or Anthropic. The key stays in your browser and goes straight to the provider.</span>
+        <span class="s">For developers</span>
+      </button>
     </div>
 
-    <div id="out" class="report hidden"></div>
-  </main>
+    <div class="pane hidden" id="pane-claude">
+      <p class="panehead">Claude, built in</p>
+      <p class="tally" style="margin:0">Uses Claude's most capable reasoning model where your plan allows. Careful marking takes a minute or two.</p>
+      <div class="row"><button class="btn" id="go-claude">Mark with Claude</button><button class="btn quiet hidden" id="stop-claude">Stop</button></div>
+      <p class="msg" id="msg-claude"></p>
+    </div>
 
+    <div class="pane" id="pane-chat">
+      <p class="panehead">Any chatbot</p>
+      <ol class="steps">
+        <li>Pick your chatbot. The marking prompt is copied and the chatbot opens in a new tab.</li>
+        <li>Paste the prompt there and send it. Use its most capable reasoning mode if you can choose.</li>
+        <li>Copy the chatbot's whole reply, paste it below, and press Show report.</li>
+      </ol>
+      <div class="row">
+        <button class="btn" data-open="https://chatgpt.com/" data-name="ChatGPT">ChatGPT</button>
+        <button class="btn" data-open="https://gemini.google.com/app" data-name="Gemini">Gemini</button>
+        <button class="btn" data-open="https://claude.ai/new" data-name="Claude">Claude</button>
+        <button class="btn quiet" id="copy-plain">Just copy the prompt</button>
+      </div>
+      <input type="hidden" id="whichbot" value="your chatbot">
+      <div id="promptwrap" class="hidden"><label>The prompt <small>(in case copying was blocked)</small><textarea id="promptbox" readonly></textarea></label></div>
+      <label>The chatbot's reply<textarea id="reply" placeholder="Paste the whole reply here."></textarea></label>
+      <div class="row"><button class="btn" id="render">Show report</button></div>
+      <p class="msg" id="msg-chat"></p>
+    </div>
+
+    <div class="pane hidden" id="pane-key">
+      <p class="panehead">Your API key</p>
+      <label>Provider <select id="prov"><option value="openai">OpenAI</option><option value="gemini">Google Gemini</option><option value="anthropic">Anthropic</option></select></label>
+      <label>API key <input type="password" id="apikey" autocomplete="off"></label>
+      <label>Model <small>(change it if your provider has renamed it)</small><input type="text" id="apimodel"></label>
+      <label style="display:flex;gap:.5rem;align-items:center;color:var(--soft)"><input type="checkbox" id="remember" checked style="width:auto;margin:0"> Remember the key in this browser</label>
+      <div class="row"><button class="btn" id="go-key">Mark it</button></div>
+      <p class="msg" id="msg-key"></p>
+    </div>
+
+    <div id="out" class="report hidden" aria-live="polite"></div>
+  </main>
 <script>
-var FREE_PROXY = "https://hu-interviewer.kevinvariant08.workers.dev";
-function esc(s){return String(s).replace(/[&<>]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c];});}
-/* Models often emit LaTeX backslashes unescaped inside JSON strings (\mid, \frac), which is invalid JSON,
-   and \frac or \text silently become a form feed or a tab. Repair those, strip code fences,
-   and if the object was cut off mid-way, close whatever is still open. */
+/* ====================================================== configuration */
+var ARTIFACT_URL = "https://claude.ai/artifact/6MiSw7qdvz75ycpsFB1SMH";   /* the claude.ai copy of this page, where Claude runs built in */
+var SITE = "https://kevinvariant08.github.io/";
+
+var SCHEMES={
+  bmo:{max:10,name:'BMO round 1 style, out of 10',desc:'British Mathematical Olympiad Round 1 conventions. 10 for a complete and rigorous proof with all cases handled. 7 to 9 for essentially complete with a minor gap or an omitted degenerate case. 4 to 6 for substantial progress towards a complete method. 1 to 3 for relevant observations or a special case only. 0 for nothing of value, including a correct final answer with no valid argument.'},
+  bmo2:{max:10,name:'BMO round 2 style, out of 10, stricter',desc:'British Mathematical Olympiad Round 2 conventions, marked strictly. Any logical gap that could hide a false step costs at least 3 marks. Unjustified "clearly" or "it is easy to see" steps are treated as absent. A proof relying on one configuration of a diagram without handling the others is capped at 5.'},
+  step:{max:20,name:'STEP style, out of 20',desc:'STEP conventions. Marks for correct method and execution of each part; accuracy marks are lost for algebraic slips, method marks are not. A part that is not attempted scores zero for that part; a correct answer with no working scores at most one third of its marks.'},
+  mat:{max:15,name:'MAT long question, out of 15',desc:'Oxford MAT long question conventions. Marks are allocated per sub-part; later parts can be credited using an earlier wrong result if the method is correct. Full marks require every claim to be justified in writing, not asserted.'},
+  interview:{max:10,name:'Interview whiteboard, out of 10',desc:'A whiteboard argument in an Oxford interview. 10 if the argument is complete and each step would satisfy a tutor probing it; 7 if a tutor would need to ask one clarifying question; 4 if the idea is right but the argument would not survive questioning; 0 to 2 if the reasoning is circular, assumes the result, or is missing.'}
+};
+
+/* ====================================================== small helpers */
+function $(id){ return document.getElementById(id); }
+function esc(s){ return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+function typeset(el){ if(window.MathJax&&MathJax.typesetPromise) MathJax.typesetPromise([el]).catch(function(){}); }
+function lsGet(k,d){ try{ var v=localStorage.getItem(k); return v==null?d:v; }catch(e){ return d; } }
+function lsSet(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
+
+/* ====================================================== prompt */
+function buildPrompt(prob, sol, schemeKey, arith, photoCount){
+  var S=SCHEMES[schemeKey];
+  var rules='You are an experienced olympiad and university-admissions mathematics marker. Mark the candidate\'s solution against this scheme: '+S.desc+' Maximum '+S.max+'.\n\n'
+   +'Principles. Award marks only for what is written, not for what the candidate probably meant. Before scoring, recompute every numerical and algebraic step yourself; never assume a computation is right because it looks plausible. A step that is true but not justified is a gap. Check that every case is covered and that every claimed equality, bound or existence statement is actually established. Do not write a corrected proof and do not supply the missing steps: describe each gap precisely enough for the candidate to fix it, and no more. If the solution is correct and complete, say so plainly and award full marks; do not invent nitpicks.';
+  var arithNote = arith.length
+    ? '\n\nEXACT ARITHMETIC CHECK (computed by a program, not an opinion). These equalities written in the solution are FALSE:\n'+arith.map(function(a){return '  '+a.claim+'   (left side equals '+a.left+', right side '+a.right+')';}).join('\n')+'\nEach is a genuine error and must appear as a gap. A wrong final answer caused by an arithmetic error cannot receive full marks.'
+    : (arith.checked ? '\n\nEXACT ARITHMETIC CHECK: '+arith.checked+' purely numerical equalities were found in the typed solution and all are correct. Algebraic steps were not machine-checked; verify them yourself.' : '');
+  var photo = photoCount ? '\n\nThe candidate\'s handwritten solution is attached as '+photoCount+' image'+(photoCount>1?'s':'')+'. Treat the images as the solution; any typed text below is supplementary. Read the handwriting carefully and say so if any part is illegible.' : '';
+  var format='\n\nReply with ONLY one JSON object and no other text, in exactly this shape:\n'
+   +'{"score": 7, "max": '+S.max+', "verdict": "one sentence", "sound": false, "gaps": [{"severity": "major", "where": "a short quote of the candidate\'s words", "what": "what is missing or wrong"}], "credit": ["what earned marks"], "next": "the single most valuable thing to fix first"}\n'
+   +'"severity" is one of "fatal", "major", "minor". "sound" is true only if the argument would convince a strict marker exactly as written. Keep quotes short; you may paraphrase LaTeX into words.';
+  return rules+arithNote+photo+'\n\nPROBLEM:\n'+prob+'\n\nCANDIDATE SOLUTION:\n'+(sol||'(see attached image)')+format;
+}
+
+/* ====================================================== exact arithmetic */
+function cleanForArith(t){
+  return String(t)
+    .replace(/\\(?:boxed|text|mathrm|mathbf)\{([^{}]*)\}/g,'$1')
+    .replace(/\\(?:times|cdot)/g,'*').replace(/\\div/g,'/')
+    .replace(/\\(?:left|right|quad|qquad|,|;|!|blacksquare|square|qed)/g,' ')
+    .replace(/\\\[|\\\]|\\\(|\\\)|\$/g,' ')
+    .replace(/\\dfrac|\\tfrac/g,'\\frac')
+    .replace(/\\frac\s*\{([^{}]*)\}\s*\{([^{}]*)\}/g,'(($1)/($2))')
+    .replace(/[{}]/g,function(m){return m==='{'?'(':')';})
+    .replace(/\u00d7/g,'*').replace(/\u2212/g,'-');
+}
+function evalNumeric(expr){
+  var e=expr.trim().replace(/\^/g,'**');
+  if(!e||!/^[\d\s+\-*/().]+$/.test(e)||!/\d/.test(e)) return null;
+  if(/[+\-*/]\s*$/.test(e)||/^\s*[*/]/.test(e)) return null;
+  try{ var v=Function('"use strict";return ('+e+')')(); return (typeof v==='number'&&isFinite(v))?v:null; }catch(_){ return null; }
+}
+function checkArithmetic(solution){
+  var text=cleanForArith(solution||''), found=[], seen={}, checked=0, lastPos=-1;
+  var segs=[];
+  text.split(/[^0-9+\-*/().=\s^]+/).forEach(function(s){
+    /* two numbers separated only by space belong to different statements ("= 8    252 + ...") */
+    s.replace(/([\d)])\s+(?=[\d(])/g,'$1|').split('|').forEach(function(x){ segs.push(x); });
+  });
+  segs.forEach(function(seg){
+    seg=seg.replace(/^\s*=+|=+\s*$/g,'');
+    if(seg.indexOf('=')<0) return;
+    var sides=seg.split('=').map(function(s){return s.trim().replace(/^[.\s]+|[.\s]+$/g,'');});
+    if(sides.some(function(s){return !s;})) return;
+    if(!sides.some(function(s){return /[\d)]\s*[+\-*/^]\s*[\d(]/.test(s);})) return;
+    var vals=sides.map(evalNumeric); if(vals.some(function(v){return v===null;})) return;
+    var pos=text.indexOf(seg)/Math.max(1,text.length); if(pos>lastPos) lastPos=pos;
+    for(var k=0;k+1<vals.length;k++){
+      var a=vals[k],b=vals[k+1]; checked++;
+      if(Math.abs(a-b)>1e-9*Math.max(1,Math.abs(a),Math.abs(b))){
+        var shown=sides[k]+' = '+sides[k+1]; if(seen[shown]) continue; seen[shown]=1;
+        found.push({claim:shown.replace(/\*\*/g,'^'),left:a,right:b,pos:pos});
+      }
+    }
+  });
+  /* an error in the last numerical computation, or in the final quarter, is where the answer is formed */
+  found.forEach(function(f){ f.late=(f.pos>=lastPos-1e-9)||f.pos>0.75; });
+  found.checked=checked; return found;
+}
+
+/* ====================================================== tolerant parsing */
 var LATEX_WORD=/^(frac|tfrac|dfrac|text|textbf|textit|times|theta|tau|tan|tanh|triangle|to|top|neq|nabla|nmid|notin|not|nu|ne|ni|right|rightarrow|rfloor|rceil|rangle|rho|binom|beta|begin|bmod|blacksquare|bigl|bigr|big|bar|boxed|underline|upsilon|uparrow|forall|flat)(?![a-zA-Z])/;
 function repairEscapes(s){
   return s.replace(/\\([\s\S])/g,function(m,c,off,str){
@@ -126,35 +285,24 @@ function repairEscapes(s){
 function tolerantJSON(txt){
   var s=String(txt||'').replace(/```json|```/g,'').trim(), i=s.indexOf('{'); if(i<0) return null; s=s.slice(i);
   function tryParse(t){ try{ return JSON.parse(t); }catch(e){ return null; } }
-  var j=s.lastIndexOf('}'), r=j>0?tryParse(s.slice(0,j+1)):null;
-  var fixed=repairEscapes(s);
-  if(r&&!/[\f\t\b]/.test(JSON.stringify(r).replace(/\\[ftb]/g,''))&&fixed===s) return r;
-  j=fixed.lastIndexOf('}'); r=j>0?tryParse(fixed.slice(0,j+1)):null; if(r) return r;
-  var stack=[], inStr=false, esc=false;
+  var fixed=repairEscapes(s), j=fixed.lastIndexOf('}'), r=j>0?tryParse(fixed.slice(0,j+1)):null; if(r) return r;
+  var stack=[], inStr=false, esc2=false;
   for(var k=0;k<fixed.length;k++){ var c=fixed[k];
-    if(esc){esc=false;continue;} if(inStr&&c==='\\'){esc=true;continue;}
+    if(esc2){esc2=false;continue;} if(inStr&&c==='\\'){esc2=true;continue;}
     if(c==='"'){inStr=!inStr;continue;} if(inStr) continue;
     if(c==='{'||c==='[') stack.push(c); else if(c==='}'||c===']') stack.pop(); }
-  var tail=fixed; if(inStr) tail+='"';
-  tail=tail.replace(/[,:]\s*$/,'');
+  var tail=fixed; if(inStr) tail+='"'; tail=tail.replace(/[,:]\s*$/,'');
   while(stack.length) tail+=(stack.pop()==='{')?'}':']';
   return tryParse(tail);
 }
-/* Last resort for replies that are almost JSON: pull each field out on its own,
-   so an unquoted verdict or a stray bracket does not lose the whole report. */
 function salvageReport(txt){
   var s=String(txt||'').replace(/```json|```/g,'');
   function unq(v){ return String(v||'').trim().replace(/^"+|"+$/g,'').replace(/\\"/g,'"').replace(/\\\\/g,'\\').trim(); }
   var KEYS='score|max|verdict|sound|gaps|credit|next';
-  function field(name){
-    var re=new RegExp('"'+name+'"\\s*:\\s*([\\s\\S]*?)\\s*(?:,\\s*"(?:'+KEYS+')"\\s*:|\\}\\s*$)');
-    var m=s.match(re); return m?m[1]:null;
-  }
-  var r={};
-  var sc=field('score'), mx=field('max'), sd=field('sound');
-  if(sc&&/\d+/.test(sc)) r.score=parseInt(sc.match(/\d+/)[0],10); else return null;
-  if(mx&&/\d+/.test(mx)) r.max=parseInt(mx.match(/\d+/)[0],10);
-  r.sound=sd?/true/.test(sd):false;
+  function field(name){ var m=s.match(new RegExp('"'+name+'"\\s*:\\s*([\\s\\S]*?)\\s*(?:,\\s*"(?:'+KEYS+')"\\s*:|\\}\\s*$)')); return m?m[1]:null; }
+  var r={}, sc=field('score'); if(sc&&/\d+/.test(sc)) r.score=parseInt(sc.match(/\d+/)[0],10); else return null;
+  var mx=field('max'); if(mx&&/\d+/.test(mx)) r.max=parseInt(mx.match(/\d+/)[0],10);
+  var sd=field('sound'); r.sound=sd?/true/.test(sd):false;
   var vd=field('verdict'); if(vd) r.verdict=unq(vd);
   var nx=field('next'); if(nx) r.next=unq(nx.replace(/\}\s*$/,''));
   r.gaps=[]; var gre=/"severity"\s*:\s*"?([a-z]+)"?\s*,\s*"where"\s*:\s*"([\s\S]*?)"\s*,\s*"what"\s*:\s*"([\s\S]*?)"\s*\}/g, g;
@@ -163,121 +311,188 @@ function salvageReport(txt){
   r.credit=cr?cr[1].split(/"\s*,\s*"/).map(unq).filter(Boolean):[];
   return r;
 }
-/* Exact arithmetic checker. Finds every purely numerical equality chain in the
-   solution (such as 252 + 195 + 8 = 452) and evaluates each side exactly.
-   The AI never sees a chance to wave these through: errors are reported to it
-   as fixed facts and the page enforces a score cap if it ignores them. */
-function cleanForArith(t){
-  return String(t)
-    .replace(/\\(?:boxed|text|mathrm|mathbf)\{([^{}]*)\}/g,'$1')
-    .replace(/\\(?:times|cdot)/g,'*').replace(/\\div/g,'/')
-    .replace(/\\(?:left|right|quad|qquad|,|;|!|blacksquare|square|qed)/g,' ')
-    .replace(/\\\[|\\\]|\\\(|\\\)|\$/g,' ')
-    .replace(/\\dfrac|\\tfrac|\\frac/g,'\\frac')
-    .replace(/\\frac\s*\{([^{}]*)\}\s*\{([^{}]*)\}/g,'(($1)/($2))')
-    .replace(/[{}]/g,m=>m==='{'?'(':')')
-    .replace(/\u00d7/g,'*').replace(/\u2212/g,'-');
+function parseReport(txt){ var r=tolerantJSON(txt)||salvageReport(txt); return (r&&typeof r.score!=='undefined')?r:null; }
+
+/* ====================================================== report */
+function renderReport(r, arith, schemeKey, source, hadPhoto){
+  var S=SCHEMES[schemeKey], out=$('out'); out.classList.remove('hidden');
+  var capped=false;
+  if(arith.length){
+    r.gaps=r.gaps||[];
+    arith.forEach(function(a){
+      var key=a.claim.replace(/\s/g,'').split('=')[0];
+      var mentioned=r.gaps.some(function(g){ return ((g.where||'')+' '+(g.what||'')).replace(/\s/g,'').indexOf(key)>=0; });
+      if(!mentioned) r.gaps.unshift({severity:a.late?'major':'minor',where:a.claim,what:'This equality is false: the left side equals '+a.left+', not '+a.right+'.'+(a.late?' It sits where the final answer is computed, so the stated answer is wrong.':'')});
+    });
+    var mx0=r.max||S.max, cap=mx0-(arith.some(function(a){return a.late;})?2:1);
+    if((r.score|0)>cap){ r.score=cap; capped=true; }
+    r.sound=false;
+    if(/correct and complete/i.test(r.verdict||'')) r.verdict='The method is sound but the solution contains an arithmetic error.';
+    r.credit=(r.credit||[]).filter(function(c){ return !/calculat|comput|arithmetic|final answer/i.test(c); });
+    var first=arith.filter(function(a){return a.late;})[0]||arith[0];
+    r.next='Recompute '+first.claim.split('=')[0].trim()+': it equals '+first.left+', not '+first.right+'. Then check every later line that depends on it.';
+  }
+  var max=r.max||S.max, sc=Math.max(0,Math.min(max,r.score|0)), frac=sc/max, C=2*Math.PI*50;
+  var ring=frac>=0.8?'var(--ok)':frac>=0.5?'var(--warn)':'var(--bad)';
+  var order={fatal:0,major:1,minor:2};
+  var gaps=(r.gaps||[]).slice().sort(function(a,b){ var x=order[(a.severity||'').toLowerCase()], y=order[(b.severity||'').toLowerCase()]; return (x==null?3:x)-(y==null?3:y); });
+  var arithHtml = arith.length
+    ? '<p class="bad small">'+arith.length+' false equalit'+(arith.length>1?'ies':'y')+' found by exact computation'+(capped?'; score capped accordingly.':'.')+'</p>'+arith.map(function(a){return '<p class="struck"><s>'+esc(a.claim)+'</s> <span class="tally">left side is '+esc(a.left)+'</span></p>';}).join('')
+    : '<p class="ok small">'+(arith.checked?'All '+arith.checked+' numerical equalit'+(arith.checked>1?'ies':'y')+' in the typed solution check out.':(hadPhoto?'Solution given as a photo, so arithmetic was not machine-checked.':'No purely numerical equalities to check.'))+'</p><p class="tally">Algebra and logic are judged by the model, not machine-checked.</p>';
+  out.innerHTML=
+    '<div class="rhead">'
+    +'<div class="dial"><svg viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="50" fill="none" stroke="var(--rule)" stroke-width="8"/><circle cx="60" cy="60" r="50" fill="none" stroke="'+ring+'" stroke-width="8" stroke-dasharray="'+(C*frac)+' '+C+'"/></svg><div class="num"><b>'+sc+'</b><span>out of '+max+'</span></div></div>'
+    +'<div><p class="rmeta">'+esc(S.name)+' &middot; marked by '+esc(source)+'</p><p class="rverdict">'+esc(r.verdict||'')+'</p>'
+    +'<span class="status '+(r.sound?'ok':'bad')+'">'+(r.sound?'The argument stands as written':'The argument does not stand as written')+'</span></div></div>'
+    +'<div class="rsec"><h3>Exact arithmetic check</h3>'+arithHtml+'</div>'
+    +'<div class="rsec"><h3>Gaps'+(gaps.length?' &middot; '+gaps.length:'')+'</h3>'
+    +(gaps.length?gaps.map(function(g){ var sv=String(g.severity||'minor').toLowerCase(); if(!order.hasOwnProperty(sv)) sv='minor'; return '<div class="gapcard"><span class="sev '+sv+'">'+sv+'</span><div>'+(g.where?'<blockquote>'+esc(g.where)+'</blockquote>':'')+'<p class="what">'+esc(g.what||'')+'</p></div></div>'; }).join(''):'<p class="tally">No gaps found.</p>')+'</div>'
+    +((r.credit&&r.credit.length)?'<div class="rsec"><h3>Credited</h3><ul class="credit">'+r.credit.map(function(c){return '<li>'+esc(c)+'</li>';}).join('')+'</ul></div>':'')
+    +(r.next?'<div class="fixfirst"><span class="k">Fix first</span><p>'+esc(r.next)+'</p></div>':'')
+    +'<p class="rfoot">A second opinion from '+esc(source)+', not an examiner\'s verdict. Check each gap it names against your own reading before rewriting; models can miss errors and can invent them.</p>';
+  typeset(out); out.scrollIntoView({behavior:'smooth',block:'start'});
 }
-function evalNumeric(expr){
-  var e=expr.trim().replace(/\^/g,'**');
-  if(!e||!/^[\d\s+\-*/().]+$/.test(e)||!/\d/.test(e)) return null;
-  if(/[+\-*/]\s*$/.test(e)||/^\s*[*/]/.test(e)) return null;
-  try{ var v=Function('"use strict";return ('+e+')')(); return (typeof v==='number'&&isFinite(v))?v:null; }catch(_){ return null; }
+
+/* ====================================================== inputs */
+function readInputs(needSolution){
+  var prob=$('prob').value.trim(), sol=$('sol').value.trim(), sk=$('scheme').value;
+  var files=($('photo')&&$('photo').files)?Array.prototype.slice.call($('photo').files):[];
+  if(!prob){ return {err:'Enter the problem statement.'}; }
+  if(needSolution!==false&&!sol&&!files.length){ return {err:'Enter your solution'+(photoAllowed?' or attach a photo of it.':'.')}; }
+  return {prob:prob,sol:sol,sk:sk,files:files,arith:checkArithmetic(sol)};
 }
-function checkArithmetic(solution){
-  var text=cleanForArith(solution), found=[], seen={}, checked=0;
-  var segs=text.split(/[^0-9+\-*/().=\s^]+/);
-  segs.forEach(function(seg){
-    if(seg.indexOf('=')<0) return;
-    var sides=seg.split('=').map(function(s){return s.trim().replace(/^[.\s]+|[.\s]+$/g,'');});
-    if(sides.some(function(s){return !s;})) return;
-    if(!sides.some(function(s){return /\d\s*[+\-*/^]\s*[\d(]/.test(s);})) return;
-    var vals=sides.map(evalNumeric); if(vals.some(function(v){return v===null;})) return;
-    var pos=text.indexOf(seg)/Math.max(1,text.length);
-    for(var k=0;k+1<vals.length;k++){
-      var a=vals[k],b=vals[k+1]; checked++;
-      if(Math.abs(a-b)>1e-9*Math.max(1,Math.abs(a),Math.abs(b))){
-        var shown=sides[k]+' = '+sides[k+1]; if(seen[shown]) continue; seen[shown]=1;
-        found.push({claim:shown.replace(/\*\*/g,'^'),left:a,right:b,late:pos>0.75});
-      }
-    }
-  });
-  found.checked=checked; return found;
+
+/* ====================================================== mode switching */
+var mode='chat', sampleFn=null, photoAllowed=false, inArtifact=!!window.claude;
+function setMode(m){
+  mode=m;
+  ['claude','chat','key'].forEach(function(k){ var c=$('card-'+k); if(c) c.setAttribute('aria-pressed',String(k===m)); var p=$('pane-'+k); if(p) p.classList.toggle('hidden',k!==m); });
+  $('photorow').classList.toggle('hidden',!(m==='claude'&&photoAllowed));
+  lsSet('hu_mk_mode',m);
 }
-function typeset(el){ if(window.MathJax&&MathJax.typesetPromise) MathJax.typesetPromise([el]).catch(function(){}); }
-var SCHEMES={
-  bmo:{max:10,desc:'British Mathematical Olympiad Round 1 conventions. 10 for a complete and rigorous proof with all cases handled. 7 to 9 for essentially complete with a minor gap or an omitted degenerate case. 4 to 6 for substantial progress towards a complete method. 1 to 3 for relevant observations or a special case only. 0 for nothing of value, including a correct final answer with no valid argument.'},
-  bmo2:{max:10,desc:'British Mathematical Olympiad Round 2 conventions, marked strictly. Any logical gap that could hide a false step costs at least 3 marks. Unjustified "clearly" or "it is easy to see" steps are treated as absent. A proof relying on a diagram-specific configuration without handling the others is capped at 5.'},
-  step:{max:20,desc:'STEP conventions. Marks for correct method and execution of each part; accuracy marks are lost for algebraic slips, method marks are not. A part that is not attempted scores zero for that part; a correct answer with no working scores at most one third of its marks.'},
-  mat:{max:15,desc:'Oxford MAT long question conventions. Marks are allocated per sub-part; later parts can be credited using an earlier wrong result if the method is correct. Full marks require every claim to be justified in writing, not asserted.'},
-  interview:{max:10,desc:'Whiteboard argument in an Oxford interview. Score 10 if the argument is complete and each step is justified in a way that would satisfy a tutor probing it; 7 if a tutor would need to ask one clarifying question; 4 if the idea is right but the argument would not survive questioning; 0 to 2 if the reasoning is circular, assumes the result, or is missing.'}
-};
-document.getElementById('mark').addEventListener('click',async function(){
-  var prob=document.getElementById('prob').value.trim(), sol=document.getElementById('sol').value.trim(), sk=document.getElementById('scheme').value, S=SCHEMES[sk], msg=document.getElementById('msg'), btn=this;
-  if(!prob||!sol){ msg.textContent='Both boxes are needed.'; return; }
-  btn.disabled=true; msg.textContent='Marking';
-  var sys='You are an experienced olympiad and university-admissions mathematics marker. Mark the candidate\'s solution against this scheme: '+S.desc+' Maximum '+S.max+'.\n'
-   +'Principles: award marks only for what is written, not for what the candidate probably meant. Check every step for validity; a step that is true but not justified is a gap. Verify the algebra yourself. Check that all cases are covered and that any claimed equality, bound or existence has been actually established. Do not write a corrected proof and do not supply the missing steps; describe each gap in enough detail that the candidate could fix it, and no more. Quote the candidate\'s own words when identifying a gap. If the solution is correct and complete, say so plainly and award full marks; do not invent nitpicks.\n'
-   +'Output ONLY JSON: {"score": integer, "max": '+S.max+', "verdict": one sentence, "sound": true or false (would the argument convince a strict marker as written), "gaps": [{"severity": "fatal"|"major"|"minor", "where": quoted words, "what": what is missing or wrong}], "credit": [what was done correctly and earned marks], "next": one sentence on the single most valuable thing to fix first}.';
-  var schema={type:'object',properties:{score:{type:'integer'},max:{type:'integer'},verdict:{type:'string'},sound:{type:'boolean'},
-      gaps:{type:'array',items:{type:'object',properties:{severity:{type:'string'},where:{type:'string'},what:{type:'string'}},required:['severity','where','what']}},
-      credit:{type:'array',items:{type:'string'}},next:{type:'string'}},required:['score','max','verdict','sound','gaps','credit','next']};
-  var arith=checkArithmetic(sol);
-  var arithNote=arith.length
-    ? '\n\nEXACT ARITHMETIC CHECK (computed by a program, not an opinion): the following equalities written in the solution are FALSE:\n'+arith.map(function(a){return '  '+a.claim+'   (left side actually equals '+a.left+', right side '+a.right+')';}).join('\n')+'\nEach is a genuine error and must appear as a gap. A wrong final answer caused by an arithmetic error cannot receive full marks.'
-    : '\n\nEXACT ARITHMETIC CHECK: '+(arith.checked||0)+' purely numerical equalities were found and all are correct. Algebraic steps were not checked; verify those yourself.';
-  var body={system:sys+'\nBefore scoring, recompute every numerical and algebraic step yourself; do not assume a computation is right because it looks plausible. When quoting the candidate, you may paraphrase LaTeX into words; keep each quote short.',max_tokens:1400,json_schema:schema,messages:[{role:'user',content:'PROBLEM:\n'+prob+'\n\nCANDIDATE SOLUTION:\n'+sol+arithNote}]};
+
+/* ------------------------------ Claude, built in */
+var ctl=null;
+async function markWithClaude(){
+  var inp=readInputs(), msg=$('msg-claude'); if(inp.err){ msg.textContent=inp.err; return; }
+  if(!sampleFn){ msg.textContent='Claude is not available in this view.'; return; }
+  var btn=$('go-claude'), stop=$('stop-claude');
+  btn.disabled=true; stop.classList.remove('hidden'); msg.textContent='Thinking. Careful marking can take a minute or two.';
+  ctl=new AbortController();
+  var prompt=buildPrompt(inp.prob,inp.sol,inp.sk,inp.arith,inp.files.length);
+  var opts={modelTier:'complex',signal:ctl.signal,cache:false,onText:function(){ msg.textContent='Writing the report.'; }};
+  if(inp.files.length) opts.images=inp.files;
   try{
-    var res=await fetch(FREE_PROXY,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(body)});
-    var data=await res.json(); if(!res.ok) throw new Error(data.message||('Error '+res.status));
-    var txt=(data.content||[]).filter(function(b){return b.type==='text';}).map(function(b){return b.text;}).join('\n');
-    var r=tolerantJSON(txt)||salvageReport(txt);
-    var out=document.getElementById('out'); out.classList.remove('hidden');
-    if(!r){
-      out.innerHTML='<p class="rmeta">Marker\'s report</p><p class="tally">The report did not come back in a structured form, so here it is as written.</p><div style="font-family:var(--serif);white-space:pre-wrap;line-height:1.7">'+esc(txt)+'</div>';
-      typeset(out); msg.textContent=''; btn.disabled=false; return;
+    var res=await sampleFn(prompt,opts), r=parseReport(res.text);
+    if(!r){ msg.textContent='The reply could not be read as a report. Try again.'; }
+    else{ msg.textContent=(res.modelTierApplied&&res.modelTierApplied!=='complex')?'Marked on a lighter model than requested, which your plan allowed.':''; renderReport(r,inp.arith,inp.sk,'Claude',inp.files.length>0); }
+  }catch(e){
+    var code=e&&e.code, copy={cancelled:'Stopped.',not_granted:'Claude was not allowed for this page. Use the chatbot option instead.',sampling_disabled:'Claude is not available on this account. Use the chatbot option instead.',rate_limited:'You have hit a usage limit on your Claude plan. Try again later, or use another chatbot.',session_expired:'Please sign in to Claude again.',prompt_too_large:'The problem and solution are too long to send in one go. Shorten them.',image_rejected:'That photo could not be used. Try a clearer JPEG or PNG.',refused:'Claude declined this request.'};
+    msg.textContent=copy[code]||'Something went wrong on the way to Claude. Try again in a moment.';
+    if(code==='not_granted'||code==='sampling_disabled'){ $('card-claude').classList.add('off'); }
+  }
+  btn.disabled=false; stop.classList.add('hidden');
+}
+
+/* ------------------------------ any chatbot */
+var lastPromptArith=null, lastPromptScheme=null;
+function makeChatPrompt(){
+  var inp=readInputs(), msg=$('msg-chat'); if(inp.err){ msg.textContent=inp.err; return null; }
+  lastPromptArith=inp.arith; lastPromptScheme=inp.sk;
+  var p='You are being used as a mathematics marker by a web page. Your reply will be pasted back into that page and read by a program, so follow the output format exactly.\n\n'+buildPrompt(inp.prob,inp.sol,inp.sk,inp.arith,0);
+  $('promptbox').value=p; $('promptwrap').classList.remove('hidden'); msg.textContent='';
+  return p;
+}
+async function copyPrompt(open){
+  var p=makeChatPrompt(); if(!p) return;
+  var ok=false;
+  try{ await navigator.clipboard.writeText(p); ok=true; }catch(e){ try{ $('promptbox').select(); ok=document.execCommand('copy'); }catch(_){ ok=false; } }
+  $('msg-chat').textContent=ok?'Prompt copied. Paste it into your chatbot, then paste its whole reply below.':'Copying was blocked here. Select the prompt below, copy it yourself, and paste it into your chatbot.';
+  if(open) window.open(open,'_blank','noopener');
+}
+function renderPasted(){
+  var txt=$('reply').value.trim(), msg=$('msg-chat');
+  if(!txt){ msg.textContent='Paste the chatbot\'s reply first.'; return; }
+  if(!lastPromptArith){ var inp=readInputs(); if(inp.err){ msg.textContent=inp.err; return; } lastPromptArith=inp.arith; lastPromptScheme=inp.sk; }
+  var r=parseReport(txt);
+  if(!r){ msg.textContent='That reply does not contain a report in the expected format. Make sure you pasted all of it; if the chatbot added commentary, ask it to reply with only the JSON.'; return; }
+  msg.textContent=''; renderReport(r,lastPromptArith,lastPromptScheme,$('whichbot').value||'your chatbot',false);
+}
+
+/* ------------------------------ own API key */
+var PROVIDERS={
+  openai:{label:'OpenAI',model:'gpt-5.4-mini',keyHint:'sk-...'},
+  gemini:{label:'Google Gemini',model:'gemini-2.5-flash',keyHint:'AIza...'},
+  anthropic:{label:'Anthropic',model:'claude-sonnet-5',keyHint:'sk-ant-...'}
+};
+function loadKeyUI(){
+  var p=$('prov').value, P=PROVIDERS[p];
+  $('apikey').placeholder=P.keyHint; $('apikey').value=lsGet('hu_mk_key_'+p,'');
+  $('apimodel').value=lsGet('hu_mk_model_'+p,P.model);
+}
+async function markWithKey(){
+  var inp=readInputs(), msg=$('msg-key'); if(inp.err){ msg.textContent=inp.err; return; }
+  var p=$('prov').value, key=$('apikey').value.trim(), model=$('apimodel').value.trim()||PROVIDERS[p].model;
+  if(!key){ msg.textContent='Enter your API key.'; return; }
+  if($('remember').checked){ lsSet('hu_mk_key_'+p,key); lsSet('hu_mk_model_'+p,model); } else { lsSet('hu_mk_key_'+p,''); }
+  var prompt=buildPrompt(inp.prob,inp.sol,inp.sk,inp.arith,0), btn=$('go-key');
+  btn.disabled=true; msg.textContent='Marking with '+PROVIDERS[p].label+'. This can take a minute.';
+  try{
+    var text='';
+    if(p==='openai'){
+      var res=await fetch('https://api.openai.com/v1/chat/completions',{method:'POST',headers:{'content-type':'application/json','authorization':'Bearer '+key},body:JSON.stringify({model:model,messages:[{role:'user',content:prompt}],response_format:{type:'json_object'},max_completion_tokens:6000})});
+      var d=await res.json(); if(!res.ok) throw new Error((d.error&&d.error.message)||('HTTP '+res.status));
+      text=d.choices&&d.choices[0]&&d.choices[0].message&&d.choices[0].message.content||'';
+    } else if(p==='gemini'){
+      var res2=await fetch('https://generativelanguage.googleapis.com/v1beta/models/'+encodeURIComponent(model)+':generateContent?key='+encodeURIComponent(key),{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({contents:[{role:'user',parts:[{text:prompt}]}],generationConfig:{responseMimeType:'application/json',maxOutputTokens:8192,temperature:0.2}})});
+      var d2=await res2.json(); if(!res2.ok) throw new Error((d2.error&&d2.error.message)||('HTTP '+res2.status));
+      text=((d2.candidates&&d2.candidates[0]&&d2.candidates[0].content&&d2.candidates[0].content.parts)||[]).map(function(x){return x.text||'';}).join('');
+    } else {
+      var res3=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'content-type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:model,max_tokens:4000,messages:[{role:'user',content:prompt}]})});
+      var d3=await res3.json(); if(!res3.ok) throw new Error((d3.error&&d3.error.message)||('HTTP '+res3.status));
+      text=(d3.content||[]).filter(function(b){return b.type==='text';}).map(function(b){return b.text;}).join('');
     }
-    var capped=false;
-    if(arith.length){
-      r.gaps=r.gaps||[];
-      arith.forEach(function(a){
-        var mentioned=r.gaps.some(function(g){ return (g.where+' '+g.what).replace(/\s/g,'').indexOf(a.claim.replace(/\s/g,'').split('=')[0])>=0; });
-        if(!mentioned) r.gaps.unshift({severity:a.late?'major':'minor',where:a.claim,what:'This equality is false: the left side equals '+a.left+', not '+a.right+'.'+(a.late?' It sits where the final answer is computed, so the stated answer is wrong.':'')});
-      });
-      var mx0=r.max||S.max, cap=mx0-(arith.some(function(a){return a.late;})?2:1);
-      if((r.score|0)>cap){ r.score=cap; capped=true; }
-      r.sound=false;
-      if(/correct and complete/i.test(r.verdict||'')) r.verdict='The method is sound but the solution contains an arithmetic error.';
-      r.credit=(r.credit||[]).filter(function(c){ return !/calculat|comput|arithmetic|final answer/i.test(c); });
-      var first=arith.filter(function(a){return a.late;})[0]||arith[0];
-      r.next='Recompute '+first.claim.split('=')[0].trim()+': it equals '+first.left+', not '+first.right+'. Then check every later line that depends on it.';
-    }
-    var max=r.max||S.max, sc=Math.max(0,Math.min(max,r.score|0)), frac=sc/max, C=2*Math.PI*50;
-    var ringCol=frac>=0.8?'#2C5545':frac>=0.5?'#8A5A12':'#8C2F2F';
-    var order={fatal:0,major:1,minor:2};
-    var gaps=(r.gaps||[]).slice().sort(function(a,b){return (order[a.severity]??3)-(order[b.severity]??3);});
-    var schemeName=document.getElementById('scheme').selectedOptions[0].textContent;
-    out.innerHTML=
-      '<div class="rhead">'
-      +'<div class="dial"><svg viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="50" fill="none" stroke="#D9D6CC" stroke-width="8"/><circle cx="60" cy="60" r="50" fill="none" stroke="'+ringCol+'" stroke-width="8" stroke-linecap="butt" stroke-dasharray="'+(C*frac)+' '+C+'"/></svg><div class="num"><b>'+sc+'</b><span>out of '+max+'</span></div></div>'
-      +'<div><p class="rmeta">'+esc(schemeName)+'</p><p class="rverdict">'+esc(r.verdict||'')+'</p>'
-      +'<span class="status '+(r.sound?'ok':'bad')+'">'+(r.sound?'The argument stands as written':'The argument does not stand as written')+'</span></div>'
-      +'</div>'
-      +'<div class="rsec"><h3>Exact arithmetic check</h3>'
-      +(arith.length
-         ? '<p class="bad" style="font-family:var(--sans);font-size:.92rem;margin:0 0 .4rem">'+arith.length+' false equalit'+(arith.length>1?'ies':'y')+' found by exact computation'+(capped?'. Score capped accordingly.':'.')+'</p>'+arith.map(function(a){return '<p style="margin:.15rem 0"><span style="text-decoration:line-through;text-decoration-color:#8C2F2F">'+esc(a.claim)+'</span> &nbsp;<span class="tally">left side is '+esc(a.left)+'</span></p>';}).join('')
-         : '<p class="ok" style="font-family:var(--sans);font-size:.92rem;margin:0">'+(arith.checked?'All '+arith.checked+' numerical equalit'+(arith.checked>1?'ies':'y')+' in the solution check out.':'No purely numerical equalities to check.')+'</p><p class="tally" style="margin:.2rem 0 0">Algebraic steps are judged by the AI and are not machine-checked.</p>')
-      +'</div>'
-      +'<div class="rsec"><h3>Gaps'+(gaps.length?' \u00b7 '+gaps.length:'')+'</h3>'
-      +(gaps.length?gaps.map(function(g){ var sv=(g.severity||'minor').toLowerCase(); return '<div class="gapcard"><span class="sev '+esc(sv)+'">'+esc(sv)+'</span><div>'+(g.where?'<blockquote>'+esc(g.where)+'</blockquote>':'')+'<p class="what">'+esc(g.what||'')+'</p></div></div>'; }).join('')
-        :'<p class="tally">No gaps found.</p>')+'</div>'
-      +((r.credit&&r.credit.length)?'<div class="rsec"><h3>Credited</h3><ul class="credit">'+r.credit.map(function(c){return '<li>'+esc(c)+'</li>';}).join('')+'</ul></div>':'')
-      +(r.next?'<div class="fixfirst"><span class="k">Fix first</span><p>'+esc(r.next)+'</p></div>':'')
-      +'<p class="rfoot">Marked by an AI against the '+esc(schemeName.split(',')[0])+' scheme. Treat it as a second opinion, not a verdict: check any gap it names against your own reading before rewriting.</p>';
-    typeset(out); msg.textContent=''; out.scrollIntoView({behavior:'smooth',block:'start'});
-  }catch(e){ msg.textContent=e.message; }
+    var r=parseReport(text);
+    if(!r){ msg.textContent='The reply could not be read as a report. Try again, or try a more capable model.'; }
+    else{ msg.textContent=''; renderReport(r,inp.arith,inp.sk,PROVIDERS[p].label+' ('+model+')',false); }
+  }catch(e){ msg.textContent='The request failed: '+String(e.message||e).slice(0,200); }
   btn.disabled=false;
-});
+}
+
+/* ====================================================== boot */
+function boot(){
+  var sel=$('scheme'); Object.keys(SCHEMES).forEach(function(k){ var o=document.createElement('option'); o.value=k; o.textContent=SCHEMES[k].name; sel.appendChild(o); }); sel.value=lsGet('hu_mk_scheme','bmo');
+  sel.addEventListener('change',function(){ lsSet('hu_mk_scheme',sel.value); });
+  ['claude','chat','key'].forEach(function(k){ var c=$('card-'+k); if(c) c.addEventListener('click',function(){ if(!c.classList.contains('off')||k!=='claude') setMode(k); }); });
+  $('go-claude').addEventListener('click',markWithClaude);
+  $('stop-claude').addEventListener('click',function(){ if(ctl) ctl.abort(); });
+  $('copy-plain').addEventListener('click',function(){ copyPrompt(null); });
+  document.querySelectorAll('[data-open]').forEach(function(b){ b.addEventListener('click',function(){ $('whichbot').value=b.getAttribute('data-name'); copyPrompt(b.getAttribute('data-open')); }); });
+  $('render').addEventListener('click',renderPasted);
+  $('prov').addEventListener('change',loadKeyUI); loadKeyUI();
+  $('go-key').addEventListener('click',markWithKey);
+
+  if(inArtifact){
+    $('card-key').classList.add('hidden');
+    $('claude-note').textContent='Runs on your own Claude account. The first time, Claude asks your permission.';
+    window.claude.use('sample').then(function(fn){
+      if(fn){ sampleFn=fn;
+        $('card-claude').classList.remove('off'); $('claude-state').textContent='Ready';
+        if(fn.limits) fn.limits().then(function(l){ photoAllowed=!!(l&&l.images); if(photoAllowed){ $('photo').accept=l.images.mediaTypes.join(','); } setMode(mode); }).catch(function(){});
+        setMode(lsGet('hu_mk_mode','claude')==='key'?'claude':lsGet('hu_mk_mode','claude'));
+      } else { $('claude-state').textContent='Unavailable here'; $('card-claude').classList.add('off'); setMode('chat'); }
+    });
+  } else {
+    $('card-claude').classList.add('off');
+    if(ARTIFACT_URL){
+      $('claude-state').innerHTML='<a href="'+ARTIFACT_URL+'" target="_blank" rel="noopener">Open on claude.ai</a>';
+      $('claude-note').textContent='Claude runs directly only in the claude.ai copy of this page, on your own account. Free accounts work.';
+    } else { $('claude-state').textContent='Coming soon'; $('claude-note').textContent='The claude.ai copy of this page is not linked yet.'; }
+    var m=lsGet('hu_mk_mode','chat'); setMode(m==='claude'?'chat':m);
+  }
+}
+boot();
+
 </script>
 </body>
 </html>
