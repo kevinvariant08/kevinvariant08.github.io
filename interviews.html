@@ -347,12 +347,35 @@ async function callAI(system, messages, maxTokens){
   var data = await res.json();
   return (data.content||[]).filter(function(b){return b.type==='text';}).map(function(b){return b.text;}).join('\n');
 }
-function parseJSON(txt){
-  var s = txt.replace(/```json|```/g,'').trim();
-  var i = s.indexOf('{'), j = s.lastIndexOf('}');
-  if(i<0||j<0) return null;
-  try{ return JSON.parse(s.slice(i,j+1)); }catch(e){ return null; }
+/* Models often emit LaTeX backslashes unescaped inside JSON strings (\mid, \frac), which is invalid JSON,
+   and \frac or \text silently become a form feed or a tab. Repair those, strip code fences,
+   and if the object was cut off mid-way, close whatever is still open. */
+var LATEX_WORD=/^(frac|tfrac|dfrac|text|textbf|textit|times|theta|tau|tan|tanh|triangle|to|top|neq|nabla|nmid|notin|not|nu|ne|ni|right|rightarrow|rfloor|rceil|rangle|rho|binom|beta|begin|bmod|blacksquare|bigl|bigr|big|bar|boxed|underline|upsilon|uparrow|forall|flat)(?![a-zA-Z])/;
+function repairEscapes(s){
+  return s.replace(/\\([\s\S])/g,function(m,c,off,str){
+    if(c==='\\'||c==='"'||c==='/') return m;
+    if('bfnrtu'.indexOf(c)>=0) return LATEX_WORD.test(str.slice(off+1))?'\\\\'+c:m;
+    return '\\\\'+c;
+  });
 }
+function tolerantJSON(txt){
+  var s=String(txt||'').replace(/```json|```/g,'').trim(), i=s.indexOf('{'); if(i<0) return null; s=s.slice(i);
+  function tryParse(t){ try{ return JSON.parse(t); }catch(e){ return null; } }
+  var j=s.lastIndexOf('}'), r=j>0?tryParse(s.slice(0,j+1)):null;
+  var fixed=repairEscapes(s);
+  if(r&&!/[\f\t\b]/.test(JSON.stringify(r).replace(/\\[ftb]/g,''))&&fixed===s) return r;
+  j=fixed.lastIndexOf('}'); r=j>0?tryParse(fixed.slice(0,j+1)):null; if(r) return r;
+  var stack=[], inStr=false, esc=false;
+  for(var k=0;k<fixed.length;k++){ var c=fixed[k];
+    if(esc){esc=false;continue;} if(inStr&&c==='\\'){esc=true;continue;}
+    if(c==='"'){inStr=!inStr;continue;} if(inStr) continue;
+    if(c==='{'||c==='[') stack.push(c); else if(c==='}'||c===']') stack.pop(); }
+  var tail=fixed; if(inStr) tail+='"';
+  tail=tail.replace(/[,:]\s*$/,'');
+  while(stack.length) tail+=(stack.pop()==='{')?'}':']';
+  return tryParse(tail);
+}
+function parseJSON(txt){ return tolerantJSON(txt); }
 function interviewerSystem(p){
   var parts = p.parts.map(function(q,i){
     return 'PART '+i+' '+q.label+': '+q.text+'\n  MODEL ANSWER (private): '+q.model+'\n  HINT LADDER (gentlest first): '+q.hints.map(function(h,k){return '['+(k+1)+'] '+h;}).join(' ');
