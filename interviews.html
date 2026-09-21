@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Kevin Hu - Mock interviews</title>
+  <title>Kevin Hu - Proof marker</title>
   <link rel="icon" href="/favicon.ico" sizes="32x32">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -12,78 +12,41 @@
   <link rel="stylesheet" href="style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+  <script>window.MathJax={tex:{inlineMath:[['$','$']],displayMath:[['\\[','\\]']],processEscapes:true},options:{skipHtmlTags:['script','noscript','style','textarea','pre']}};</script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
   <style>
-    .iv{--ink:#1A2230;--soft:#586374;--faint:#8A93A1;--rule:#D9D6CC;--warn:#8A5A12;--urgent:#8C2F2F;--mark:#2C5545;--paper:#FBFAF6;
-        --serif:"IBM Plex Serif",Georgia,serif;--sans:"IBM Plex Sans",system-ui,sans-serif;
-        font-family:var(--sans);color:var(--ink);line-height:1.6}
-    .iv .hidden{display:none!important}
-    .iv h2{font-family:var(--serif);font-weight:600}
-    .iv p{max-width:68ch}
-    .iv .lead{font-size:1.05rem;color:var(--soft)}
-    .iv .btn2{font-family:var(--sans);font-size:.95rem;font-weight:500;color:var(--ink);background:transparent;border:1px solid var(--ink);border-radius:2px;padding:.5rem 1rem;cursor:pointer}
-    .iv .btn2:hover{background:var(--ink);color:#fff}
-    .iv .btn2.quiet{border-color:var(--rule);color:var(--soft);font-weight:400}
-    .iv .btn2.quiet:hover{background:transparent;border-color:var(--ink);color:var(--ink)}
-    .iv .btn2[disabled]{opacity:.35;cursor:default}
-    .iv .btn2:focus-visible{outline:2px solid var(--urgent);outline-offset:2px}
-    .iv input[type=text],.iv input[type=password],.iv select,.iv textarea{font-family:var(--sans);font-size:.95rem;padding:.45rem .6rem;border:1px solid var(--rule);border-radius:2px;background:#fff;color:var(--ink)}
-    .iv textarea{width:100%;min-height:5.5rem;resize:vertical;line-height:1.5}
-    .iv .row{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;margin-top:.9rem}
-    .iv .settings{border:1px solid var(--rule);padding:1rem 1.2rem;margin:1.4rem 0}
-    .iv .settings label{display:block;font-size:.9rem;color:var(--soft);margin-top:.7rem}
-    .iv .settings small{color:var(--faint)}
-    .iv .plist{margin:1.6rem 0}
-    .iv .prob{border-top:1px solid var(--rule);padding:1.1rem 0 1.2rem}
-    .iv .prob:last-child{border-bottom:1px solid var(--rule)}
-    .iv .prob h3{font-family:var(--serif);font-weight:600;font-size:1.15rem;margin:0 0 .25rem}
-    .iv .meta{color:var(--faint);font-size:.88rem;margin:0 0 .5rem}
-    .iv .prob p.blurb{margin:0 0 .7rem}
-    .iv .record{margin-top:2rem;color:var(--soft);font-size:.92rem}
-    .iv .record table{border-collapse:collapse;font-size:.9rem;margin-top:.5rem}
-    .iv .record td,.iv .record th{border-bottom:1px solid var(--rule);padding:.35rem .8rem .35rem 0;text-align:left;font-weight:400}
-    .iv .record th{color:var(--faint)}
-    /* interview mode */
-    .iv .clockbox{border-top:2px solid var(--ink);border-bottom:1px solid var(--rule);padding:1rem 0 .8rem;margin-bottom:1.6rem}
-    .iv .clockrow{display:flex;align-items:baseline;justify-content:space-between;gap:1rem;flex-wrap:wrap}
-    .iv #clock{font-family:var(--serif);font-weight:600;font-size:3rem;line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
-    .iv #clock.warn{color:var(--warn)} .iv #clock.urgent{color:var(--urgent)}
-    .iv .clocknote{color:var(--faint);font-size:.86rem;text-align:right;max-width:18rem}
-    .iv .drain{height:2px;background:var(--rule);margin-top:.8rem;overflow:hidden}
-    .iv #drainbar{height:100%;width:0%;background:var(--ink);transition:width 1s linear}
-    .iv #drainbar.warn{background:var(--warn)} .iv #drainbar.urgent{background:var(--urgent)}
-    @media (prefers-reduced-motion:reduce){.iv #drainbar{transition:none}}
-    .iv .setup{font-family:var(--serif);font-size:1.08rem;line-height:1.7}
-    .iv .part{border-left:2px solid var(--rule);padding:.1rem 0 .1rem 1.1rem;margin:0 0 1.4rem}
-    .iv .part.live{border-left-color:var(--ink)} .iv .part.done{opacity:.55}
-    .iv .plabel{font-family:var(--serif);font-weight:600;margin:0 0 .3rem}
-    .iv .ptext{font-family:var(--serif);font-size:1.05rem;line-height:1.7;margin:0}
-    .iv .hint{margin:.8rem 0 0;padding:.7rem .9rem;border:1px dashed var(--rule);font-size:.95rem;color:var(--soft)}
-    .iv .hint .who,.iv .msg .who{font-family:var(--sans);font-weight:500;color:var(--ink);display:block;font-size:.82rem;margin-bottom:.15rem}
-    .iv .chat{margin:1.4rem 0 .6rem;border-top:1px solid var(--rule);padding-top:1rem}
-    .iv .msg{margin:0 0 .9rem;max-width:66ch}
-    .iv .msg.tutor{font-family:var(--serif);font-size:1.02rem;line-height:1.65}
-    .iv .msg.cand{color:var(--soft);padding-left:1rem;border-left:2px solid var(--rule)}
-    .iv .msg.sys{color:var(--faint);font-size:.88rem;font-style:italic}
-    .iv .tally{color:var(--faint);font-size:.88rem}
-    .iv .debrief{border-top:2px solid var(--ink);margin-top:2.4rem;padding-top:1.2rem}
-    .iv .debrief h2{font-size:1.25rem;margin:1.6rem 0 .5rem}
-    .iv .debrief h3{font-family:var(--serif);font-weight:600;font-size:1.02rem;margin:1.2rem 0 .3rem}
-    .iv .debrief p,.iv .debrief li{font-family:var(--serif);font-size:1.02rem;line-height:1.7}
-    .iv .score{display:flex;align-items:baseline;gap:1rem;flex-wrap:wrap}
-    .iv .score .big{font-family:var(--serif);font-weight:600;font-size:3rem;line-height:1}
-    .iv .score .band{font-family:var(--serif);font-style:italic;color:var(--soft)}
-    .iv .stats{font-size:.95rem;color:var(--soft);border:1px solid var(--rule);padding:.8rem 1rem;margin:1rem 0 1.2rem}
-    .iv .stats b{color:var(--ink);font-weight:500}
-    .iv .turn{margin:0 0 .6rem;font-family:var(--serif);font-size:1rem;line-height:1.65}
-    .iv .turn .sp{font-family:var(--sans);font-size:.78rem;font-weight:500;color:var(--faint);display:block}
-    .iv .verdict{border-left:2px solid var(--mark);padding-left:1rem;color:var(--soft);font-style:italic}
-    .iv details{margin:1rem 0}
-    .iv summary{cursor:pointer;font-family:var(--serif);font-weight:600}
-    .iv .err{color:var(--urgent);font-size:.9rem}
+    .hu{--ink:#1A2230;--soft:#586374;--faint:#8A93A1;--rule:#D9D6CC;--paper:#FBFAF6;--ok:#2C5545;--bad:#8C2F2F;--warn:#8A5A12;--acc:#534AB7;--acc2:#AFA9EC;
+        --serif:"IBM Plex Serif",Georgia,serif;--sans:"IBM Plex Sans",system-ui,sans-serif;font-family:var(--sans);color:var(--ink);line-height:1.55}
+    .hu h2{font-family:var(--serif);font-weight:600}
+    .hu h3{font-family:var(--serif);font-weight:600;font-size:1.05rem;margin:1.2rem 0 .4rem}
+    .hu p{max-width:70ch}
+    .hu .lead{font-size:1.05rem;color:var(--soft)}
+    .hu .hidden{display:none!important}
+    .hu .btn2{font-family:var(--sans);font-size:.95rem;font-weight:500;color:var(--ink);background:transparent;border:1px solid var(--ink);border-radius:2px;padding:.5rem 1rem;cursor:pointer}
+    .hu .btn2:hover{background:var(--ink);color:#fff}
+    .hu .btn2.quiet{border-color:var(--rule);color:var(--soft);font-weight:400}
+    .hu .btn2.quiet:hover{background:transparent;border-color:var(--ink);color:var(--ink)}
+    .hu .btn2[disabled]{opacity:.35;cursor:default}
+    .hu .row{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;margin-top:.9rem}
+    .hu .panel{border:1px solid var(--rule);padding:1rem 1.2rem;margin:1.2rem 0}
+    .hu select,.hu input[type=text],.hu textarea{font-family:var(--sans);font-size:.95rem;padding:.45rem .6rem;border:1px solid var(--rule);border-radius:2px;background:#fff;color:var(--ink)}
+    .hu textarea{width:100%;resize:vertical;line-height:1.5}
+    .hu .tally{color:var(--faint);font-size:.88rem}
+    .hu .err{color:var(--bad);font-size:.9rem}
+    .hu .ok{color:var(--ok)} .hu .bad{color:var(--bad)}
+    .hu label{display:block;font-size:.9rem;color:var(--soft);margin-top:.9rem}
+    .hu textarea{min-height:7rem;font-family:var(--serif);font-size:1rem}
+    .hu textarea#sol{min-height:16rem}
+    .hu .report{border-top:2px solid var(--ink);margin-top:2rem;padding-top:1rem}
+    .hu .report .big{font-family:var(--serif);font-weight:600;font-size:2.8rem;line-height:1}
+    .hu .report p,.hu .report li{font-family:var(--serif);font-size:1.02rem;line-height:1.7}
+    .hu .gap{border-left:2px solid var(--bad);padding:.2rem 0 .2rem 1rem;margin:.6rem 0}
+    .hu .gap.minor{border-left-color:var(--warn)}
+    .hu .gap .sev{font-family:var(--sans);font-size:.78rem;color:var(--faint)}
+    .hu .verdict{font-family:var(--serif);font-style:italic;color:var(--soft)}
   </style>
 </head>
 <body>
-
   <nav>
     <div class="nav-links">
       <a href="index.html">Mathematics</a>
@@ -91,262 +54,42 @@
       <a href="geometry.html">Geometry Lab</a>
       <a href="sandbox.html">Sandbox</a>
       <a href="drill.html">Drill</a>
-      <a href="interviews.html" aria-current="page">Mock interviews</a>
-      <a href="marker.html">Marker</a>
+      <a href="interviews.html">Mock interviews</a>
+      <a href="marker.html" aria-current="page">Marker</a>
       <a href="techniques.html">Techniques</a>
       <a href="progress.html">Progress</a>
     </div>
   </nav>
+  <main class="container hu">
+    <h1>Proof marker</h1>
+    <p class="lead">Paste a problem and your written solution, and get it marked the way an olympiad or STEP marker would: a score against a real scheme, every unjustified step named, and no help writing the proof. Marks are hard to get here on purpose. A solution that is correct but not proved scores like one that is wrong.</p>
 
-  <main class="container iv">
-
-    <!-- ============================================================ HUB -->
-    <section id="hub">
-      <h1>Mock interview simulators</h1>
-      <p class="lead">Oxbridge maths interviews are twenty-five minutes with one problem, delivered in parts you cannot see in advance, with a tutor who probes every step and gives ground only when you ask. These simulators reproduce that. Each problem is original, escalates from accessible to genuinely hard, and comes with a mark scheme, a scored debrief and sample performances at the bottom and top of the scale, all locked until you finish.</p>
-
-      <div class="settings">
-        <h2 style="margin:0 0 .3rem;font-size:1.1rem">Interviewer</h2>
-        <label>Mode
-          <select id="mode">
-            <option value="free">AI interviewer, free (no sign-up, no key)</option>
-            <option value="self">Self-guided (timer and written nudges, no AI)</option>
-            <option value="own">AI interviewer with your own API key (no daily limit)</option>
-          </select>
-        </label>
-        <p id="freenote" style="font-size:.88rem;color:var(--faint);margin:.6rem 0 0">Free interviews are paid for by this site and capped each day so the budget lasts. If you hit the cap, switch to self-guided or use your own key.</p>
-        <div id="ownopts" class="hidden">
-          <label>Anthropic API key <small>(kept in this browser only, sent straight to api.anthropic.com, never to this site)</small>
-            <input type="password" id="apikey" placeholder="sk-ant-..." style="width:100%;max-width:32rem">
-          </label>
-          <label>Model
-            <input type="text" id="model" value="claude-sonnet-5" style="width:16rem">
-          </label>
-          <label>Custom proxy URL <small>(optional; overrides the key field)</small>
-            <input type="text" id="proxy" placeholder="https://..." style="width:100%;max-width:32rem">
-          </label>
-        </div>
-        <label id="voicelab" style="display:flex;gap:.5rem;align-items:flex-start;margin-top:.9rem;color:var(--ink)">
-          <input type="checkbox" id="voice" style="margin-top:.3rem">
-          <span>Voice mode: speak your reasoning and hear the interviewer reply. Your silences are timed and count towards the score, exactly as in the room. <small style="color:var(--faint)">Chrome and Safari only; nothing is recorded or uploaded, transcription happens in the browser.</small></span>
-        </label>
-        <p style="font-size:.88rem;color:var(--faint);margin:.7rem 0 0">Whichever mode you pick, the interviewer never gives answers. It asks you to justify what you claim, gives the smallest possible nudge when you ask for one, and moves you on only when you have earned it.</p>
-        <div class="row"><button class="btn2 quiet" id="savecfg">Save settings</button><span id="cfgmsg" class="tally"></span></div>
+    <div class="panel">
+      <label>Problem statement <small class="tex2jax_ignore" style="color:var(--faint)">(LaTeX between dollar signs is fine)</small>
+        <textarea id="prob" placeholder="State the problem exactly as set."></textarea></label>
+      <label>Your solution
+        <textarea id="sol" placeholder="Write it as you would on paper: every step you would expect a marker to read."></textarea></label>
+      <div class="row">
+        <label style="margin:0">Scheme
+          <select id="scheme">
+            <option value="bmo">BMO round 1 style, out of 10</option>
+            <option value="bmo2">BMO round 2 style, out of 10, stricter</option>
+            <option value="step">STEP style, out of 20</option>
+            <option value="mat">MAT long question, out of 15</option>
+            <option value="interview">Interview whiteboard: is the argument sound?</option>
+          </select></label>
+        <button class="btn2" id="mark">Mark it</button>
+        <span class="tally" id="msg"></span>
       </div>
+      <p class="tally" style="margin-top:.8rem">Uses the same free interviewer as the mock interviews, so the daily cap is shared. Nothing you paste is stored.</p>
+    </div>
 
-      <h2>Choose a problem</h2>
-      <div class="plist" id="plist"></div>
-
-      <div class="record" id="record"></div>
-    </section>
-
-    <!-- ====================================================== INTERVIEW -->
-    <section id="stage" class="hidden">
-      <h1 id="ptitle"></h1>
-      <div class="clockbox">
-        <div class="clockrow">
-          <div id="clock">25:00</div>
-          <div class="clocknote" id="clocknote">Paper and pen beside you. Everything you would say aloud, type.</div>
-        </div>
-        <div class="drain"><div id="drainbar"></div></div>
-      </div>
-      <p class="setup" id="setup"></p>
-      <div id="parts"></div>
-
-      <div class="chat" id="chat"></div>
-      <div id="composer">
-        <textarea id="input" placeholder="Say what you are trying, then try it. Short messages are fine; this is a conversation."></textarea>
-        <div class="row">
-          <button class="btn2" id="send">Send</button>
-          <button class="btn2 quiet hidden" id="mic">Start listening</button>
-          <button class="btn2 quiet" id="nudge">Ask for a nudge</button>
-          <button class="btn2 quiet" id="next">Move on to the next part</button>
-          <button class="btn2 quiet" id="end">End and see the debrief</button>
-          <span class="tally" id="tally">Nudges used: 0</span>
-          <span class="tally hidden" id="quiet"></span>
-        </div>
-        <p class="err" id="err"></p>
-      </div>
-      <div id="debrief" class="debrief hidden"></div>
-    </section>
-
+    <div id="out" class="report hidden"></div>
   </main>
 
 <script>
-/* ================================================================ PROBLEMS
-   Each problem: id, title, blurb, topics, setup (HTML), parts[] with label,
-   text, hints[] (ladder, gentlest first), model (private, for the interviewer),
-   scheme (HTML mark scheme), sample0 / sample10 (HTML transcripts).            */
-var PROBLEMS = [
-{
-  id:"shadow", title:"An unfamiliar operation on functions", topics:"Integration, inequalities",
-  blurb:"You are handed a definition nobody has taught you and asked to work with it. The last part has an answer that is not what the obvious bound suggests.",
-  setup:'For a continuous function <i>f</i> on [0,1], define its <i>shadow</i> S(<i>f</i>) = &int;<sub>0</sub><sup>1</sup> max(<i>f</i>(<i>x</i>), <i>f</i>(1&minus;<i>x</i>)) d<i>x</i>.',
-  parts:[
-   {label:"(a)", text:"Compute S(f) when f(x) = x.",
-    hints:["Sketch y = x and y = 1 minus x on the same axes. Which one is on top, and where?","The two pieces you get are mirror images; you only need to compute one of them."],
-    model:"3/4. max(x,1-x) is 1-x on [0,1/2] and x on [1/2,1]; by symmetry S = 2*int_{1/2}^1 x dx = 3/4."},
-   {label:"(b)", text:"Show that S(f) is at least the integral of f over [0,1], for every continuous f. For which f is there equality?",
-    hints:["What is true pointwise, before you integrate anything?","For equality: a non-negative continuous function with zero integral has to be what?"],
-    model:"Pointwise max(f(x),f(1-x)) >= f(x); integrate. Equality iff f(x) = f(1-x) for all x (f symmetric about 1/2): the difference is a non-negative continuous integrand with zero integral, so it vanishes; then swap x and 1-x."},
-   {label:"(c)", text:"Prove that S(f) equals the integral of f plus one half of the integral of |f(x) minus f(1 minus x)|, both over [0,1].",
-    hints:["Is there a formula for max(a,b) in terms of a + b and a minus b?","What is the integral of f(1 minus x) over [0,1]?"],
-    model:"max(a,b) = (a+b)/2 + |a-b|/2. Integrate with a=f(x), b=f(1-x); substitution u=1-x gives int f(1-x) = int f. (b) follows immediately."},
-   {label:"(d)", text:"Suppose f is continuous with integral zero over [0,1] and |f(x)| at most 1 throughout. How large can S(f) be?",
-    hints:["Use (c). What is the largest the integrand in the modulus can be?","You have a bound. Is it attained? Try to write down a function that achieves it, and check it satisfies every hypothesis.","What happens to |f(x) minus f(1 minus x)| at x = 1/2, and what does continuity say about nearby x?"],
-    model:"S(f) = (1/2) int |f(x)-f(1-x)| <= 1 since integrand <= 2. Not attained: at x=1/2 the integrand is 0, and continuity keeps it small nearby, so the integral is strictly less than 2. Supremum is 1, approached by f_eps = 1 on [0,1/2-eps], -1 on [1/2+eps,1], linear between (antisymmetric about 1/2 so integral is 0). Answer: sup 1, no maximiser."},
-   {label:"(e)", text:"Define T(f) the same way but with min instead of max. What is S(f) + T(f), and what does it tell you?",
-    hints:["min(a,b) has a formula just like max(a,b), with one sign changed."],
-    model:"min(a,b) = (a+b)/2 - |a-b|/2, so T(f) = int f - (1/2)int|f(x)-f(1-x)| and S+T = 2 int f. The integral of f sits midway between S and T; their gap measures failure of symmetry about 1/2."}
-  ],
-  scheme:'<h3>(a) S(f) = 3/4</h3><p>max(x, 1&minus;x) is 1&minus;x on [0,&frac12;] and x on [&frac12;,1]; the two pieces are mirror images, so S = 2&int;<sub>&frac12;</sub><sup>1</sup> x dx = 2(&frac12; &minus; &#8539;) = 3/4.</p><h3>(b) Inequality, with equality exactly for f symmetric about x = &frac12;</h3><p>Pointwise max(f(x), f(1&minus;x)) &ge; f(x); integrate. The difference of the two sides is the integral of a non-negative continuous function, which vanishes only if the integrand does, i.e. f(x) &ge; f(1&minus;x) everywhere; replacing x by 1&minus;x gives the reverse, so equality means f(x) = f(1&minus;x).</p><h3>(c) The identity</h3><p>Everything rests on max(a,b) = (a+b)/2 + |a&minus;b|/2. Apply with a = f(x), b = f(1&minus;x) and integrate; the substitution u = 1&minus;x shows &int;f(1&minus;x) = &int;f, so the first term is &int;f and the second is &frac12;&int;|f(x)&minus;f(1&minus;x)|. Part (b) is now a corollary.</p><h3>(d) Supremum 1, not attained</h3><p>With &int;f = 0, (c) gives S(f) = &frac12;&int;|f(x)&minus;f(1&minus;x)| &le; &frac12;&middot;2 = 1. Equality needs the integrand to equal 2 everywhere, but at x = &frac12; it is |f(&frac12;)&minus;f(&frac12;)| = 0, and by continuity it stays below 1 on a neighbourhood, so the integral is strictly below 2 and S(f) &lt; 1. The value 1 is approached by f<sub>&epsilon;</sub> equal to 1 on [0,&frac12;&minus;&epsilon;], &minus;1 on [&frac12;+&epsilon;,1], linear between: antisymmetric about &frac12; so &int;f = 0, and S(f<sub>&epsilon;</sub>) &ge; 1 &minus; 2&epsilon;.</p><h3>(e) S(f) + T(f) = 2&int;f</h3><p>From min(a,b) = (a+b)/2 &minus; |a&minus;b|/2 the modulus terms cancel. The integral of f sits halfway between the max-shadow and the min-shadow, and their gap measures how far f is from symmetric.</p><h3>What the scoring turns on</h3><p>Noticing unprompted that f(1&minus;x) is the reflection of f in x = &frac12;. Producing the max identity rather than waiting for it. Checking (c) against (a). In (d), asking whether the bound is attained before being asked, and saying the word supremum. Going quiet when stuck is the single most expensive habit on this problem.</p>',
-  sample0:'<p class="turn"><span class="sp">Interviewer</span>Compute S(f) for f(x) = x.</p><p class="turn"><span class="sp">Candidate</span>The integral of x from 0 to 1 is a half.</p><p class="turn"><span class="sp">Interviewer</span>Where has the max gone? What is the integrand at x = 0.3?</p><p class="turn"><span class="sp">Candidate</span>The maximum of x is 1, so is it just 1?</p><p class="turn"><span class="sp">Interviewer</span>It is the larger of f(0.3) and f(0.7).</p><p class="turn"><span class="sp">Candidate</span>0.7. So the answer is 0.7?</p><p class="verdict">Nothing was reasoned. Every statement was a guess in response to a direct question, and the definition was never read.</p>',
-  sample10:'<p class="turn"><span class="sp">Candidate</span>Before I compute: f(1&minus;x) is the mirror image of f in the line x = &frac12;, so S is the integral of the upper envelope of f and its reflection. Whatever I find should measure how far f is from being symmetric. For f(x) = x the envelope is 1&minus;x then x, and by symmetry S = 2&int;<sub>&frac12;</sub><sup>1</sup> x = 3/4.</p><p class="turn"><span class="sp">Interviewer</span>Show S(f) &ge; &int;f.</p><p class="turn"><span class="sp">Candidate</span>Pointwise. But I would rather prove the identity first: max(a,b) = (a+b)/2 + |a&minus;b|/2, and &int;f(1&minus;x) = &int;f by substitution, so S = &int;f + &frac12;&int;|f(x)&minus;f(1&minus;x)|. Then (b) and its equality case are corollaries: equality means f = f(1&minus;x), the symmetry I predicted. Check against (a): &frac12; + &frac14; = 3/4.</p><p class="turn"><span class="sp">Interviewer</span>Mean zero, |f| &le; 1. How large can S be?</p><p class="turn"><span class="sp">Candidate</span>At most 1 from the modulus bound. But it cannot be attained: at x = &frac12; the integrand is forced to be zero and continuity spreads that over an interval. So it is a supremum, approached by a steep antisymmetric ramp. And (e) is the same identity with a sign flipped, giving S + T = 2&int;f.</p><p class="turn"><span class="sp">Candidate</span>What if the reflection is replaced by a map that is not an involution? The step &int;f(1&minus;x) = &int;f breaks, so I would expect the clean identity to fail.</p><p class="verdict">Found the governing structure in the first minute, reordered the parts so they fell out, noticed non-attainment unprompted, and ended with a question of their own.</p>'
-},
-{
-  id:"hyperbola", title:"Pairs with a small product", topics:"Number theory, counting, estimation",
-  blurb:"A count so simple it can be done by hand for n = 10. Getting from there to a formula you could run on n = a trillion takes four ideas, none of which is on any syllabus.",
-  setup:'For a positive integer <i>n</i>, let A(<i>n</i>) be the number of ordered pairs of positive integers (<i>a</i>, <i>b</i>) with <i>ab</i> &le; <i>n</i>.',
-  parts:[
-   {label:"(a)", text:"Find A(10).",
-    hints:["Do not list pairs at random. Fix the value of a and ask how many b are allowed.","For a = 2, how many b satisfy 2b at most 10?"],
-    model:"27: columns 10+5+3+2+2+1+1+1+1+1."},
-   {label:"(b)", text:"Find a formula for A(n) as a sum of n terms.",
-    hints:["You already did this for n = 10. Write the same count with n in place of 10, one term per value of a."],
-    model:"A(n) = sum_{k=1}^{n} floor(n/k)."},
-   {label:"(c)", text:"Count the same pairs a second way, grouping them by the value of the product ab. What does that tell you about the total number of divisors of the integers 1 to n, and about the average number of divisors of an integer up to n?",
-    hints:["For a fixed m, how many pairs (a,b) have ab = m exactly?","You have counted one set in two ways. Set the two counts equal."],
-    model:"Pairs with ab = m correspond to divisors of m, so A(n) = d(1)+...+d(n). Hence sum of d(m) up to n equals sum of floor(n/k), and the average number of divisors of an integer up to n is A(n)/n."},
-   {label:"(d)", text:"Show that the average number of divisors of an integer up to n is roughly ln n, and be as precise as you can about roughly.",
-    hints:["floor(n/k) differs from n/k by less than 1, and there are n terms.","What do you know about 1 + 1/2 + ... + 1/n? Compare it with an integral."],
-    model:"n/k - 1 < floor(n/k) <= n/k, so nH_n - n < A(n) <= nH_n; with ln n < H_n <= 1 + ln n, A(n)/n is within 1 of ln n. Remark: surprising, since most integers have few divisors; average is dragged up by rare highly composite numbers."},
-   {label:"(e)", text:"Your formula in (b) needs n terms, so computing A(10\u00B9\u00B2) that way is hopeless. Find a formula that needs only about 2\u221An terms.",
-    hints:["If ab is at most n, what can you say about the smaller of a and b?","Draw the region under the hyperbola and the line a = b. Count the points with a at most root n, and the points with b at most root n. What have you counted twice?"],
-    model:"min(a,b) <= sqrt(n). A(n) = 2*sum_{a<=sqrt n} floor(n/a) - floor(sqrt n)^2 (inclusion-exclusion; the overlap square lies entirely under the curve). Check n=10: 2(10+5+3)-9 = 27."}
-  ],
-  scheme:'<h3>(a) A(10) = 27</h3><p>Fix a and count b: 10 + 5 + 3 + 2 + 2 + 1 + 1 + 1 + 1 + 1.</p><h3>(b) A(n) = &sum;&lfloor;n/k&rfloor;, k from 1 to n</h3><p>For a = k the allowed b run from 1 to &lfloor;n/k&rfloor;.</p><h3>(c) Counting by product</h3><p>The pairs with ab = m are the divisors of m, so A(n) = d(1) + &hellip; + d(n). Two counts of one set, hence &sum;d(m) = &sum;&lfloor;n/k&rfloor;, and the average divisor count of an integer up to n is A(n)/n.</p><h3>(d) Within 1 of ln n</h3><p>n/k &minus; 1 &lt; &lfloor;n/k&rfloor; &le; n/k, so nH<sub>n</sub> &minus; n &lt; A(n) &le; nH<sub>n</sub>; comparing H<sub>n</sub> with &int;dx/x gives ln n &lt; H<sub>n</sub> &le; 1 + ln n. So A(n)/n lies between ln n &minus; 1 and ln n + 1. Worth saying: most integers have two or four divisors, yet the average grows without bound, carried by rare highly composite numbers, and slowly: about 14 at a million.</p><h3>(e) A(n) = 2&sum;<sub>a&le;&radic;n</sub>&lfloor;n/a&rfloor; &minus; &lfloor;&radic;n&rfloor;&sup2;</h3><p>If ab &le; n then min(a,b) &le; &radic;n. Count pairs with a &le; &radic;n, add pairs with b &le; &radic;n (same by symmetry), subtract the overlap, which is the square of pairs with both coordinates at most &radic;n, all of which satisfy ab &le; n. Check: 2(10 + 5 + 3) &minus; 9 = 27. The work drops from n terms to about 2&radic;n. This is known as Dirichlet\'s hyperbola method.</p><h3>What the scoring turns on</h3><p>Organising the count in (a). Seeing (b) as (a) with a letter. Saying the words counting two ways in (c). Bracketing rather than hand-waving in (d). Extracting min(a,b) &le; &radic;n from the inequality itself in (e) and handling the double count unprompted.</p>',
-  sample0:'<p class="turn"><span class="sp">Interviewer</span>Find A(10).</p><p class="turn"><span class="sp">Candidate</span>Pairs with ab less than 10. Is (1,2) different from (2,1)?</p><p class="turn"><span class="sp">Interviewer</span>Ordered pairs, so yes. And the condition is at most 10.</p><p class="turn"><span class="sp">Candidate</span>[writes for ninety seconds] 24.</p><p class="turn"><span class="sp">Interviewer</span>Check the a = 2 row.</p><p class="turn"><span class="sp">Candidate</span>[silence] I think it is 24. I have not done this topic.</p><p class="verdict">No organisation, no checking when queried, silence when stuck. There is no topic here, only counting.</p>',
-  sample10:'<p class="turn"><span class="sp">Candidate</span>These are the lattice points under the hyperbola xy = n, so I expect something like the area under it, a logarithm. Holding that thought: by columns, 10 + 5 + 3 + 2 + 2 + five ones, 27. In general &sum;&lfloor;n/k&rfloor;.</p><p class="turn"><span class="sp">Candidate</span>The other axis to count along is the product: pairs with ab = m are divisors of m, so A(n) is also &sum;d(m). I got a relation between the divisor function and a floor sum for free, by counting one set two ways.</p><p class="turn"><span class="sp">Interviewer</span>Average number of divisors?</p><p class="turn"><span class="sp">Candidate</span>A(n)/n, and the logarithm appears: each term is within 1 of n/k, so A(n) is within n of nH<sub>n</sub>, and H<sub>n</sub> is between ln n and 1 + ln n. Counterintuitive: typical numbers have few divisors, so rare highly composite ones drag the mean up, but only logarithmically.</p><p class="turn"><span class="sp">Interviewer</span>Fewer terms?</p><p class="turn"><span class="sp">Candidate</span>The picture is symmetric in a = b, which meets the curve at &radic;n. Every point has min(a,b) &le; &radic;n, so count the two strips and subtract the square where they overlap, which sits under the curve. 2&sum;<sub>a&le;&radic;n</sub>&lfloor;n/a&rfloor; &minus; &lfloor;&radic;n&rfloor;&sup2;; on n = 10 that is 36 &minus; 9 = 27. Can I ask: my error bound in (d) was order n, but the geometry suggests the true error is like the boundary, order &radic;n. Is that known?</p><p class="verdict">Set up the picture in fifteen seconds and cashed it three times. The closing question is the Dirichlet divisor problem, which is open.</p>'
-},
-{
-  id:"repeat", title:"Tossing until something happens", topics:"Probability, expectation",
-  blurb:"A fair coin, no tricks, and two questions at the end whose answers differ when everything about them looks the same. Applied-style; expect to be asked why, not just how much.",
-  setup:'A fair coin is tossed repeatedly. Let N be the number of tosses made up to and including the first time two consecutive tosses show the same face.',
-  parts:[
-   {label:"(a)", text:"Find P(N = 2) and P(N = 3).",
-    hints:["N = 2 means the first two tosses agree. Write out the sequences for N = 3."],
-    model:"P(N=2) = 1/2. P(N=3) = 1/4 (HTT or THH)."},
-   {label:"(b)", text:"Find P(N = k) for general k.",
-    hints:["What must the first k minus 1 tosses look like, and how many such sequences are there?"],
-    model:"First k-1 tosses alternate (2 patterns), toss k matches toss k-1: P(N=k) = 2*(1/2)^k = (1/2)^{k-1} for k >= 2."},
-   {label:"(c)", text:"Find the expected value of N.",
-    hints:["There is a series route and a much shorter route. For the short one: after the first toss, what is the probability that each later toss ends the game?","N minus 1 has a familiar distribution."],
-    model:"E[N] = 3. After toss 1, every subsequent toss ends the game with probability 1/2 regardless of history, so N - 1 is geometric with mean 2. Series check: sum k (1/2)^{k-1} over k>=2 equals 4 - 1 = 3."},
-   {label:"(d)", text:"Now wait instead for the first time two consecutive tosses are both heads. Find the expected number of tosses.",
-    hints:["Introduce states: no progress, and last toss was a head. Write an equation for the expected remaining tosses from each.","From the state where the last toss was a head, a tail sends you back to no progress, not one step back."],
-    model:"E0 = 1 + (1/2)E0 + (1/2)E1, E1 = 1 + (1/2)*0 + (1/2)E0. So E1 = 1 + E0/2 and E0 = 6."},
-   {label:"(e)", text:"Repeat (d) for the pattern head then tail. The two patterns are equally likely on any given pair of tosses, yet the answers differ. Explain exactly why.",
-    hints:["Do the same two-state calculation for HT. Which transition is different?","When you fail to complete HH by seeing a tail, what have you got? When you fail to complete HT by seeing a head, what have you got?"],
-    model:"For HT: E1 = 1 + (1/2)E1 (a head keeps you at 'have a head'), so E1 = 2, and E0 = 1 + E0/2 + 1 gives E0 = 4. Difference: a failed attempt at HT leaves you holding a usable head; a failed attempt at HH throws everything away. HH overlaps with itself, HT does not."}
-  ],
-  scheme:'<h3>(a) 1/2 and 1/4</h3><p>N = 2 needs HH or TT. N = 3 needs HTT or THH.</p><h3>(b) P(N = k) = (1/2)<sup>k&minus;1</sup></h3><p>The first k&minus;1 tosses must alternate, which happens in exactly 2 ways, and toss k must copy toss k&minus;1: 2 &middot; (1/2)<sup>k</sup>.</p><h3>(c) E[N] = 3</h3><p>The short route: whatever the history, each toss after the first ends the game with probability &frac12;, so N &minus; 1 is geometric with mean 2. The series route, &sum;k(1/2)<sup>k&minus;1</sup> from k = 2, gives 4 &minus; 1 = 3 and is a good check.</p><h3>(d) 6</h3><p>States: nothing useful, and last toss a head. E<sub>0</sub> = 1 + &frac12;E<sub>0</sub> + &frac12;E<sub>1</sub> and E<sub>1</sub> = 1 + &frac12;E<sub>0</sub>, giving E<sub>0</sub> = 6.</p><h3>(e) 4, and why</h3><p>For HT the second equation becomes E<sub>1</sub> = 1 + &frac12;E<sub>1</sub>, since another head leaves you still holding a head; so E<sub>1</sub> = 2 and E<sub>0</sub> = 4. The asymmetry is self-overlap: failing HH by seeing HT sends you to zero, while failing HT by seeing HH leaves progress intact. Equal probability per position does not mean equal waiting time.</p><h3>What the scoring turns on</h3><p>Seeing the geometric structure in (c) rather than grinding the series, or grinding it and then noticing the structure. Setting up states in (d) without being told. In (e), not just computing 4 but locating the exact transition that differs and naming the reason.</p>',
-  sample0:'<p class="turn"><span class="sp">Interviewer</span>P(N = 2)?</p><p class="turn"><span class="sp">Candidate</span>A quarter, because HH is a quarter.</p><p class="turn"><span class="sp">Interviewer</span>Does TT also count?</p><p class="turn"><span class="sp">Candidate</span>Oh. A half then. For N = 3 is it a half again?</p><p class="turn"><span class="sp">Interviewer</span>Write out the sequences.</p><p class="turn"><span class="sp">Candidate</span>HHT, HTH, HTT &hellip; I am not sure which ones count.</p><p class="verdict">Never re-read the definition, guessed rather than enumerated, and did not check the guess against anything.</p>',
-  sample10:'<p class="turn"><span class="sp">Candidate</span>N = 2 is HH or TT, so &frac12;. For general k the first k&minus;1 must alternate, two patterns, then a copy: (1/2)<sup>k&minus;1</sup>. Before summing for the mean I want to see why: after the first toss, every toss ends things with probability &frac12; independently of the past, so N &minus; 1 is geometric with mean 2 and E[N] = 3. The series agrees.</p><p class="turn"><span class="sp">Interviewer</span>Now HH specifically.</p><p class="turn"><span class="sp">Candidate</span>Two states, and the tail from the head-state resets fully. E<sub>0</sub> = 6. For HT the reset is not full: a head from the head-state keeps the head, so E<sub>1</sub> = 2 and E<sub>0</sub> = 4. The whole difference is one transition, and it is because HH overlaps itself while HT cannot.</p><p class="turn"><span class="sp">Candidate</span>Does that generalise? I would guess a pattern that overlaps with a shift of itself always waits longer, and that the waiting time can be read off from the set of self-overlaps.</p><p class="verdict">Found the geometric decomposition before summing, ran both state calculations cleanly, and stated the general principle unprompted.</p>'
-}
-];
-
-/* ================================================================ STATE  */
-/* Paste your deployed Cloudflare Worker URL here to switch the free mode on.
-   Leave it empty and the page quietly falls back to self-guided.            */
-var FREE_PROXY = "";
-
-var cfg = {mode:"free", apikey:"", proxy:"", model:"claude-sonnet-5", voice:false};
-var st = null; // live interview state
-
-function loadCfg(){ try{ var c = JSON.parse(localStorage.getItem('hu_iv_cfg')||'null'); if(c) cfg = Object.assign(cfg,c);}catch(e){} }
-function saveCfg(){ try{ localStorage.setItem('hu_iv_cfg', JSON.stringify(cfg)); }catch(e){} }
-function loadHist(){ try{ return JSON.parse(localStorage.getItem('hu_iv_hist')||'[]'); }catch(e){ return []; } }
-function pushHist(rec){ try{ var h = loadHist(); h.unshift(rec); localStorage.setItem('hu_iv_hist', JSON.stringify(h.slice(0,50))); }catch(e){} }
-function esc(s){ return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
-function fmt(s){ var m = Math.floor(s/60), r = s%60; return m + ":" + (r<10?"0":"") + r; }
-
-/* ================================================================ HUB    */
-function renderHub(){
-  document.getElementById('mode').value = cfg.mode;
-  document.getElementById('apikey').value = cfg.apikey;
-  document.getElementById('proxy').value = cfg.proxy;
-  document.getElementById('model').value = cfg.model;
-  document.getElementById('voice').checked = !!cfg.voice;
-  applyModeUI(cfg.mode);
-  var pl = document.getElementById('plist'); pl.innerHTML = '';
-  PROBLEMS.forEach(function(p){
-    var d = document.createElement('div'); d.className='prob';
-    d.innerHTML = '<h3>'+esc(p.title)+'</h3><p class="meta">'+esc(p.topics)+' &nbsp;&middot;&nbsp; 25 minutes &nbsp;&middot;&nbsp; 5 parts</p><p class="blurb">'+esc(p.blurb)+'</p>';
-    var b = document.createElement('button'); b.className='btn2'; b.textContent='Start this interview';
-    b.addEventListener('click', function(){ startInterview(p); });
-    d.appendChild(b); pl.appendChild(d);
-  });
-  var h = loadHist(); var r = document.getElementById('record');
-  if(!h.length){ r.innerHTML = '<p>No attempts recorded in this browser yet. Attempts are saved here so you can watch the score move.</p>'; return; }
-  var rows = h.map(function(x){ return '<tr><td>'+esc(x.date)+'</td><td>'+esc(x.title)+'</td><td>'+esc(x.mode)+'</td><td>'+esc(x.parts)+'/5</td><td>'+esc(x.nudges)+'</td><td>'+(x.score==null?'&ndash;':esc(x.score)+'/10')+'</td></tr>'; }).join('');
-  r.innerHTML = '<h2 style="font-size:1.1rem">Your record</h2><table><tr><th>Date</th><th>Problem</th><th>Mode</th><th>Parts</th><th>Nudges</th><th>Score</th></tr>'+rows+'</table>';
-}
-function applyModeUI(m){
-  document.getElementById('ownopts').classList.toggle('hidden', m !== 'own');
-  document.getElementById('voicelab').classList.toggle('hidden', m === 'self');
-  var fn = document.getElementById('freenote');
-  fn.classList.toggle('hidden', m !== 'free');
-  if(m === 'free' && !FREE_PROXY){
-    fn.classList.remove('hidden');
-    fn.innerHTML = 'The free interviewer is not switched on for this site yet, so this mode will run self-guided. Use your own key for the full conversation.';
-  }
-}
-document.getElementById('mode').addEventListener('change', function(e){ applyModeUI(e.target.value); });
-document.getElementById('savecfg').addEventListener('click', function(){
-  cfg.mode = document.getElementById('mode').value;
-  cfg.apikey = document.getElementById('apikey').value.trim();
-  cfg.proxy = document.getElementById('proxy').value.trim();
-  cfg.model = document.getElementById('model').value.trim() || 'claude-sonnet-5';
-  cfg.voice = document.getElementById('voice').checked;
-  applyModeUI(cfg.mode);
-  saveCfg(); document.getElementById('cfgmsg').textContent = 'Saved.';
-  setTimeout(function(){ document.getElementById('cfgmsg').textContent=''; }, 1500);
-});
-
-/* ================================================================ AI     */
-function aiAvailable(){
-  if(cfg.mode === 'free') return !!FREE_PROXY;
-  if(cfg.mode === 'own') return !!(cfg.proxy || cfg.apikey);
-  return false;
-}
-
-async function callAI(system, messages, maxTokens){
-  var body = {model:cfg.model, max_tokens:maxTokens||600, system:system, messages:messages};
-  var url, headers = {'content-type':'application/json'};
-  if(cfg.mode === 'free'){
-    url = FREE_PROXY;                      // the worker picks and pays for the model
-    delete body.model;
-  } else if(cfg.proxy){
-    url = cfg.proxy;
-  } else {
-    url = 'https://api.anthropic.com/v1/messages';
-    headers['x-api-key'] = cfg.apikey;
-    headers['anthropic-version'] = '2023-06-01';
-    headers['anthropic-dangerous-direct-browser-access'] = 'true';
-  }
-  var res = await fetch(url, {method:'POST', headers:headers, body:JSON.stringify(body)});
-  if(res.status === 429){
-    var msg = 'The free interviewer has reached its limit for now. Switch to self-guided in settings, or add your own key to carry on.';
-    try{ var j429 = await res.json(); if(j429 && j429.message) msg = j429.message; }catch(e){}
-    throw new Error(msg);
-  }
-  if(!res.ok){
-    var t = await res.text();
-    throw new Error('API error ' + res.status + ': ' + t.slice(0,200));
-  }
-  var data = await res.json();
-  return (data.content||[]).filter(function(b){return b.type==='text';}).map(function(b){return b.text;}).join('\n');
-}
+var FREE_PROXY = "https://hu-interviewer.kevinvariant08.workers.dev";
+function esc(s){return String(s).replace(/[&<>]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c];});}
 /* Models often emit LaTeX backslashes unescaped inside JSON strings (\mid, \frac), which is invalid JSON,
    and \frac or \text silently become a form feed or a tab. Repair those, strip code fences,
    and if the object was cut off mid-way, close whatever is still open. */
@@ -375,225 +118,45 @@ function tolerantJSON(txt){
   while(stack.length) tail+=(stack.pop()==='{')?'}':']';
   return tryParse(tail);
 }
-function parseJSON(txt){ return tolerantJSON(txt); }
-function interviewerSystem(p){
-  var parts = p.parts.map(function(q,i){
-    return 'PART '+i+' '+q.label+': '+q.text+'\n  MODEL ANSWER (private): '+q.model+'\n  HINT LADDER (gentlest first): '+q.hints.map(function(h,k){return '['+(k+1)+'] '+h;}).join(' ');
-  }).join('\n');
-  return 'You are a mathematics admissions tutor at an Oxford college conducting a 25-minute interview. You are warm, curious and rigorous. The candidate types what they would say aloud.\n\n'
-  + 'PROBLEM SETUP: '+p.setup.replace(/<[^>]+>/g,'')+'\n\n'+parts+'\n\n'
-  + 'RULES, in priority order:\n'
-  + '1. Never state the answer or solution to any part, never complete a calculation for the candidate, never confirm an unjustified number. If they state a correct answer without justification, ask them to justify it. If they state a wrong answer, do not say it is wrong outright; ask a question that exposes the error.\n'
-  + '2. Give a hint only when the candidate explicitly asks, or has been stuck across two consecutive messages. When you do, give ONLY the next rung of the hint ladder for the current part, paraphrased in your own words, and set "hinted" to true. Never skip rungs. Never give a hint the candidate did not need.\n'
-  + '3. Keep every reply to at most three sentences and ask exactly one question. Be specific to what they wrote; quote their own words back when probing.\n'
-  + '4. Work only on the CURRENT PART given in the user message. If they jump ahead, steer them back. Set "advance" to true only when they have correctly and fully justified the current part; say something brief like "Good, that settles it" and nothing about the next part, which the page will show.\n'
-  + '5. Reward good habits in one short clause when you see them: checking a result against a special case, naming a structure before computing, asking whether a bound is attained.\n'
-  + '6. Output ONLY a JSON object, no prose outside it: {"say": string, "advance": boolean, "hinted": boolean}.';
-}
-function markingSystem(p){
-  return 'You are the same tutor, now writing the post-interview score. Use this scale, which is how Oxford tutors calibrate a 25-minute maths interview.\n'
-  + '10: found the governing structure before computing, completed every part unaided, checked own work, asked a research-shaped question of their own. Given only a few times a year.\n'
-  + '8: every part essentially unaided, at most one nudge, checks attainment or special cases without being asked.\n'
-  + '6: most parts, two or three nudges, stops at the first plausible answer; roughly the offer threshold.\n'
-  + '4: reaches the middle of the problem with substantial help, correct but dependent.\n'
-  + '2: only what the interviewer supplied was correct.\n'
-  + '0: no engagement or reasoning.\n'
-  + 'Weigh the transcript, the number of nudges, how far they got, and above all whether steps were generated or supplied. Be honest and specific; quote the candidate. The model answers for each part are:\n'
-  + p.parts.map(function(q){return q.label+' '+q.model;}).join('\n')
-  + '\nOutput ONLY JSON: {"score": integer 0-10, "band": short phrase, "headline": one sentence, "parts": [{"label": string, "comment": string}], "strengths": [string], "improve": [string], "practice": one concrete thing to do this week}.';
-}
-
-/* ================================================================ VOICE  */
-var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-var rec = null, listening = false, vbuf = '', vtimer = null, lastQuietStart = 0, ttsBusy = false;
-function voiceOK(){ return !!cfg.voice && !!SR; }
-function fmtQuiet(){
-  if(!st) return '';
-  return 'Quiet: ' + fmt(Math.round(st.quiet)) + (st.longestQuiet>=3 ? ' \u00b7 longest ' + fmt(Math.round(st.longestQuiet)) : '');
-}
-function markQuietStart(){ lastQuietStart = Date.now(); }
-function closeQuiet(){
-  if(!st || !lastQuietStart) return;
-  var gap = (Date.now() - lastQuietStart)/1000; lastQuietStart = 0;
-  if(gap >= 2){ st.quiet += gap; if(gap > st.longestQuiet) st.longestQuiet = gap; }
-  document.getElementById('quiet').textContent = fmtQuiet();
-}
-function startListening(){
-  if(!voiceOK() || listening) return;
-  rec = new SR(); rec.continuous = true; rec.interimResults = true; rec.lang = 'en-GB';
-  rec.onresult = function(e){
-    var interim = '';
-    for(var i = e.resultIndex; i < e.results.length; i++){
-      var t = e.results[i][0].transcript;
-      if(e.results[i].isFinal){ vbuf += (vbuf ? ' ' : '') + t.trim(); } else interim += t;
+function typeset(el){ if(window.MathJax&&MathJax.typesetPromise) MathJax.typesetPromise([el]).catch(function(){}); }
+var SCHEMES={
+  bmo:{max:10,desc:'British Mathematical Olympiad Round 1 conventions. 10 for a complete and rigorous proof with all cases handled. 7 to 9 for essentially complete with a minor gap or an omitted degenerate case. 4 to 6 for substantial progress towards a complete method. 1 to 3 for relevant observations or a special case only. 0 for nothing of value, including a correct final answer with no valid argument.'},
+  bmo2:{max:10,desc:'British Mathematical Olympiad Round 2 conventions, marked strictly. Any logical gap that could hide a false step costs at least 3 marks. Unjustified "clearly" or "it is easy to see" steps are treated as absent. A proof relying on a diagram-specific configuration without handling the others is capped at 5.'},
+  step:{max:20,desc:'STEP conventions. Marks for correct method and execution of each part; accuracy marks are lost for algebraic slips, method marks are not. A part that is not attempted scores zero for that part; a correct answer with no working scores at most one third of its marks.'},
+  mat:{max:15,desc:'Oxford MAT long question conventions. Marks are allocated per sub-part; later parts can be credited using an earlier wrong result if the method is correct. Full marks require every claim to be justified in writing, not asserted.'},
+  interview:{max:10,desc:'Whiteboard argument in an Oxford interview. Score 10 if the argument is complete and each step is justified in a way that would satisfy a tutor probing it; 7 if a tutor would need to ask one clarifying question; 4 if the idea is right but the argument would not survive questioning; 0 to 2 if the reasoning is circular, assumes the result, or is missing.'}
+};
+document.getElementById('mark').addEventListener('click',async function(){
+  var prob=document.getElementById('prob').value.trim(), sol=document.getElementById('sol').value.trim(), sk=document.getElementById('scheme').value, S=SCHEMES[sk], msg=document.getElementById('msg'), btn=this;
+  if(!prob||!sol){ msg.textContent='Both boxes are needed.'; return; }
+  btn.disabled=true; msg.textContent='Marking';
+  var sys='You are an experienced olympiad and university-admissions mathematics marker. Mark the candidate\'s solution against this scheme: '+S.desc+' Maximum '+S.max+'.\n'
+   +'Principles: award marks only for what is written, not for what the candidate probably meant. Check every step for validity; a step that is true but not justified is a gap. Verify the algebra yourself. Check that all cases are covered and that any claimed equality, bound or existence has been actually established. Do not write a corrected proof and do not supply the missing steps; describe each gap in enough detail that the candidate could fix it, and no more. Quote the candidate\'s own words when identifying a gap. If the solution is correct and complete, say so plainly and award full marks; do not invent nitpicks.\n'
+   +'Output ONLY JSON: {"score": integer, "max": '+S.max+', "verdict": one sentence, "sound": true or false (would the argument convince a strict marker as written), "gaps": [{"severity": "fatal"|"major"|"minor", "where": quoted words, "what": what is missing or wrong}], "credit": [what was done correctly and earned marks], "next": one sentence on the single most valuable thing to fix first}.';
+  var schema={type:'object',properties:{score:{type:'integer'},max:{type:'integer'},verdict:{type:'string'},sound:{type:'boolean'},
+      gaps:{type:'array',items:{type:'object',properties:{severity:{type:'string'},where:{type:'string'},what:{type:'string'}},required:['severity','where','what']}},
+      credit:{type:'array',items:{type:'string'}},next:{type:'string'}},required:['score','max','verdict','sound','gaps','credit','next']};
+  var body={system:sys+'\nWhen quoting the candidate, you may paraphrase LaTeX into words; keep each quote short.',max_tokens:1400,json_schema:schema,messages:[{role:'user',content:'PROBLEM:\n'+prob+'\n\nCANDIDATE SOLUTION:\n'+sol}]};
+  try{
+    var res=await fetch(FREE_PROXY,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(body)});
+    var data=await res.json(); if(!res.ok) throw new Error(data.message||('Error '+res.status));
+    var txt=(data.content||[]).filter(function(b){return b.type==='text';}).map(function(b){return b.text;}).join('\n');
+    var r=tolerantJSON(txt);
+    if(!r){
+      var out0=document.getElementById('out'); out0.classList.remove('hidden');
+      out0.innerHTML='<h3>Marker\'s report</h3><p class="tally">The report did not come back in the usual structured form, so here it is as written.</p><div style="font-family:var(--serif);white-space:pre-wrap;line-height:1.7">'+esc(txt)+'</div>';
+      typeset(out0); msg.textContent=''; btn.disabled=false; return;
     }
-    closeQuiet();
-    inputEl.value = vbuf + (interim ? ' ' + interim : '');
-    if(vtimer) clearTimeout(vtimer);
-    vtimer = setTimeout(function(){ flushVoice(); }, 2400);
-  };
-  rec.onspeechstart = function(){ closeQuiet(); };
-  rec.onspeechend = function(){ markQuietStart(); };
-  rec.onerror = function(e){ if(e.error === 'not-allowed'){ sysMsg('Microphone access was refused; continuing in text mode.'); stopListening(); } };
-  rec.onend = function(){ if(listening && !ttsBusy && st && !st.ended){ try{ rec.start(); }catch(x){} } };
-  try{ rec.start(); listening = true; markQuietStart(); }catch(e){ return; }
-  document.getElementById('mic').textContent = 'Stop listening';
-  document.getElementById('quiet').classList.remove('hidden');
-  document.getElementById('quiet').textContent = fmtQuiet();
-}
-function stopListening(){
-  listening = false; if(vtimer){ clearTimeout(vtimer); vtimer = null; }
-  if(rec){ try{ rec.onend = null; rec.stop(); }catch(e){} rec = null; }
-  document.getElementById('mic').textContent = 'Start listening';
-}
-function flushVoice(){
-  vtimer = null; var t = vbuf.trim(); vbuf = ''; inputEl.value = '';
-  if(!t || !st || st.ended) return;
-  candMsg(t); converse(t, false);
-}
-function speak(text){
-  if(!voiceOK() || !window.speechSynthesis) return;
-  try{
-    window.speechSynthesis.cancel();
-    var u = new SpeechSynthesisUtterance(text); u.lang = 'en-GB'; u.rate = 1.0;
-    var wasListening = listening;
-    u.onstart = function(){ ttsBusy = true; if(rec){ try{ rec.stop(); }catch(e){} } };
-    u.onend = function(){ ttsBusy = false; markQuietStart(); if(wasListening && st && !st.ended){ try{ rec && rec.start(); }catch(e){} } };
-    window.speechSynthesis.speak(u);
-  }catch(e){}
-}
-
-/* ================================================================ INTERVIEW */
-var clockEl, barEl, noteEl, partsEl, chatEl, inputEl, errEl, tallyEl;
-function startInterview(p){
-  st = {p:p, idx:0, left:25*60, nudges:0, hintLevel:[], transcript:[], tick:null, ended:false, ai:aiAvailable(), forced:0, quiet:0, longestQuiet:0};
-  stopListening(); vbuf=''; lastQuietStart=0;
-  p.parts.forEach(function(){ st.hintLevel.push(0); });
-  document.getElementById('hub').classList.add('hidden');
-  document.getElementById('stage').classList.remove('hidden');
-  document.getElementById('ptitle').textContent = p.title;
-  document.getElementById('setup').innerHTML = p.setup;
-  document.getElementById('debrief').classList.add('hidden');
-  document.getElementById('debrief').innerHTML = '';
-  clockEl=document.getElementById('clock'); barEl=document.getElementById('drainbar'); noteEl=document.getElementById('clocknote');
-  partsEl=document.getElementById('parts'); chatEl=document.getElementById('chat'); inputEl=document.getElementById('input'); errEl=document.getElementById('err'); tallyEl=document.getElementById('tally');
-  partsEl.innerHTML=''; chatEl.innerHTML=''; inputEl.value=''; errEl.textContent=''; tallyEl.textContent='Nudges used: 0';
-  ['send','nudge','next','end'].forEach(function(id){ document.getElementById(id).disabled=false; });
-  document.getElementById('composer').classList.toggle('hidden', false);
-  document.getElementById('send').classList.toggle('hidden', !st.ai);
-  inputEl.classList.toggle('hidden', !st.ai);
-  noteEl.textContent = st.ai ? 'Say what you are trying before you try it. Silence is scored.' : 'Paper and pen. Speak every thought aloud, ideally recording yourself.';
-  if(!st.ai && cfg.mode !== 'self') sysMsg('Running self-guided: the AI interviewer is unavailable, so nudges below are written ones.');
-  var micBtn = document.getElementById('mic'); micBtn.classList.toggle('hidden', !(st.ai && voiceOK())); micBtn.textContent = 'Start listening';
-  document.getElementById('quiet').classList.add('hidden');
-  if(st.ai && cfg.voice && !SR) sysMsg('Voice mode needs Chrome or Safari; running in text mode.');
-  if(st.ai && voiceOK()) sysMsg('Voice is on. Press Start listening, then talk; a pause of a couple of seconds sends what you said.');
-  showPart(0);
-  if(st.ai) sysMsg('The interviewer is listening. Begin with part (a) whenever you are ready.');
-  st.tick = setInterval(function(){
-    st.left--; paint();
-    if(st.left<=0){ clearInterval(st.tick); st.tick=null; noteEl.textContent='Time is up. Finish the sentence you are on, then end the session.'; }
-  },1000);
-  paint();
-  window.scrollTo({top:0});
-}
-function paint(){
-  clockEl.textContent = fmt(Math.max(st.left,0));
-  barEl.style.width = ((25*60-st.left)/(25*60)*100)+'%';
-  var c = st.left<=60?'urgent':(st.left<=300?'warn':''); clockEl.className=c; barEl.className=c;
-}
-function showPart(i){
-  var prev = partsEl.querySelector('.part.live'); if(prev){prev.classList.remove('live');prev.classList.add('done');}
-  var q = st.p.parts[i]; var d=document.createElement('div'); d.className='part live';
-  d.innerHTML='<p class="plabel">'+q.label+'</p><p class="ptext">'+esc(q.text)+'</p>';
-  partsEl.appendChild(d);
-  document.getElementById('next').disabled = (i===st.p.parts.length-1);
-  document.getElementById('next').textContent = (i===st.p.parts.length-1)?'That is the last part':'Move on to the next part';
-  document.getElementById('nudge').disabled = false;
-  st.transcript.push({role:'system', text:'[Part '+q.label+' shown: '+q.text+']'});
-  d.scrollIntoView({behavior:'smooth',block:'center'});
-}
-function tutorMsg(t){ var m=document.createElement('div'); m.className='msg tutor'; m.innerHTML='<span class="who">Interviewer</span>'+esc(t); chatEl.appendChild(m); m.scrollIntoView({behavior:'smooth',block:'nearest'}); }
-function candMsg(t){ var m=document.createElement('div'); m.className='msg cand'; m.innerHTML='<span class="who">You</span>'+esc(t); chatEl.appendChild(m); }
-function sysMsg(t){ var m=document.createElement('div'); m.className='msg sys'; m.textContent=t; chatEl.appendChild(m); }
-function staticHint(){
-  var q = st.p.parts[st.idx]; var lvl = st.hintLevel[st.idx];
-  if(lvl>=q.hints.length){ sysMsg('No further nudges for this part; the interviewer would now move you on.'); document.getElementById('nudge').disabled=true; return; }
-  st.hintLevel[st.idx]=lvl+1; st.nudges++; tallyEl.textContent='Nudges used: '+st.nudges;
-  var live = partsEl.querySelector('.part.live'); var h=document.createElement('div'); h.className='hint';
-  h.innerHTML='<span class="who">Interviewer</span>'+esc(q.hints[lvl]); live.appendChild(h);
-  st.transcript.push({role:'assistant', text:'[nudge] '+q.hints[lvl]});
-  if(st.hintLevel[st.idx]>=q.hints.length) document.getElementById('nudge').disabled=true;
-}
-async function converse(userText, isNudge){
-  var busy = document.getElementById('send'); busy.disabled=true; errEl.textContent='';
-  var q = st.p.parts[st.idx];
-  var msgs = st.transcript.filter(function(m){return m.role!=='system';}).map(function(m){return {role:m.role==='assistant'?'assistant':'user',content:m.text};});
-  var prefix = 'CURRENT PART: '+st.idx+' '+q.label+'. Hints already given for this part: '+st.hintLevel[st.idx]+' of '+q.hints.length+'. Time left: '+fmt(Math.max(st.left,0))+'.\n';
-  var content = prefix + (isNudge ? '[The candidate asks for a hint.]' : 'CANDIDATE: '+userText);
-  msgs.push({role:'user',content:content});
-  st.transcript.push({role:'user', text:isNudge?'[asks for a hint]':userText});
-  try{
-    var raw = await callAI(interviewerSystem(st.p), msgs, 500);
-    var j = parseJSON(raw) || {say: raw.slice(0,600), advance:false, hinted:isNudge};
-    tutorMsg(j.say); st.transcript.push({role:'assistant', text:j.say}); speak(j.say);
-    if(j.hinted){ st.nudges++; st.hintLevel[st.idx]=Math.min(st.hintLevel[st.idx]+1,q.hints.length); tallyEl.textContent='Nudges used: '+st.nudges; }
-    if(j.advance && st.idx < st.p.parts.length-1){ st.idx++; showPart(st.idx); }
-    else if(j.advance){ sysMsg('That was the last part. End the session when you are ready for the debrief.'); }
-  }catch(e){ errEl.textContent = e.message; }
-  busy.disabled=false;
-}
-document.getElementById('send').addEventListener('click', function(){
-  var t = inputEl.value.trim(); if(!t||!st||st.ended) return;
-  candMsg(t); inputEl.value=''; converse(t,false);
+    var out=document.getElementById('out'); out.classList.remove('hidden');
+    out.innerHTML='<div class="score" style="display:flex;gap:1.2rem;align-items:baseline"><span class="big">'+esc(r.score)+'<span style="font-size:1.2rem;color:var(--faint)">/'+esc(r.max||S.max)+'</span></span><span class="verdict">'+esc(r.verdict||'')+'</span></div>'
+      +'<p><strong class="'+(r.sound?'ok':'bad')+'">'+(r.sound?'The argument stands as written.':'The argument does not stand as written.')+'</strong></p>'
+      +((r.gaps&&r.gaps.length)?'<h3>Gaps</h3>'+r.gaps.map(function(g){return '<div class="gap '+(g.severity==='minor'?'minor':'')+'"><span class="sev">'+esc(g.severity||'')+'</span><p style="margin:.1rem 0"><em>'+esc(g.where||'')+'</em></p><p style="margin:.1rem 0">'+esc(g.what||'')+'</p></div>';}).join(''):'<h3>Gaps</h3><p class="tally">None found.</p>')
+      +((r.credit&&r.credit.length)?'<h3>Credited</h3><ul>'+r.credit.map(function(c){return '<li>'+esc(c)+'</li>';}).join('')+'</ul>':'')
+      +(r.next?'<h3>Fix first</h3><p>'+esc(r.next)+'</p>':'');
+    typeset(out); msg.textContent=''; out.scrollIntoView({behavior:'smooth',block:'start'});
+  }catch(e){ msg.textContent=e.message; }
+  btn.disabled=false;
 });
-inputEl = document.getElementById('input');
-inputEl.addEventListener('keydown', function(e){ if((e.metaKey||e.ctrlKey)&&e.key==='Enter'){ document.getElementById('send').click(); } });
-document.getElementById('nudge').addEventListener('click', function(){ if(!st||st.ended) return; if(st.ai){ candMsg('Could I have a nudge?'); converse('',true); } else staticHint(); });
-document.getElementById('next').addEventListener('click', function(){ if(!st||st.ended||st.idx>=st.p.parts.length-1) return; st.forced++; if(st.ai) sysMsg('You moved on without the interviewer\'s agreement; this is noted.'); st.idx++; showPart(st.idx); });
-document.getElementById('mic').addEventListener('click', function(){ if(!st||st.ended) return; if(listening) stopListening(); else startListening(); });
-document.getElementById('end').addEventListener('click', endInterview);
-
-async function endInterview(){
-  if(!st||st.ended) return; st.ended=true;
-  if(st.tick){clearInterval(st.tick);st.tick=null;}
-  closeQuiet(); stopListening(); if(window.speechSynthesis) try{ window.speechSynthesis.cancel(); }catch(e){}
-  ['send','nudge','next','end','mic'].forEach(function(id){ document.getElementById(id).disabled=true; });
-  var used = 25*60-Math.max(st.left,0), reached = st.idx+1, p = st.p;
-  var quietNote = st.quiet>0 ? ' &nbsp;&nbsp; Quiet time: <b>'+fmt(Math.round(st.quiet))+'</b> (longest '+fmt(Math.round(st.longestQuiet))+')' : '';
-  var box = document.getElementById('debrief'); box.classList.remove('hidden');
-  var head = '<div class="stats">Time used: <b>'+fmt(used)+'</b> of 25:00 &nbsp;&nbsp; Parts reached: <b>'+reached+' of 5</b> &nbsp;&nbsp; Nudges used: <b>'+st.nudges+'</b>'+(st.forced?' &nbsp;&nbsp; Moved on unprompted: <b>'+st.forced+'</b>':'')+quietNote+'</div>';
-  var score = null, report = '';
-  if(st.ai){
-    box.innerHTML = head + '<p class="msg sys">The interviewer is writing your report.</p>';
-    try{
-      var tr = st.transcript.map(function(m){return (m.role==='assistant'?'TUTOR: ':m.role==='user'?'CANDIDATE: ':'')+m.text;}).join('\n');
-      var raw = await callAI(markingSystem(p), [{role:'user',content:'TRANSCRIPT:\n'+tr+'\n\nParts reached: '+reached+' of 5. Nudges: '+st.nudges+'. Moved on without agreement: '+st.forced+'. Time used: '+fmt(used)+'.'+(st.quiet>0?' Voice mode was on: total silence '+fmt(Math.round(st.quiet))+', longest silent stretch '+fmt(Math.round(st.longestQuiet))+'. Treat silences over 45 seconds as a significant negative, as a real interviewer would.':'')}], 1200);
-      var j = parseJSON(raw);
-      if(j){ score = j.score;
-        report = '<h2>Report</h2><div class="score"><span class="big">'+esc(j.score)+'<span style="font-size:1.2rem;color:var(--faint)">/10</span></span><span class="band">'+esc(j.band||'')+'</span></div><p>'+esc(j.headline||'')+'</p>'
-          + (j.parts||[]).map(function(x){return '<h3>'+esc(x.label)+'</h3><p>'+esc(x.comment)+'</p>';}).join('')
-          + (j.strengths&&j.strengths.length?'<h3>What worked</h3><ul>'+j.strengths.map(function(s){return '<li>'+esc(s)+'</li>';}).join('')+'</ul>':'')
-          + (j.improve&&j.improve.length?'<h3>What to change</h3><ul>'+j.improve.map(function(s){return '<li>'+esc(s)+'</li>';}).join('')+'</ul>':'')
-          + (j.practice?'<h3>This week</h3><p>'+esc(j.practice)+'</p>':'');
-      } else report = '<p class="err">The report came back in an unexpected format. Raw text follows.</p><p>'+esc(raw)+'</p>';
-    }catch(e){ report = '<p class="err">Could not fetch the report: '+esc(e.message)+'</p>'; }
-  } else {
-    report = '<h2>Self-marking</h2><p>Before opening the scheme, place yourself. Five parts with no nudges and the key structural remark said aloud is an 8 or better. Four parts with one or two nudges is a 6. Reaching part (c) with help is a 4. If (a) took more than three minutes the issue is organisation, not mathematics.</p><div class="row"><label style="font-size:.95rem">Your score <select id="selfscore">'+[0,1,2,3,4,5,6,7,8,9,10].map(function(n){return '<option value="'+n+'">'+n+'</option>';}).join('')+'</select></label><button class="btn2 quiet" id="saveself">Save to record</button></div>';
-  }
-  box.innerHTML = head + report
-    + '<details open><summary>Mark scheme</summary>'+p.scheme+'</details>'
-    + '<details><summary>Sample performance: score 0</summary>'+p.sample0+'</details>'
-    + '<details><summary>Sample performance: score 10</summary>'+p.sample10+'</details>'
-    + '<div class="row"><button class="btn2" id="back">Back to the problems</button></div>';
-  var rec = {date:new Date().toISOString().slice(0,10), title:p.title, mode:st.ai?'AI':'self', parts:reached, nudges:st.nudges, score:score};
-  if(st.ai) pushHist(rec);
-  var ss = document.getElementById('saveself'); if(ss) ss.addEventListener('click', function(){ rec.score = parseInt(document.getElementById('selfscore').value,10); pushHist(rec); ss.textContent='Saved'; ss.disabled=true; });
-  document.getElementById('back').addEventListener('click', function(){ document.getElementById('stage').classList.add('hidden'); document.getElementById('hub').classList.remove('hidden'); renderHub(); window.scrollTo({top:0}); });
-  box.scrollIntoView({behavior:'smooth',block:'start'});
-}
-
-loadCfg(); renderHub();
 </script>
 </body>
 </html>
