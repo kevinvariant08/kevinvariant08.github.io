@@ -25,14 +25,15 @@ const ALLOWED_ORIGINS = [
 ];
 
 const CONFIG = {
-  backend: "anthropic",        // "anthropic" or "gemini"
+  backend: "workers-ai",       // "workers-ai" (free, built into Cloudflare), "gemini" (free tier) or "anthropic" (paid)
+  workersModel: "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
   anthropicModel: "claude-haiku-4-5-20251001",
-  geminiModel: "gemini-2.0-flash",
-  maxTokensCap: 900,           // per reply
+  geminiModel: "gemini-2.5-flash",   // stable and on the free tier; 2.0 Flash was shut down in June 2026
+  maxTokensCap: 1500,          // per reply (the proof marker needs room for its JSON report)
   perVisitorPerDay: 45,        // ~2 full interviews
-  sitePerDay: 1200,            // site-wide circuit breaker
+  sitePerDay: 450,             // site-wide circuit breaker; Cloudflare also enforces its own free daily allowance
   maxMessages: 60,             // reject runaway conversations
-  maxChars: 24000,             // reject oversized payloads
+  maxChars: 60000,             // reject oversized payloads (long written proofs are fine)
 };
 
 const PAPERS = { "setA-p1": 20, "setA-p2": 20, "setB-p1": 20, "setB-p2": 20 }; // id -> max score
@@ -86,14 +87,21 @@ async function callAnthropic(env, body) {
 // Gemini speaks a different dialect; translate in and out so the page sees
 // the Anthropic shape it already understands.
 async function callGemini(env, body) {
-  const contents = body.messages.map((m) => ({
-    role: m.role === "assistant" ? "model" : "user",
-    parts: [{ text: String(m.content) }],
-  }));
+  // Gemini wants alternating user/model turns, so merge any consecutive same-role messages.
+  const contents = [];
+  for (const m of body.messages) {
+    const role = m.role === "assistant" ? "model" : "user";
+    const text = String(m.content);
+    if (contents.length && contents[contents.length - 1].role === role) contents[contents.length - 1].parts[0].text += "\n\n" + text;
+    else contents.push({ role, parts: [{ text }] });
+  }
+  if (contents.length && contents[0].role !== "user") contents.unshift({ role: "user", parts: [{ text: "(start)" }] });
   const payload = {
     contents,
     systemInstruction: { parts: [{ text: body.system }] },
-    generationConfig: { maxOutputTokens: body.max_tokens, temperature: 0.7 },
+    // thinkingBudget 0 stops 2.5 Flash spending the output allowance on hidden reasoning,
+    // which would otherwise truncate the JSON reports.
+    generationConfig: { maxOutputTokens: body.max_tokens, temperature: 0.6, thinkingConfig: { thinkingBudget: 0 } },
   };
   const url =
     "https://generativelanguage.googleapis.com/v1beta/models/" +
@@ -107,13 +115,40 @@ async function callGemini(env, body) {
   });
   if (!res.ok) return { status: res.status, text: await res.text() };
   const data = await res.json();
-  const text = (data?.candidates?.[0]?.content?.parts || [])
-    .map((p) => p.text || "")
-    .join("\n");
+  const cand = data?.candidates?.[0];
+  const text = (cand?.content?.parts || []).map((p) => p.text || "").join("\n");
+  if (!text) {
+    const why = cand?.finishReason || data?.promptFeedback?.blockReason || "no text returned";
+    return { status: 502, text: JSON.stringify({ error: { message: "Gemini returned an empty reply (" + why + ")" } }) };
+  }
   return {
     status: 200,
     text: JSON.stringify({ content: [{ type: "text", text }] }),
   };
+}
+
+// Workers AI runs on Cloudflare itself: no external key, no card, billed against
+// the free daily allowance on the account. Needs `[ai] binding = "AI"` in wrangler.toml.
+async function callWorkersAI(env, body) {
+  if (!env.AI) return { status: 500, text: JSON.stringify({ error: { message: "Workers AI binding missing. Add [ai] binding = \"AI\" to wrangler.toml and redeploy." } }) };
+  const messages = [{ role: "system", content: body.system }];
+  for (const m of body.messages) {
+    const role = m.role === "assistant" ? "assistant" : "user";
+    const text = String(m.content);
+    const last = messages[messages.length - 1];
+    if (last.role === role) last.content += "\n\n" + text; else messages.push({ role, content: text });
+  }
+  try {
+    const out = await env.AI.run(CONFIG.workersModel, { messages, max_tokens: body.max_tokens, temperature: 0.6 });
+    const text = typeof out?.response === "string" ? out.response
+               : (out?.choices?.[0]?.message?.content || (typeof out === "string" ? out : ""));
+    if (!text) return { status: 502, text: JSON.stringify({ error: { message: "Workers AI returned an empty reply" } }) };
+    return { status: 200, text: JSON.stringify({ content: [{ type: "text", text }] }) };
+  } catch (e) {
+    const msg = String(e && e.message || e);
+    if (/4006|neuron|daily free allocation/i.test(msg)) return { status: 429, text: JSON.stringify({ error: { message: "quota" } }) };
+    return { status: 502, text: JSON.stringify({ error: { message: msg.slice(0, 160) } }) };
+  }
 }
 
 export default {
@@ -177,14 +212,25 @@ export default {
     if (!(await bump(env.IV, `ip:${ip}:${day}`, CONFIG.perVisitorPerDay)))
       return refuse(429, "You have used today's free interviews. Come back tomorrow, run self-guided, or add your own key.", cors);
 
+    const useWorkersAI = CONFIG.backend === "workers-ai";
     const useGemini = CONFIG.backend === "gemini" && env.GEMINI_API_KEY;
+    if (CONFIG.backend === "gemini" && !env.GEMINI_API_KEY) return refuse(500, "Missing GEMINI_API_KEY secret on the worker. Run: npx wrangler secret put GEMINI_API_KEY", cors);
+    if (!useWorkersAI && !useGemini && !env.ANTHROPIC_API_KEY) return refuse(500, "Missing ANTHROPIC_API_KEY secret on the worker. Run: npx wrangler secret put ANTHROPIC_API_KEY", cors);
     let out;
     try {
-      out = useGemini ? await callGemini(env, body) : await callAnthropic(env, body);
+      out = useWorkersAI ? await callWorkersAI(env, body) : useGemini ? await callGemini(env, body) : await callAnthropic(env, body);
     } catch (e) {
-      return refuse(502, "The interviewer could not be reached. Try again in a moment.", cors);
+      console.log("Fetch failed", String(e));
+      return refuse(502, "The AI service could not be reached: " + String(e).slice(0, 120), cors);
     }
-    if (out.status !== 200) return refuse(502, "The interviewer returned an error. Try again, or run self-guided.", cors);
+    if (out.status === 429) return refuse(429, "The free AI allowance for today has been used up. It resets at 04:00 UAE time; until then, use self-guided mode.", cors);
+    if (out.status !== 200) {
+      // Surface the real reason so problems can be diagnosed from the page.
+      let reason = "";
+      try { const e = JSON.parse(out.text); reason = (e.error && (e.error.message || e.error.type)) || e.message || ""; } catch { reason = out.text.slice(0, 160); }
+      console.log("Upstream error", out.status, out.text.slice(0, 500));
+      return refuse(502, `The AI service returned an error (${out.status})${reason ? ": " + reason : ""}.`, cors);
+    }
 
     return new Response(out.text, {
       status: 200,
