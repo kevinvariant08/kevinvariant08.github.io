@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kevin Hu - Proof marker</title>
+  <link rel="icon" href="/favicon.ico" sizes="32x32">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#1A2230">
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+  <script>window.MathJax={tex:{inlineMath:[['$','$']],displayMath:[['\\[','\\]']],processEscapes:true},options:{skipHtmlTags:['script','noscript','style','textarea','pre']}};</script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+  <style>
+    .hu{--ink:#1A2230;--soft:#586374;--faint:#8A93A1;--rule:#D9D6CC;--paper:#FBFAF6;--ok:#2C5545;--bad:#8C2F2F;--warn:#8A5A12;--acc:#534AB7;--acc2:#AFA9EC;
+        --serif:"IBM Plex Serif",Georgia,serif;--sans:"IBM Plex Sans",system-ui,sans-serif;font-family:var(--sans);color:var(--ink);line-height:1.55}
+    .hu h2{font-family:var(--serif);font-weight:600}
+    .hu h3{font-family:var(--serif);font-weight:600;font-size:1.05rem;margin:1.2rem 0 .4rem}
+    .hu p{max-width:70ch}
+    .hu .lead{font-size:1.05rem;color:var(--soft)}
+    .hu .hidden{display:none!important}
+    .hu .btn2{font-family:var(--sans);font-size:.95rem;font-weight:500;color:var(--ink);background:transparent;border:1px solid var(--ink);border-radius:2px;padding:.5rem 1rem;cursor:pointer}
+    .hu .btn2:hover{background:var(--ink);color:#fff}
+    .hu .btn2.quiet{border-color:var(--rule);color:var(--soft);font-weight:400}
+    .hu .btn2.quiet:hover{background:transparent;border-color:var(--ink);color:var(--ink)}
+    .hu .btn2[disabled]{opacity:.35;cursor:default}
+    .hu .row{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;margin-top:.9rem}
+    .hu .panel{border:1px solid var(--rule);padding:1rem 1.2rem;margin:1.2rem 0}
+    .hu select,.hu input[type=text],.hu textarea{font-family:var(--sans);font-size:.95rem;padding:.45rem .6rem;border:1px solid var(--rule);border-radius:2px;background:#fff;color:var(--ink)}
+    .hu textarea{width:100%;resize:vertical;line-height:1.5}
+    .hu .tally{color:var(--faint);font-size:.88rem}
+    .hu .err{color:var(--bad);font-size:.9rem}
+    .hu .ok{color:var(--ok)} .hu .bad{color:var(--bad)}
+    .hu label{display:block;font-size:.9rem;color:var(--soft);margin-top:.9rem}
+    .hu textarea{min-height:7rem;font-family:var(--serif);font-size:1rem}
+    .hu textarea#sol{min-height:16rem}
+    .hu .report{border-top:2px solid var(--ink);margin-top:2rem;padding-top:1rem}
+    .hu .report .big{font-family:var(--serif);font-weight:600;font-size:2.8rem;line-height:1}
+    .hu .report p,.hu .report li{font-family:var(--serif);font-size:1.02rem;line-height:1.7}
+    .hu .gap{border-left:2px solid var(--bad);padding:.2rem 0 .2rem 1rem;margin:.6rem 0}
+    .hu .gap.minor{border-left-color:var(--warn)}
+    .hu .gap .sev{font-family:var(--sans);font-size:.78rem;color:var(--faint)}
+    .hu .verdict{font-family:var(--serif);font-style:italic;color:var(--soft)}
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-links">
+      <a href="index.html">Mathematics</a>
+      <a href="music.html">Music &amp; Piano</a>
+      <a href="geometry.html">Geometry Lab</a>
+      <a href="sandbox.html">Sandbox</a>
+      <a href="drill.html">Drill</a>
+      <a href="interviews.html">Mock interviews</a>
+      <a href="marker.html" aria-current="page">Marker</a>
+      <a href="techniques.html">Techniques</a>
+      <a href="progress.html">Progress</a>
+    </div>
+  </nav>
+  <main class="container hu">
+    <h1>Proof marker</h1>
+    <p class="lead">Paste a problem and your written solution, and get it marked the way an olympiad or STEP marker would: a score against a real scheme, every unjustified step named, and no help writing the proof. Marks are hard to get here on purpose. A solution that is correct but not proved scores like one that is wrong.</p>
+
+    <div class="panel">
+      <label>Problem statement <small style="color:var(--faint)">(LaTeX in $...$ is fine)</small>
+        <textarea id="prob" placeholder="State the problem exactly as set."></textarea></label>
+      <label>Your solution
+        <textarea id="sol" placeholder="Write it as you would on paper: every step you would expect a marker to read."></textarea></label>
+      <div class="row">
+        <label style="margin:0">Scheme
+          <select id="scheme">
+            <option value="bmo">BMO round 1 style, out of 10</option>
+            <option value="bmo2">BMO round 2 style, out of 10, stricter</option>
+            <option value="step">STEP style, out of 20</option>
+            <option value="mat">MAT long question, out of 15</option>
+            <option value="interview">Interview whiteboard: is the argument sound?</option>
+          </select></label>
+        <button class="btn2" id="mark">Mark it</button>
+        <span class="tally" id="msg"></span>
+      </div>
+      <p class="tally" style="margin-top:.8rem">Uses the same free interviewer as the mock interviews, so the daily cap is shared. Nothing you paste is stored.</p>
+    </div>
+
+    <div id="out" class="report hidden"></div>
+  </main>
+
+<script>
+var FREE_PROXY = "https://hu-interviewer.kevinvariant08.workers.dev";
+function esc(s){return String(s).replace(/[&<>]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c];});}
+function typeset(el){ if(window.MathJax&&MathJax.typesetPromise) MathJax.typesetPromise([el]).catch(function(){}); }
+var SCHEMES={
+  bmo:{max:10,desc:'British Mathematical Olympiad Round 1 conventions. 10 for a complete and rigorous proof with all cases handled. 7 to 9 for essentially complete with a minor gap or an omitted degenerate case. 4 to 6 for substantial progress towards a complete method. 1 to 3 for relevant observations or a special case only. 0 for nothing of value, including a correct final answer with no valid argument.'},
+  bmo2:{max:10,desc:'British Mathematical Olympiad Round 2 conventions, marked strictly. Any logical gap that could hide a false step costs at least 3 marks. Unjustified "clearly" or "it is easy to see" steps are treated as absent. A proof relying on a diagram-specific configuration without handling the others is capped at 5.'},
+  step:{max:20,desc:'STEP conventions. Marks for correct method and execution of each part; accuracy marks are lost for algebraic slips, method marks are not. A part that is not attempted scores zero for that part; a correct answer with no working scores at most one third of its marks.'},
+  mat:{max:15,desc:'Oxford MAT long question conventions. Marks are allocated per sub-part; later parts can be credited using an earlier wrong result if the method is correct. Full marks require every claim to be justified in writing, not asserted.'},
+  interview:{max:10,desc:'Whiteboard argument in an Oxford interview. Score 10 if the argument is complete and each step is justified in a way that would satisfy a tutor probing it; 7 if a tutor would need to ask one clarifying question; 4 if the idea is right but the argument would not survive questioning; 0 to 2 if the reasoning is circular, assumes the result, or is missing.'}
+};
+document.getElementById('mark').addEventListener('click',async function(){
+  var prob=document.getElementById('prob').value.trim(), sol=document.getElementById('sol').value.trim(), sk=document.getElementById('scheme').value, S=SCHEMES[sk], msg=document.getElementById('msg'), btn=this;
+  if(!prob||!sol){ msg.textContent='Both boxes are needed.'; return; }
+  btn.disabled=true; msg.textContent='Marking';
+  var sys='You are an experienced olympiad and university-admissions mathematics marker. Mark the candidate\'s solution against this scheme: '+S.desc+' Maximum '+S.max+'.\n'
+   +'Principles: award marks only for what is written, not for what the candidate probably meant. Check every step for validity; a step that is true but not justified is a gap. Verify the algebra yourself. Check that all cases are covered and that any claimed equality, bound or existence has been actually established. Do not write a corrected proof and do not supply the missing steps; describe each gap in enough detail that the candidate could fix it, and no more. Quote the candidate\'s own words when identifying a gap. If the solution is correct and complete, say so plainly and award full marks; do not invent nitpicks.\n'
+   +'Output ONLY JSON: {"score": integer, "max": '+S.max+', "verdict": one sentence, "sound": true or false (would the argument convince a strict marker as written), "gaps": [{"severity": "fatal"|"major"|"minor", "where": quoted words, "what": what is missing or wrong}], "credit": [what was done correctly and earned marks], "next": one sentence on the single most valuable thing to fix first}.';
+  var body={system:sys,max_tokens:1400,messages:[{role:'user',content:'PROBLEM:\n'+prob+'\n\nCANDIDATE SOLUTION:\n'+sol}]};
+  try{
+    var res=await fetch(FREE_PROXY,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(body)});
+    var data=await res.json(); if(!res.ok) throw new Error(data.message||('Error '+res.status));
+    var txt=(data.content||[]).filter(function(b){return b.type==='text';}).map(function(b){return b.text;}).join('\n');
+    var s=txt.replace(/```json|```/g,'').trim(), i=s.indexOf('{'), j=s.lastIndexOf('}'); var r=JSON.parse(s.slice(i,j+1));
+    var out=document.getElementById('out'); out.classList.remove('hidden');
+    out.innerHTML='<div class="score" style="display:flex;gap:1.2rem;align-items:baseline"><span class="big">'+esc(r.score)+'<span style="font-size:1.2rem;color:var(--faint)">/'+esc(r.max||S.max)+'</span></span><span class="verdict">'+esc(r.verdict||'')+'</span></div>'
+      +'<p><strong class="'+(r.sound?'ok':'bad')+'">'+(r.sound?'The argument stands as written.':'The argument does not stand as written.')+'</strong></p>'
+      +((r.gaps&&r.gaps.length)?'<h3>Gaps</h3>'+r.gaps.map(function(g){return '<div class="gap '+(g.severity==='minor'?'minor':'')+'"><span class="sev">'+esc(g.severity||'')+'</span><p style="margin:.1rem 0"><em>'+esc(g.where||'')+'</em></p><p style="margin:.1rem 0">'+esc(g.what||'')+'</p></div>';}).join(''):'<h3>Gaps</h3><p class="tally">None found.</p>')
+      +((r.credit&&r.credit.length)?'<h3>Credited</h3><ul>'+r.credit.map(function(c){return '<li>'+esc(c)+'</li>';}).join('')+'</ul>':'')
+      +(r.next?'<h3>Fix first</h3><p>'+esc(r.next)+'</p>':'');
+    typeset(out); msg.textContent=''; out.scrollIntoView({behavior:'smooth',block:'start'});
+  }catch(e){ msg.textContent=e.message; }
+  btn.disabled=false;
+});
+</script>
+</body>
+</html>
