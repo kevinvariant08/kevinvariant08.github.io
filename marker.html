@@ -110,7 +110,8 @@ document.getElementById('mark').addEventListener('click',async function(){
     var res=await fetch(FREE_PROXY,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(body)});
     var data=await res.json(); if(!res.ok) throw new Error(data.message||('Error '+res.status));
     var txt=(data.content||[]).filter(function(b){return b.type==='text';}).map(function(b){return b.text;}).join('\n');
-    var s=txt.replace(/```json|```/g,'').trim(), i=s.indexOf('{'), j=s.lastIndexOf('}'); var r=JSON.parse(s.slice(i,j+1));
+    var s=txt.replace(/```json|```/g,'').trim(), i=s.indexOf('{'), j=s.lastIndexOf('}'), r;
+    try{ r=JSON.parse(s.slice(i,j+1)); }catch(pe){ throw new Error('The marker replied, but its report was cut off or malformed. Try a shorter solution, or press Mark again.'); }
     var out=document.getElementById('out'); out.classList.remove('hidden');
     out.innerHTML='<div class="score" style="display:flex;gap:1.2rem;align-items:baseline"><span class="big">'+esc(r.score)+'<span style="font-size:1.2rem;color:var(--faint)">/'+esc(r.max||S.max)+'</span></span><span class="verdict">'+esc(r.verdict||'')+'</span></div>'
       +'<p><strong class="'+(r.sound?'ok':'bad')+'">'+(r.sound?'The argument stands as written.':'The argument does not stand as written.')+'</strong></p>'
