@@ -37,13 +37,35 @@
     .hu label{display:block;font-size:.9rem;color:var(--soft);margin-top:.9rem}
     .hu textarea{min-height:7rem;font-family:var(--serif);font-size:1rem}
     .hu textarea#sol{min-height:16rem}
-    .hu .report{border-top:2px solid var(--ink);margin-top:2rem;padding-top:1rem}
-    .hu .report .big{font-family:var(--serif);font-weight:600;font-size:2.8rem;line-height:1}
+    .hu .report{border-top:2px solid var(--ink);margin-top:2.2rem;padding-top:1.4rem}
     .hu .report p,.hu .report li{font-family:var(--serif);font-size:1.02rem;line-height:1.7}
-    .hu .gap{border-left:2px solid var(--bad);padding:.2rem 0 .2rem 1rem;margin:.6rem 0}
-    .hu .gap.minor{border-left-color:var(--warn)}
-    .hu .gap .sev{font-family:var(--sans);font-size:.78rem;color:var(--faint)}
-    .hu .verdict{font-family:var(--serif);font-style:italic;color:var(--soft)}
+    .hu .rhead{display:grid;grid-template-columns:auto 1fr;gap:1.6rem;align-items:center}
+    @media (max-width:600px){.hu .rhead{grid-template-columns:1fr}}
+    .hu .dial{position:relative;width:118px;height:118px}
+    .hu .dial svg{width:118px;height:118px;display:block;transform:rotate(-90deg)}
+    .hu .dial .num{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:var(--serif)}
+    .hu .dial .num b{font-size:2.3rem;font-weight:600;line-height:1}
+    .hu .dial .num span{font-size:.85rem;color:var(--faint)}
+    .hu .rmeta{font-family:var(--sans);font-size:.8rem;color:var(--faint);letter-spacing:.02em;margin:0 0 .3rem}
+    .hu .rverdict{font-family:var(--serif);font-size:1.18rem;line-height:1.5;margin:0 0 .6rem;color:var(--ink)}
+    .hu .status{display:inline-flex;align-items:center;gap:.45rem;font-family:var(--sans);font-size:.85rem;padding:.25rem .7rem;border-radius:2px}
+    .hu .status.ok{background:#E5F1EA;color:var(--ok)} .hu .status.bad{background:#F6E3E1;color:var(--bad)}
+    .hu .status::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+    .hu .rsec{margin-top:1.8rem}
+    .hu .rsec h3{font-family:var(--sans);font-size:.8rem;font-weight:500;letter-spacing:.03em;color:var(--faint);margin:0 0 .7rem;padding-bottom:.35rem;border-bottom:1px solid var(--rule)}
+    .hu .gapcard{display:grid;grid-template-columns:5.2rem 1fr;gap:1rem;padding:.9rem 0;border-bottom:1px dashed var(--rule)}
+    .hu .gapcard:last-child{border-bottom:0}
+    .hu .sev{font-family:var(--sans);font-size:.74rem;font-weight:500;padding:.18rem .5rem;border-radius:2px;align-self:start;text-align:center}
+    .hu .sev.fatal{background:#8C2F2F;color:#fff} .hu .sev.major{background:#F6E3E1;color:var(--bad)} .hu .sev.minor{background:#F6EBD9;color:var(--warn)}
+    .hu .gapcard blockquote{margin:0 0 .45rem;padding:.1rem 0 .1rem .8rem;border-left:2px solid var(--rule);font-family:var(--serif);font-style:italic;color:var(--soft);font-size:.98rem;line-height:1.6}
+    .hu .gapcard .what{margin:0}
+    .hu .credit{list-style:none;padding:0;margin:0}
+    .hu .credit li{position:relative;padding:.3rem 0 .3rem 1.6rem}
+    .hu .credit li::before{content:"";position:absolute;left:.15rem;top:.95rem;width:.55rem;height:.3rem;border-left:2px solid var(--ok);border-bottom:2px solid var(--ok);transform:rotate(-45deg)}
+    .hu .fixfirst{margin-top:1.8rem;padding:1rem 1.2rem;border:1px solid var(--ink);display:grid;grid-template-columns:auto 1fr;gap:1rem;align-items:start}
+    .hu .fixfirst .k{font-family:var(--sans);font-size:.78rem;font-weight:500;color:#fff;background:var(--ink);padding:.2rem .55rem;border-radius:2px;white-space:nowrap}
+    .hu .fixfirst p{margin:0}
+    .hu .rfoot{margin-top:1.4rem;font-size:.82rem;color:var(--faint)}
   </style>
 </head>
 <body>
@@ -118,6 +140,29 @@ function tolerantJSON(txt){
   while(stack.length) tail+=(stack.pop()==='{')?'}':']';
   return tryParse(tail);
 }
+/* Last resort for replies that are almost JSON: pull each field out on its own,
+   so an unquoted verdict or a stray bracket does not lose the whole report. */
+function salvageReport(txt){
+  var s=String(txt||'').replace(/```json|```/g,'');
+  function unq(v){ return String(v||'').trim().replace(/^"+|"+$/g,'').replace(/\\"/g,'"').replace(/\\\\/g,'\\').trim(); }
+  var KEYS='score|max|verdict|sound|gaps|credit|next';
+  function field(name){
+    var re=new RegExp('"'+name+'"\\s*:\\s*([\\s\\S]*?)\\s*(?:,\\s*"(?:'+KEYS+')"\\s*:|\\}\\s*$)');
+    var m=s.match(re); return m?m[1]:null;
+  }
+  var r={};
+  var sc=field('score'), mx=field('max'), sd=field('sound');
+  if(sc&&/\d+/.test(sc)) r.score=parseInt(sc.match(/\d+/)[0],10); else return null;
+  if(mx&&/\d+/.test(mx)) r.max=parseInt(mx.match(/\d+/)[0],10);
+  r.sound=sd?/true/.test(sd):false;
+  var vd=field('verdict'); if(vd) r.verdict=unq(vd);
+  var nx=field('next'); if(nx) r.next=unq(nx.replace(/\}\s*$/,''));
+  r.gaps=[]; var gre=/"severity"\s*:\s*"?([a-z]+)"?\s*,\s*"where"\s*:\s*"([\s\S]*?)"\s*,\s*"what"\s*:\s*"([\s\S]*?)"\s*\}/g, g;
+  while((g=gre.exec(s))) r.gaps.push({severity:g[1],where:unq(g[2]),what:unq(g[3])});
+  var cr=s.match(/"credit"\s*:\s*\[([\s\S]*?)\]\s*(?:,\s*"(?:score|max|verdict|sound|gaps|next)"|\}\s*$)/);
+  r.credit=cr?cr[1].split(/"\s*,\s*"/).map(unq).filter(Boolean):[];
+  return r;
+}
 function typeset(el){ if(window.MathJax&&MathJax.typesetPromise) MathJax.typesetPromise([el]).catch(function(){}); }
 var SCHEMES={
   bmo:{max:10,desc:'British Mathematical Olympiad Round 1 conventions. 10 for a complete and rigorous proof with all cases handled. 7 to 9 for essentially complete with a minor gap or an omitted degenerate case. 4 to 6 for substantial progress towards a complete method. 1 to 3 for relevant observations or a special case only. 0 for nothing of value, including a correct final answer with no valid argument.'},
@@ -141,18 +186,29 @@ document.getElementById('mark').addEventListener('click',async function(){
     var res=await fetch(FREE_PROXY,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(body)});
     var data=await res.json(); if(!res.ok) throw new Error(data.message||('Error '+res.status));
     var txt=(data.content||[]).filter(function(b){return b.type==='text';}).map(function(b){return b.text;}).join('\n');
-    var r=tolerantJSON(txt);
-    if(!r){
-      var out0=document.getElementById('out'); out0.classList.remove('hidden');
-      out0.innerHTML='<h3>Marker\'s report</h3><p class="tally">The report did not come back in the usual structured form, so here it is as written.</p><div style="font-family:var(--serif);white-space:pre-wrap;line-height:1.7">'+esc(txt)+'</div>';
-      typeset(out0); msg.textContent=''; btn.disabled=false; return;
-    }
+    var r=tolerantJSON(txt)||salvageReport(txt);
     var out=document.getElementById('out'); out.classList.remove('hidden');
-    out.innerHTML='<div class="score" style="display:flex;gap:1.2rem;align-items:baseline"><span class="big">'+esc(r.score)+'<span style="font-size:1.2rem;color:var(--faint)">/'+esc(r.max||S.max)+'</span></span><span class="verdict">'+esc(r.verdict||'')+'</span></div>'
-      +'<p><strong class="'+(r.sound?'ok':'bad')+'">'+(r.sound?'The argument stands as written.':'The argument does not stand as written.')+'</strong></p>'
-      +((r.gaps&&r.gaps.length)?'<h3>Gaps</h3>'+r.gaps.map(function(g){return '<div class="gap '+(g.severity==='minor'?'minor':'')+'"><span class="sev">'+esc(g.severity||'')+'</span><p style="margin:.1rem 0"><em>'+esc(g.where||'')+'</em></p><p style="margin:.1rem 0">'+esc(g.what||'')+'</p></div>';}).join(''):'<h3>Gaps</h3><p class="tally">None found.</p>')
-      +((r.credit&&r.credit.length)?'<h3>Credited</h3><ul>'+r.credit.map(function(c){return '<li>'+esc(c)+'</li>';}).join('')+'</ul>':'')
-      +(r.next?'<h3>Fix first</h3><p>'+esc(r.next)+'</p>':'');
+    if(!r){
+      out.innerHTML='<p class="rmeta">Marker\'s report</p><p class="tally">The report did not come back in a structured form, so here it is as written.</p><div style="font-family:var(--serif);white-space:pre-wrap;line-height:1.7">'+esc(txt)+'</div>';
+      typeset(out); msg.textContent=''; btn.disabled=false; return;
+    }
+    var max=r.max||S.max, sc=Math.max(0,Math.min(max,r.score|0)), frac=sc/max, C=2*Math.PI*50;
+    var ringCol=frac>=0.8?'#2C5545':frac>=0.5?'#8A5A12':'#8C2F2F';
+    var order={fatal:0,major:1,minor:2};
+    var gaps=(r.gaps||[]).slice().sort(function(a,b){return (order[a.severity]??3)-(order[b.severity]??3);});
+    var schemeName=document.getElementById('scheme').selectedOptions[0].textContent;
+    out.innerHTML=
+      '<div class="rhead">'
+      +'<div class="dial"><svg viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="50" fill="none" stroke="#D9D6CC" stroke-width="8"/><circle cx="60" cy="60" r="50" fill="none" stroke="'+ringCol+'" stroke-width="8" stroke-linecap="butt" stroke-dasharray="'+(C*frac)+' '+C+'"/></svg><div class="num"><b>'+sc+'</b><span>out of '+max+'</span></div></div>'
+      +'<div><p class="rmeta">'+esc(schemeName)+'</p><p class="rverdict">'+esc(r.verdict||'')+'</p>'
+      +'<span class="status '+(r.sound?'ok':'bad')+'">'+(r.sound?'The argument stands as written':'The argument does not stand as written')+'</span></div>'
+      +'</div>'
+      +'<div class="rsec"><h3>Gaps'+(gaps.length?' \u00b7 '+gaps.length:'')+'</h3>'
+      +(gaps.length?gaps.map(function(g){ var sv=(g.severity||'minor').toLowerCase(); return '<div class="gapcard"><span class="sev '+esc(sv)+'">'+esc(sv)+'</span><div>'+(g.where?'<blockquote>'+esc(g.where)+'</blockquote>':'')+'<p class="what">'+esc(g.what||'')+'</p></div></div>'; }).join('')
+        :'<p class="tally">No gaps found.</p>')+'</div>'
+      +((r.credit&&r.credit.length)?'<div class="rsec"><h3>Credited</h3><ul class="credit">'+r.credit.map(function(c){return '<li>'+esc(c)+'</li>';}).join('')+'</ul></div>':'')
+      +(r.next?'<div class="fixfirst"><span class="k">Fix first</span><p>'+esc(r.next)+'</p></div>':'')
+      +'<p class="rfoot">Marked by an AI against the '+esc(schemeName.split(',')[0])+' scheme. Treat it as a second opinion, not a verdict: check any gap it names against your own reading before rewriting.</p>';
     typeset(out); msg.textContent=''; out.scrollIntoView({behavior:'smooth',block:'start'});
   }catch(e){ msg.textContent=e.message; }
   btn.disabled=false;
