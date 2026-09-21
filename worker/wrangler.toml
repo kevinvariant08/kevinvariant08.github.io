@@ -7,6 +7,9 @@ compatibility_date = "2026-09-20"
 binding = "IV"
 id = "PASTE_YOUR_KV_NAMESPACE_ID_HERE"
 
+[ai]
+binding = "AI"
+
 # Secrets are not stored here. Set them once each:
 #   wrangler secret put ANTHROPIC_API_KEY
 #   wrangler secret put GEMINI_API_KEY      (only if CONFIG.backend = "gemini")
