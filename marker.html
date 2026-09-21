@@ -65,7 +65,7 @@
     <p class="lead">Paste a problem and your written solution, and get it marked the way an olympiad or STEP marker would: a score against a real scheme, every unjustified step named, and no help writing the proof. Marks are hard to get here on purpose. A solution that is correct but not proved scores like one that is wrong.</p>
 
     <div class="panel">
-      <label>Problem statement <small style="color:var(--faint)">(LaTeX in $...$ is fine)</small>
+      <label>Problem statement <small class="tex2jax_ignore" style="color:var(--faint)">(LaTeX between dollar signs is fine)</small>
         <textarea id="prob" placeholder="State the problem exactly as set."></textarea></label>
       <label>Your solution
         <textarea id="sol" placeholder="Write it as you would on paper: every step you would expect a marker to read."></textarea></label>
@@ -90,6 +90,34 @@
 <script>
 var FREE_PROXY = "https://hu-interviewer.kevinvariant08.workers.dev";
 function esc(s){return String(s).replace(/[&<>]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c];});}
+/* Models often emit LaTeX backslashes unescaped inside JSON strings (\mid, \frac), which is invalid JSON,
+   and \frac or \text silently become a form feed or a tab. Repair those, strip code fences,
+   and if the object was cut off mid-way, close whatever is still open. */
+var LATEX_WORD=/^(frac|tfrac|dfrac|text|textbf|textit|times|theta|tau|tan|tanh|triangle|to|top|neq|nabla|nmid|notin|not|nu|ne|ni|right|rightarrow|rfloor|rceil|rangle|rho|binom|beta|begin|bmod|blacksquare|bigl|bigr|big|bar|boxed|underline|upsilon|uparrow|forall|flat)(?![a-zA-Z])/;
+function repairEscapes(s){
+  return s.replace(/\\([\s\S])/g,function(m,c,off,str){
+    if(c==='\\'||c==='"'||c==='/') return m;
+    if('bfnrtu'.indexOf(c)>=0) return LATEX_WORD.test(str.slice(off+1))?'\\\\'+c:m;
+    return '\\\\'+c;
+  });
+}
+function tolerantJSON(txt){
+  var s=String(txt||'').replace(/```json|```/g,'').trim(), i=s.indexOf('{'); if(i<0) return null; s=s.slice(i);
+  function tryParse(t){ try{ return JSON.parse(t); }catch(e){ return null; } }
+  var j=s.lastIndexOf('}'), r=j>0?tryParse(s.slice(0,j+1)):null;
+  var fixed=repairEscapes(s);
+  if(r&&!/[\f\t\b]/.test(JSON.stringify(r).replace(/\\[ftb]/g,''))&&fixed===s) return r;
+  j=fixed.lastIndexOf('}'); r=j>0?tryParse(fixed.slice(0,j+1)):null; if(r) return r;
+  var stack=[], inStr=false, esc=false;
+  for(var k=0;k<fixed.length;k++){ var c=fixed[k];
+    if(esc){esc=false;continue;} if(inStr&&c==='\\'){esc=true;continue;}
+    if(c==='"'){inStr=!inStr;continue;} if(inStr) continue;
+    if(c==='{'||c==='[') stack.push(c); else if(c==='}'||c===']') stack.pop(); }
+  var tail=fixed; if(inStr) tail+='"';
+  tail=tail.replace(/[,:]\s*$/,'');
+  while(stack.length) tail+=(stack.pop()==='{')?'}':']';
+  return tryParse(tail);
+}
 function typeset(el){ if(window.MathJax&&MathJax.typesetPromise) MathJax.typesetPromise([el]).catch(function(){}); }
 var SCHEMES={
   bmo:{max:10,desc:'British Mathematical Olympiad Round 1 conventions. 10 for a complete and rigorous proof with all cases handled. 7 to 9 for essentially complete with a minor gap or an omitted degenerate case. 4 to 6 for substantial progress towards a complete method. 1 to 3 for relevant observations or a special case only. 0 for nothing of value, including a correct final answer with no valid argument.'},
@@ -105,13 +133,20 @@ document.getElementById('mark').addEventListener('click',async function(){
   var sys='You are an experienced olympiad and university-admissions mathematics marker. Mark the candidate\'s solution against this scheme: '+S.desc+' Maximum '+S.max+'.\n'
    +'Principles: award marks only for what is written, not for what the candidate probably meant. Check every step for validity; a step that is true but not justified is a gap. Verify the algebra yourself. Check that all cases are covered and that any claimed equality, bound or existence has been actually established. Do not write a corrected proof and do not supply the missing steps; describe each gap in enough detail that the candidate could fix it, and no more. Quote the candidate\'s own words when identifying a gap. If the solution is correct and complete, say so plainly and award full marks; do not invent nitpicks.\n'
    +'Output ONLY JSON: {"score": integer, "max": '+S.max+', "verdict": one sentence, "sound": true or false (would the argument convince a strict marker as written), "gaps": [{"severity": "fatal"|"major"|"minor", "where": quoted words, "what": what is missing or wrong}], "credit": [what was done correctly and earned marks], "next": one sentence on the single most valuable thing to fix first}.';
-  var body={system:sys,max_tokens:1400,messages:[{role:'user',content:'PROBLEM:\n'+prob+'\n\nCANDIDATE SOLUTION:\n'+sol}]};
+  var schema={type:'object',properties:{score:{type:'integer'},max:{type:'integer'},verdict:{type:'string'},sound:{type:'boolean'},
+      gaps:{type:'array',items:{type:'object',properties:{severity:{type:'string'},where:{type:'string'},what:{type:'string'}},required:['severity','where','what']}},
+      credit:{type:'array',items:{type:'string'}},next:{type:'string'}},required:['score','max','verdict','sound','gaps','credit','next']};
+  var body={system:sys+'\nWhen quoting the candidate, you may paraphrase LaTeX into words; keep each quote short.',max_tokens:1400,json_schema:schema,messages:[{role:'user',content:'PROBLEM:\n'+prob+'\n\nCANDIDATE SOLUTION:\n'+sol}]};
   try{
     var res=await fetch(FREE_PROXY,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(body)});
     var data=await res.json(); if(!res.ok) throw new Error(data.message||('Error '+res.status));
     var txt=(data.content||[]).filter(function(b){return b.type==='text';}).map(function(b){return b.text;}).join('\n');
-    var s=txt.replace(/```json|```/g,'').trim(), i=s.indexOf('{'), j=s.lastIndexOf('}'), r;
-    try{ r=JSON.parse(s.slice(i,j+1)); }catch(pe){ throw new Error('The marker replied, but its report was cut off or malformed. Try a shorter solution, or press Mark again.'); }
+    var r=tolerantJSON(txt);
+    if(!r){
+      var out0=document.getElementById('out'); out0.classList.remove('hidden');
+      out0.innerHTML='<h3>Marker\'s report</h3><p class="tally">The report did not come back in the usual structured form, so here it is as written.</p><div style="font-family:var(--serif);white-space:pre-wrap;line-height:1.7">'+esc(txt)+'</div>';
+      typeset(out0); msg.textContent=''; btn.disabled=false; return;
+    }
     var out=document.getElementById('out'); out.classList.remove('hidden');
     out.innerHTML='<div class="score" style="display:flex;gap:1.2rem;align-items:baseline"><span class="big">'+esc(r.score)+'<span style="font-size:1.2rem;color:var(--faint)">/'+esc(r.max||S.max)+'</span></span><span class="verdict">'+esc(r.verdict||'')+'</span></div>'
       +'<p><strong class="'+(r.sound?'ok':'bad')+'">'+(r.sound?'The argument stands as written.':'The argument does not stand as written.')+'</strong></p>'
