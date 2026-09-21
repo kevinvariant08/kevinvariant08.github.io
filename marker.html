@@ -83,7 +83,7 @@
     </div>
   </nav>
   <main class="container hu">
-    <h1>Proof marker</h1>
+    <h1>Proof marker <span style="font-family:var(--sans);font-size:.8rem;font-weight:500;color:#8A5A12;background:#F6EBD9;padding:.15rem .5rem;border-radius:2px;vertical-align:middle">beta</span></h1>
     <p class="lead">Paste a problem and your written solution, and get it marked the way an olympiad or STEP marker would: a score against a real scheme, every unjustified step named, and no help writing the proof. Marks are hard to get here on purpose. A solution that is correct but not proved scores like one that is wrong.</p>
 
     <div class="panel">
@@ -163,6 +163,47 @@ function salvageReport(txt){
   r.credit=cr?cr[1].split(/"\s*,\s*"/).map(unq).filter(Boolean):[];
   return r;
 }
+/* Exact arithmetic checker. Finds every purely numerical equality chain in the
+   solution (such as 252 + 195 + 8 = 452) and evaluates each side exactly.
+   The AI never sees a chance to wave these through: errors are reported to it
+   as fixed facts and the page enforces a score cap if it ignores them. */
+function cleanForArith(t){
+  return String(t)
+    .replace(/\\(?:boxed|text|mathrm|mathbf)\{([^{}]*)\}/g,'$1')
+    .replace(/\\(?:times|cdot)/g,'*').replace(/\\div/g,'/')
+    .replace(/\\(?:left|right|quad|qquad|,|;|!|blacksquare|square|qed)/g,' ')
+    .replace(/\\\[|\\\]|\\\(|\\\)|\$/g,' ')
+    .replace(/\\dfrac|\\tfrac|\\frac/g,'\\frac')
+    .replace(/\\frac\s*\{([^{}]*)\}\s*\{([^{}]*)\}/g,'(($1)/($2))')
+    .replace(/[{}]/g,m=>m==='{'?'(':')')
+    .replace(/\u00d7/g,'*').replace(/\u2212/g,'-');
+}
+function evalNumeric(expr){
+  var e=expr.trim().replace(/\^/g,'**');
+  if(!e||!/^[\d\s+\-*/().]+$/.test(e)||!/\d/.test(e)) return null;
+  if(/[+\-*/]\s*$/.test(e)||/^\s*[*/]/.test(e)) return null;
+  try{ var v=Function('"use strict";return ('+e+')')(); return (typeof v==='number'&&isFinite(v))?v:null; }catch(_){ return null; }
+}
+function checkArithmetic(solution){
+  var text=cleanForArith(solution), found=[], seen={}, checked=0;
+  var segs=text.split(/[^0-9+\-*/().=\s^]+/);
+  segs.forEach(function(seg){
+    if(seg.indexOf('=')<0) return;
+    var sides=seg.split('=').map(function(s){return s.trim().replace(/^[.\s]+|[.\s]+$/g,'');});
+    if(sides.some(function(s){return !s;})) return;
+    if(!sides.some(function(s){return /\d\s*[+\-*/^]\s*[\d(]/.test(s);})) return;
+    var vals=sides.map(evalNumeric); if(vals.some(function(v){return v===null;})) return;
+    var pos=text.indexOf(seg)/Math.max(1,text.length);
+    for(var k=0;k+1<vals.length;k++){
+      var a=vals[k],b=vals[k+1]; checked++;
+      if(Math.abs(a-b)>1e-9*Math.max(1,Math.abs(a),Math.abs(b))){
+        var shown=sides[k]+' = '+sides[k+1]; if(seen[shown]) continue; seen[shown]=1;
+        found.push({claim:shown.replace(/\*\*/g,'^'),left:a,right:b,late:pos>0.75});
+      }
+    }
+  });
+  found.checked=checked; return found;
+}
 function typeset(el){ if(window.MathJax&&MathJax.typesetPromise) MathJax.typesetPromise([el]).catch(function(){}); }
 var SCHEMES={
   bmo:{max:10,desc:'British Mathematical Olympiad Round 1 conventions. 10 for a complete and rigorous proof with all cases handled. 7 to 9 for essentially complete with a minor gap or an omitted degenerate case. 4 to 6 for substantial progress towards a complete method. 1 to 3 for relevant observations or a special case only. 0 for nothing of value, including a correct final answer with no valid argument.'},
@@ -181,7 +222,11 @@ document.getElementById('mark').addEventListener('click',async function(){
   var schema={type:'object',properties:{score:{type:'integer'},max:{type:'integer'},verdict:{type:'string'},sound:{type:'boolean'},
       gaps:{type:'array',items:{type:'object',properties:{severity:{type:'string'},where:{type:'string'},what:{type:'string'}},required:['severity','where','what']}},
       credit:{type:'array',items:{type:'string'}},next:{type:'string'}},required:['score','max','verdict','sound','gaps','credit','next']};
-  var body={system:sys+'\nWhen quoting the candidate, you may paraphrase LaTeX into words; keep each quote short.',max_tokens:1400,json_schema:schema,messages:[{role:'user',content:'PROBLEM:\n'+prob+'\n\nCANDIDATE SOLUTION:\n'+sol}]};
+  var arith=checkArithmetic(sol);
+  var arithNote=arith.length
+    ? '\n\nEXACT ARITHMETIC CHECK (computed by a program, not an opinion): the following equalities written in the solution are FALSE:\n'+arith.map(function(a){return '  '+a.claim+'   (left side actually equals '+a.left+', right side '+a.right+')';}).join('\n')+'\nEach is a genuine error and must appear as a gap. A wrong final answer caused by an arithmetic error cannot receive full marks.'
+    : '\n\nEXACT ARITHMETIC CHECK: '+(arith.checked||0)+' purely numerical equalities were found and all are correct. Algebraic steps were not checked; verify those yourself.';
+  var body={system:sys+'\nBefore scoring, recompute every numerical and algebraic step yourself; do not assume a computation is right because it looks plausible. When quoting the candidate, you may paraphrase LaTeX into words; keep each quote short.',max_tokens:1400,json_schema:schema,messages:[{role:'user',content:'PROBLEM:\n'+prob+'\n\nCANDIDATE SOLUTION:\n'+sol+arithNote}]};
   try{
     var res=await fetch(FREE_PROXY,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(body)});
     var data=await res.json(); if(!res.ok) throw new Error(data.message||('Error '+res.status));
@@ -191,6 +236,21 @@ document.getElementById('mark').addEventListener('click',async function(){
     if(!r){
       out.innerHTML='<p class="rmeta">Marker\'s report</p><p class="tally">The report did not come back in a structured form, so here it is as written.</p><div style="font-family:var(--serif);white-space:pre-wrap;line-height:1.7">'+esc(txt)+'</div>';
       typeset(out); msg.textContent=''; btn.disabled=false; return;
+    }
+    var capped=false;
+    if(arith.length){
+      r.gaps=r.gaps||[];
+      arith.forEach(function(a){
+        var mentioned=r.gaps.some(function(g){ return (g.where+' '+g.what).replace(/\s/g,'').indexOf(a.claim.replace(/\s/g,'').split('=')[0])>=0; });
+        if(!mentioned) r.gaps.unshift({severity:a.late?'major':'minor',where:a.claim,what:'This equality is false: the left side equals '+a.left+', not '+a.right+'.'+(a.late?' It sits where the final answer is computed, so the stated answer is wrong.':'')});
+      });
+      var mx0=r.max||S.max, cap=mx0-(arith.some(function(a){return a.late;})?2:1);
+      if((r.score|0)>cap){ r.score=cap; capped=true; }
+      r.sound=false;
+      if(/correct and complete/i.test(r.verdict||'')) r.verdict='The method is sound but the solution contains an arithmetic error.';
+      r.credit=(r.credit||[]).filter(function(c){ return !/calculat|comput|arithmetic|final answer/i.test(c); });
+      var first=arith.filter(function(a){return a.late;})[0]||arith[0];
+      r.next='Recompute '+first.claim.split('=')[0].trim()+': it equals '+first.left+', not '+first.right+'. Then check every later line that depends on it.';
     }
     var max=r.max||S.max, sc=Math.max(0,Math.min(max,r.score|0)), frac=sc/max, C=2*Math.PI*50;
     var ringCol=frac>=0.8?'#2C5545':frac>=0.5?'#8A5A12':'#8C2F2F';
@@ -202,6 +262,11 @@ document.getElementById('mark').addEventListener('click',async function(){
       +'<div class="dial"><svg viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="50" fill="none" stroke="#D9D6CC" stroke-width="8"/><circle cx="60" cy="60" r="50" fill="none" stroke="'+ringCol+'" stroke-width="8" stroke-linecap="butt" stroke-dasharray="'+(C*frac)+' '+C+'"/></svg><div class="num"><b>'+sc+'</b><span>out of '+max+'</span></div></div>'
       +'<div><p class="rmeta">'+esc(schemeName)+'</p><p class="rverdict">'+esc(r.verdict||'')+'</p>'
       +'<span class="status '+(r.sound?'ok':'bad')+'">'+(r.sound?'The argument stands as written':'The argument does not stand as written')+'</span></div>'
+      +'</div>'
+      +'<div class="rsec"><h3>Exact arithmetic check</h3>'
+      +(arith.length
+         ? '<p class="bad" style="font-family:var(--sans);font-size:.92rem;margin:0 0 .4rem">'+arith.length+' false equalit'+(arith.length>1?'ies':'y')+' found by exact computation'+(capped?'. Score capped accordingly.':'.')+'</p>'+arith.map(function(a){return '<p style="margin:.15rem 0"><span style="text-decoration:line-through;text-decoration-color:#8C2F2F">'+esc(a.claim)+'</span> &nbsp;<span class="tally">left side is '+esc(a.left)+'</span></p>';}).join('')
+         : '<p class="ok" style="font-family:var(--sans);font-size:.92rem;margin:0">'+(arith.checked?'All '+arith.checked+' numerical equalit'+(arith.checked>1?'ies':'y')+' in the solution check out.':'No purely numerical equalities to check.')+'</p><p class="tally" style="margin:.2rem 0 0">Algebraic steps are judged by the AI and are not machine-checked.</p>')
       +'</div>'
       +'<div class="rsec"><h3>Gaps'+(gaps.length?' \u00b7 '+gaps.length:'')+'</h3>'
       +(gaps.length?gaps.map(function(g){ var sv=(g.severity||'minor').toLowerCase(); return '<div class="gapcard"><span class="sev '+esc(sv)+'">'+esc(sv)+'</span><div>'+(g.where?'<blockquote>'+esc(g.where)+'</blockquote>':'')+'<p class="what">'+esc(g.what||'')+'</p></div></div>'; }).join('')
