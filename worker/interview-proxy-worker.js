@@ -138,9 +138,19 @@ async function callWorkersAI(env, body) {
     const last = messages[messages.length - 1];
     if (last.role === role) last.content += "\n\n" + text; else messages.push({ role, content: text });
   }
+  const base = { messages, max_tokens: body.max_tokens, temperature: body.json_schema ? 0.2 : 0.6 };
   try {
-    const out = await env.AI.run(CONFIG.workersModel, { messages, max_tokens: body.max_tokens, temperature: 0.6 });
-    const text = typeof out?.response === "string" ? out.response
+    let out;
+    if (body.json_schema) {
+      // Constrained decoding guarantees valid JSON. If the model does not support it, fall back to plain output.
+      try { out = await env.AI.run(CONFIG.workersModel, { ...base, response_format: { type: "json_schema", json_schema: body.json_schema } }); }
+      catch (e) { if (/4006|neuron|daily free allocation/i.test(String(e && e.message || e))) throw e; out = await env.AI.run(CONFIG.workersModel, base); }
+    } else {
+      out = await env.AI.run(CONFIG.workersModel, base);
+    }
+    const r = out?.response;
+    const text = typeof r === "string" ? r
+               : (r && typeof r === "object") ? JSON.stringify(r)
                : (out?.choices?.[0]?.message?.content || (typeof out === "string" ? out : ""));
     if (!text) return { status: 502, text: JSON.stringify({ error: { message: "Workers AI returned an empty reply" } }) };
     return { status: 200, text: JSON.stringify({ content: [{ type: "text", text }] }) };
