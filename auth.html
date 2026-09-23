@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sign in - Kevinvariant</title>
+  <link rel="icon" href="/favicon.ico" sizes="32x32">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <meta name="theme-color" content="#15173B">
+  <meta name="robots" content="noindex">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .auth{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,27rem);gap:3rem;align-items:center;max-width:66rem;margin:0 auto;padding:3rem 1.4rem 4rem;min-height:calc(100vh - 60px)}
+    @media (max-width:880px){.auth{grid-template-columns:1fr;gap:1.4rem;padding-top:1.6rem}.art{order:2}}
+    .art{display:flex;flex-direction:column;align-items:center;text-align:center}
+    .art svg{width:min(24rem,80vw);height:auto;overflow:visible}
+    .art h2{margin:1rem 0 .3rem;font-size:1.5rem}
+    .art p{color:var(--ink-soft);max-width:28rem;margin:0 auto}
+    .side{transition:stroke .35s ease}
+    .tp{transition:fill .35s ease, r .35s ease}
+    .ring{transition:stroke-dashoffset .8s cubic-bezier(.6,.1,.2,1), opacity .3s}
+    @media (prefers-reduced-motion:reduce){.side,.tp,.ring{transition:none}}
+    .card{background:var(--surface);border:1px solid var(--line);border-radius:26px;padding:2rem 1.8rem 1.6rem;box-shadow:0 30px 70px rgba(6,7,30,.5);margin:0}
+    .card h1{font-size:2rem;margin:0 0 .35rem}
+    .card .sub{color:var(--ink-soft);margin:0 0 1.3rem;font-size:.98rem}
+    .fld{display:block;margin:0 0 1rem}
+    .fld>span{display:flex;justify-content:space-between;align-items:baseline;font-size:.88rem;font-weight:600;color:var(--ink-soft);margin-bottom:.35rem}
+    .fld>span a{font-weight:500;font-size:.85rem}
+    .inwrap{position:relative}
+    .fld input{width:100%;font-family:var(--display);font-size:1rem;color:var(--ink);background:var(--bg-deep);border:1.5px solid var(--line);border-radius:12px;padding:.75rem .9rem;min-height:48px;transition:border-color .15s}
+    .fld input:focus{outline:none;border-color:var(--aqua);box-shadow:0 0 0 3px var(--aqua-wash)}
+    .fld input[aria-invalid="true"]{border-color:var(--rose)}
+    .fld .eye{position:absolute;right:.4rem;top:50%;transform:translateY(-50%);background:none;border:0;color:var(--ink-faint);font-family:var(--display);font-size:.85rem;font-weight:600;padding:.4rem .6rem;border-radius:8px;cursor:pointer}
+    .fld .eye:hover{color:var(--ink);background:var(--surface-2)}
+    .fld.pw input{padding-right:4.2rem}
+    .fld>span.caps{display:none;color:var(--saffron);font-size:.84rem;font-weight:500;margin:.35rem 0 0}
+    .fld>span.caps.on{display:block}
+    .fld>span.match{display:block;font-weight:500}
+    .rules{list-style:none;padding:0;margin:.1rem 0 1rem;display:grid;grid-template-columns:1fr 1fr;gap:.3rem .8rem;font-size:.86rem}
+    @media (max-width:420px){.rules{grid-template-columns:1fr}}
+    .rules li{display:flex;gap:.45rem;align-items:flex-start;color:var(--ink-faint)}
+    .rules li::before{content:"";flex:none;width:.95rem;height:.95rem;margin-top:.18rem;border-radius:50%;border:1.5px solid var(--line)}
+    .rules li.ok{color:var(--ink)}
+    .rules li.ok::before{background:var(--mint);border-color:var(--mint);box-shadow:inset 0 0 0 2.5px var(--surface)}
+    .match{font-size:.84rem;margin-top:.35rem;color:var(--ink-faint);min-height:1.2em}
+    .match.ok{color:var(--mint)} .match.bad{color:var(--rose)}
+    .submit{width:100%;justify-content:center;margin:.4rem 0 0;font-size:1.02rem;min-height:50px}
+    .switch{margin:1.2rem 0 0;text-align:center;color:var(--ink-soft);font-size:.95rem}
+    .note{border-radius:12px;padding:.75rem .9rem;margin:0 0 1rem;font-size:.93rem;line-height:1.5}
+    .note.err{background:var(--rose-wash);border:1px solid rgba(255,107,139,.45);color:#FFD3DC}
+    .note.ok{background:var(--mint-wash);border:1px solid rgba(91,227,166,.45);color:#D4FBE8}
+    .note.info{background:var(--aqua-wash);border:1px solid rgba(79,216,232,.4);color:#D5F7FB}
+    .note button{background:none;border:0;padding:0;color:inherit;font:inherit;font-weight:700;text-decoration:underline;cursor:pointer}
+    .note button[disabled]{opacity:.6;cursor:default;text-decoration:none}
+    .fine{font-size:.82rem;color:var(--ink-faint);margin:1rem 0 0;line-height:1.5}
+    .bigmail{font-weight:700;color:var(--ink);word-break:break-all}
+    .spinner{display:inline-block;width:1em;height:1em;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:spin .7s linear infinite;vertical-align:-2px}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    [hidden]{display:none!important}
+  </style>
+</head>
+<body data-theme-v2>
+  <nav id="sitenav"><div class="nav-links"><a href="index.html">Home</a></div></nav>
+  <main class="auth">
+    <div class="art" aria-hidden="true">
+      <svg viewBox="0 0 400 360" id="meter">
+        <g id="tri"></g>
+      </svg>
+      <h2 id="artTitle">Your progress, on every device</h2>
+      <p id="artText">Sign in and your drill history, Arena rating, ladder best and interview record follow you from laptop to phone.</p>
+    </div>
+
+    <div class="card" id="card">
+      <!-- ============================================ not configured -->
+      <section data-view="off" hidden>
+        <h1>Accounts are coming</h1>
+        <p class="sub">Sign-in isn't switched on for this site yet. Everything still works without an account: your progress is kept in this browser.</p>
+        <a class="btn submit" href="index.html">Back to the site</a>
+      </section>
+
+      <!-- ============================================ sign in -->
+      <section data-view="signin" hidden>
+        <h1>Welcome back</h1>
+        <p class="sub">Sign in to pick up where you left off.</p>
+        <div class="note" data-msg hidden></div>
+        <form novalidate data-form="signin">
+          <label class="fld"><span>Email</span><input type="email" name="email" autocomplete="email" required inputmode="email"></label>
+          <label class="fld pw"><span>Password <a href="#forgot" data-go="forgot">Forgot your password?</a></span>
+            <span class="inwrap"><input type="password" name="password" autocomplete="current-password" required><button type="button" class="eye" aria-label="Show password">Show</button></span>
+            <span class="caps" role="status">Caps Lock is on</span></label>
+          <button class="btn submit" type="submit">Sign in</button>
+        </form>
+        <p class="switch">New here? <a href="#signup" data-go="signup">Create an account</a></p>
+      </section>
+
+      <!-- ============================================ sign up -->
+      <section data-view="signup" hidden>
+        <h1>Create an account</h1>
+        <p class="sub">Free, and it takes a minute. We'll email you a link to confirm your address.</p>
+        <div class="note" data-msg hidden></div>
+        <form novalidate data-form="signup">
+          <label class="fld"><span>Name <small style="font-weight:400;color:var(--ink-faint)">optional, shown only to you</small></span><input type="text" name="name" autocomplete="nickname" maxlength="40"></label>
+          <label class="fld"><span>Email</span><input type="email" name="email" autocomplete="email" required inputmode="email"></label>
+          <label class="fld pw"><span>Password</span>
+            <span class="inwrap"><input type="password" name="password" autocomplete="new-password" required aria-describedby="rules-signup"><button type="button" class="eye" aria-label="Show password">Show</button></span>
+            <span class="caps" role="status">Caps Lock is on</span></label>
+          <ul class="rules" id="rules-signup" aria-live="polite"></ul>
+          <label class="fld pw"><span>Confirm password</span>
+            <span class="inwrap"><input type="password" name="confirm" autocomplete="new-password" required><button type="button" class="eye" aria-label="Show password">Show</button></span>
+            <span class="match" role="status"></span></label>
+          <button class="btn submit" type="submit" disabled>Create account</button>
+        </form>
+        <p class="fine">Your email is used only to sign you in and to reset your password. Your synced progress is visible to you alone.</p>
+        <p class="switch">Already have an account? <a href="#signin" data-go="signin">Sign in</a></p>
+      </section>
+
+      <!-- ============================================ check email -->
+      <section data-view="check" hidden>
+        <h1>Check your inbox</h1>
+        <p class="sub">We've sent a confirmation link to <span class="bigmail" data-email></span>. Open it on this device to finish creating your account.</p>
+        <div class="note" data-msg hidden></div>
+        <div class="note info">Nothing after a few minutes? Check your spam folder, or <button type="button" data-resend>send the link again</button>.</div>
+        <p class="switch"><a href="#signup" data-go="signup">Use a different email</a> &nbsp;or&nbsp; <a href="#signin" data-go="signin">Back to sign in</a></p>
+      </section>
+
+      <!-- ============================================ forgot -->
+      <section data-view="forgot" hidden>
+        <h1>Reset your password</h1>
+        <p class="sub">Enter the email you signed up with and we'll send you a link to choose a new password.</p>
+        <div class="note" data-msg hidden></div>
+        <form novalidate data-form="forgot">
+          <label class="fld"><span>Email</span><input type="email" name="email" autocomplete="email" required inputmode="email"></label>
+          <button class="btn submit" type="submit">Send reset link</button>
+        </form>
+        <p class="switch">Remembered it? <a href="#signin" data-go="signin">Sign in</a></p>
+      </section>
+
+      <!-- ============================================ reset (from email link) -->
+      <section data-view="reset" hidden>
+        <h1>Choose a new password</h1>
+        <p class="sub">Pick something you haven't used here before.</p>
+        <div class="note" data-msg hidden></div>
+        <form novalidate data-form="reset">
+          <label class="fld pw"><span>New password</span>
+            <span class="inwrap"><input type="password" name="password" autocomplete="new-password" required aria-describedby="rules-reset"><button type="button" class="eye" aria-label="Show password">Show</button></span>
+            <span class="caps" role="status">Caps Lock is on</span></label>
+          <ul class="rules" id="rules-reset" aria-live="polite"></ul>
+          <label class="fld pw"><span>Confirm new password</span>
+            <span class="inwrap"><input type="password" name="confirm" autocomplete="new-password" required><button type="button" class="eye" aria-label="Show password">Show</button></span>
+            <span class="match" role="status"></span></label>
+          <button class="btn submit" type="submit" disabled>Save new password</button>
+        </form>
+      </section>
+
+      <!-- ============================================ done / signed in -->
+      <section data-view="done" hidden>
+        <h1 data-title>You're signed in</h1>
+        <p class="sub" data-text></p>
+        <a class="btn submit" href="account.html">Go to your account</a>
+        <p class="switch"><a href="drill.html">Start a drill</a> &nbsp;or&nbsp; <a href="arena.html">Race the bot</a></p>
+      </section>
+    </div>
+  </main>
+
+<script src="site.js"></script>
+<script>
+(function(){
+  var NS='http://www.w3.org/2000/svg', A={x:52,y:318}, B={x:352,y:318}, C={x:228,y:42};
+  /* ---------------------------------------------------- the triangle meter */
+  var tri=document.getElementById('tri');
+  function mk(n,a){ var e=document.createElementNS(NS,n); for(var k in a) e.setAttribute(k,a[k]); tri.appendChild(e); return e; }
+  function d(p,q){ return Math.hypot(p.x-q.x,p.y-q.y); }
+  var a=d(B,C), b=d(C,A), c=d(A,B), s=a+b+c, area=Math.abs((B.x-A.x)*(C.y-A.y)-(C.x-A.x)*(B.y-A.y))/2;
+  var I={x:(a*A.x+b*B.x+c*C.x)/s,y:(a*A.y+b*B.y+c*C.y)/s}, r=2*area/s;
+  function foot(p,q){ var dx=q.x-p.x,dy=q.y-p.y,t=((I.x-p.x)*dx+(I.y-p.y)*dy)/(dx*dx+dy*dy); return {x:p.x+t*dx,y:p.y+t*dy}; }
+  var circ=2*Math.PI*r;
+  var ring=mk('circle',{cx:I.x,cy:I.y,r:r,fill:'none',stroke:'#F3F1FF','stroke-width':4,class:'ring','stroke-dasharray':circ,'stroke-dashoffset':circ,transform:'rotate(-90 '+I.x+' '+I.y+')'});
+  var COL=['#4FD8E8','#FF6B8B','#FFC53D'], DIM='#343A82';
+  var sides=[[A,B],[B,C],[C,A]].map(function(pq){ return mk('line',{x1:pq[0].x,y1:pq[0].y,x2:pq[1].x,y2:pq[1].y,stroke:DIM,'stroke-width':12,'stroke-linecap':'round',class:'side'}); });
+  var tps=[foot(A,B),foot(B,C),foot(C,A)].map(function(p){ return mk('circle',{cx:p.x,cy:p.y,r:8,fill:DIM,stroke:'#15173B','stroke-width':4,class:'tp'}); });
+  var centre=mk('circle',{cx:I.x,cy:I.y,r:5,fill:'#F3F1FF',opacity:0,class:'ring'});
+  function meter(rules,matched){
+    var ok=rules?rules.map(function(x){return x.ok;}):[true,true,true,true,true,true];
+    sides.forEach(function(l,i){ l.setAttribute('stroke',ok[i]?COL[i]:DIM); });
+    tps.forEach(function(p,i){ p.setAttribute('fill',ok[i+3]?'#F3F1FF':DIM); p.setAttribute('r',ok[i+3]?9:7); });
+    var all=ok.every(Boolean)&&matched!==false;
+    ring.setAttribute('stroke-dashoffset',all?0:circ); centre.setAttribute('opacity',all?1:0);
+  }
+  meter(null,true);
+
+  /* ---------------------------------------------------- helpers */
+  var card=document.getElementById('card'), current='signin', resendEmail='', cooldown=0, cdTimer=null;
+  function $v(v){ return card.querySelector('[data-view="'+v+'"]'); }
+  function show(v){
+    current=v; card.querySelectorAll('[data-view]').forEach(function(sec){ sec.hidden=sec.dataset.view!==v; });
+    var art={signup:['A strong password completes the triangle','Each requirement you meet lights up a side or a tangency point. The incircle closes when the password is strong enough.'],
+             reset:['A strong password completes the triangle','Each requirement lights up a side or a tangency point; the incircle closes when you are there.']}[v]
+      ||['Your progress, on every device','Sign in and your drill history, Arena rating, ladder best and interview record follow you from laptop to phone.'];
+    document.getElementById('artTitle').textContent=art[0]; document.getElementById('artText').textContent=art[1];
+    if(v==='signup'||v==='reset'){ var f=card.querySelector('[data-form="'+v+'"]'); validate(f); } else meter(null,true);
+    var first=$v(v).querySelector('input'); if(first&&v!=='done') setTimeout(function(){ first.focus(); },30);
+    if(location.hash.slice(1)!==v&&['signin','signup','forgot'].indexOf(v)>=0) history.replaceState(null,'',location.pathname+location.search+'#'+v);
+  }
+  function msg(v,text,kind,html){ var m=$v(v).querySelector('[data-msg]'); if(!m) return; if(!text){ m.hidden=true; return; } m.hidden=false; m.className='note '+(kind||'err'); if(html) m.innerHTML=text; else m.textContent=text; }
+  function busy(form,on,label){ var b=form.querySelector('[type=submit]'); if(on){ b.dataset.label=b.textContent; b.disabled=true; b.innerHTML='<span class="spinner" aria-hidden="true"></span> '+(label||'Working'); } else { b.disabled=false; b.textContent=b.dataset.label||b.textContent; } }
+  function emailOk(e){ return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(e); }
+  function A_(){ return window.HU_AUTH; }
+
+  /* show/hide and caps lock */
+  card.querySelectorAll('.eye').forEach(function(btn){ btn.addEventListener('click',function(){ var i=btn.parentNode.querySelector('input'), sh=i.type==='password'; i.type=sh?'text':'password'; btn.textContent=sh?'Hide':'Show'; btn.setAttribute('aria-label',sh?'Hide password':'Show password'); i.focus(); }); });
+  card.querySelectorAll('input[type=password]').forEach(function(i){ ['keydown','keyup'].forEach(function(ev){ i.addEventListener(ev,function(e){ var c=i.closest('.fld').querySelector('.caps'); if(c&&e.getModifierState) c.classList.toggle('on',e.getModifierState('CapsLock')); }); }); });
+  card.querySelectorAll('[data-go]').forEach(function(a){ a.addEventListener('click',function(e){ e.preventDefault(); var carry=card.querySelector('[data-view="'+current+'"] input[name=email]'); show(a.dataset.go); var to=$v(a.dataset.go).querySelector('input[name=email]'); if(carry&&to&&!to.value) to.value=carry.value; }); });
+
+  /* live password validation for sign-up and reset */
+  function validate(form){
+    var pw=form.password.value, cf=form.confirm.value, em=form.email?form.email.value:((A_()&&A_().user()&&A_().user().email)||'');
+    var rules=A_()?A_().checkPassword(pw,em):[];
+    var ul=form.parentNode.querySelector('.rules'); ul.innerHTML=rules.map(function(x){ return '<li class="'+(x.ok?'ok':'')+'">'+x.label+'</li>'; }).join('');
+    var m=form.querySelector('.match'), matched=cf.length?cf===pw:null;
+    m.className='match'+(matched===true?' ok':matched===false?' bad':''); m.textContent=matched===true?'Passwords match':matched===false?'Passwords don\u2019t match yet':'';
+    var good=rules.length&&rules.every(function(x){return x.ok;})&&matched===true&&(!form.email||emailOk(form.email.value.trim()));
+    form.querySelector('[type=submit]').disabled=!good;
+    meter(rules.length?rules:null,matched);
+    return good;
+  }
+  ['signup','reset'].forEach(function(v){ var f=card.querySelector('[data-form="'+v+'"]'); f.addEventListener('input',function(){ validate(f); }); });
+
+  /* ---------------------------------------------------- actions */
+  var go=new URLSearchParams(location.search).get('next');
+  function after(){ location.href=go&&/^[a-z0-9_-]+\.html$/i.test(go)?go:'account.html'; }
+
+  card.querySelector('[data-form="signin"]').addEventListener('submit',async function(e){
+    e.preventDefault(); var f=this, em=f.email.value.trim(), pw=f.password.value;
+    if(!emailOk(em)){ msg('signin','Enter a valid email address.'); f.email.setAttribute('aria-invalid','true'); f.email.focus(); return; }
+    if(!pw){ msg('signin','Enter your password.'); f.password.focus(); return; }
+    f.email.removeAttribute('aria-invalid'); msg('signin',''); busy(f,true,'Signing in');
+    var r=await A_().client.auth.signInWithPassword({email:em,password:pw}); busy(f,false);
+    if(r.error){
+      var t=A_().explain(r.error);
+      if(/confirm your email/i.test(t)){ resendEmail=em; msg('signin',t+' <button type="button" data-resend>Send a new confirmation link</button>','err',true); wireResend($v('signin')); }
+      else msg('signin',t);
+      f.password.value=''; f.password.focus(); return;
+    }
+    after();
+  });
+
+  card.querySelector('[data-form="signup"]').addEventListener('submit',async function(e){
+    e.preventDefault(); var f=this; if(!validate(f)) return;
+    var em=f.email.value.trim(), name=f.name.value.trim(); msg('signup',''); busy(f,true,'Creating your account');
+    var r=await A_().client.auth.signUp({email:em,password:f.password.value,options:{emailRedirectTo:A_().site+'auth.html',data:name?{display_name:name}:{}}});
+    busy(f,false);
+    if(r.error){ msg('signup',A_().explain(r.error)); return; }
+    if(r.data&&r.data.user&&Array.isArray(r.data.user.identities)&&r.data.user.identities.length===0){
+      msg('signup','An account with that email already exists. <a href="#signin" data-go2="signin">Sign in</a> or <a href="#forgot" data-go2="forgot">reset your password</a>.','err',true);
+      $v('signup').querySelectorAll('[data-go2]').forEach(function(a){ a.addEventListener('click',function(ev){ ev.preventDefault(); show(a.dataset.go2); $v(a.dataset.go2).querySelector('input[name=email]').value=em; }); }); return;
+    }
+    f.password.value=''; f.confirm.value='';
+    if(r.data&&r.data.session){ after(); return; }
+    resendEmail=em; $v('check').querySelector('[data-email]').textContent=em; startCooldown(); show('check');
+  });
+
+  card.querySelector('[data-form="forgot"]').addEventListener('submit',async function(e){
+    e.preventDefault(); var f=this, em=f.email.value.trim();
+    if(!emailOk(em)){ msg('forgot','Enter a valid email address.'); f.email.focus(); return; }
+    msg('forgot',''); busy(f,true,'Sending');
+    var r=await A_().client.auth.resetPasswordForEmail(em,{redirectTo:A_().site+'auth.html'}); busy(f,false);
+    if(r.error&&(r.error.status===429||/rate/i.test(r.error.message))){ msg('forgot',A_().explain(r.error)); return; }
+    msg('forgot','If an account exists for '+em+', a reset link is on its way. It expires after an hour.','ok');
+  });
+
+  card.querySelector('[data-form="reset"]').addEventListener('submit',async function(e){
+    e.preventDefault(); var f=this; if(!validate(f)) return; msg('reset',''); busy(f,true,'Saving');
+    var r=await A_().client.auth.updateUser({password:f.password.value}); busy(f,false);
+    if(r.error){ msg('reset',A_().explain(r.error)); return; }
+    f.password.value=''; f.confirm.value='';
+    done('Password updated','Your new password is saved and you\u2019re signed in. Use it next time you sign in on another device.');
+  });
+
+  function startCooldown(){ cooldown=60; clearInterval(cdTimer); tickCd(); cdTimer=setInterval(function(){ cooldown--; tickCd(); if(cooldown<=0) clearInterval(cdTimer); },1000); }
+  function tickCd(){ card.querySelectorAll('[data-resend]').forEach(function(b){ b.disabled=cooldown>0; b.textContent=cooldown>0?'send it again in '+cooldown+'s':'send the link again'; }); }
+  function wireResend(root){ root.querySelectorAll('[data-resend]').forEach(function(b){ b.onclick=async function(){ if(cooldown>0||!resendEmail) return;
+      b.disabled=true; var r=await A_().client.auth.resend({type:'signup',email:resendEmail,options:{emailRedirectTo:A_().site+'auth.html'}});
+      var where=root.dataset.view||current; if(r.error) msg(where,A_().explain(r.error)); else { msg(where,'A new link is on its way to '+resendEmail+'.','ok'); startCooldown(); } }; }); tickCd(); }
+  wireResend($v('check'));
+
+  function done(title,text){ var sec=$v('done'); sec.querySelector('[data-title]').textContent=title; sec.querySelector('[data-text]').textContent=text; show('done'); meter(null,true); }
+
+  /* ---------------------------------------------------- arrival: links from emails, hash errors */
+  var hash=new URLSearchParams(location.hash.replace(/^#/,'')), qs=new URLSearchParams(location.search);
+  var arrivedType=hash.get('type'), hashErr=hash.get('error_description')||qs.get('error_description');
+  function boot(){
+    var H=A_();
+    if(!H||!H.configured){ show('off'); return; }
+    if(hashErr){ show('signin'); msg('signin',H.explain({message:decodeURIComponent(hashErr.replace(/\+/g,' '))})+' You can <a href="#forgot" data-go3="forgot">reset your password</a> or sign in to send a new confirmation link.','err',true);
+      $v('signin').querySelectorAll('[data-go3]').forEach(function(a){ a.addEventListener('click',function(ev){ ev.preventDefault(); show('forgot'); }); }); history.replaceState(null,'',location.pathname+'#signin'); return; }
+    if(arrivedType==='recovery'){ show('reset'); return; }
+    window.addEventListener('hu-auth-event',function(ev){ if(ev.detail.event==='PASSWORD_RECOVERY') show('reset'); });
+    var first=true;
+    H.onChange(function(u){
+      if(!first) return; if(u===null&&H.client){ /* wait for getSession */ }
+      H.client.auth.getSession().then(function(r){
+        if(!first) return; first=false;
+        var sess=r.data&&r.data.session;
+        if(arrivedType==='signup'&&sess){ done('Email confirmed','Your account is ready and you\u2019re signed in. Your progress from this browser has been saved to your account.'); history.replaceState(null,'',location.pathname); return; }
+        if(sess&&current!=='reset'){ done('You\u2019re signed in','Signed in as '+sess.user.email+'. Your progress syncs automatically.'); return; }
+        var want=location.hash.slice(1); show(['signup','forgot','signin'].indexOf(want)>=0?want:(qs.get('mode')==='signup'?'signup':'signin'));
+        if(qs.get('signedout')) msg('signin','You\u2019ve signed out. Your progress is saved to your account.','ok');
+      });
+    });
+  }
+  if(window.HU_AUTH) boot(); else window.addEventListener('hu-auth-ready',boot,{once:true});
+  setTimeout(function(){ if(!window.HU_AUTH) show('off'); },8000);
+})();
+</script>
+</body>
+</html>
