@@ -8,19 +8,19 @@
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
-  <meta name="theme-color" content="#1A2230">
+  <meta name="theme-color" content="#F3F1FF">
   <link rel="stylesheet" href="style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
   <style>
-    .tx{--ink:#1A2230;--soft:#586374;--faint:#8A93A1;--rule:#D9D6CC;--paper:#FBFAF6;
-        --serif:"IBM Plex Serif",Georgia,serif;--sans:"IBM Plex Sans",system-ui,sans-serif;font-family:var(--sans);color:var(--ink);line-height:1.55}
+    .tx{--ink:#F3F1FF;--soft:#BDBBE6;--faint:#8A89BD;--rule:#343A82;--paper:#15173B;
+        --serif:"IBM Plex Serif",Georgia,serif;--sans:"Bricolage Grotesque","IBM Plex Sans",system-ui,sans-serif;font-family:var(--sans);color:var(--ink);line-height:1.55}
     .tx h2{font-family:var(--serif);font-weight:600}
     .tx p{max-width:68ch}
     .tx .lead{font-size:1.05rem;color:var(--soft)}
     .tx .layout{display:grid;grid-template-columns:230px 1fr;gap:1.6rem;align-items:start;margin-top:1.4rem}
     @media (max-width:800px){.tx .layout{grid-template-columns:1fr}}
-    .tx input[type=search]{width:100%;font-family:var(--sans);font-size:.95rem;padding:.5rem .7rem;border:1px solid var(--rule);border-radius:2px;background:#fff;color:var(--ink);margin-bottom:.8rem}
+    .tx input[type=search]{width:100%;font-family:var(--sans);font-size:.95rem;padding:.5rem .7rem;border:1px solid var(--rule);border-radius:2px;background:#0F1130;color:var(--ink);margin-bottom:.8rem}
     .tx .chips{display:flex;flex-direction:column;gap:.15rem}
     .tx .chip{display:flex;justify-content:space-between;align-items:baseline;font-size:.92rem;text-align:left;background:transparent;border:0;border-left:2px solid transparent;padding:.3rem .6rem;cursor:pointer;color:var(--ink);font-family:var(--sans)}
     .tx .chip:hover{border-left-color:var(--rule)}
@@ -38,21 +38,9 @@
     .tx .count{color:var(--faint);font-size:.88rem;margin:.5rem 0 1.2rem}
   </style>
 </head>
-<body>
+<body data-theme-v2>
 
-  <nav>
-    <div class="nav-links">
-      <a href="index.html">Mathematics</a>
-      <a href="music.html">Music &amp; Piano</a>
-      <a href="geometry.html">Geometry Lab</a>
-      <a href="sandbox.html">Sandbox</a>
-      <a href="drill.html">Drill</a>
-      <a href="interviews.html">Mock interviews</a>
-      <a href="marker.html">Marker</a>
-      <a href="techniques.html" aria-current="page">Techniques</a>
-      <a href="progress.html">Progress</a>
-    </div>
-  </nav>
+  <nav id="sitenav"><div class="nav-links"><a href="https://kevinvariant08.github.io/index.html">Home</a> <a href="https://kevinvariant08.github.io/drill.html">Drill</a> <a href="https://kevinvariant08.github.io/arena.html">Arena</a> <a href="https://kevinvariant08.github.io/bank.html">Question bank</a></div></nav>
 
   <main class="container tx">
     <h1>Technique index</h1>
@@ -259,5 +247,6 @@ function render(){
 document.getElementById('q').addEventListener('input',function(e){q=e.target.value;render();});
 render();
 </script>
+<script src="site.js"></script>
 </body>
 </html>
