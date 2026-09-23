@@ -39,10 +39,38 @@
     document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeAll(null); });
     var t=nav.querySelector('.toggle'); t.addEventListener('click',function(e){ e.stopPropagation(); var o=!nav.classList.contains('open'); nav.classList.toggle('open',o); t.setAttribute('aria-expanded',String(o)); });
   }
+  /* ---------------------------------------------------------- accounts */
+  function loadScript(src){ return new Promise(function(res,rej){ var s=document.createElement('script'); s.src=src; s.onload=res; s.onerror=rej; document.head.appendChild(s); }); }
+  function esc(t){ return String(t).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+  function accountSlot(nav){
+    var ul=nav.querySelector('.links'); if(!ul) return;
+    var li=document.createElement('li'); li.className='acct'; ul.appendChild(li);
+    function paint(u){
+      if(!window.HU_AUTH||!window.HU_AUTH.configured){ li.innerHTML=''; return; }
+      if(!u){ li.innerHTML='<a class="signin" href="auth.html"'+(here==='auth.html'?' aria-current="page"':'')+'>Sign in</a>'; return; }
+      var name=(u.user_metadata&&u.user_metadata.display_name)||u.email||'Account', init=name.trim().charAt(0).toUpperCase();
+      li.innerHTML='<button type="button" class="who" aria-expanded="false" aria-controls="macct"><span class="av">'+esc(init)+'</span><span class="nm">'+esc(name.split('@')[0])+'</span>'+caret()+'</button>'
+        +'<ul class="menu right" id="macct"><li class="me">'+esc(u.email||'')+'</li><li><a href="account.html"'+(here==='account.html'?' aria-current="page"':'')+'>Your account<small>Profile, password and synced progress</small></a></li><li><a href="progress.html">My progress<small>Synced across your devices</small></a></li><li><button type="button" class="out">Sign out</button></li></ul>';
+      var b=li.querySelector('.who'), m=li.querySelector('.menu');
+      b.addEventListener('click',function(e){ e.stopPropagation(); var o=b.getAttribute('aria-expanded')!=='true'; nav.querySelectorAll('.menu.open').forEach(function(x){ if(x!==m){ x.classList.remove('open'); } }); b.setAttribute('aria-expanded',String(o)); m.classList.toggle('open',o); });
+      li.querySelector('.out').addEventListener('click',async function(){ this.disabled=true; this.textContent='Signing out'; await window.HU_AUTH.signOut(); location.href='auth.html?signedout=1'; });
+    }
+    window.addEventListener('hu-auth-ready',function(){ window.HU_AUTH.onChange(paint); });
+    if(window.HU_AUTH) window.HU_AUTH.onChange(paint);
+  }
+  function loadAccounts(){
+    if(window.HU_AUTH) return;
+    loadScript('auth-config.js').catch(function(){}).then(function(){
+      var c=window.HU_AUTH_CONFIG||{};
+      var lib=(c.url&&c.anonKey)?loadScript('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js').catch(function(){}):Promise.resolve();
+      return lib.then(function(){ return loadScript('account.js'); });
+    }).catch(function(){});
+  }
   function init(){
     document.body.setAttribute('data-theme-v2','');
     var nav=document.getElementById('sitenav')||document.querySelector('body>nav');
-    if(nav) build(nav);
+    if(nav){ build(nav); accountSlot(nav); }
+    loadAccounts();
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init); else init();
 })();
