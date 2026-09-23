@@ -8,14 +8,14 @@
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
-  <meta name="theme-color" content="#1A2230">
+  <meta name="theme-color" content="#F3F1FF">
   <link rel="stylesheet" href="style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono&display=swap" rel="stylesheet">
   <style>
-    .sb{--ink:#1A2230;--soft:#586374;--faint:#8A93A1;--rule:#D9D6CC;--paper:#FBFAF6;--grid:rgba(40,70,120,.09);
-        --stable:#2C5545;--maybe:#8A5A12;--derived:#534AB7;--circ:#993C1D;--dline:#0F6E56;
-        --serif:"IBM Plex Serif",Georgia,serif;--sans:"IBM Plex Sans",system-ui,sans-serif;--mono:"IBM Plex Mono",monospace;
+    .sb{--ink:#F3F1FF;--soft:#BDBBE6;--faint:#8A89BD;--rule:#343A82;--paper:#15173B;--grid:rgba(143,150,255,.08);
+        --stable:#5BE3A6;--maybe:#FFC53D;--derived:#4FD8E8;--circ:#FF6B8B;--dline:#FFC53D;
+        --serif:"IBM Plex Serif",Georgia,serif;--sans:"Bricolage Grotesque","IBM Plex Sans",system-ui,sans-serif;--mono:"IBM Plex Mono",monospace;
         font-family:var(--sans);color:var(--ink);line-height:1.55}
     .sb h2{font-family:var(--serif);font-weight:600}
     .sb p{max-width:68ch}
@@ -26,13 +26,13 @@
     .sb .tools h4{font-size:.74rem;font-weight:500;letter-spacing:.03em;color:var(--faint);margin:.7rem 0 .15rem}
     .sb .tool{font-family:var(--sans);font-size:.88rem;text-align:left;background:transparent;border:1px solid var(--rule);border-radius:2px;padding:.35rem .6rem;cursor:pointer;color:var(--ink);line-height:1.25}
     .sb .tool:hover{border-color:var(--ink)}
-    .sb .tool.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+    .sb .tool.on{background:var(--ink);color:#15173B;border-color:var(--ink)}
     .sb .tool small{display:block;color:var(--faint);font-size:.74rem}
-    .sb .tool.on small{color:#cfd3da}
+    .sb .tool.on small{color:#3B3F7A}
     .sb .canvaswrap{border:1px solid var(--rule);background-color:var(--paper);
         background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:30px 30px;position:relative}
     .sb svg{display:block;width:100%;height:auto;touch-action:none;cursor:crosshair}
-    .sb .status{position:absolute;left:.8rem;bottom:.6rem;font-size:.85rem;color:var(--soft);pointer-events:none;background:rgba(251,250,246,.88);padding:.15rem .5rem;max-width:80%}
+    .sb .status{position:absolute;left:.8rem;bottom:.6rem;font-size:.85rem;color:var(--soft);pointer-events:none;background:rgba(21,23,59,.86);padding:.15rem .5rem;max-width:80%}
     .sb .panel{border:1px solid var(--rule);padding:.9rem 1rem;font-size:.93rem}
     .sb .panel h3{font-family:var(--serif);font-weight:600;font-size:1rem;margin:0 0 .4rem}
     .sb .panel h4{font-size:.78rem;font-weight:500;letter-spacing:.02em;color:var(--faint);margin:.9rem 0 .3rem}
@@ -40,35 +40,23 @@
     .sb .rel.stable{color:var(--stable)} .sb .rel.maybe{color:var(--maybe)} .sb .rel.meas{color:var(--ink)}
     .sb .empty{color:var(--faint);font-style:italic}
     .sb .btn2{font-family:var(--sans);font-size:.9rem;font-weight:500;color:var(--ink);background:transparent;border:1px solid var(--ink);border-radius:2px;padding:.45rem .9rem;cursor:pointer}
-    .sb .btn2:hover{background:var(--ink);color:#fff}
+    .sb .btn2:hover{background:var(--ink);color:#15173B}
     .sb .btn2.quiet{border-color:var(--rule);color:var(--soft);font-weight:400}
     .sb .btn2.quiet:hover{border-color:var(--ink);color:var(--ink);background:transparent}
     .sb .row{display:flex;gap:.5rem;flex-wrap:wrap;align-items:center;margin-top:.8rem}
-    .sb textarea{width:100%;min-height:12rem;font-family:var(--mono);font-size:.82rem;line-height:1.45;border:1px solid var(--rule);padding:.6rem;background:#fff;color:var(--ink);resize:vertical}
+    .sb textarea{width:100%;min-height:12rem;font-family:var(--mono);font-size:.82rem;line-height:1.45;border:1px solid var(--rule);padding:.6rem;background:#0F1130;color:var(--ink);resize:vertical}
     .sb .export{margin-top:1.4rem}
     .sb .legend{display:flex;gap:1.1rem;font-size:.82rem;color:var(--soft);margin-top:.5rem;flex-wrap:wrap}
     .sb .legend span::before{content:"";display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:.35rem;vertical-align:middle}
     .sb .legend .f::before{background:var(--ink)} .sb .legend .o::before{background:var(--derived)} .sb .legend .d::before{border:2px solid var(--derived);width:6px;height:6px}
     .sb .legend .l::before{background:var(--dline);border-radius:0;height:2px;width:14px}
     .sb .legend .s::before{background:var(--stable)} .sb .legend .m::before{background:var(--maybe)}
-    .sb select{font-family:var(--sans);font-size:.85rem;padding:.3rem .5rem;border:1px solid var(--rule);border-radius:2px;background:#fff;color:var(--ink)}
+    .sb select{font-family:var(--sans);font-size:.85rem;padding:.3rem .5rem;border:1px solid var(--rule);border-radius:2px;background:#0F1130;color:var(--ink)}
   </style>
 </head>
-<body>
+<body data-theme-v2>
 
-  <nav>
-    <div class="nav-links">
-      <a href="index.html">Mathematics</a>
-      <a href="music.html">Music &amp; Piano</a>
-      <a href="geometry.html">Geometry Lab</a>
-      <a href="sandbox.html" aria-current="page">Sandbox</a>
-      <a href="drill.html">Drill</a>
-      <a href="interviews.html">Mock interviews</a>
-      <a href="marker.html">Marker</a>
-      <a href="techniques.html">Techniques</a>
-      <a href="progress.html">Progress</a>
-    </div>
-  </nav>
+  <nav id="sitenav"><div class="nav-links"><a href="https://kevinvariant08.github.io/index.html">Home</a> <a href="https://kevinvariant08.github.io/drill.html">Drill</a> <a href="https://kevinvariant08.github.io/arena.html">Arena</a> <a href="https://kevinvariant08.github.io/bank.html">Question bank</a></div></nav>
 
   <main class="container sb">
     <h1>Conjecture sandbox</h1>
@@ -380,26 +368,26 @@ function clipLine(l,mode){
 function draw(){
   compute(); var s='';
   objs.forEach(function(o){ if(o.type!=='circle'||!isFinite(o.g.r)) return;
-    s+='<circle cx="'+o.g.cx+'" cy="'+o.g.cy+'" r="'+o.g.r+'" fill="none" stroke="#993C1D" stroke-width="1.3" opacity=".9"/>';
-    if(o.kind!=='cp') s+='<circle cx="'+o.g.cx+'" cy="'+o.g.cy+'" r="2" fill="#993C1D" opacity=".6"/>';
+    s+='<circle cx="'+o.g.cx+'" cy="'+o.g.cy+'" r="'+o.g.r+'" fill="none" stroke="#FF6B8B" stroke-width="1.3" opacity=".9"/>';
+    if(o.kind!=='cp') s+='<circle cx="'+o.g.cx+'" cy="'+o.g.cy+'" r="2" fill="#FF6B8B" opacity=".6"/>';
   });
   objs.forEach(function(o){ if(o.type!=='line'||!isFinite(o.g.x1)||!isFinite(o.g.x2)) return;
-    var sel=picks.indexOf(o.id)>=0, col=o.kind==='two'?'#1A2230':'#0F6E56';
+    var sel=picks.indexOf(o.id)>=0, col=o.kind==='two'?'#F3F1FF':'#FFC53D';
     if(o.kind==='two'){
       if(o.style!=='segment'){ var c=clipLine(o.g,o.style); if(c) s+='<line x1="'+c[0].x+'" y1="'+c[0].y+'" x2="'+c[1].x+'" y2="'+c[1].y+'" stroke="'+col+'" stroke-width="'+(sel?1.6:0.7)+'" opacity=".45"/>'; }
-      s+='<line x1="'+o.g.x1+'" y1="'+o.g.y1+'" x2="'+o.g.x2+'" y2="'+o.g.y2+'" stroke="'+(sel?'#EF9F27':col)+'" stroke-width="1.6"/>';
-    } else { var c2=clipLine(o.g,'line'); if(c2) s+='<line x1="'+c2[0].x+'" y1="'+c2[0].y+'" x2="'+c2[1].x+'" y2="'+c2[1].y+'" stroke="'+(sel?'#EF9F27':col)+'" stroke-width="1.1" stroke-dasharray="6 3" opacity=".85"/>'; }
+      s+='<line x1="'+o.g.x1+'" y1="'+o.g.y1+'" x2="'+o.g.x2+'" y2="'+o.g.y2+'" stroke="'+(sel?'#5BE3A6':col)+'" stroke-width="1.6"/>';
+    } else { var c2=clipLine(o.g,'line'); if(c2) s+='<line x1="'+c2[0].x+'" y1="'+c2[0].y+'" x2="'+c2[1].x+'" y2="'+c2[1].y+'" stroke="'+(sel?'#5BE3A6':col)+'" stroke-width="1.1" stroke-dasharray="6 3" opacity=".85"/>'; }
   });
   objs.forEach(function(o){ if(o.type!=='point'||o.hidden||!isFinite(o.g.x)) return;
     var sel=picks.indexOf(o.id)>=0;
-    if(o.kind==='free') s+='<circle cx="'+o.g.x+'" cy="'+o.g.y+'" r="'+(sel?7:5)+'" fill="#1A2230" stroke="'+(sel?'#EF9F27':'#FBFAF6')+'" stroke-width="2" style="cursor:grab"/>';
-    else if(o.kind==='onl'||o.kind==='onc') s+='<circle cx="'+o.g.x+'" cy="'+o.g.y+'" r="'+(sel?7:5)+'" fill="#534AB7" stroke="'+(sel?'#EF9F27':'#FBFAF6')+'" stroke-width="2" style="cursor:grab"/>';
-    else s+='<circle cx="'+o.g.x+'" cy="'+o.g.y+'" r="'+(sel?6:4.5)+'" fill="#FBFAF6" stroke="'+(sel?'#EF9F27':'#534AB7')+'" stroke-width="2"/>';
-    s+='<text x="'+(o.g.x+8)+'" y="'+(o.g.y-8)+'" font-family="IBM Plex Serif,serif" font-style="italic" font-size="15" fill="#1A2230">'+o.label+'</text>';
+    if(o.kind==='free') s+='<circle cx="'+o.g.x+'" cy="'+o.g.y+'" r="'+(sel?7:5)+'" fill="#F3F1FF" stroke="'+(sel?'#5BE3A6':'#15173B')+'" stroke-width="2" style="cursor:grab"/>';
+    else if(o.kind==='onl'||o.kind==='onc') s+='<circle cx="'+o.g.x+'" cy="'+o.g.y+'" r="'+(sel?7:5)+'" fill="#4FD8E8" stroke="'+(sel?'#5BE3A6':'#15173B')+'" stroke-width="2" style="cursor:grab"/>';
+    else s+='<circle cx="'+o.g.x+'" cy="'+o.g.y+'" r="'+(sel?6:4.5)+'" fill="#15173B" stroke="'+(sel?'#5BE3A6':'#4FD8E8')+'" stroke-width="2"/>';
+    s+='<text x="'+(o.g.x+8)+'" y="'+(o.g.y-8)+'" font-family="IBM Plex Serif,serif" font-style="italic" font-size="15" fill="#F3F1FF">'+o.label+'</text>';
   });
   objs.forEach(function(o){ if(o.type!=='meas'||o.kind!=='angle') return; var a=P(o.of[0]),b=P(o.of[1]),c=P(o.of[2]);
     var t1=Math.atan2(a.y-b.y,a.x-b.x),t2=Math.atan2(c.y-b.y,c.x-b.x),r=22,d=t2-t1; while(d<=-Math.PI)d+=2*Math.PI; while(d>Math.PI)d-=2*Math.PI;
-    var sw=d>0?1:0; s+='<path d="M'+(b.x+r*Math.cos(t1))+' '+(b.y+r*Math.sin(t1))+' A'+r+' '+r+' 0 0 '+sw+' '+(b.x+r*Math.cos(t2))+' '+(b.y+r*Math.sin(t2))+'" fill="none" stroke="#EF9F27" stroke-width="1.2"/>';
+    var sw=d>0?1:0; s+='<path d="M'+(b.x+r*Math.cos(t1))+' '+(b.y+r*Math.sin(t1))+' A'+r+' '+r+' 0 0 '+sw+' '+(b.x+r*Math.cos(t2))+' '+(b.y+r*Math.sin(t2))+'" fill="none" stroke="#5BE3A6" stroke-width="1.2"/>';
   });
   svg.innerHTML=s; renderRelations(); renderMeas(); exportTex();
 }
@@ -593,5 +581,6 @@ var DEMOS={
 document.getElementById('demo').addEventListener('change',function(e){ var k=e.target.value; if(k&&DEMOS[k]) DEMOS[k](); e.target.value=''; });
 renderTools(); draw();
 </script>
+<script src="site.js"></script>
 </body>
 </html>
