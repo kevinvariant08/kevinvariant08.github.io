@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Your account - Kevinvariant</title>
+  <link rel="icon" href="/favicon.ico" sizes="32x32">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <meta name="theme-color" content="#15173B">
+  <meta name="robots" content="noindex">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .acc{max-width:52rem}
+    .who{display:flex;align-items:center;gap:1.1rem;margin:0 0 2rem}
+    .who .av{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:1.6rem;color:#15173B;background:conic-gradient(var(--aqua),var(--rose),var(--saffron),var(--aqua));flex:none}
+    .who h1{margin:0;font-size:clamp(1.8rem,4vw,2.6rem)}
+    .who p{margin:.1rem 0 0;color:var(--ink-soft)}
+    .blk{border-top:1px solid var(--line-soft);padding:1.6rem 0;display:grid;grid-template-columns:minmax(0,15rem) minmax(0,1fr);gap:1rem 2.4rem}
+    @media (max-width:760px){.blk{grid-template-columns:1fr}}
+    .blk h2{margin:0;font-size:1.2rem}
+    .blk .lead2{margin:.3rem 0 0;color:var(--ink-faint);font-size:.9rem}
+    .fld{display:block;margin:0 0 .9rem;max-width:26rem}
+    .fld span{display:block;font-size:.86rem;font-weight:600;color:var(--ink-soft);margin-bottom:.3rem}
+    .fld input{width:100%;font-family:var(--display);font-size:1rem;color:var(--ink);background:var(--bg-deep);border:1.5px solid var(--line);border-radius:12px;padding:.7rem .85rem;min-height:46px}
+    .fld input:focus{outline:none;border-color:var(--aqua);box-shadow:0 0 0 3px var(--aqua-wash)}
+    .rules{list-style:none;padding:0;margin:.1rem 0 1rem;display:grid;grid-template-columns:1fr 1fr;gap:.3rem .8rem;font-size:.85rem;max-width:30rem}
+    .rules li{display:flex;gap:.45rem;color:var(--ink-faint)}
+    .rules li::before{content:"";flex:none;width:.9rem;height:.9rem;margin-top:.2rem;border-radius:50%;border:1.5px solid var(--line)}
+    .rules li.ok{color:var(--ink)} .rules li.ok::before{background:var(--mint);border-color:var(--mint);box-shadow:inset 0 0 0 2.5px var(--bg)}
+    .note{border-radius:12px;padding:.65rem .85rem;margin:.6rem 0 0;font-size:.92rem;max-width:30rem}
+    .note.err{background:var(--rose-wash);border:1px solid rgba(255,107,139,.45);color:#FFD3DC}
+    .note.ok{background:var(--mint-wash);border:1px solid rgba(91,227,166,.45);color:#D4FBE8}
+    .kv{display:grid;grid-template-columns:auto 1fr;gap:.4rem 1.4rem;font-size:.97rem;margin:0}
+    .kv dt{color:var(--ink-faint)} .kv dd{margin:0}
+    .danger{border-color:rgba(255,107,139,.6);color:var(--rose)}
+    .danger:hover{background:var(--rose-wash);color:var(--rose)}
+    [hidden]{display:none!important}
+  </style>
+</head>
+<body data-theme-v2>
+  <nav id="sitenav"><div class="nav-links"><a href="index.html">Home</a></div></nav>
+  <main class="container acc" id="main" hidden>
+    <div class="who"><span class="av" id="av">?</span><div><h1 id="hello">Your account</h1><p id="email"></p></div></div>
+
+    <section class="blk">
+      <div><h2>Synced progress</h2><p class="lead2">Saved to your account and merged across every device you sign in on.</p></div>
+      <div>
+        <dl class="kv" id="stats"></dl>
+        <p style="margin:.9rem 0 0"><button class="btn ghost" id="sync" type="button">Sync now</button> <span id="syncmsg" style="color:var(--ink-faint);font-size:.9rem"></span></p>
+      </div>
+    </section>
+
+    <section class="blk">
+      <div><h2>Profile</h2><p class="lead2">Your name is only ever shown to you.</p></div>
+      <form id="profile" novalidate>
+        <label class="fld"><span>Name</span><input name="name" maxlength="40" autocomplete="nickname"></label>
+        <button class="btn" type="submit">Save name</button>
+        <div class="note" id="pmsg" hidden></div>
+      </form>
+    </section>
+
+    <section class="blk">
+      <div><h2>Password</h2><p class="lead2">You'll need your current password to set a new one.</p></div>
+      <form id="pwform" novalidate>
+        <label class="fld"><span>Current password</span><input type="password" name="current" autocomplete="current-password"></label>
+        <label class="fld"><span>New password</span><input type="password" name="password" autocomplete="new-password"></label>
+        <ul class="rules" id="rules"></ul>
+        <label class="fld"><span>Confirm new password</span><input type="password" name="confirm" autocomplete="new-password"></label>
+        <button class="btn" type="submit" disabled>Change password</button>
+        <div class="note" id="pwmsg" hidden></div>
+      </form>
+    </section>
+
+    <section class="blk">
+      <div><h2>Signing out</h2><p class="lead2">Your progress is synced before you leave.</p></div>
+      <div>
+        <button class="btn ghost" id="out" type="button">Sign out</button>
+        <button class="btn ghost" id="outall" type="button">Sign out on every device</button>
+      </div>
+    </section>
+
+    <section class="blk">
+      <div><h2>Your data</h2><p class="lead2">Removes the progress stored in your account. What's saved in this browser stays.</p></div>
+      <div>
+        <button class="btn ghost danger" id="wipe" type="button">Delete my synced progress</button>
+        <div class="note" id="wmsg" hidden></div>
+        <p style="color:var(--ink-faint);font-size:.88rem;margin:1rem 0 0;max-width:34rem">To close your account entirely, email the address on the home page from the address you signed up with and it will be deleted along with everything in it.</p>
+      </div>
+    </section>
+  </main>
+
+<script src="site.js"></script>
+<script>
+(function(){
+  function $(id){ return document.getElementById(id); }
+  function note(el,text,kind){ el.hidden=!text; el.className='note '+(kind||'err'); el.textContent=text||''; }
+  function load(k,d){ try{ return JSON.parse(localStorage.getItem(k)||'null')||d; }catch(e){ return d; } }
+  function paint(u){
+    var name=(u.user_metadata&&u.user_metadata.display_name)||'';
+    $('av').textContent=(name||u.email||'?').charAt(0).toUpperCase();
+    $('hello').textContent=name?'Hello, '+name:'Your account';
+    $('email').textContent=u.email+(u.email_confirmed_at?'':' (not yet confirmed)');
+    $('profile').name.value=name;
+    var log=load('hu_drill_log',[]), ar=load('hu_arena',null), att=load('hu_drill_attempts',[]), iv=load('hu_iv_hist',[]);
+    var last=window.HU_AUTH.lastSync();
+    $('stats').innerHTML='<dt>Questions answered</dt><dd>'+log.length+'</dd><dt>Timed papers</dt><dd>'+att.length+'</dd><dt>Arena rating</dt><dd>'+(ar?Math.round(ar.rating)+' ('+ar.w+' won, '+ar.l+' lost)':'no matches yet')+'</dd><dt>Ladder best</dt><dd>'+load('hu_ladder_best',0)+'</dd><dt>Mock interviews</dt><dd>'+iv.length+'</dd><dt>Last synced</dt><dd>'+(last?last.toLocaleTimeString():'syncing')+'</dd>';
+  }
+  function boot(){
+    var H=window.HU_AUTH;
+    if(!H||!H.configured){ location.replace('auth.html'); return; }
+    H.client.auth.getSession().then(function(r){
+      var s=r.data&&r.data.session; if(!s){ location.replace('auth.html?next=account.html'); return; }
+      $('main').hidden=false; paint(s.user);
+      H.onChange(function(u){ if(u) paint(u); else location.replace('auth.html'); });
+    });
+    $('sync').addEventListener('click',async function(){ this.disabled=true; $('syncmsg').textContent='Syncing'; var r=await H.syncNow(); this.disabled=false; $('syncmsg').textContent=r.ok?'Up to date.':(r.error||'Sync failed. Try again.'); if(H.user()) paint(H.user()); });
+    $('profile').addEventListener('submit',async function(e){ e.preventDefault(); var n=this.name.value.trim(); var r=await H.client.auth.updateUser({data:{display_name:n}}); if(r.error) note($('pmsg'),H.explain(r.error)); else { note($('pmsg'),'Saved.','ok'); H.updated(r.data.user); } });
+    var f=$('pwform');
+    function check(){ var u=H.user(), rules=H.checkPassword(f.password.value,u&&u.email);
+      $('rules').innerHTML=rules.map(function(x){return '<li class="'+(x.ok?'ok':'')+'">'+x.label+'</li>';}).join('');
+      var good=f.current.value.length>0&&rules.every(function(x){return x.ok;})&&f.confirm.value===f.password.value&&f.confirm.value.length>0;
+      f.querySelector('[type=submit]').disabled=!good; return good; }
+    f.addEventListener('input',check); check();
+    f.addEventListener('submit',async function(e){ e.preventDefault(); if(!check()) return; var u=H.user(), btn=f.querySelector('[type=submit]'); btn.disabled=true; note($('pwmsg'),'');
+      var re=await H.client.auth.signInWithPassword({email:u.email,password:f.current.value});
+      if(re.error){ note($('pwmsg'),/don.t match/i.test(H.explain(re.error))?'Your current password is incorrect.':H.explain(re.error)); btn.disabled=false; return; }
+      var r=await H.client.auth.updateUser({password:f.password.value});
+      if(r.error) note($('pwmsg'),H.explain(r.error)); else { note($('pwmsg'),'Password changed.','ok'); f.reset(); }
+      check(); });
+    $('out').addEventListener('click',async function(){ this.disabled=true; await H.signOut(); location.href='auth.html?signedout=1'; });
+    $('outall').addEventListener('click',async function(){ if(!confirm('Sign out on every device, including this one?')) return; this.disabled=true; await H.signOut('global'); location.href='auth.html?signedout=1'; });
+    $('wipe').addEventListener('click',async function(){ if(!confirm('Delete the progress stored in your account? This cannot be undone. Progress in this browser stays, and will be uploaded again next time it syncs unless you also clear it.')) return; var r=await H.deleteCloudData(); note($('wmsg'),r.ok?'Your synced progress has been deleted.':(r.error||'Could not delete. Try again.'),r.ok?'ok':'err'); });
+  }
+  if(window.HU_AUTH) boot(); else window.addEventListener('hu-auth-ready',boot,{once:true});
+})();
+</script>
+</body>
+</html>
