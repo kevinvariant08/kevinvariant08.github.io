@@ -4,166 +4,259 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Kevin Hu - Mathematics</title>
+  <meta name="description" content="Original olympiad geometry, TMUA mock papers harder than the real thing, and tools to practise them: timed drills, a question bank, a race against a bot, and mock interviews.">
   <link rel="icon" href="/favicon.ico" sizes="32x32">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
-  <meta name="theme-color" content="#1A2230">
+  <meta name="theme-color" content="#15173B">
   <link rel="stylesheet" href="style.css">
+  <style>
+    .home{max-width:74rem;margin:0 auto;padding:0 1.4rem 4rem}
+    .hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:2.6rem;align-items:center;padding:3.2rem 0 2.4rem}
+    @media (max-width:900px){.hero{grid-template-columns:1fr;padding-top:2rem}}
+    .hero h1{margin-bottom:.35em}
+    .hero .lede{max-width:34rem}
+    .hero .cta{margin-top:1.4rem}
+    .board{position:relative;margin:0;background:linear-gradient(160deg,rgba(37,41,100,.9),rgba(20,22,60,.9));border:1px solid var(--line);border-radius:28px;padding:1rem 1rem .8rem;box-shadow:0 30px 80px rgba(6,7,30,.55)}
+    .board svg{width:100%;height:auto;display:block;touch-action:none}
+    .board .v{cursor:grab}
+    .board .v:active{cursor:grabbing}
+    .readout{display:flex;flex-wrap:wrap;gap:.4rem 1.4rem;align-items:baseline;padding:.2rem .6rem;font-family:var(--serif);font-size:1rem;color:var(--ink-soft)}
+    .readout b{font-family:var(--display);font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums}
+    .readout .eq{margin-left:auto;color:var(--mint)}
+    .hint{position:absolute;top:1rem;right:1.2rem;font-size:.82rem;color:var(--ink-faint)}
+    .draw{stroke-dasharray:var(--len);stroke-dashoffset:var(--len);animation:draw 1.1s cubic-bezier(.6,.1,.2,1) forwards}
+    .fadein{opacity:0;animation:fade .6s ease forwards;animation-delay:1s}
+    @keyframes draw{to{stroke-dashoffset:0}}
+    @keyframes fade{to{opacity:1}}
+    @media (prefers-reduced-motion:reduce){.draw{animation:none;stroke-dashoffset:0}.fadein{animation:none;opacity:1}}
+    .setc{margin:1.6rem 0 0;border-radius:28px;padding:2rem 2rem 1.6rem;background:linear-gradient(120deg,rgba(255,107,139,.16),rgba(255,197,61,.10) 45%,rgba(79,216,232,.14));border:1px solid rgba(255,107,139,.35)}
+    .setc h2{margin:0 0 .4rem}
+    .setc>p{color:var(--ink-soft)}
+    .papers{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-top:1.2rem}
+    @media (max-width:760px){.papers{grid-template-columns:1fr}.setc{padding:1.5rem 1.2rem}}
+    .paper{background:rgba(15,17,48,.55);border:1px solid var(--line-soft);border-radius:var(--r-lg);padding:1.3rem 1.3rem 1rem}
+    .paper h3{margin:0 0 .3rem;display:flex;align-items:center;gap:.6rem}
+    .paper h3 .dot{width:12px;height:12px;border-radius:50%;flex:none}
+    .paper p{font-size:.96rem;color:var(--ink-soft);margin-bottom:.8rem}
+    .paper .links{display:flex;flex-wrap:wrap;gap:.3rem 1.2rem;margin-top:.5rem;font-size:.95rem}
+    .tools{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.2rem 2.4rem;margin-top:1rem}
+    @media (max-width:760px){.tools{grid-template-columns:1fr}}
+    .tool{display:grid;grid-template-columns:2.6rem 1fr;gap:1rem;align-items:start;padding:1.05rem .8rem;border-radius:var(--r-md);text-decoration:none;color:var(--ink);border-bottom:1px solid var(--line-soft)}
+    .tool:hover{background:var(--surface);color:var(--ink)}
+    .tool svg{width:2.4rem;height:2.4rem}
+    .tool h3{margin:.05rem 0 .15rem;font-size:1.12rem}
+    .tool p{margin:0;font-size:.95rem;color:var(--ink-soft)}
+    .tool.star{grid-column:1/-1;background:var(--surface);border:1px solid var(--line);padding:1.3rem 1.2rem}
+    .tool.star h3{font-size:1.3rem}
+    .book{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:2.4rem;align-items:start;margin-top:1rem}
+    @media (max-width:860px){.book{grid-template-columns:1fr}}
+    .book img{border-radius:var(--r-md);box-shadow:0 26px 60px rgba(6,7,30,.6)}
+    .book .text p{font-family:var(--serif);font-size:1.03rem;line-height:1.75;color:var(--ink-soft)}
+    .book .text h3{margin-top:1.4rem}
+    .archive{margin-top:1rem;border-top:1px solid var(--line-soft)}
+    .arow{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1.4fr);gap:.4rem 2rem;padding:1.1rem .2rem;border-bottom:1px solid var(--line-soft)}
+    @media (max-width:760px){.arow{grid-template-columns:1fr}}
+    .arow h3{margin:0 0 .2rem;font-size:1.06rem}
+    .arow p{margin:0;color:var(--ink-soft);font-size:.94rem}
+    .arow .files{display:flex;flex-wrap:wrap;gap:.3rem 1.3rem;align-content:start;font-size:.97rem}
+    .section-intro{color:var(--ink-soft);max-width:60ch}
+  </style>
 </head>
-<body>
+<body data-theme-v2>
+  <nav id="sitenav"><div class="nav-links"><a href="index.html">Home</a> <a href="drill.html">Drill</a> <a href="arena.html">Arena</a> <a href="bank.html">Question bank</a></div></nav>
 
-  <nav>
-    <div class="nav-links">
-      <a href="index.html" aria-current="page">Mathematics</a>
-      <a href="music.html">Music &amp; Piano</a>
-      <a href="geometry.html">Geometry Lab</a>
-      <a href="sandbox.html">Sandbox</a>
-      <a href="drill.html">Drill</a>
-      <a href="interviews.html">Mock interviews</a>
-      <a href="marker.html">Marker</a>
-      <a href="techniques.html">Techniques</a>
-      <a href="progress.html">Progress</a>
-    </div>
-  </nav>
-
-  <main class="container">
-
-    <h1>Kevin Hu</h1>
-    <p class="lede">I am a sixth-form student at Dubai College, a BMO1 silver medallist, and an aspiring mathematician with a deep interest in Euclidean and projective geometry. This site hosts my textbook sample alongside original mock olympiad papers and solutions.</p>
-
-    <h2>Beyond the Incenter</h2>
-    <div class="card">
-      <h3>A modern monograph on olympiad geometry</h3>
-
-      <img src="cover-mockup.png" alt="Beyond the Incenter book cover">
-
-      <div style="text-align:center">
-        <a class="btn" href="https://www.amazon.co.uk/dp/B0HCDN9VFL" target="_blank">Buy the paperback</a>
-        <a class="btn" href="https://www.amazon.co.uk/dp/B0HCDN9VFL" target="_blank">Buy the Kindle edition</a>
+  <main class="home">
+    <section class="hero">
+      <div>
+        <h1>Kevin Hu</h1>
+        <p class="lede">Sixth-form mathematician at Dubai College, BMO1 silver medallist, and author of <em>Beyond the Incenter</em>. Here you'll find original olympiad problems, TMUA papers that are harder than the real thing, and tools for practising them properly.</p>
+        <div class="cta">
+          <a class="btn" href="drill.html?paper=C1">Sit Set C timed</a>
+          <a class="btn secondary" href="arena.html">Race the bot</a>
+        </div>
       </div>
+      <figure class="board" aria-label="A triangle with its incircle. Drag the vertices.">
+        <span class="hint">Drag a vertex</span>
+        <svg id="tri" viewBox="0 0 560 430" role="img" aria-labelledby="tri-title"><title id="tri-title">Triangle, incircle and circumcircle, with Euler's formula checked live</title></svg>
+        <figcaption class="readout" id="readout"></figcaption>
+      </figure>
+    </section>
 
-      <h4>About the monograph</h4>
-      <p>In competitive mathematics, geometry is often perceived by students as a chaotic collection of messy intersections and phantom points, where auxiliary lines and constructions occur purely by luck. <em>Beyond the Incenter</em> dismantles this misconception, presenting synthetic geometry as a rigorous, systematic, and highly structured discipline.</p>
+    <section class="setc" aria-labelledby="setc-h">
+      <h2 id="setc-h">Set C, the newest TMUA mock</h2>
+      <p>Pitched well above the 2025 TMUA while staying inside its syllabus. Sit either paper in the Drill with standard time, extra time or untimed, and an emergency pause.</p>
+      <div class="papers">
+        <div class="paper">
+          <h3><span class="dot" style="background:var(--rose)"></span>Paper 1</h3>
+          <p>Integration that needs a trick: substitutions inside the function, the inverse-function rectangle, pairing <em>x</em> with <em>a</em>&minus;<em>x</em>, integrals that turn out to be constants. Plus a run of trigonometric inequalities.</p>
+          <a class="btn" href="drill.html?paper=C1">Sit it timed</a>
+          <div class="links"><a href="HU_Collection_TMUA_SetC_Paper1.pdf" target="_blank">Question paper</a><a href="HU_Collection_TMUA_SetC_Paper1_Solutions.pdf" target="_blank">Worked solutions</a></div>
+        </div>
+        <div class="paper">
+          <h3><span class="dot" style="background:var(--aqua)"></span>Paper 2</h3>
+          <p>Implications and their negations, conditions that are or are not independent, counterexamples, proofs by contradiction, and reasoning with trigonometric inequalities and integrals.</p>
+          <a class="btn" href="drill.html?paper=C2">Sit it timed</a>
+          <div class="links"><a href="HU_Collection_TMUA_SetC_Paper2.pdf" target="_blank">Question paper</a><a href="HU_Collection_TMUA_SetC_Paper2_Solutions.pdf" target="_blank">Worked solutions</a></div>
+        </div>
+      </div>
+    </section>
 
-      <p>Authored for the ambitious student bridging the gap between standard high school curricula and elite-level competitions, this textbook synthesizes classical theorems with modern methods. From the foundational properties of the triangle's five centers to advanced topics like projective geometry and spiral similarity, the text guides readers through the exact techniques required to conquer IMO-caliber configurations.</p>
-
-      <h4>Why I wrote this book: the geometry gap</h4>
-      <p>Having analysed UKMT markers' reports from the last decade, something alarms me: geometry is consistently the least-attempted and most poorly answered section. The markers explicitly note that geometry questions are "one of the least attempted by candidates," and constantly complain that students rely on "algebraic proof with no reference to the geometrical justifications."</p>
-
-      <p>The reason for this is simple: modern high school syllabuses have largely stripped out classical geometry. I see this at my own school. Out of over 1,000 students, only three know Menelaus's Theorem, and exactly two know how to use a complete quadrilateral. Because students lack these core geometric tools, they default to Cartesian coordinate or trigonometric bashes in competitions. As the markers point out, this usually leads to pages of algebra, which are highly prone to errors.</p>
-
-      <p>I wrote <em>Beyond the Incenter</em> to fix this specific gap. There are very few resources that bridge the gap from A-Level math to that elite standard. The goal of this book is to show that Olympiad geometry isn't about guessing "lucky" lines. By breaking down methods like projective geometry, radical axes, and spiral similarity, it provides students with a reliable, systematic approach to problems that otherwise look impossible.</p>
-
-      <a class="btn secondary" href="cross-ratios.pdf" target="_blank">Read the sample chapter: Cross Ratios</a>
+    <h2>Practise</h2>
+    <div class="tools">
+      <a class="tool star" href="arena.html">
+        <svg viewBox="0 0 40 40" aria-hidden="true"><path d="M6 34 L20 6 L34 34 Z" fill="none" stroke="#FF6B8B" stroke-width="3" stroke-linejoin="round"/><path d="M13 26 h14" stroke="#FFC53D" stroke-width="3" stroke-linecap="round"/></svg>
+        <div><h3>Arena</h3><p>Race a bot to the right answer. Pick an opponent, from a slow warm-up bot to one that answers like an olympian, or set its speed yourself. Best of five, with a rating that moves as you win. There's also a ten-minute ladder that climbs in difficulty until you run out of lives.</p></div>
+      </a>
+      <a class="tool" href="drill.html">
+        <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="21" r="13" fill="none" stroke="#4FD8E8" stroke-width="3"/><path d="M20 21 V13 M20 21 l6 4" stroke="#F3F1FF" stroke-width="3" stroke-linecap="round"/></svg>
+        <div><h3>Drill</h3><p>Full papers under exam conditions, technique drills with a solution after every answer, and a weakest-first queue built from your mistakes.</p></div>
+      </a>
+      <a class="tool" href="bank.html">
+        <svg viewBox="0 0 40 40" aria-hidden="true"><rect x="7" y="24" width="6" height="10" rx="2" fill="#4FD8E8"/><rect x="17" y="16" width="6" height="18" rx="2" fill="#FFC53D"/><rect x="27" y="7" width="6" height="27" rx="2" fill="#FF6B8B"/></svg>
+        <div><h3>Question bank</h3><p>All eighty questions ranked from 4.5 to 9.0, filterable by paper and technique, each playable on the spot.</p></div>
+      </a>
+      <a class="tool" href="interviews.html">
+        <svg viewBox="0 0 40 40" aria-hidden="true"><path d="M7 10 h26 v16 h-14 l-7 6 v-6 h-5 Z" fill="none" stroke="#FFC53D" stroke-width="3" stroke-linejoin="round"/></svg>
+        <div><h3>Mock interviews</h3><p>Twenty-five minutes, one original problem in parts you can't see in advance, a nudge button that counts against you, and a locked debrief.</p></div>
+      </a>
+      <a class="tool" href="marker.html">
+        <svg viewBox="0 0 40 40" aria-hidden="true"><path d="M9 21 l7 7 L31 12" fill="none" stroke="#5BE3A6" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div><h3>Proof marker</h3><p>Paste a written solution and have it marked against a BMO, STEP, MAT or interview scheme by Claude, ChatGPT or Gemini. The arithmetic is checked exactly.</p></div>
+      </a>
+      <a class="tool" href="techniques.html">
+        <svg viewBox="0 0 40 40" aria-hidden="true"><path d="M8 12 h24 M8 20 h16 M8 28 h20" stroke="#4FD8E8" stroke-width="3" stroke-linecap="round"/></svg>
+        <div><h3>Technique index</h3><p>Every question filed by the idea that cracks it: telescoping, invariants, the inverse-function rectangle, and the rest.</p></div>
+      </a>
+      <a class="tool" href="progress.html">
+        <svg viewBox="0 0 40 40" aria-hidden="true"><path d="M6 30 L15 20 L22 25 L34 10" fill="none" stroke="#FF6B8B" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div><h3>Progress</h3><p>Accuracy by technique, how long questions take you, your interview trend and a twelve-week activity map. Stored only in your browser.</p></div>
+      </a>
     </div>
 
-    <div class="card board-card">
-      <h3>Try the configurations yourself</h3>
-      <p>The Geometry Lab puts one triangle on a board with its five centres, three circles and the Euler line. Drag a vertex and watch <em>OI</em> stay equal to <em>&radic;(R&sup2;&minus;2Rr)</em>, whatever shape you force the triangle into.</p>
-      <a class="btn" href="geometry.html">Open the Geometry Lab</a>
+    <h2 id="book">Beyond the Incenter</h2>
+    <div class="book">
+      <div>
+        <img src="cover-mockup.png" alt="Beyond the Incenter book cover">
+        <div style="margin-top:1.2rem">
+          <a class="btn" href="https://www.amazon.co.uk/dp/B0HCDN9VFL" target="_blank" rel="noopener">Buy the paperback</a>
+          <a class="btn secondary" href="https://www.amazon.co.uk/dp/B0HCDN9VFL" target="_blank" rel="noopener">Buy the Kindle edition</a>
+        </div>
+      </div>
+      <div class="text">
+        <h3 style="margin-top:0">A modern monograph on olympiad geometry</h3>
+        <p>In competitive mathematics, geometry is often perceived by students as a chaotic collection of messy intersections and phantom points, where auxiliary lines and constructions occur purely by luck. <em>Beyond the Incenter</em> dismantles this misconception, presenting synthetic geometry as a rigorous, systematic, and highly structured discipline.</p>
+        <p>Authored for the ambitious student bridging the gap between standard high school curricula and elite-level competitions, this textbook synthesizes classical theorems with modern methods. From the foundational properties of the triangle's five centers to advanced topics like projective geometry and spiral similarity, the text guides readers through the exact techniques required to conquer IMO-caliber configurations.</p>
+        <h3>Why I wrote this book: the geometry gap</h3>
+        <p>Having analysed UKMT markers' reports from the last decade, something alarms me: geometry is consistently the least-attempted and most poorly answered section. The markers explicitly note that geometry questions are "one of the least attempted by candidates," and constantly complain that students rely on "algebraic proof with no reference to the geometrical justifications."</p>
+        <p>The reason for this is simple: modern high school syllabuses have largely stripped out classical geometry. I see this at my own school. Out of over 1,000 students, only three know Menelaus's Theorem, and exactly two know how to use a complete quadrilateral. Because students lack these core geometric tools, they default to Cartesian coordinate or trigonometric bashes in competitions. As the markers point out, this usually leads to pages of algebra, which are highly prone to errors.</p>
+        <p>I wrote <em>Beyond the Incenter</em> to fix this specific gap. There are very few resources that bridge the gap from A-Level math to that elite standard. The goal of this book is to show that Olympiad geometry isn't about guessing "lucky" lines. By breaking down methods like projective geometry, radical axes, and spiral similarity, it provides students with a reliable, systematic approach to problems that otherwise look impossible.</p>
+        <a class="btn secondary" href="cross-ratios.pdf" target="_blank">Read the sample chapter on cross ratios</a>
+      </div>
     </div>
 
-    <div class="card board-card">
-      <h3>Conjecture sandbox</h3>
-      <p>Place points, draw lines and circles, take midpoints, feet and intersections, then drag. The page watches for collinearities, concurrences, concyclic quadruples, equal lengths, right angles and tangencies, and tests each one against random perturbations so it can tell a theorem from a coincidence. When the figure is right, export it as tkz-euclide code that reconstructs the points rather than hard-coding them.</p>
-      <a class="btn" href="sandbox.html">Open the sandbox</a>
+    <h2>Geometry you can move</h2>
+    <div class="tools">
+      <a class="tool" href="geometry.html">
+        <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="14" fill="none" stroke="#FFC53D" stroke-width="3"/><path d="M9 30 L20 7 L32 29 Z" fill="none" stroke="#4FD8E8" stroke-width="2.6" stroke-linejoin="round"/></svg>
+        <div><h3>Geometry Lab</h3><p>One triangle with its five centres, three circles and the Euler line. Drag a vertex and watch <em>OI</em> stay equal to &radic;(<em>R</em>&sup2;&minus;2<em>Rr</em>), whatever shape you force the triangle into.</p></div>
+      </a>
+      <a class="tool" href="sandbox.html">
+        <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="10" cy="30" r="3.5" fill="#FF6B8B"/><circle cx="30" cy="28" r="3.5" fill="#FF6B8B"/><circle cx="20" cy="9" r="3.5" fill="#FF6B8B"/><path d="M10 30 L20 9 L30 28" fill="none" stroke="#F3F1FF" stroke-width="2" stroke-dasharray="3 3"/></svg>
+        <div><h3>Conjecture sandbox</h3><p>Build a figure from twenty-seven constructions and drag it. The page reports what stays true under perturbation, then exports tkz-euclide code.</p></div>
+      </a>
     </div>
 
-    <h2>Oxbridge admissions preparation</h2>
-
-    <div class="card">
-      <h3>TMUA mock papers</h3>
-      <p>Full-length original mocks written to the real format: 20 multiple-choice questions in 75 minutes, no calculator. Every question is pitched at the level of the closing third of a genuine TMUA paper, so there is no warm-up ramp. Sit them under strict timed conditions and mark afterwards.</p>
-
-      <h4>Set C &middot; Papers 1 and 2 (newest)</h4>
-      <p>Pitched well above the 2025 TMUA while staying inside its syllabus. Paper 1 leans on the integration tricks that separate candidates: substitutions inside the function, the inverse-function rectangle, pairing <em>x</em> with <em>a</em>&minus;<em>x</em>, and integrals that turn out to be constants. It also includes a run of trigonometric inequalities. Paper 2 is built around implications and their negations, conditions that are or are not independent, and reasoning with trigonometric inequalities and integrals. Sit them timed in the <a href="drill.html">Drill</a>, with a choice of standard time, extra time or untimed, and an emergency pause.</p>
-      <a class="btn" href="drill.html">Sit Set C timed</a>
-      <a class="btn" href="HU_Collection_TMUA_SetC_Paper1.pdf" target="_blank">Set C Paper 1: question paper</a>
-      <a class="btn secondary" href="HU_Collection_TMUA_SetC_Paper1_Solutions.pdf" target="_blank">Set C Paper 1: worked solutions</a>
-      <a class="btn" href="HU_Collection_TMUA_SetC_Paper2.pdf" target="_blank">Set C Paper 2: question paper</a>
-      <a class="btn secondary" href="HU_Collection_TMUA_SetC_Paper2_Solutions.pdf" target="_blank">Set C Paper 2: worked solutions</a>
-
-      <h4>Set B &middot; Papers 1 and 2</h4>
-      <p>The hardest set on this site. No routine questions: each one turns on a method or a trap that a standard A-level or Further Maths course does not teach. Paper 1 includes Chebyshev-style root permutations, Ptolemy on a heptagon, polynomial interpolation of an exponential, telescoping against a geometric factor, and definite integrals that are areas rather than antiderivatives. Paper 2 is reasoning at the olympiad end of the scale: invariants, counting two ways, remainders, pigeonhole, a subtraction game, colourings, functional equations, and a sign-change argument for integrals, every one a fresh instance rather than a known problem. Solutions are separate downloads so each paper can be sat cold.</p>
-      <a class="btn" href="HU_Collection_TMUA_SetB_Paper1.pdf" target="_blank">Set B Paper 1: question paper</a>
-      <a class="btn secondary" href="HU_Collection_TMUA_SetB_Paper1_Solutions.pdf" target="_blank">Set B Paper 1: worked solutions</a>
-      <a class="btn" href="HU_Collection_TMUA_SetB_Paper2.pdf" target="_blank">Set B Paper 2: question paper</a>
-      <a class="btn secondary" href="HU_Collection_TMUA_SetB_Paper2_Solutions.pdf" target="_blank">Set B Paper 2: worked solutions</a>
-
-      <h4>Set A &middot; Papers 1 and 2</h4>
-      <p>A gentler entry point than Set B, with questions and worked solutions in a single document. Paper 1 covers applications of mathematical knowledge; Paper 2 covers mathematical reasoning, including negation, quantifier order, necessary and sufficient conditions, and flawed-proof analysis.</p>
-      <a class="btn" href="hu_mock_a_p1_with_solutions.pdf" target="_blank">Set A Paper 1 with solutions</a>
-      <a class="btn" href="hu_mock_a_p2_with_solutions.pdf" target="_blank">Set A Paper 2 with solutions</a>
+    <h2>Papers and solutions</h2>
+    <p class="section-intro">Every paper is original. Solutions are separate downloads, so each paper can be sat cold.</p>
+    <div class="archive">
+      <div class="arow">
+        <div><h3>TMUA mock Set B</h3><p>No routine questions: invariants, Ptolemy on a heptagon, interpolating an exponential, a sign-change argument for integrals.</p></div>
+        <div class="files"><a href="drill.html?paper=B1">Sit Paper 1 timed</a><a href="HU_Collection_TMUA_SetB_Paper1.pdf" target="_blank">Paper 1</a><a href="HU_Collection_TMUA_SetB_Paper1_Solutions.pdf" target="_blank">Paper 1 solutions</a><a href="drill.html?paper=B2">Sit Paper 2 timed</a><a href="HU_Collection_TMUA_SetB_Paper2.pdf" target="_blank">Paper 2</a><a href="HU_Collection_TMUA_SetB_Paper2_Solutions.pdf" target="_blank">Paper 2 solutions</a></div>
+      </div>
+      <div class="arow">
+        <div><h3>TMUA mock Set A</h3><p>A gentler entry point, with questions and worked solutions in one document.</p></div>
+        <div class="files"><a href="hu_mock_a_p1_with_solutions.pdf" target="_blank">Paper 1 with solutions</a><a href="hu_mock_a_p2_with_solutions.pdf" target="_blank">Paper 2 with solutions</a></div>
+      </div>
+      <div class="arow">
+        <div><h3>The HU Collection</h3><p>Short elite-level mock examinations for TMUA, MAT and interview preparation, on topics the standard curriculum skips.</p></div>
+        <div class="files"><a href="Hu_Collection_Part_1.pdf" target="_blank">Part 1</a><a href="Hu_Collection_Part_2.pdf" target="_blank">Part 2</a></div>
+      </div>
+      <div class="arow">
+        <div><h3>Kevin's Mathematical Olympiad</h3><p>Original mock olympiad papers across geometry, number theory, algebra and combinatorics.</p></div>
+        <div class="files"><a href="Mock_BMO.pdf" target="_blank">Problem set</a><a href="KMO_solutions.pdf" target="_blank">Solutions</a></div>
+      </div>
+      <div class="arow">
+        <div><h3>Mock SMC and S(A)MC</h3><p>Practice papers and full solutions for the Senior Maths Challenge, AMC, AIME and more.</p></div>
+        <div class="files"><a href="Mock_UKMT_SMC.pdf" target="_blank">Mock UKMT SMC</a><a href="S(A)MC_Solutions.pdf" target="_blank">S(A)MC solutions</a><a href="PC.pdf" target="_blank">Purple Comet 2026 HS solutions</a></div>
+      </div>
+      <div class="arow">
+        <div><h3>Olympiad solutions</h3><p>Original write-ups for the British Mathematical Olympiad and the IMO Shortlist.</p></div>
+        <div class="files"><a href="BMO2_2011_Sol.pdf" target="_blank">BMO2 2011</a><a href="ISL_2025_sol.pdf" target="_blank">IMO Shortlist 2025, G1 to G3</a></div>
+      </div>
     </div>
-
-    <div class="card">
-      <h3>Mock interview simulators</h3>
-      <p>Twenty-five minutes, one original problem delivered in parts you cannot see in advance, a nudge button that counts against you, and a locked debrief with mark scheme and sample performances at the bottom and top of the scale. An AI tutor who probes every step and never gives the answer, scores you afterwards on the 0 to 10 scale interviewers actually use, and, in voice mode, times your silences.</p>
-      <a class="btn" href="interviews.html">Open the simulators</a>
-    </div>
-
-    <div class="card">
-      <h3>The HU Collection</h3>
-      <p>Short, original, elite-level mock examinations with detailed solutions designed to train candidates to develop a more intricate 'eye' and attention to detail. These problems, which are curated for TMUA, MAT, and Oxbridge interview preparation, bypass standard algorithmic testing to focus on topics rarely taught in the standard curriculum to bridge the gap between A-level and University mathematics.</p>
-      <a class="btn" href="Hu_Collection_Part_1.pdf" target="_blank">HU Collection Part 1</a>
-      <a class="btn" href="Hu_Collection_Part_2.pdf" target="_blank">HU Collection Part 2</a>
-    </div>
-
-    <div class="card">
-      <h3>Drill</h3>
-      <p>The Set B questions as an engine: a timed full paper with an answer grid and per-question timing, technique drills with the full solution after every answer, and a weakest-first mode that rebuilds its queue from what you have got wrong. Wrong answers can ask the tutor why the option you chose was tempting.</p>
-      <a class="btn" href="drill.html">Start a drill</a>
-    </div>
-
-    <div class="card">
-      <h3>Proof marker</h3>
-      <p>Paste a problem and your written solution and have it marked against a BMO, STEP, MAT or interview-whiteboard scheme. Every unjustified step is named and quoted, nothing is written for you, and a correct answer without a valid argument scores what it deserves.</p>
-      <a class="btn" href="marker.html">Mark a proof</a>
-    </div>
-
-    <div class="card">
-      <h3>Progress</h3>
-      <p>Accuracy by technique, a radar of your strengths, how long questions take you and whether the time converts, your interview score trend against the offer line, and a twelve-week activity map. Read entirely from your own browser.</p>
-      <a class="btn" href="progress.html">See your progress</a>
-    </div>
-
-    <div class="card">
-      <h3>Technique index</h3>
-      <p>Every question on this site filed by the idea that cracks it, across all the papers and the interview problems: telescoping, invariants, counting two ways, extremal principle, integral reasoning and the rest. Pick a technique and get every instance at once.</p>
-      <a class="btn" href="techniques.html">Browse by technique</a>
-    </div>
-
-    <div class="card">
-      <h3>Results and distributions</h3>
-      <p>Log a score after sitting a paper and see where it sits against everyone else who has sat it: the full distribution, the median, and the share of candidates below you. Anonymous, pooled, and the only way to know what a 12 out of 20 on Set B actually means.</p>
-      <a class="btn" href="results.html">Log a score</a>
-    </div>
-
-    <h2>Olympiad papers</h2>
-    <div class="card">
-      <h3>Kevin's Mathematical Olympiad</h3>
-      <p>Original mock papers designed to test advanced problem-solving skills, focusing on synthetic geometry, number theory, algebra, and combinatorics, the four pillars of Olympiad mathematics.</p>
-      <a class="btn" href="Mock_BMO.pdf" target="_blank">KMO problem set</a>
-      <a class="btn secondary" href="KMO_solutions.pdf" target="_blank">KMO solutions</a>
-    </div>
-
-    <div class="card">
-      <h3>Mock SMC and S(A)MC</h3>
-      <p>Practice materials and rigorous solutions tailored for the UKMT's Senior Maths Challenge, the AMC, AIME, and more.</p>
-      <a class="btn" href="Mock_UKMT_SMC.pdf" target="_blank">Mock UKMT SMC</a>
-      <a class="btn secondary" href="S(A)MC_Solutions.pdf" target="_blank">S(A)MC solutions</a>
-      <a class="btn secondary" href="PC.pdf" target="_blank">Purple Comet 2026 HS solutions</a>
-    </div>
-
-    <div class="card">
-      <h3>Advanced olympiad solutions</h3>
-      <p>Original solutions for the British Mathematical Olympiad, UK's national math competition, which serves as a critical selection tool for the UK's IMO team, and ultimately, the IMO, the most challenging math competition for high schoolers.</p>
-      <a class="btn" href="BMO2_2011_Sol.pdf" target="_blank">BMO2 2011 solutions</a>
-      <a class="btn" href="ISL_2025_sol.pdf" target="_blank">IMO Shortlist 2025 G1-3</a>
-    </div>
-
   </main>
+  <footer class="site-foot">Kevin Hu, Dubai College. Everything on this site is original work; scores and progress stay in your browser unless you choose to log them.</footer>
 
+<script src="site.js"></script>
+<script>
+(function(){
+  var svg=document.getElementById('tri'), NS='http://www.w3.org/2000/svg', U=100;
+  var P=[{x:118,y:380},{x:404,y:324},{x:419,y:134}];
+  var COL=['#4FD8E8','#FF6B8B','#FFC53D'];
+  function el(n,a){ var e=document.createElementNS(NS,n); for(var k in a) e.setAttribute(k,a[k]); svg.appendChild(e); return e; }
+  var circ=el('circle',{fill:'none',stroke:'#8A89BD','stroke-width':1.2,'stroke-dasharray':'5 6',opacity:.7,class:'fadein'});
+  var O=el('circle',{r:4,fill:'#8A89BD',class:'fadein'});
+  var OI=el('line',{stroke:'#5BE3A6','stroke-width':1.6,'stroke-dasharray':'2 5',class:'fadein'});
+  var inc=el('circle',{fill:'rgba(243,241,255,.05)',stroke:'#F3F1FF','stroke-width':2.2,class:'fadein'});
+  var sides=[0,1,2].map(function(i){ return el('line',{stroke:COL[i],'stroke-width':7,'stroke-linecap':'round'}); });
+  var I=el('circle',{r:4.5,fill:'#F3F1FF',class:'fadein'});
+  var T=[0,1,2].map(function(){ return el('circle',{r:6,fill:'#F3F1FF',stroke:'#15173B','stroke-width':2,class:'fadein'}); });
+  var V=[0,1,2].map(function(i){ return el('circle',{r:13,fill:'#15173B',stroke:COL[(i+2)%3],'stroke-width':3.5,class:'v',tabindex:0,role:'slider','aria-label':'Vertex '+'ABC'[i]+', move with arrow keys'}); });
+  var L=[0,1,2].map(function(i){ var t=el('text',{'font-family':'IBM Plex Serif,serif','font-style':'italic','font-size':22,fill:'#F3F1FF'}); t.textContent='ABC'[i]; return t; });
+  var lblO=el('text',{'font-family':'IBM Plex Serif,serif','font-style':'italic','font-size':18,fill:'#8A89BD',class:'fadein'}); lblO.textContent='O';
+  var lblI=el('text',{'font-family':'IBM Plex Serif,serif','font-style':'italic','font-size':18,fill:'#F3F1FF',class:'fadein'}); lblI.textContent='I';
+  var first=true;
+  function d(a,b){ return Math.hypot(a.x-b.x,a.y-b.y); }
+  function draw(){
+    var A=P[0],B=P[1],C=P[2], a=d(B,C), b=d(C,A), c=d(A,B), s=a+b+c;
+    var area=Math.abs((B.x-A.x)*(C.y-A.y)-(C.x-A.x)*(B.y-A.y))/2;
+    if(area<1) return;
+    var Ic={x:(a*A.x+b*B.x+c*C.x)/s,y:(a*A.y+b*B.y+c*C.y)/s}, r=2*area/s;
+    var D=2*(A.x*(B.y-C.y)+B.x*(C.y-A.y)+C.x*(A.y-B.y));
+    var a2=A.x*A.x+A.y*A.y,b2=B.x*B.x+B.y*B.y,c2=C.x*C.x+C.y*C.y;
+    var Oc={x:(a2*(B.y-C.y)+b2*(C.y-A.y)+c2*(A.y-B.y))/D,y:(a2*(C.x-B.x)+b2*(A.x-C.x)+c2*(B.x-A.x))/D}, R=d(Oc,A);
+    circ.setAttribute('cx',Oc.x); circ.setAttribute('cy',Oc.y); circ.setAttribute('r',R);
+    O.setAttribute('cx',Oc.x); O.setAttribute('cy',Oc.y);
+    OI.setAttribute('x1',Oc.x); OI.setAttribute('y1',Oc.y); OI.setAttribute('x2',Ic.x); OI.setAttribute('y2',Ic.y);
+    inc.setAttribute('cx',Ic.x); inc.setAttribute('cy',Ic.y); inc.setAttribute('r',r);
+    I.setAttribute('cx',Ic.x); I.setAttribute('cy',Ic.y);
+    [[0,1],[1,2],[2,0]].forEach(function(pq,i){
+      var p=P[pq[0]],q=P[pq[1]], ln=sides[i];
+      ln.setAttribute('x1',p.x); ln.setAttribute('y1',p.y); ln.setAttribute('x2',q.x); ln.setAttribute('y2',q.y);
+      var dx=q.x-p.x,dy=q.y-p.y,t=((Ic.x-p.x)*dx+(Ic.y-p.y)*dy)/(dx*dx+dy*dy);
+      T[i].setAttribute('cx',p.x+t*dx); T[i].setAttribute('cy',p.y+t*dy);
+      if(first){ ln.style.setProperty('--len',Math.hypot(dx,dy)); ln.setAttribute('class','draw'); ln.style.animationDelay=(i*.18)+'s'; }
+    });
+    var gx=(A.x+B.x+C.x)/3, gy=(A.y+B.y+C.y)/3;
+    P.forEach(function(p,i){ V[i].setAttribute('cx',p.x); V[i].setAttribute('cy',p.y);
+      var ux=p.x-gx, uy=p.y-gy, n=Math.hypot(ux,uy)||1; L[i].setAttribute('x',p.x+ux/n*30-7); L[i].setAttribute('y',p.y+uy/n*30+7); });
+    lblO.setAttribute('x',Oc.x+8); lblO.setAttribute('y',Oc.y-8); lblI.setAttribute('x',Ic.x+9); lblI.setAttribute('y',Ic.y-9);
+    var RR=R/U, rr=r/U, oi2=Math.pow(d(Oc,Ic)/U,2), rhs=RR*(RR-2*rr);
+    document.getElementById('readout').innerHTML='<span><i>R</i> = <b>'+RR.toFixed(2)+'</b></span><span><i>r</i> = <b>'+rr.toFixed(2)+'</b></span><span><i>OI</i>&sup2; = <b>'+oi2.toFixed(3)+'</b></span><span class="eq"><i>R</i>(<i>R</i>&minus;2<i>r</i>) = <b style="color:inherit">'+rhs.toFixed(3)+'</b></span>';
+    first=false;
+  }
+  var drag=null;
+  function pt(e){ var r=svg.getBoundingClientRect(); return {x:(e.clientX-r.left)*560/r.width,y:(e.clientY-r.top)*430/r.height}; }
+  V.forEach(function(v,i){
+    v.addEventListener('pointerdown',function(e){ drag=i; v.setPointerCapture(e.pointerId); });
+    v.addEventListener('keydown',function(e){ var k={ArrowLeft:[-8,0],ArrowRight:[8,0],ArrowUp:[0,-8],ArrowDown:[0,8]}[e.key]; if(k){ e.preventDefault(); P[i].x=Math.max(20,Math.min(540,P[i].x+k[0])); P[i].y=Math.max(20,Math.min(410,P[i].y+k[1])); draw(); } });
+  });
+  svg.addEventListener('pointermove',function(e){ if(drag==null) return; var p=pt(e); P[drag].x=Math.max(20,Math.min(540,p.x)); P[drag].y=Math.max(20,Math.min(410,p.y)); draw(); });
+  svg.addEventListener('pointerup',function(){ drag=null; });
+  draw();
+})();
+</script>
 </body>
 </html>
