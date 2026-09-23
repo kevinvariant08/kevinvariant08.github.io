@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Question bank - Kevinvariant</title>
+  <link rel="icon" href="/favicon.ico" sizes="32x32">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <meta name="theme-color" content="#15173B">
+  <link rel="stylesheet" href="style.css">
+  <script>window.MathJax={tex:{inlineMath:[['$','$']],displayMath:[['\\[','\\]']],processEscapes:true},options:{skipHtmlTags:['script','noscript','style','textarea','pre']}};</script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js" async></script>
+  <style>
+    .qb{max-width:66rem}
+    .qb .lede{max-width:44rem}
+    .hist{display:flex;align-items:flex-end;gap:4px;height:110px;margin:1.6rem 0 .3rem;padding:0 .2rem;border-bottom:1px solid var(--line)}
+    .hist button{flex:1;border:0;padding:0;border-radius:6px 6px 0 0;cursor:pointer;min-width:0;position:relative;opacity:.9}
+    .hist button:hover,.hist button.on{opacity:1;outline:2px solid var(--ink);outline-offset:1px}
+    .hist button span{position:absolute;bottom:calc(100% + 3px);left:50%;transform:translateX(-50%);font-size:.72rem;color:var(--ink-faint)}
+    .histax{display:flex;justify-content:space-between;font-size:.8rem;color:var(--ink-faint);padding:0 .2rem}
+    .legend{display:flex;flex-wrap:wrap;gap:.4rem 1.4rem;margin:.8rem 0 0;font-size:.88rem;color:var(--ink-soft)}
+    .legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:.45rem;vertical-align:-1px}
+    .filters{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr auto;gap:.7rem;margin:1.6rem 0 .8rem;align-items:end}
+    @media (max-width:860px){.filters{grid-template-columns:1fr 1fr}}
+    .filters label{font-size:.82rem;color:var(--ink-faint);display:flex;flex-direction:column;gap:.25rem}
+    .filters input,.filters select{font-family:var(--display);font-size:.95rem;background:var(--bg-deep);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:.55rem .7rem;min-height:42px}
+    .count{color:var(--ink-faint);font-size:.9rem;margin:.2rem 0 .6rem}
+    .list{list-style:none;padding:0;margin:0}
+    .item{border-top:1px solid var(--line-soft)}
+    .item:last-child{border-bottom:1px solid var(--line-soft)}
+    .row{display:grid;grid-template-columns:4.2rem 1fr auto;gap:1rem;align-items:center;width:100%;text-align:left;background:none;border:0;color:var(--ink);padding:.95rem .4rem;cursor:pointer;font-family:var(--display)}
+    .row:hover{background:rgba(29,32,82,.6)}
+    .rate{font-weight:800;font-size:1.25rem;font-variant-numeric:tabular-nums;text-align:center;border-radius:12px;padding:.35rem 0;color:#15173B}
+    .meta{min-width:0}
+    .meta .t{display:block;font-weight:600;font-size:1rem}
+    .meta .p{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-family:var(--serif);color:var(--ink-soft);font-size:.95rem;line-height:1.5;margin-top:.1rem;max-height:3em}
+    .meta .p p,.meta .p .c,.meta .p ol,.meta .p li{display:inline;margin:0;padding:0}
+    .meta .p br{display:none}
+    .meta .p mjx-container[display="true"]{display:inline!important;margin:0 .15em!important}
+    .meta .tags{display:flex}
+    .tags{display:flex;flex-wrap:wrap;gap:.3rem;margin-top:.3rem}
+    .tag{font-size:.74rem;color:var(--ink-soft);border:1px solid var(--line);border-radius:999px;padding:.08rem .55rem}
+    .state{font-size:.82rem;color:var(--ink-faint);white-space:nowrap}
+    .state.ok{color:var(--mint)} .state.bad{color:var(--rose)}
+    .body{padding:.4rem .4rem 1.6rem 5.2rem}
+    @media (max-width:640px){.body{padding-left:.4rem}}
+    .qtext{font-family:var(--serif);font-size:1.06rem;line-height:1.7}
+    .qtext .c{text-align:center;margin:.6rem 0}
+    .qtext ol.stmts{margin:.4rem 0 .4rem 1.6rem}
+    .opts{list-style:none;padding:0;margin:.8rem 0 0;display:grid;gap:.35rem}
+    .opt{display:flex;gap:.9rem;align-items:baseline;width:100%;text-align:left;font-family:var(--serif);font-size:1.02rem;background:var(--surface);color:var(--ink);border:1px solid var(--line-soft);border-radius:12px;padding:.6rem .9rem;cursor:pointer}
+    .opt:hover{border-color:var(--ink-soft)}
+    .opt .L{font-family:var(--display);font-weight:700;color:var(--ink-faint);min-width:1.1rem}
+    .opt.right{border-color:var(--mint);background:var(--mint-wash)} .opt.wrong{border-color:var(--rose);background:var(--rose-wash)}
+    .opt[disabled]{cursor:default}
+    .actions{display:flex;flex-wrap:wrap;gap:.2rem .6rem;align-items:center;margin-top:1rem}
+    .sol{font-family:var(--serif);line-height:1.75;color:var(--ink-soft);margin-top:1rem;padding:1rem 1.1rem;border-left:3px solid var(--aqua);background:rgba(15,17,48,.5);border-radius:0 12px 12px 0}
+    .verdict{font-weight:600}
+    .verdict.ok{color:var(--mint)} .verdict.bad{color:var(--rose)}
+    .empty{padding:2rem 0;color:var(--ink-faint)}
+  </style>
+</head>
+<body data-theme-v2>
+  <nav id="sitenav"><div class="nav-links"><a href="index.html">Home</a> <a href="drill.html">Drill</a> <a href="arena.html">Arena</a></div></nav>
+  <main class="container qb">
+    <h1>Question bank</h1>
+    <p class="lede">Every question on the site, ranked from the most accessible to the hardest. Ratings run from 4.5 to 9.0; the single 9.0 is the hardest question in the collection. Open any question to answer it on the spot.</p>
+
+    <div class="hist" id="hist" role="group" aria-label="Filter by rating band"></div>
+    <div class="histax"><span>4.5</span><span>6.0</span><span>7.5</span><span>9.0</span></div>
+    <div class="legend"><span><i style="background:var(--aqua)"></i>4.5 to 5.9, solid</span><span><i style="background:var(--saffron)"></i>6.0 to 7.4, hard</span><span><i style="background:var(--rose)"></i>7.5 to 9.0, severe</span></div>
+
+    <div class="filters">
+      <label>Search<input type="search" id="q" placeholder="Words from the question or technique"></label>
+      <label>Paper<select id="fpaper"><option value="">All papers</option></select></label>
+      <label>Technique<select id="ftech"><option value="">All techniques</option></select></label>
+      <label>Status<select id="fstate"><option value="">Any</option><option value="unseen">Not tried</option><option value="ok">Solved</option><option value="bad">Missed</option></select></label>
+      <label>Order<select id="fsort"><option value="asc">Easiest first</option><option value="desc">Hardest first</option></select></label>
+    </div>
+    <p class="count" id="count"></p>
+    <ul class="list" id="list"></ul>
+  </main>
+
+<script src="site.js"></script>
+<script src="questions.js"></script>
+<script>
+(function(){
+  var Q=window.HU_QUESTIONS, TECH=window.HU_TECH, PAPERS=window.HU_PAPERS;
+  function load(k,d){ try{ return JSON.parse(localStorage.getItem(k)||'null')||d; }catch(e){ return d; } }
+  function save(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} }
+  function esc(s){ return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+  function typeset(el){ if(window.MathJax&&MathJax.typesetPromise) MathJax.typesetPromise([el]).catch(function(){}); }
+  function band(r){ return r<6?'var(--aqua)':r<7.5?'var(--saffron)':'var(--rose)'; }
+  function plain(h){ var t=document.createElement('textarea'); t.innerHTML=h.replace(/<[^>]+>/g,' '); h=t.value; return h.replace(/\\\[|\\\]|\$/g,'').replace(/\\[a-zA-Z]+/g,' ').replace(/[{}]/g,'').replace(/\s+/g,' ').trim(); }
+  function status(){ var st={}; load('hu_drill_log',[]).forEach(function(e){ st[e.id]=e.correct?'ok':'bad'; }); return st; }
+
+  var sel={band:null};
+  Object.keys(PAPERS).forEach(function(k){ var o=document.createElement('option'); o.value=k; o.textContent=PAPERS[k]; document.getElementById('fpaper').appendChild(o); });
+  var used={}; Q.forEach(function(q){ q.tags.forEach(function(t){ used[t]=1; }); });
+  Object.keys(used).sort(function(a,b){return TECH[a].localeCompare(TECH[b]);}).forEach(function(k){ var o=document.createElement('option'); o.value=k; o.textContent=TECH[k]; document.getElementById('ftech').appendChild(o); });
+
+  /* histogram in half-point bins */
+  var bins=[]; for(var b=4.5;b<9.01;b+=0.5) bins.push(Math.round(b*10)/10);
+  var hist=document.getElementById('hist'), counts=bins.map(function(b){ return Q.filter(function(q){ return q.rating>=b&&q.rating<b+0.5; }).length; }), mx=Math.max.apply(null,counts);
+  bins.forEach(function(b,i){ var btn=document.createElement('button'); btn.type='button'; btn.style.height=Math.max(6,counts[i]/mx*100)+'%'; btn.style.background=band(b); btn.title=b.toFixed(1)+' to '+(b+0.4).toFixed(1)+': '+counts[i]+' questions'; btn.setAttribute('aria-label',btn.title); btn.innerHTML='<span>'+counts[i]+'</span>';
+    btn.addEventListener('click',function(){ sel.band=(sel.band===b)?null:b; hist.querySelectorAll('button').forEach(function(x){x.classList.remove('on');}); if(sel.band!==null) btn.classList.add('on'); render(); }); hist.appendChild(btn); });
+
+  function render(){
+    var term=document.getElementById('q').value.trim().toLowerCase(), fp=document.getElementById('fpaper').value, ft=document.getElementById('ftech').value, fs=document.getElementById('fstate').value, desc=document.getElementById('fsort').value==='desc', st=status();
+    var rows=Q.filter(function(q){
+      if(fp&&q.paper!==fp) return false;
+      if(ft&&q.tags.indexOf(ft)<0) return false;
+      if(sel.band!==null&&!(q.rating>=sel.band&&q.rating<sel.band+0.5)) return false;
+      var s=st[q.id]||'unseen'; if(fs&&s!==fs) return false;
+      if(term){ var hay=(plain(q.q)+' '+q.tags.map(function(t){return TECH[t];}).join(' ')+' '+PAPERS[q.paper]).toLowerCase(); if(hay.indexOf(term)<0) return false; }
+      return true;
+    }).slice().sort(function(a,b){ return desc?(b.rating-a.rating||a.id.localeCompare(b.id)):(a.rating-b.rating||a.id.localeCompare(b.id)); });
+    document.getElementById('count').textContent=rows.length+' of '+Q.length+' questions';
+    var ul=document.getElementById('list'); ul.innerHTML='';
+    if(!rows.length){ ul.innerHTML='<li class="empty">Nothing matches these filters. Clear the search or pick another band.</li>'; return; }
+    rows.forEach(function(q){
+      var s=st[q.id], li=document.createElement('li'); li.className='item';
+      li.innerHTML='<button class="row" type="button" aria-expanded="false"><span class="rate" style="background:'+band(q.rating)+'">'+q.rating.toFixed(1)+'</span>'
+        +'<span class="meta"><span class="t">'+esc(PAPERS[q.paper])+', question '+q.n+'</span><span class="p">'+q.q+'</span><span class="tags">'+q.tags.map(function(t){return '<span class="tag">'+esc(TECH[t])+'</span>';}).join('')+'</span></span>'
+        +'<span class="state '+(s||'')+'">'+(s==='ok'?'Solved':s==='bad'?'Missed':'')+'</span></button><div class="body" hidden></div>';
+      var btn=li.querySelector('.row'), body=li.querySelector('.body');
+      btn.addEventListener('click',function(){ var open=body.hidden; body.hidden=!open; btn.setAttribute('aria-expanded',String(open)); if(open&&!body.dataset.built) build(q,body,li); });
+      ul.appendChild(li);
+    });
+    typeset(ul);
+  }
+  function build(q,body,li){
+    body.dataset.built='1'; var t0=Date.now();
+    body.innerHTML='<div class="qtext">'+q.q+'</div><ul class="opts">'+q.opts.map(function(o,k){ var L='ABCDEFGH'[k]; return '<li><button class="opt" type="button" data-l="'+L+'"><span class="L">'+L+'</span><span>'+o+'</span></button></li>'; }).join('')+'</ul>'
+      +'<div class="actions"><span class="verdict" aria-live="polite"></span><button class="btn ghost" type="button" data-act="sol">Show the solution</button><a class="btn secondary" href="arena.html?q='+encodeURIComponent(q.id)+'">Race a bot on this one</a></div><div class="sol" hidden>'+q.sol+'</div>';
+    typeset(body);
+    body.querySelectorAll('.opt').forEach(function(b){ b.addEventListener('click',function(){
+      var L=b.dataset.l, ok=L===q.ans, secs=Math.round((Date.now()-t0)/1000);
+      body.querySelectorAll('.opt').forEach(function(x){ x.disabled=true; if(x.dataset.l===q.ans) x.classList.add('right'); });
+      if(!ok) b.classList.add('wrong');
+      var v=body.querySelector('.verdict'); v.className='verdict '+(ok?'ok':'bad'); v.textContent=ok?'Correct.':'Not this one. The answer is '+q.ans+'.';
+      var log=load('hu_drill_log',[]); log.push({t:Date.now(),id:q.id,paper:q.paper,correct:ok,chosen:L,secs:secs,mode:'bank',tags:q.tags}); save('hu_drill_log',log.slice(-2000));
+      var stEl=li.querySelector('.state'); stEl.className='state '+(ok?'ok':'bad'); stEl.textContent=ok?'Solved':'Missed';
+    }); });
+    body.querySelector('[data-act="sol"]').addEventListener('click',function(){ var s=body.querySelector('.sol'); s.hidden=!s.hidden; this.textContent=s.hidden?'Show the solution':'Hide the solution'; });
+  }
+  ['q','fpaper','ftech','fstate','fsort'].forEach(function(id){ document.getElementById(id).addEventListener(id==='q'?'input':'change',render); });
+  render();
+})();
+</script>
+</body>
+</html>
