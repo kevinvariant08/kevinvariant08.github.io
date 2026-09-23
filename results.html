@@ -8,21 +8,21 @@
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
-  <meta name="theme-color" content="#1A2230">
+  <meta name="theme-color" content="#F3F1FF">
   <link rel="stylesheet" href="style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
   <style>
-    .rs{--ink:#1A2230;--soft:#586374;--faint:#8A93A1;--rule:#D9D6CC;--paper:#FBFAF6;--you:#8C2F2F;--bar:#AFA9EC;--barhi:#534AB7;
-        --serif:"IBM Plex Serif",Georgia,serif;--sans:"IBM Plex Sans",system-ui,sans-serif;font-family:var(--sans);color:var(--ink);line-height:1.55}
+    .rs{--ink:#F3F1FF;--soft:#BDBBE6;--faint:#8A89BD;--rule:#343A82;--paper:#15173B;--you:#FF6B8B;--bar:rgba(79,216,232,.35);--barhi:#4FD8E8;
+        --serif:"IBM Plex Serif",Georgia,serif;--sans:"Bricolage Grotesque","IBM Plex Sans",system-ui,sans-serif;font-family:var(--sans);color:var(--ink);line-height:1.55}
     .rs h2{font-family:var(--serif);font-weight:600}
     .rs p{max-width:68ch}
     .rs .lead{font-size:1.05rem;color:var(--soft)}
     .rs .panel{border:1px solid var(--rule);padding:1rem 1.2rem;margin:1.4rem 0}
     .rs label{display:block;font-size:.9rem;color:var(--soft);margin-top:.6rem}
-    .rs select,.rs input[type=number]{font-family:var(--sans);font-size:.95rem;padding:.45rem .6rem;border:1px solid var(--rule);border-radius:2px;background:#fff;color:var(--ink)}
+    .rs select,.rs input[type=number]{font-family:var(--sans);font-size:.95rem;padding:.45rem .6rem;border:1px solid var(--rule);border-radius:2px;background:#0F1130;color:var(--ink)}
     .rs .btn2{font-family:var(--sans);font-size:.95rem;font-weight:500;color:var(--ink);background:transparent;border:1px solid var(--ink);border-radius:2px;padding:.5rem 1rem;cursor:pointer}
-    .rs .btn2:hover{background:var(--ink);color:#fff}
+    .rs .btn2:hover{background:var(--ink);color:#15173B}
     .rs .btn2[disabled]{opacity:.35;cursor:default}
     .rs .row{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;margin-top:.9rem}
     .rs .msg{font-size:.9rem;color:var(--faint)}
@@ -39,21 +39,9 @@
     .rs .mine th{color:var(--faint)}
   </style>
 </head>
-<body>
+<body data-theme-v2>
 
-  <nav>
-    <div class="nav-links">
-      <a href="index.html">Mathematics</a>
-      <a href="music.html">Music &amp; Piano</a>
-      <a href="geometry.html">Geometry Lab</a>
-      <a href="sandbox.html">Sandbox</a>
-      <a href="drill.html">Drill</a>
-      <a href="interviews.html">Mock interviews</a>
-      <a href="marker.html">Marker</a>
-      <a href="techniques.html">Techniques</a>
-      <a href="progress.html">Progress</a>
-    </div>
-  </nav>
+  <nav id="sitenav"><div class="nav-links"><a href="https://kevinvariant08.github.io/index.html">Home</a> <a href="https://kevinvariant08.github.io/drill.html">Drill</a> <a href="https://kevinvariant08.github.io/arena.html">Arena</a> <a href="https://kevinvariant08.github.io/bank.html">Question bank</a></div></nav>
 
   <main class="container rs">
     <h1>Results</h1>
@@ -108,12 +96,12 @@ function renderDist(paper, counts, mine){
   var W=680,H=220,pad=36,bw=(W-2*pad)/(MAX+1), svg='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Score distribution">';
   counts.forEach(function(c,s){
     var h=mx?(c/mx)*(H-70):0, x=pad+s*bw, y=H-40-h, hi=(mine!=null&&s===mine);
-    svg+='<rect x="'+(x+2)+'" y="'+y+'" width="'+(bw-4)+'" height="'+h+'" fill="'+(hi?'#534AB7':'#AFA9EC')+'"/>';
-    if(c) svg+='<text x="'+(x+bw/2)+'" y="'+(y-5)+'" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#8A93A1">'+c+'</text>';
-    svg+='<text x="'+(x+bw/2)+'" y="'+(H-22)+'" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="'+(hi?'#534AB7':'#586374')+'">'+s+'</text>';
+    svg+='<rect x="'+(x+2)+'" y="'+y+'" width="'+(bw-4)+'" height="'+h+'" fill="'+(hi?'#4FD8E8':'rgba(79,216,232,.35)')+'"/>';
+    if(c) svg+='<text x="'+(x+bw/2)+'" y="'+(y-5)+'" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#8A89BD">'+c+'</text>';
+    svg+='<text x="'+(x+bw/2)+'" y="'+(H-22)+'" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="'+(hi?'#4FD8E8':'#BDBBE6')+'">'+s+'</text>';
   });
-  if(md!=null){ var mxp=pad+md*bw+bw/2; svg+='<line x1="'+mxp+'" y1="20" x2="'+mxp+'" y2="'+(H-40)+'" stroke="#8C2F2F" stroke-width="1" stroke-dasharray="4 3"/><text x="'+(mxp+5)+'" y="18" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#8C2F2F">median</text>'; }
-  svg+='<line x1="'+pad+'" y1="'+(H-40)+'" x2="'+(W-pad)+'" y2="'+(H-40)+'" stroke="#D9D6CC"/></svg>';
+  if(md!=null){ var mxp=pad+md*bw+bw/2; svg+='<line x1="'+mxp+'" y1="20" x2="'+mxp+'" y2="'+(H-40)+'" stroke="#FF6B8B" stroke-width="1" stroke-dasharray="4 3"/><text x="'+(mxp+5)+'" y="18" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#FF6B8B">median</text>'; }
+  svg+='<line x1="'+pad+'" y1="'+(H-40)+'" x2="'+(W-pad)+'" y2="'+(H-40)+'" stroke="#343A82"/></svg>';
   var pc = mine!=null ? percentileBelow(counts,mine) : null;
   box.innerHTML='<h2 style="font-size:1.15rem;margin:1.4rem 0 .2rem">'+esc(paperName(paper))+'</h2>'
     +'<div class="stats"><div class="stat"><div class="big">'+n+'</div><div class="lab">scores logged</div></div>'
@@ -158,5 +146,6 @@ document.getElementById('submit').addEventListener('click',async function(){
 });
 refresh();
 </script>
+<script src="site.js"></script>
 </body>
 </html>
