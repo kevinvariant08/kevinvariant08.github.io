@@ -76,7 +76,7 @@ function load(k,d){ try{ return JSON.parse(localStorage.getItem(k)||'null')||d; 
 function esc(s){return String(s).replace(/[&<>]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c];});}
 function fmt(s){ s=Math.max(0,Math.round(s)); var m=Math.floor(s/60), r=s%60; return m+':'+(r<10?'0':'')+r; }
 var TECH={sym:'Symmetry and substitution',tel:'Telescoping',two:'Counting two ways',inv:'Invariants',pig:'Pigeonhole',mod:'Modular arithmetic',vie:'Vieta and symmetric functions',trg:'Trigonometric identities and bounds',arint:'Integrals as areas or by symmetry',fint:'Integral reasoning',root:'Root counting via monotonicity',ext:'Extremal principle',col:'Colouring and parity',game:'Games and losing positions',log:'Quantifiers, negation and vacuous truth',prf:'Proof analysis',ns:'Necessary and sufficient',ineq:'Inequalities',circ:'Circle geometry',ser:'Series and sequences',poly:'Polynomials',cnt:'Counting arguments'};
-var PAPER_NAME={B1:'Set B Paper 1',B2:'Set B Paper 2','setB-p1':'Set B Paper 1','setB-p2':'Set B Paper 2','setA-p1':'Set A Paper 1','setA-p2':'Set A Paper 2'};
+var PAPER_NAME={C1:'Set C Paper 1',C2:'Set C Paper 2',B1:'Set B Paper 1',B2:'Set B Paper 2','setC-p1':'Set C Paper 1','setC-p2':'Set C Paper 2','setB-p1':'Set B Paper 1','setB-p2':'Set B Paper 2','setA-p1':'Set A Paper 1','setA-p2':'Set A Paper 2'};
 
 var L=load('hu_drill_log',[]), A=load('hu_drill_attempts',[]), IV=load('hu_iv_hist',[]), SC=load('hu_scores',[]);
 var out='';
@@ -136,8 +136,9 @@ if(!L.length&&!A.length&&!IV.length&&!SC.length){
       +'<polyline points="'+pts2.map(function(p){return p[0]+','+p[1];}).join(' ')+'" fill="none" stroke="#534AB7" stroke-width="1.6"/>'+pts2.map(function(p,i){return '<circle cx="'+p[0]+'" cy="'+p[1]+'" r="3.5" fill="#534AB7"/><text x="'+p[0]+'" y="'+(p[1]-8)+'" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#586374">'+ivScores[i]+'</text>';}).join('')+'</svg>';
     out+='<h3>Interview scores</h3>'+line;
   }
-  if(A.length){ rows=A.slice(0,10).map(function(a){return '<tr><td>'+esc(a.date)+'</td><td>'+esc(PAPER_NAME[a.paper]||a.paper)+'</td><td>'+a.score+'/20</td><td>'+fmt(a.secs)+'</td></tr>';}).join('');
-    out+='<h3>Timed papers</h3><table><tr><th>Date</th><th>Paper</th><th>Score</th><th>Time</th></tr>'+rows+'</table><p class="tally"><a href="results.html">Compare against everyone else.</a></p>'; }
+  if(A.length){ var TIM={4500:'standard',5400:'+20%',5625:'+25%',6750:'+50%',9000:'+100%',0:'untimed'};
+    rows=A.slice(0,10).map(function(a){return '<tr><td>'+esc(a.date)+'</td><td>'+esc(PAPER_NAME[a.paper]||a.paper)+'</td><td>'+a.score+'/20</td><td>'+fmt(a.secs)+'</td><td>'+esc(TIM[a.timing==null?4500:a.timing]||'')+(a.pauses?', paused '+a.pauses+'\u00d7':'')+'</td></tr>';}).join('');
+    out+='<h3>Timed papers</h3><table><tr><th>Date</th><th>Paper</th><th>Score</th><th>Time</th><th>Conditions</th></tr>'+rows+'</table><p class="tally"><a href="results.html">Compare against everyone else.</a></p>'; }
 
   // heatmap 12 weeks
   var cells='', today=new Date(); today.setHours(0,0,0,0);
