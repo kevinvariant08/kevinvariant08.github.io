@@ -6,7 +6,7 @@
   <title>Proof marker</title>
   <link rel="icon" href="/favicon.ico" sizes="32x32">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  <meta name="theme-color" content="#1A2230">
+  <meta name="theme-color" content="#F3F1FF">
   <link rel="stylesheet" href="style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,16 +15,16 @@
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js" async></script>
   <style>
     :root{
-      --ink:#1A2230;--soft:#586374;--faint:#8A93A1;--rule:#D9D6CC;--paper:#FBFAF6;--card:#FFFFFF;
-      --ok:#2C5545;--okbg:#E5F1EA;--bad:#8C2F2F;--badbg:#F6E3E1;--warn:#8A5A12;--warnbg:#F6EBD9;--sel:#F1F0EA;
-      --serif:"IBM Plex Serif",Georgia,"Times New Roman",serif;--sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+      --ink:#F3F1FF;--soft:#BDBBE6;--faint:#8A89BD;--rule:#343A82;--paper:#15173B;--card:#1D2052;
+      --ok:#5BE3A6;--okbg:rgba(91,227,166,.14);--bad:#FF6B8B;--badbg:rgba(255,107,139,.14);--warn:#FFC53D;--warnbg:rgba(255,197,61,.14);--sel:rgba(255,197,61,.14);
+      --serif:"IBM Plex Serif",Georgia,"Times New Roman",serif;--sans:"Bricolage Grotesque","IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
     }
     @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-      --ink:#E6E4DD;--soft:#A7AEBB;--faint:#737C8B;--rule:#2F3540;--paper:#12151B;--card:#1A1E26;
-      --ok:#7FBFA3;--okbg:#1C2C25;--bad:#E07A6F;--badbg:#2E1D1C;--warn:#D9A64E;--warnbg:#2C2416;--sel:#20252E;}}
+      --ink:#F3F1FF;--soft:#BDBBE6;--faint:#8A89BD;--rule:#343A82;--paper:#15173B;--card:#1D2052;
+      --ok:#5BE3A6;--okbg:rgba(91,227,166,.14);--bad:#FF6B8B;--badbg:rgba(255,107,139,.14);--warn:#FFC53D;--warnbg:rgba(255,197,61,.14);--sel:#252964;}}
     :root[data-theme="dark"]{
-      --ink:#E6E4DD;--soft:#A7AEBB;--faint:#737C8B;--rule:#2F3540;--paper:#12151B;--card:#1A1E26;
-      --ok:#7FBFA3;--okbg:#1C2C25;--bad:#E07A6F;--badbg:#2E1D1C;--warn:#D9A64E;--warnbg:#2C2416;--sel:#20252E;}
+      --ink:#F3F1FF;--soft:#BDBBE6;--faint:#8A89BD;--rule:#343A82;--paper:#15173B;--card:#1D2052;
+      --ok:#5BE3A6;--okbg:rgba(91,227,166,.14);--bad:#FF6B8B;--badbg:rgba(255,107,139,.14);--warn:#FFC53D;--warnbg:rgba(255,197,61,.14);--sel:#252964;}
 
     /* Only when opened as the standalone claude.ai copy, where the site stylesheet is absent */
     html.standalone{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);scroll-padding-top:env(safe-area-inset-top,0px)}
@@ -109,18 +109,8 @@
     .mk .rfoot{margin-top:1.4rem;font-size:.84rem!important;color:var(--faint);font-family:var(--sans)!important}
   </style>
 </head>
-<body>
-  <nav>
-    <div class="nav-links">
-      <a href="https://kevinvariant08.github.io/index.html">Mathematics</a>
-      <a href="https://kevinvariant08.github.io/drill.html">Drill</a>
-      <a href="https://kevinvariant08.github.io/interviews.html">Mock interviews</a>
-      <a href="https://kevinvariant08.github.io/marker.html" aria-current="page">Marker</a>
-      <a href="https://kevinvariant08.github.io/techniques.html">Techniques</a>
-      <a href="https://kevinvariant08.github.io/sandbox.html">Sandbox</a>
-      <a href="https://kevinvariant08.github.io/progress.html">Progress</a>
-    </div>
-  </nav>
+<body data-theme-v2>
+  <nav id="sitenav"><div class="nav-links"><a href="https://kevinvariant08.github.io/index.html">Home</a> <a href="https://kevinvariant08.github.io/drill.html">Drill</a> <a href="https://kevinvariant08.github.io/arena.html">Arena</a> <a href="https://kevinvariant08.github.io/bank.html">Question bank</a></div></nav>
 
   <main class="container mk">
     <h1>Proof marker</h1>
@@ -494,5 +484,6 @@ function boot(){
 boot();
 
 </script>
+<script src="site.js"></script>
 </body>
 </html>
