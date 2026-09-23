@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Arena - Kevinvariant</title>
+  <link rel="icon" href="/favicon.ico" sizes="32x32">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <meta name="theme-color" content="#15173B">
+  <link rel="stylesheet" href="style.css">
+  <script>window.MathJax={tex:{inlineMath:[['$','$']],displayMath:[['\\[','\\]']],processEscapes:true},options:{skipHtmlTags:['script','noscript','style','textarea','pre']}};</script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js" async></script>
+  <style>
+    .ar{max-width:64rem}
+    .hidden{display:none!important}
+    .top{display:flex;flex-wrap:wrap;align-items:flex-end;gap:1rem 2.4rem;margin-bottom:1.6rem}
+    .top h1{margin:0}
+    .stat{display:flex;flex-direction:column}
+    .stat b{font-size:1.9rem;font-weight:800;line-height:1;font-variant-numeric:tabular-nums}
+    .stat span{font-size:.82rem;color:var(--ink-faint);margin-top:.2rem}
+    .sound{margin-left:auto}
+    .modes{display:grid;grid-template-columns:1.25fr 1fr;gap:1.2rem}
+    @media (max-width:820px){.modes{grid-template-columns:1fr}}
+    .panel{background:var(--surface);border:1px solid var(--line-soft);border-radius:var(--r-lg);padding:1.4rem 1.4rem 1.2rem}
+    .panel h2{margin:0 0 .3rem;font-size:1.45rem}
+    .panel>p{color:var(--ink-soft);font-size:.97rem}
+    .bots{display:grid;gap:.5rem;margin:1rem 0}
+    .bot{display:grid;grid-template-columns:2.6rem 1fr auto;gap:.9rem;align-items:center;text-align:left;width:100%;background:var(--bg-deep);border:1.5px solid var(--line-soft);border-radius:14px;padding:.7rem .85rem;color:var(--ink);cursor:pointer;font-family:var(--display)}
+    .bot:hover{border-color:var(--ink-soft)}
+    .bot[aria-pressed="true"]{border-color:var(--rose);background:var(--rose-wash)}
+    .bot .av{width:2.6rem;height:2.6rem;border-radius:12px;display:grid;place-items:center;font-weight:800;color:#15173B}
+    .bot b{display:block;font-size:1.02rem}
+    .bot small{color:var(--ink-soft);font-size:.86rem}
+    .bot .elo{font-size:.82rem;color:var(--ink-faint);font-variant-numeric:tabular-nums}
+    .custom{display:grid;grid-template-columns:1fr 1fr;gap:.6rem .9rem;margin:.2rem 0 1rem;padding:.9rem;border:1px dashed var(--line);border-radius:14px}
+    .custom label{font-size:.84rem;color:var(--ink-soft);display:flex;flex-direction:column;gap:.25rem}
+    .custom input{accent-color:var(--rose)}
+    .custom output{color:var(--ink);font-weight:600}
+
+    /* match */
+    .score{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:1rem;margin-bottom:1rem}
+    .side{display:flex;align-items:center;gap:.8rem}
+    .side.bot-side{justify-content:flex-end;text-align:right}
+    .side b{font-size:1.1rem}
+    .pips{display:flex;gap:.35rem}
+    .pip{width:18px;height:18px;clip-path:polygon(50% 6%,96% 92%,4% 92%);background:var(--line)}
+    .pip.win-you{background:var(--rose)} .pip.win-bot{background:var(--aqua)}
+    .round{font-size:.9rem;color:var(--ink-faint);text-align:center}
+    .lanes{display:grid;gap:.55rem;margin:0 0 1.2rem}
+    .lane{display:grid;grid-template-columns:6.5rem 1fr 5.2rem;gap:.8rem;align-items:center;font-size:.92rem}
+    .track{height:12px;border-radius:999px;background:var(--bg-deep);border:1px solid var(--line-soft);overflow:hidden;position:relative}
+    .fill{height:100%;width:0;border-radius:999px}
+    .fill.you{background:linear-gradient(90deg,var(--saffron),var(--rose))}
+    .fill.bot{background:linear-gradient(90deg,#3A7DE8,var(--aqua))}
+    .lane .t{font-variant-numeric:tabular-nums;text-align:right;font-weight:600}
+    .lane .who{color:var(--ink-soft)}
+    .lane .flag{color:var(--aqua);font-weight:600}
+    .qcard{background:var(--surface);border:1px solid var(--line-soft);border-radius:var(--r-lg);padding:1.3rem 1.4rem}
+    .qhead{display:flex;justify-content:space-between;gap:1rem;font-size:.86rem;color:var(--ink-faint);margin-bottom:.6rem}
+    .qhead .rt{font-weight:700;color:#15173B;border-radius:8px;padding:.05rem .5rem}
+    .qtext{font-family:var(--serif);font-size:1.08rem;line-height:1.7}
+    .qtext .c{text-align:center;margin:.6rem 0}
+    .qtext ol.stmts{margin:.4rem 0 .4rem 1.6rem}
+    .opts{list-style:none;padding:0;margin:1rem 0 0;display:grid;grid-template-columns:1fr 1fr;gap:.45rem}
+    @media (max-width:640px){.opts{grid-template-columns:1fr}}
+    .opt{display:flex;gap:.9rem;align-items:baseline;width:100%;text-align:left;font-family:var(--serif);font-size:1.02rem;background:var(--bg-deep);color:var(--ink);border:1.5px solid var(--line-soft);border-radius:12px;padding:.65rem .9rem;cursor:pointer;min-height:48px}
+    .opt:hover{border-color:var(--ink-soft)}
+    .opt .L{font-family:var(--display);font-weight:800;color:var(--ink-faint);min-width:1.1rem}
+    .opt.sel{border-color:var(--saffron);background:var(--saffron-wash)}
+    .opt.right{border-color:var(--mint);background:var(--mint-wash)} .opt.wrong{border-color:var(--rose);background:var(--rose-wash)}
+    .opt[disabled]{cursor:default}
+    .lockrow{display:flex;align-items:center;gap:1rem;margin-top:1rem;flex-wrap:wrap}
+    .lockrow .tally{color:var(--ink-faint);font-size:.88rem}
+    .result{margin-top:1rem;border-radius:var(--r-lg);padding:1.2rem 1.3rem;border:1px solid var(--line)}
+    .result.you{background:linear-gradient(120deg,rgba(255,107,139,.18),rgba(255,197,61,.10));border-color:rgba(255,107,139,.5)}
+    .result.bot{background:linear-gradient(120deg,rgba(79,216,232,.16),rgba(58,125,232,.10));border-color:rgba(79,216,232,.5)}
+    .result h3{margin:0 0 .3rem;font-size:1.35rem}
+    .result p{margin:.2rem 0;color:var(--ink-soft)}
+    .sol{font-family:var(--serif);line-height:1.75;color:var(--ink-soft);margin-top:.8rem;padding:1rem 1.1rem;border-left:3px solid var(--aqua);background:rgba(15,17,48,.5);border-radius:0 12px 12px 0}
+    .count{position:fixed;inset:0;display:grid;place-items:center;background:rgba(15,17,48,.72);z-index:60;font-size:clamp(5rem,18vw,11rem);font-weight:800;color:var(--ink);pointer-events:none}
+    .count span{animation:pop .9s ease both}
+    @keyframes pop{0%{transform:scale(.4);opacity:0}30%{transform:scale(1.08);opacity:1}100%{transform:scale(1);opacity:.0}}
+    .toast{position:fixed;left:50%;bottom:1.6rem;transform:translateX(-50%);background:var(--surface-2);border:1px solid var(--aqua);color:var(--ink);padding:.6rem 1.1rem;border-radius:999px;z-index:55;font-weight:600;box-shadow:0 12px 30px rgba(5,6,24,.5)}
+    .end{text-align:center;padding:2rem 1rem}
+    .end h2{font-size:clamp(2rem,5vw,3rem);margin:0 0 .4rem}
+    .end .delta{font-size:1.3rem;font-weight:800}
+    .ladderbar{display:flex;flex-wrap:wrap;align-items:center;gap:1rem 2rem;margin-bottom:1rem}
+    .clock{font-size:2.3rem;font-weight:800;font-variant-numeric:tabular-nums;line-height:1}
+    .clock.warn{color:var(--saffron)} .clock.urgent{color:var(--rose)}
+    .lives{display:flex;gap:.35rem}
+    .lives .pip{width:22px;height:22px;background:var(--rose)}
+    .lives .pip.lost{background:var(--line)}
+    .rungs{display:flex;gap:3px;align-items:flex-end;height:44px;flex:1;min-width:10rem}
+    .rungs i{flex:1;border-radius:3px 3px 0 0;background:var(--line-soft)}
+    .rungs i.done{background:var(--mint)} .rungs i.miss{background:var(--rose)}
+    .flash-ok{animation:fok .5s ease} .flash-bad{animation:fbad .5s ease}
+    @keyframes fok{0%{box-shadow:0 0 0 0 rgba(91,227,166,.7)}100%{box-shadow:0 0 0 18px rgba(91,227,166,0)}}
+    @keyframes fbad{0%,100%{transform:none}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+    @media (prefers-reduced-motion:reduce){.count span,.flash-ok,.flash-bad{animation:none}}
+    #confetti{position:fixed;inset:0;pointer-events:none;z-index:70}
+    .review{margin-top:1.4rem;text-align:left}
+    .review details{border-top:1px solid var(--line-soft);padding:.6rem 0}
+    .review summary{cursor:pointer;font-weight:600}
+  </style>
+</head>
+<body data-theme-v2>
+  <nav id="sitenav"><div class="nav-links"><a href="index.html">Home</a> <a href="drill.html">Drill</a> <a href="bank.html">Question bank</a></div></nav>
+  <canvas id="confetti" aria-hidden="true"></canvas>
+  <main class="container ar">
+    <div class="top">
+      <h1>Arena</h1>
+      <div class="stat"><b id="myrating">1200</b><span>your arena rating</span></div>
+      <div class="stat"><b id="record">0&ndash;0</b><span>matches won and lost</span></div>
+      <div class="stat"><b id="best">0</b><span>best win streak</span></div>
+      <button class="btn ghost sound" id="sound" type="button" aria-pressed="true">Sound on</button>
+    </div>
+
+    <!-- ===================================================== lobby -->
+    <section id="lobby">
+      <div class="modes">
+        <div class="panel">
+          <h2>Duel</h2>
+          <p>Best of five against a bot. Each round, you and the bot race the same question. The first correct answer wins the round; if you're both wrong, nobody scores. You can see how far through its thinking the bot is, but not whether it got the answer right until you've locked in yours.</p>
+          <div class="bots" id="bots" role="group" aria-label="Choose an opponent"></div>
+          <div class="custom hidden" id="custom">
+            <label>Average time per question <output id="o-mean">3 min</output><input type="range" id="c-mean" min="0.5" max="8" step="0.25" value="3"></label>
+            <label>Random spread either way <output id="o-spread">1 min</output><input type="range" id="c-spread" min="0" max="3" step="0.25" value="1"></label>
+            <label>Accuracy <output id="o-acc">75%</output><input type="range" id="c-acc" min="20" max="100" step="5" value="75"></label>
+            <label>Question ratings <output id="o-range">5.5 to 8.0</output><input type="range" id="c-lo" min="4.5" max="9" step="0.5" value="5.5"><input type="range" id="c-hi" min="4.5" max="9" step="0.5" value="8"></label>
+          </div>
+          <button class="btn" id="startDuel" type="button">Start the duel</button>
+        </div>
+        <div class="panel">
+          <h2>Ten-minute ladder</h2>
+          <p>Questions climb in difficulty every time you get one right. A wrong answer costs one of your three lives and keeps you on the same rung. Each correct answer scores ten times its rating. The run ends when the clock or your lives run out.</p>
+          <p id="ladderbest" class="tally" style="color:var(--ink-faint)"></p>
+          <button class="btn" id="startLadder" type="button">Climb the ladder</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================== duel -->
+    <section id="duel" class="hidden" aria-live="polite">
+      <div class="score">
+        <div class="side"><b>You</b><div class="pips" id="pips-you"></div></div>
+        <div class="round" id="roundlbl">Round 1</div>
+        <div class="side bot-side"><div class="pips" id="pips-bot"></div><b id="botname">Bot</b></div>
+      </div>
+      <div class="lanes">
+        <div class="lane"><span class="who">You</span><div class="track"><div class="fill you" id="fill-you"></div></div><span class="t" id="t-you">0:00</span></div>
+        <div class="lane"><span class="who" id="lane-botname">Bot</span><div class="track"><div class="fill bot" id="fill-bot"></div></div><span class="t" id="t-bot">thinking</span></div>
+      </div>
+      <div class="qcard" id="qcard">
+        <div class="qhead"><span id="qsrc"></span><span class="rt" id="qrate"></span></div>
+        <div class="qtext" id="qtext"></div>
+        <ul class="opts" id="opts"></ul>
+        <div class="lockrow"><button class="btn" id="lock" type="button" disabled>Lock in</button><button class="btn ghost" id="giveup" type="button">Skip this round</button><span class="tally">Keys A to H choose, Enter locks in. Your bar fills at 3:45, the average time per TMUA question.</span></div>
+      </div>
+      <div id="roundres"></div>
+      <div class="lockrow"><button class="btn ghost" id="quitDuel" type="button">Leave the match</button></div>
+    </section>
+
+    <!-- ===================================================== ladder -->
+    <section id="ladder" class="hidden" aria-live="polite">
+      <div class="ladderbar">
+        <div class="clock" id="lclock">10:00</div>
+        <div class="lives" id="lives" aria-label="Lives"></div>
+        <div class="stat"><b id="lscore">0</b><span>score</span></div>
+        <div class="rungs" id="rungs" aria-hidden="true"></div>
+      </div>
+      <div class="qcard" id="lcard">
+        <div class="qhead"><span id="lsrc"></span><span class="rt" id="lrate"></span></div>
+        <div class="qtext" id="ltext"></div>
+        <ul class="opts" id="lopts"></ul>
+        <div class="lockrow"><button class="btn" id="llock" type="button" disabled>Lock in</button><span class="tally" id="lmsg">Keys A to H choose, Enter locks in.</span></div>
+      </div>
+      <div class="lockrow"><button class="btn ghost" id="quitLadder" type="button">End the run</button></div>
+    </section>
+
+    <section id="finish" class="hidden"></section>
+  </main>
+
+<script src="site.js"></script>
+<script src="questions.js"></script>
+<script>
+(function(){
+  var Q=window.HU_QUESTIONS, TECH=window.HU_TECH, PAPERS=window.HU_PAPERS;
+  function $(id){ return document.getElementById(id); }
+  function load(k,d){ try{ return JSON.parse(localStorage.getItem(k)||'null')||d; }catch(e){ return d; } }
+  function save(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} }
+  function esc(s){ return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+  function fmt(s){ s=Math.max(0,Math.round(s)); var m=Math.floor(s/60),r=s%60; return m+':'+(r<10?'0':'')+r; }
+  function typeset(el){ if(window.MathJax&&MathJax.typesetPromise) MathJax.typesetPromise([el]).catch(function(){}); }
+  function band(r){ return r<6?'var(--aqua)':r<7.5?'var(--saffron)':'var(--rose)'; }
+  function clamp(x,a,b){ return Math.max(a,Math.min(b,x)); }
+  function logAnswer(q,chosen,secs,mode){ var L=load('hu_drill_log',[]); L.push({t:Date.now(),id:q.id,paper:q.paper,correct:chosen===q.ans,chosen:chosen,secs:Math.round(secs),mode:mode,tags:q.tags}); save('hu_drill_log',L.slice(-2000)); }
+  var reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ------------------------------------------------------------ sound */
+  var soundOn=load('hu_arena_sound',true), actx=null;
+  function tone(f,d,type,vol,delay){ if(!soundOn) return; try{ actx=actx||new (window.AudioContext||window.webkitAudioContext)(); var t=actx.currentTime+(delay||0), o=actx.createOscillator(), g=actx.createGain(); o.type=type||'sine'; o.frequency.value=f; g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(vol||0.12,t+0.01); g.gain.exponentialRampToValueAtTime(0.0001,t+d); o.connect(g); g.connect(actx.destination); o.start(t); o.stop(t+d+0.02); }catch(e){} }
+  var SFX={tick:function(){tone(660,.08,'square',.05);}, go:function(){tone(880,.18,'triangle',.12);}, lock:function(){tone(520,.1,'triangle',.1);},
+    bot:function(){tone(300,.12,'sine',.1);tone(240,.14,'sine',.08,.1);}, win:function(){[523,659,784,1047].forEach(function(f,i){tone(f,.18,'triangle',.12,i*.09);});},
+    lose:function(){[392,330,262].forEach(function(f,i){tone(f,.22,'sine',.1,i*.12);});}, ok:function(){tone(784,.12,'triangle',.1);tone(1047,.16,'triangle',.1,.08);}, bad:function(){tone(200,.25,'sawtooth',.06);} };
+  function paintSound(){ $('sound').textContent=soundOn?'Sound on':'Sound off'; $('sound').setAttribute('aria-pressed',String(soundOn)); }
+  $('sound').addEventListener('click',function(){ soundOn=!soundOn; save('hu_arena_sound',soundOn); paintSound(); });
+
+  /* ------------------------------------------------------------ profile */
+  var prof=load('hu_arena',{rating:1200,w:0,l:0,d:0,streak:0,best:0,history:[]});
+  function paintProfile(){ $('myrating').textContent=Math.round(prof.rating); $('record').innerHTML=prof.w+'&ndash;'+prof.l; $('best').textContent=prof.best;
+    var lb=load('hu_ladder_best',0); $('ladderbest').textContent=lb?'Your best run so far: '+lb+' points.':'No runs yet.'; }
+
+  /* ------------------------------------------------------------ bots */
+  var BOTS=[
+    {id:'pip',name:'Pip',av:'P',col:'var(--aqua)',note:'Warm-up. Slow, and wrong about half the time.',speed:1.7,acc:.55,lo:4.5,hi:6.5,elo:1000},
+    {id:'app',name:'Apprentice',av:'A',col:'var(--mint)',note:'Steady A-level pace, gets most standard ones.',speed:1.2,acc:.7,lo:5,hi:7.5,elo:1200},
+    {id:'offer',name:'Offer Holder',av:'O',col:'var(--saffron)',note:'Answers like a strong TMUA candidate.',speed:.95,acc:.82,lo:5.8,hi:8.2,elo:1400},
+    {id:'olymp',name:'Olympian',av:'&Omega;',col:'var(--rose)',note:'Fast, and rarely wrong.',speed:.7,acc:.92,lo:6.8,hi:9,elo:1650},
+    {id:'custom',name:'Custom bot',av:'?',col:'#B7A6FF',note:'Set its speed, spread and accuracy yourself.',custom:true,elo:1300}
+  ];
+  var chosen=load('hu_arena_bot','app');
+  function renderBots(){
+    var el=$('bots'); el.innerHTML='';
+    BOTS.forEach(function(b){ var btn=document.createElement('button'); btn.type='button'; btn.className='bot'; btn.setAttribute('aria-pressed',String(b.id===chosen));
+      btn.innerHTML='<span class="av" style="background:'+b.col+'">'+b.av+'</span><span><b>'+b.name+'</b><small>'+b.note+'</small></span><span class="elo">'+b.elo+'</span>';
+      btn.addEventListener('click',function(){ chosen=b.id; save('hu_arena_bot',chosen); renderBots(); }); el.appendChild(btn); });
+    $('custom').classList.toggle('hidden',chosen!=='custom');
+  }
+  function syncCustom(){
+    var lo=parseFloat($('c-lo').value), hi=parseFloat($('c-hi').value); if(lo>hi){ var t=lo; lo=hi; hi=t; }
+    $('o-mean').textContent=$('c-mean').value+' min'; $('o-spread').textContent=$('c-spread').value+' min'; $('o-acc').textContent=$('c-acc').value+'%'; $('o-range').textContent=lo.toFixed(1)+' to '+hi.toFixed(1);
+  }
+  ['c-mean','c-spread','c-acc','c-lo','c-hi'].forEach(function(id){ $(id).addEventListener('input',syncCustom); });
+  function botSpec(){
+    var b=BOTS.filter(function(x){return x.id===chosen;})[0];
+    if(!b.custom) return b;
+    var lo=parseFloat($('c-lo').value), hi=parseFloat($('c-hi').value); if(lo>hi){ var t=lo; lo=hi; hi=t; }
+    return {id:'custom',name:'Custom bot',av:'?',col:b.col,custom:true,mean:parseFloat($('c-mean').value),spread:parseFloat($('c-spread').value),acc:parseFloat($('c-acc').value)/100,lo:lo,hi:hi,elo:1300};
+  }
+  /* A bot's time grows with the question's rating; its accuracy falls with it. */
+  function botPlay(b,q){
+    var secs, p;
+    if(b.custom){ secs=(b.mean+(Math.random()*2-1)*b.spread)*60; p=b.acc; }
+    else { var mean=b.speed*(1.1+0.6*(q.rating-4.5)); secs=mean*(0.7+Math.random()*0.6)*60; p=clamp(b.acc-0.06*(q.rating-6.5),0.15,0.99); }
+    secs=Math.max(10,secs);
+    var right=Math.random()<p, wrongs='ABCDEFGH'.slice(0,q.opts.length).split('').filter(function(L){return L!==q.ans;});
+    return {secs:secs,right:right,choice:right?q.ans:wrongs[Math.floor(Math.random()*wrongs.length)]};
+  }
+
+  /* ------------------------------------------------------------ question picking */
+  function pick(lo,hi,used){
+    var pool=Q.filter(function(q){ return q.rating>=lo-1e-9&&q.rating<=hi+1e-9&&!used[q.id]; });
+    if(!pool.length) pool=Q.filter(function(q){ return !used[q.id]; });
+    if(!pool.length) pool=Q.slice();
+    return pool[Math.floor(Math.random()*pool.length)];
+  }
+  function show(id){ ['lobby','duel','ladder','finish'].forEach(function(s){ $(s).classList.toggle('hidden',s!==id); }); window.scrollTo({top:0}); }
+  function renderQ(q,prefix,onPick){
+    $(prefix+'src').textContent=PAPERS[q.paper]+', question '+q.n+', '+q.tags.map(function(t){return TECH[t];}).join(', ');
+    var rt=$(prefix+'rate'); rt.textContent=q.rating.toFixed(1); rt.style.background=band(q.rating);
+    var tx=$(prefix+'text'); tx.innerHTML=q.q; typeset(tx);
+    var ul=$(prefix==='q'?'opts':'lopts'); ul.innerHTML='';
+    q.opts.forEach(function(o,k){ var L='ABCDEFGH'[k], li=document.createElement('li'), b=document.createElement('button'); b.type='button'; b.className='opt'; b.dataset.l=L;
+      b.innerHTML='<span class="L">'+L+'</span><span>'+o+'</span>'; b.addEventListener('click',function(){ onPick(L); }); li.appendChild(b); ul.appendChild(li); });
+    typeset(ul);
+  }
+  function markSel(ulId,L){ $(ulId).querySelectorAll('.opt').forEach(function(b){ b.classList.toggle('sel',b.dataset.l===L); }); }
+  function reveal(ulId,q,mine){ $(ulId).querySelectorAll('.opt').forEach(function(b){ b.disabled=true; b.classList.remove('sel'); if(b.dataset.l===q.ans) b.classList.add('right'); else if(b.dataset.l===mine) b.classList.add('wrong'); }); }
+  function toast(t){ var d=document.createElement('div'); d.className='toast'; d.textContent=t; document.body.appendChild(d); setTimeout(function(){ d.remove(); },2200); }
+  function countdown(done){
+    if(reduce){ done(); return; }
+    var ov=document.createElement('div'); ov.className='count'; document.body.appendChild(ov); var n=3;
+    (function step(){ if(n===0){ ov.innerHTML='<span>Go</span>'; SFX.go(); setTimeout(function(){ ov.remove(); done(); },450); return; } ov.innerHTML='<span>'+n+'</span>'; SFX.tick(); n--; setTimeout(step,700); })();
+  }
+
+  /* ------------------------------------------------------------ duel */
+  var D=null, raf=null;
+  function startDuel(forceQ){
+    var b=botSpec(); D={bot:b,round:0,you:0,them:0,used:{},log:[],forceQ:forceQ||null,single:!!forceQ};
+    $('botname').textContent=b.name; $('lane-botname').textContent=b.name;
+    show('duel'); nextRound();
+  }
+  function pips(){
+    var need=D.single?1:3;
+    $('pips-you').innerHTML=Array.from({length:need},function(_,i){return '<span class="pip'+(i<D.you?' win-you':'')+'"></span>';}).join('');
+    $('pips-bot').innerHTML=Array.from({length:need},function(_,i){return '<span class="pip'+(i<D.them?' win-bot':'')+'"></span>';}).join('');
+  }
+  function nextRound(){
+    D.round++; pips(); $('roundres').innerHTML=''; $('qcard').classList.remove('hidden');
+    $('roundlbl').textContent=D.single?'Quick race':'Round '+D.round+' of up to 5';
+    var q=D.forceQ?Q.filter(function(x){return x.id===D.forceQ;})[0]:pick(D.bot.lo,D.bot.hi,D.used); D.forceQ=null; D.used[q.id]=1;
+    var bp=botPlay(D.bot,q);
+    D.cur={q:q,bot:bp,mine:null,start:0,locked:false,botDone:false};
+    $('fill-you').style.width='0'; $('fill-bot').style.width='0'; $('t-you').textContent='0:00'; $('t-bot').textContent='thinking'; $('t-bot').className='t';
+    $('lock').disabled=true; $('giveup').disabled=false;
+    $('qtext').innerHTML=''; $('opts').innerHTML='';
+    countdown(function(){
+      renderQ(q,'q',function(L){ if(D.cur.locked) return; D.cur.mine=L; markSel('opts',L); $('lock').disabled=false; });
+      D.cur.start=performance.now(); loop();
+    });
+  }
+  var CAP=600;
+  function loop(){
+    cancelAnimationFrame(raf);
+    raf=requestAnimationFrame(function tick(){
+      if(!D||!D.cur||D.cur.locked) return;
+      var el=(performance.now()-D.cur.start)/1000, bt=D.cur.bot.secs;
+      $('t-you').textContent=fmt(el); $('fill-you').style.width=Math.min(100,el/225*100)+'%';  /* full bar = 3:45, the average TMUA time per question */
+      $('fill-bot').style.width=Math.min(100,el/bt*100)+'%';
+      if(!D.cur.botDone&&el>=bt){ D.cur.botDone=true; $('t-bot').textContent='locked in'; $('t-bot').className='t flag'; SFX.bot(); toast(D.bot.name+' has locked in an answer'); }
+      if(el>=CAP){ lockIn(true); return; }
+      raf=requestAnimationFrame(tick);
+    });
+  }
+  function lockIn(timeout){
+    var c=D.cur; if(c.locked) return; if(!timeout&&!c.mine) return;
+    c.locked=true; cancelAnimationFrame(raf); SFX.lock();
+    var tu=(performance.now()-c.start)/1000, youRight=!timeout&&c.mine===c.q.ans, b=c.bot;
+    if(c.mine) logAnswer(c.q,c.mine,tu,'arena');
+    reveal('opts',c.q,c.mine); $('lock').disabled=true; $('giveup').disabled=true;
+    $('fill-bot').style.width='100%'; $('t-bot').textContent=fmt(b.secs); $('t-bot').className='t';
+    var winner;
+    if(youRight&&b.right) winner=tu<=b.secs?'you':'bot';
+    else if(youRight) winner='you'; else if(b.right) winner='bot'; else winner='none';
+    if(winner==='you') D.you++; if(winner==='bot') D.them++;
+    D.log.push({q:c.q,mine:c.mine,tu:tu,bot:b,winner:winner}); pips();
+    var headline={you:'You take the round',bot:D.bot.name+' takes the round',none:'Nobody scores'}[winner];
+    var detail=(c.mine?'You answered '+c.mine+' in '+fmt(tu)+(youRight?', correctly.':', which was wrong.'):'You skipped this one.')+' '+D.bot.name+' answered '+b.choice+' in '+fmt(b.secs)+(b.right?', correctly.':', which was wrong.')+' The answer is '+c.q.ans+'.';
+    (winner==='you'?SFX.win:winner==='bot'?SFX.lose:SFX.bad)();
+    var over=D.single||D.you>=3||D.them>=3||D.round>=5;
+    var box=document.createElement('div'); box.className='result '+(winner==='you'?'you':winner==='bot'?'bot':'');
+    box.innerHTML='<h3>'+headline+'</h3><p>'+esc(detail)+'</p><div class="lockrow"><button class="btn" type="button" id="nextbtn">'+(over?'See the result':'Next round')+'</button><button class="btn ghost" type="button" id="solbtn">Show the solution</button></div><div class="sol hidden" id="solbox">'+c.q.sol+'</div>';
+    $('roundres').innerHTML=''; $('roundres').appendChild(box); typeset(box);
+    $('solbtn').addEventListener('click',function(){ var s=$('solbox'); s.classList.toggle('hidden'); this.textContent=s.classList.contains('hidden')?'Show the solution':'Hide the solution'; });
+    $('nextbtn').addEventListener('click',function(){ if(over) endDuel(); else nextRound(); });
+    $('nextbtn').focus();
+  }
+  function endDuel(){
+    var res=D.you>D.them?1:D.you<D.them?0:0.5, before=prof.rating;
+    if(!D.single){
+      var E=1/(1+Math.pow(10,(D.bot.elo-prof.rating)/400)); prof.rating=prof.rating+32*(res-E);
+      if(res===1){ prof.w++; prof.streak++; prof.best=Math.max(prof.best,prof.streak); } else if(res===0){ prof.l++; prof.streak=0; } else { prof.d++; }
+      prof.history.unshift({t:Date.now(),bot:D.bot.name,you:D.you,them:D.them,delta:Math.round(prof.rating-before)}); prof.history=prof.history.slice(0,30); save('hu_arena',prof);
+    }
+    var delta=Math.round(prof.rating-before);
+    var title=res===1?'You win':res===0?D.bot.name+' wins':'A draw';
+    var f=$('finish');
+    f.innerHTML='<div class="end"><h2>'+title+'</h2><p style="margin:0 auto .6rem;max-width:40ch;color:var(--ink-soft)">'+D.you+' to '+D.them+(D.single?' in a quick race.':' against '+esc(D.bot.name)+'.')+'</p>'
+      +(D.single?'':'<p class="delta" style="color:'+(delta>=0?'var(--mint)':'var(--rose)')+'">'+(delta>=0?'+':'')+delta+' rating, now '+Math.round(prof.rating)+'</p>')
+      +'<div style="margin-top:1rem"><button class="btn" id="again" type="button">'+(D.single?'Start a full match':'Rematch')+'</button><button class="btn ghost" id="lobbybtn" type="button">Choose another opponent</button></div>'
+      +'<div class="review">'+D.log.map(function(r,i){ return '<details><summary>Round '+(i+1)+': '+esc(PAPERS[r.q.paper])+', question '+r.q.n+' ('+r.q.rating.toFixed(1)+'), '+(r.winner==='you'?'won':r.winner==='bot'?'lost':'no score')+'</summary><div class="sol">'+r.q.sol+'</div></details>'; }).join('')+'</div></div>';
+    show('finish'); typeset(f); paintProfile();
+    if(res===1) confetti();
+    $('again').addEventListener('click',function(){ startDuel(); });
+    $('lobbybtn').addEventListener('click',function(){ show('lobby'); });
+  }
+  $('lock').addEventListener('click',function(){ lockIn(false); });
+  $('giveup').addEventListener('click',function(){ if(D&&D.cur&&!D.cur.locked){ D.cur.mine=null; lockIn(true); } });
+  $('quitDuel').addEventListener('click',function(){ if(confirm('Leave this match? It will not count.')){ cancelAnimationFrame(raf); D=null; show('lobby'); } });
+
+  /* ------------------------------------------------------------ ladder */
+  var Lr=null, lint=null;
+  function startLadder(){
+    Lr={left:600,lives:3,score:0,level:4.5,used:{},rungs:[],cur:null,missed:[]};
+    show('ladder'); paintLadder(); nextLadder();
+    clearInterval(lint); lint=setInterval(function(){ Lr.left--; paintClock(); if(Lr.left<=0) endLadder('time'); },1000);
+  }
+  function paintClock(){ var c=$('lclock'); c.textContent=fmt(Lr.left); c.className='clock'+(Lr.left<=30?' urgent':Lr.left<=90?' warn':''); }
+  function paintLadder(){ paintClock(); $('lscore').textContent=Lr.score;
+    $('lives').innerHTML=[0,1,2].map(function(i){ return '<span class="pip'+(i<Lr.lives?'':' lost')+'"></span>'; }).join('');
+    $('rungs').innerHTML=Lr.rungs.map(function(r){ return '<i class="'+(r.ok?'done':'miss')+'" style="height:'+(18+ (r.rating-4.5)/4.5*82)+'%"></i>'; }).join('')+'<i style="height:18%"></i>'; }
+  function nextLadder(){
+    var q=pick(Lr.level,Lr.level+0.8,Lr.used); Lr.used[q.id]=1; Lr.cur={q:q,mine:null,start:performance.now(),done:false};
+    $('llock').disabled=true; $('lmsg').textContent='Keys A to H choose, Enter locks in.';
+    renderQ(q,'l',function(L){ if(Lr.cur.done) return; Lr.cur.mine=L; markSel('lopts',L); $('llock').disabled=false; });
+  }
+  function lockLadder(){
+    var c=Lr.cur; if(!c||c.done||!c.mine) return; c.done=true;
+    var ok=c.mine===c.q.ans, secs=(performance.now()-c.start)/1000; logAnswer(c.q,c.mine,secs,'ladder');
+    reveal('lopts',c.q,c.mine); $('llock').disabled=true;
+    var card=$('lcard'); card.classList.remove('flash-ok','flash-bad'); void card.offsetWidth; card.classList.add(ok?'flash-ok':'flash-bad');
+    Lr.rungs.push({rating:c.q.rating,ok:ok});
+    if(ok){ Lr.score+=Math.round(c.q.rating*10); Lr.level=Math.min(8.6,Math.max(Lr.level,c.q.rating)+0.4); SFX.ok(); $('lmsg').textContent='Correct, +'+Math.round(c.q.rating*10)+'. Climbing.'; }
+    else { Lr.lives--; Lr.missed.push(c.q); SFX.bad(); $('lmsg').textContent='Not this one: the answer is '+c.q.ans+'. One life gone.'; }
+    paintLadder();
+    if(Lr.lives<=0){ setTimeout(function(){ endLadder('lives'); },1100); return; }
+    setTimeout(function(){ if(Lr&&Lr.left>0) nextLadder(); },ok?900:1600);
+  }
+  function endLadder(why){
+    if(!Lr) return; clearInterval(lint);
+    var best=load('hu_ladder_best',0), newBest=Lr.score>best; if(newBest) save('hu_ladder_best',Lr.score);
+    var right=Lr.rungs.filter(function(r){return r.ok;}).length, top=Lr.rungs.filter(function(r){return r.ok;}).reduce(function(m,r){return Math.max(m,r.rating);},0);
+    var f=$('finish');
+    f.innerHTML='<div class="end"><h2>'+Lr.score+' points</h2><p style="color:var(--ink-soft)">'+(why==='time'?'Time ran out.':why==='lives'?'Out of lives.':'Run ended.')+' '+right+' correct'+(top?', highest rung '+top.toFixed(1):'')+'.'+(newBest?' A new personal best.':' Your best is '+Math.max(best,Lr.score)+'.')+'</p>'
+      +'<div style="margin-top:1rem"><button class="btn" id="again2" type="button">Climb again</button><button class="btn ghost" id="lobby2" type="button">Back to the Arena</button></div>'
+      +(Lr.missed.length?'<div class="review"><h3>Questions you missed</h3>'+Lr.missed.map(function(q){ return '<details><summary>'+esc(PAPERS[q.paper])+', question '+q.n+' ('+q.rating.toFixed(1)+'), answer '+q.ans+'</summary><div class="sol">'+q.sol+'</div></details>'; }).join('')+'</div>':'')+'</div>';
+    Lr=null; show('finish'); typeset(f); paintProfile(); if(newBest) confetti();
+    $('again2').addEventListener('click',startLadder); $('lobby2').addEventListener('click',function(){ show('lobby'); });
+  }
+  $('llock').addEventListener('click',lockLadder);
+  $('quitLadder').addEventListener('click',function(){ if(confirm('End this run now?')) endLadder('quit'); });
+
+  /* ------------------------------------------------------------ keyboard */
+  document.addEventListener('keydown',function(e){
+    if(e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA') return;
+    var k=e.key.toUpperCase();
+    var inDuel=!$('duel').classList.contains('hidden')&&D&&D.cur&&!D.cur.locked&&D.cur.start;
+    var inLad=!$('ladder').classList.contains('hidden')&&Lr&&Lr.cur&&!Lr.cur.done;
+    if(/^[A-H]$/.test(k)){ var ul=inDuel?'opts':inLad?'lopts':null; if(!ul) return; var b=$(ul).querySelector('.opt[data-l="'+k+'"]'); if(b){ b.click(); e.preventDefault(); } }
+    if(e.key==='Enter'){ if(inDuel&&D.cur.mine){ lockIn(false); e.preventDefault(); } else if(inLad&&Lr.cur.mine){ lockLadder(); e.preventDefault(); } }
+  });
+
+  /* ------------------------------------------------------------ confetti */
+  function confetti(){
+    if(reduce) return; var cv=$('confetti'), ctx=cv.getContext('2d'); cv.width=innerWidth; cv.height=innerHeight;
+    var cols=['#FF6B8B','#FFC53D','#4FD8E8','#F3F1FF'], parts=Array.from({length:140},function(){ return {x:innerWidth/2+(Math.random()-.5)*200,y:innerHeight*.35,vx:(Math.random()-.5)*14,vy:-Math.random()*13-4,s:6+Math.random()*7,r:Math.random()*6,vr:(Math.random()-.5)*.3,c:cols[Math.floor(Math.random()*4)]}; }), t0=performance.now();
+    (function f(t){ ctx.clearRect(0,0,cv.width,cv.height); parts.forEach(function(p){ p.vy+=.35; p.x+=p.vx; p.y+=p.vy; p.r+=p.vr; ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.r); ctx.fillStyle=p.c; ctx.beginPath(); ctx.moveTo(0,-p.s/2); ctx.lineTo(p.s/2,p.s/2); ctx.lineTo(-p.s/2,p.s/2); ctx.closePath(); ctx.fill(); ctx.restore(); });
+      if(t-t0<2200) requestAnimationFrame(f); else ctx.clearRect(0,0,cv.width,cv.height); })(t0);
+  }
+
+  /* ------------------------------------------------------------ boot */
+  $('startDuel').addEventListener('click',function(){ startDuel(); });
+  $('startLadder').addEventListener('click',startLadder);
+  paintSound(); paintProfile(); renderBots(); syncCustom();
+  var qp=new URLSearchParams(location.search).get('q');
+  if(qp&&Q.some(function(x){return x.id===qp;})){ if(chosen==='custom'){ chosen='offer'; renderBots(); } startDuel(qp); }
+  window.addEventListener('beforeunload',function(e){ if((D&&D.cur&&!D.cur.locked&&!$('duel').classList.contains('hidden'))||Lr){ e.preventDefault(); e.returnValue=''; } });
+})();
+</script>
+</body>
+</html>
