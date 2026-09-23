@@ -8,26 +8,26 @@
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
-  <meta name="theme-color" content="#1A2230">
+  <meta name="theme-color" content="#F3F1FF">
   <link rel="stylesheet" href="style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
   <style>
-    .hu{--ink:#1A2230;--soft:#586374;--faint:#8A93A1;--rule:#D9D6CC;--paper:#FBFAF6;--ok:#2C5545;--bad:#8C2F2F;--warn:#8A5A12;--acc:#534AB7;--acc2:#AFA9EC;
-        --serif:"IBM Plex Serif",Georgia,serif;--sans:"IBM Plex Sans",system-ui,sans-serif;font-family:var(--sans);color:var(--ink);line-height:1.55}
+    .hu{--ink:#F3F1FF;--soft:#BDBBE6;--faint:#8A89BD;--rule:#343A82;--paper:#15173B;--ok:#5BE3A6;--bad:#FF6B8B;--warn:#FFC53D;--acc:#4FD8E8;--acc2:rgba(79,216,232,.35);
+        --serif:"IBM Plex Serif",Georgia,serif;--sans:"Bricolage Grotesque","IBM Plex Sans",system-ui,sans-serif;font-family:var(--sans);color:var(--ink);line-height:1.55}
     .hu h2{font-family:var(--serif);font-weight:600}
     .hu h3{font-family:var(--serif);font-weight:600;font-size:1.05rem;margin:1.2rem 0 .4rem}
     .hu p{max-width:70ch}
     .hu .lead{font-size:1.05rem;color:var(--soft)}
     .hu .hidden{display:none!important}
     .hu .btn2{font-family:var(--sans);font-size:.95rem;font-weight:500;color:var(--ink);background:transparent;border:1px solid var(--ink);border-radius:2px;padding:.5rem 1rem;cursor:pointer}
-    .hu .btn2:hover{background:var(--ink);color:#fff}
+    .hu .btn2:hover{background:var(--ink);color:#15173B}
     .hu .btn2.quiet{border-color:var(--rule);color:var(--soft);font-weight:400}
     .hu .btn2.quiet:hover{background:transparent;border-color:var(--ink);color:var(--ink)}
     .hu .btn2[disabled]{opacity:.35;cursor:default}
     .hu .row{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;margin-top:.9rem}
     .hu .panel{border:1px solid var(--rule);padding:1rem 1.2rem;margin:1.2rem 0}
-    .hu select,.hu input[type=text],.hu textarea{font-family:var(--sans);font-size:.95rem;padding:.45rem .6rem;border:1px solid var(--rule);border-radius:2px;background:#fff;color:var(--ink)}
+    .hu select,.hu input[type=text],.hu textarea{font-family:var(--sans);font-size:.95rem;padding:.45rem .6rem;border:1px solid var(--rule);border-radius:2px;background:#0F1130;color:var(--ink)}
     .hu textarea{width:100%;resize:vertical;line-height:1.5}
     .hu .tally{color:var(--faint);font-size:.88rem}
     .hu .err{color:var(--bad);font-size:.9rem}
@@ -44,27 +44,15 @@
     .hu .trow a{font-size:.82rem;color:var(--soft)}
     .hu .heat{display:grid;grid-template-columns:repeat(12,1fr);gap:3px;max-width:22rem}
     .hu .heat div{aspect-ratio:1;background:var(--rule)}
-    .hu .heat div.l1{background:#CFCBF0} .hu .heat div.l2{background:#9F97E0} .hu .heat div.l3{background:var(--acc)}
+    .hu .heat div.l1{background:rgba(79,216,232,.30)} .hu .heat div.l2{background:rgba(79,216,232,.62)} .hu .heat div.l3{background:var(--acc)}
     .hu table{border-collapse:collapse;font-size:.9rem}
     .hu td,.hu th{border-bottom:1px solid var(--rule);padding:.3rem .9rem .3rem 0;text-align:left;font-weight:400}
     .hu th{color:var(--faint)}
     .hu .rec{border-left:2px solid var(--acc);padding:.3rem 0 .3rem 1rem;font-family:var(--serif);font-size:1.02rem;margin:1.2rem 0}
   </style>
 </head>
-<body>
-  <nav>
-    <div class="nav-links">
-      <a href="index.html">Mathematics</a>
-      <a href="music.html">Music &amp; Piano</a>
-      <a href="geometry.html">Geometry Lab</a>
-      <a href="sandbox.html">Sandbox</a>
-      <a href="drill.html">Drill</a>
-      <a href="interviews.html">Mock interviews</a>
-      <a href="marker.html">Marker</a>
-      <a href="techniques.html">Techniques</a>
-      <a href="progress.html" aria-current="page">Progress</a>
-    </div>
-  </nav>
+<body data-theme-v2>
+  <nav id="sitenav"><div class="nav-links"><a href="https://kevinvariant08.github.io/index.html">Home</a> <a href="https://kevinvariant08.github.io/drill.html">Drill</a> <a href="https://kevinvariant08.github.io/arena.html">Arena</a> <a href="https://kevinvariant08.github.io/bank.html">Question bank</a></div></nav>
   <main class="container hu">
     <h1>Progress</h1>
     <p class="lead">Everything you have done on this site, in one place: drill accuracy by technique, how long questions take you, how your interview scores are moving, and what to do next. It is all read from this browser, so it is yours alone.</p>
@@ -106,9 +94,9 @@ if(!L.length&&!A.length&&!IV.length&&!SC.length){
     if(n>=3){
       var pts=rk.map(function(k,i){ var a=-Math.PI/2+i*2*Math.PI/n, r=R*(st[k].c/st[k].n); return [cx+r*Math.cos(a),cy+r*Math.sin(a),a]; });
       radar='<svg viewBox="0 0 400 380" role="img" aria-label="Technique accuracy radar">';
-      [0.25,0.5,0.75,1].forEach(function(f){ radar+='<polygon points="'+rk.map(function(k,i){var a=-Math.PI/2+i*2*Math.PI/n; return (cx+R*f*Math.cos(a))+','+(cy+R*f*Math.sin(a));}).join(' ')+'" fill="none" stroke="#D9D6CC" stroke-width="'+(f===1?1:0.5)+'"/>'; });
-      radar+='<polygon points="'+pts.map(function(p){return p[0]+','+p[1];}).join(' ')+'" fill="#AFA9EC" fill-opacity=".35" stroke="#534AB7" stroke-width="1.5"/>';
-      rk.forEach(function(k,i){ var a=-Math.PI/2+i*2*Math.PI/n, lx=cx+(R+16)*Math.cos(a), ly=cy+(R+16)*Math.sin(a); var anchor=Math.abs(Math.cos(a))<0.2?'middle':(Math.cos(a)>0?'start':'end'); radar+='<text x="'+lx+'" y="'+(ly+4)+'" text-anchor="'+anchor+'" font-family="IBM Plex Sans,sans-serif" font-size="10.5" fill="#586374">'+esc(TECH[k].split(' ')[0])+'</text>'; });
+      [0.25,0.5,0.75,1].forEach(function(f){ radar+='<polygon points="'+rk.map(function(k,i){var a=-Math.PI/2+i*2*Math.PI/n; return (cx+R*f*Math.cos(a))+','+(cy+R*f*Math.sin(a));}).join(' ')+'" fill="none" stroke="#343A82" stroke-width="'+(f===1?1:0.5)+'"/>'; });
+      radar+='<polygon points="'+pts.map(function(p){return p[0]+','+p[1];}).join(' ')+'" fill="rgba(79,216,232,.35)" fill-opacity=".35" stroke="#4FD8E8" stroke-width="1.5"/>';
+      rk.forEach(function(k,i){ var a=-Math.PI/2+i*2*Math.PI/n, lx=cx+(R+16)*Math.cos(a), ly=cy+(R+16)*Math.sin(a); var anchor=Math.abs(Math.cos(a))<0.2?'middle':(Math.cos(a)>0?'start':'end'); radar+='<text x="'+lx+'" y="'+(ly+4)+'" text-anchor="'+anchor+'" font-family="IBM Plex Sans,sans-serif" font-size="10.5" fill="#BDBBE6">'+esc(TECH[k].split(' ')[0])+'</text>'; });
       radar+='</svg>';
     }
     var bars=keys.map(function(k){ var pc=Math.round(100*st[k].c/st[k].n); return '<div class="trow"><span>'+esc(TECH[k])+' <span class="tally">'+st[k].c+'/'+st[k].n+' \u00b7 '+fmt(st[k].secs/st[k].n)+' avg</span></span><a href="drill.html?tech='+k+'">drill</a></div><div class="bar"><span style="width:'+pc+'%"></span></div>'; }).join('');
@@ -121,9 +109,9 @@ if(!L.length&&!A.length&&!IV.length&&!SC.length){
     var bd=buckets.map(function(b){ var inb=L.filter(function(e){return e.secs>=b[0]&&e.secs<b[1];}); var c=inb.filter(function(e){return e.correct;}).length; mx=Math.max(mx,inb.length); return {lab:b[2],n:inb.length,c:c}; });
     var W=520,H=170,bw=W/bd.length, svg='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Time per question">';
     bd.forEach(function(b,i){ var h=(b.n/mx)*(H-50), x=i*bw+12, y=H-30-h, hc=b.n?h*b.c/b.n:0;
-      svg+='<rect x="'+x+'" y="'+y+'" width="'+(bw-24)+'" height="'+h+'" fill="#F1CFCB"/><rect x="'+x+'" y="'+(y+h-hc)+'" width="'+(bw-24)+'" height="'+hc+'" fill="#CFE7DB"/>';
-      svg+='<text x="'+(x+(bw-24)/2)+'" y="'+(H-12)+'" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#586374">'+b.lab+'</text>';
-      if(b.n) svg+='<text x="'+(x+(bw-24)/2)+'" y="'+(y-4)+'" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#8A93A1">'+b.c+'/'+b.n+'</text>'; });
+      svg+='<rect x="'+x+'" y="'+y+'" width="'+(bw-24)+'" height="'+h+'" fill="rgba(255,107,139,.32)"/><rect x="'+x+'" y="'+(y+h-hc)+'" width="'+(bw-24)+'" height="'+hc+'" fill="rgba(91,227,166,.32)"/>';
+      svg+='<text x="'+(x+(bw-24)/2)+'" y="'+(H-12)+'" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#BDBBE6">'+b.lab+'</text>';
+      if(b.n) svg+='<text x="'+(x+(bw-24)/2)+'" y="'+(y-4)+'" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#8A89BD">'+b.c+'/'+b.n+'</text>'; });
     svg+='</svg>';
     out+='<h3>Time per question</h3><p class="tally">Green is correct, red is wrong. A TMUA question has 3 minutes 45 seconds on average; a high wrong count in the long buckets means you are spending time without converting it, which is the main thing to change.</p>'+svg;
   }
@@ -132,8 +120,8 @@ if(!L.length&&!A.length&&!IV.length&&!SC.length){
   var rows='';
   if(ivScores.length>=2){
     var W2=520,H2=140,n2=ivScores.length, pts2=ivScores.map(function(s,i){return [30+i*(W2-60)/(n2-1),H2-20-s*(H2-40)/10];});
-    var line='<svg viewBox="0 0 '+W2+' '+H2+'" role="img" aria-label="Interview scores"><line x1="30" y1="'+(H2-20)+'" x2="'+(W2-30)+'" y2="'+(H2-20)+'" stroke="#D9D6CC"/><line x1="30" y1="'+(H2-20-6*(H2-40)/10)+'" x2="'+(W2-30)+'" y2="'+(H2-20-6*(H2-40)/10)+'" stroke="#D9D6CC" stroke-dasharray="4 3"/><text x="'+(W2-28)+'" y="'+(H2-22-6*(H2-40)/10)+'" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#8A93A1">offer level</text>'
-      +'<polyline points="'+pts2.map(function(p){return p[0]+','+p[1];}).join(' ')+'" fill="none" stroke="#534AB7" stroke-width="1.6"/>'+pts2.map(function(p,i){return '<circle cx="'+p[0]+'" cy="'+p[1]+'" r="3.5" fill="#534AB7"/><text x="'+p[0]+'" y="'+(p[1]-8)+'" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#586374">'+ivScores[i]+'</text>';}).join('')+'</svg>';
+    var line='<svg viewBox="0 0 '+W2+' '+H2+'" role="img" aria-label="Interview scores"><line x1="30" y1="'+(H2-20)+'" x2="'+(W2-30)+'" y2="'+(H2-20)+'" stroke="#343A82"/><line x1="30" y1="'+(H2-20-6*(H2-40)/10)+'" x2="'+(W2-30)+'" y2="'+(H2-20-6*(H2-40)/10)+'" stroke="#343A82" stroke-dasharray="4 3"/><text x="'+(W2-28)+'" y="'+(H2-22-6*(H2-40)/10)+'" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#8A89BD">offer level</text>'
+      +'<polyline points="'+pts2.map(function(p){return p[0]+','+p[1];}).join(' ')+'" fill="none" stroke="#4FD8E8" stroke-width="1.6"/>'+pts2.map(function(p,i){return '<circle cx="'+p[0]+'" cy="'+p[1]+'" r="3.5" fill="#4FD8E8"/><text x="'+p[0]+'" y="'+(p[1]-8)+'" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#BDBBE6">'+ivScores[i]+'</text>';}).join('')+'</svg>';
     out+='<h3>Interview scores</h3>'+line;
   }
   if(A.length){ var TIM={4500:'standard',5400:'+20%',5625:'+25%',6750:'+50%',9000:'+100%',0:'untimed'};
@@ -148,5 +136,6 @@ if(!L.length&&!A.length&&!IV.length&&!SC.length){
 }
 document.getElementById('body').innerHTML=out;
 </script>
+<script src="site.js"></script>
 </body>
 </html>
