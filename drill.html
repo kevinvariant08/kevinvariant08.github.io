@@ -8,28 +8,28 @@
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
-  <meta name="theme-color" content="#1A2230">
+  <meta name="theme-color" content="#F3F1FF">
   <link rel="stylesheet" href="style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
   <script>window.MathJax={tex:{inlineMath:[['$','$']],displayMath:[['\\[','\\]']],processEscapes:true},options:{skipHtmlTags:['script','noscript','style','textarea','pre']}};</script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
   <style>
-    .hu{--ink:#1A2230;--soft:#586374;--faint:#8A93A1;--rule:#D9D6CC;--paper:#FBFAF6;--ok:#2C5545;--bad:#8C2F2F;--warn:#8A5A12;--acc:#534AB7;--acc2:#AFA9EC;
-        --serif:"IBM Plex Serif",Georgia,serif;--sans:"IBM Plex Sans",system-ui,sans-serif;font-family:var(--sans);color:var(--ink);line-height:1.55}
+    .hu{--ink:#F3F1FF;--soft:#BDBBE6;--faint:#8A89BD;--rule:#343A82;--paper:#15173B;--ok:#5BE3A6;--bad:#FF6B8B;--warn:#FFC53D;--acc:#4FD8E8;--acc2:rgba(79,216,232,.35);
+        --serif:"IBM Plex Serif",Georgia,serif;--sans:"Bricolage Grotesque","IBM Plex Sans",system-ui,sans-serif;font-family:var(--sans);color:var(--ink);line-height:1.55}
     .hu h2{font-family:var(--serif);font-weight:600}
     .hu h3{font-family:var(--serif);font-weight:600;font-size:1.05rem;margin:1.2rem 0 .4rem}
     .hu p{max-width:70ch}
     .hu .lead{font-size:1.05rem;color:var(--soft)}
     .hu .hidden{display:none!important}
     .hu .btn2{font-family:var(--sans);font-size:.95rem;font-weight:500;color:var(--ink);background:transparent;border:1px solid var(--ink);border-radius:2px;padding:.5rem 1rem;cursor:pointer}
-    .hu .btn2:hover{background:var(--ink);color:#fff}
+    .hu .btn2:hover{background:var(--ink);color:#15173B}
     .hu .btn2.quiet{border-color:var(--rule);color:var(--soft);font-weight:400}
     .hu .btn2.quiet:hover{background:transparent;border-color:var(--ink);color:var(--ink)}
     .hu .btn2[disabled]{opacity:.35;cursor:default}
     .hu .row{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;margin-top:.9rem}
     .hu .panel{border:1px solid var(--rule);padding:1rem 1.2rem;margin:1.2rem 0}
-    .hu select,.hu input[type=text],.hu textarea{font-family:var(--sans);font-size:.95rem;padding:.45rem .6rem;border:1px solid var(--rule);border-radius:2px;background:#fff;color:var(--ink)}
+    .hu select,.hu input[type=text],.hu textarea{font-family:var(--sans);font-size:.95rem;padding:.45rem .6rem;border:1px solid var(--rule);border-radius:2px;background:#0F1130;color:var(--ink)}
     .hu textarea{width:100%;resize:vertical;line-height:1.5}
     .hu .tally{color:var(--faint);font-size:.88rem}
     .hu .err{color:var(--bad);font-size:.9rem}
@@ -45,7 +45,7 @@
     .hu .grid button{width:2.1rem;height:2.1rem;font-family:var(--sans);font-size:.85rem;border:1px solid var(--rule);background:transparent;color:var(--ink);cursor:pointer;border-radius:2px}
     .hu .grid button.done{background:var(--acc2);border-color:var(--acc2)}
     .hu .grid button.cur{border-color:var(--ink);font-weight:500}
-    .hu .grid button.right{background:#CFE7DB} .hu .grid button.wrong{background:#F1CFCB}
+    .hu .grid button.right{background:rgba(91,227,166,.32)} .hu .grid button.wrong{background:rgba(255,107,139,.32)}
     .hu .qbox{font-family:var(--serif);font-size:1.08rem;line-height:1.7}
     .hu .qbox .c{text-align:center;margin:.6rem 0}
     .hu .qbox ol.stmts{margin:.4rem 0 .4rem 1.6rem}
@@ -55,8 +55,8 @@
     .hu .opts li{margin:.25rem 0}
     .hu .opt{display:flex;gap:.8rem;align-items:baseline;width:100%;text-align:left;font-family:var(--serif);font-size:1.02rem;background:transparent;border:1px solid var(--rule);border-radius:2px;padding:.5rem .8rem;cursor:pointer;color:var(--ink)}
     .hu .opt:hover{border-color:var(--ink)}
-    .hu .opt.sel{border-color:var(--ink);background:#F1F0EA}
-    .hu .opt.right{border-color:var(--ok);background:#E5F1EA} .hu .opt.wrong{border-color:var(--bad);background:#F6E3E1}
+    .hu .opt.sel{border-color:var(--ink);background:rgba(255,197,61,.14)}
+    .hu .opt.right{border-color:var(--ok);background:rgba(91,227,166,.14)} .hu .opt.wrong{border-color:var(--bad);background:rgba(255,107,139,.14)}
     .hu .opt .L{font-family:var(--sans);font-weight:500;font-size:.85rem;color:var(--faint);min-width:1.2rem}
     .hu .fb{border-left:2px solid var(--rule);padding:.2rem 0 .2rem 1rem;margin-top:1.2rem}
     .hu .fb.right{border-left-color:var(--ok)} .hu .fb.wrong{border-left-color:var(--bad)}
@@ -72,7 +72,7 @@
     .hu .bar span{position:absolute;left:0;top:0;height:100%;background:var(--acc)}
     .hu .chips{display:flex;flex-wrap:wrap;gap:.3rem;margin:.5rem 0}
     .hu .chip{font-size:.85rem;border:1px solid var(--rule);border-radius:2px;padding:.2rem .55rem;background:transparent;cursor:pointer;color:var(--ink);font-family:var(--sans)}
-    .hu .chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+    .hu .chip.on{background:var(--ink);color:#15173B;border-color:var(--ink)}
     .hu .lab2{display:block;font-size:.88rem;color:var(--soft);margin-top:.5rem}
     .hu .lab2 select{display:block;width:100%;margin-top:.2rem}
     .hu .pausebox{border:1px solid var(--ink);padding:2rem 1.4rem;text-align:center;margin:1.4rem 0}
@@ -82,20 +82,8 @@
     .hu #clock.paused{color:var(--faint)}
   </style>
 </head>
-<body>
-  <nav>
-    <div class="nav-links">
-      <a href="index.html">Mathematics</a>
-      <a href="music.html">Music &amp; Piano</a>
-      <a href="geometry.html">Geometry Lab</a>
-      <a href="sandbox.html">Sandbox</a>
-      <a href="drill.html" aria-current="page">Drill</a>
-      <a href="interviews.html">Mock interviews</a>
-      <a href="marker.html">Marker</a>
-      <a href="techniques.html">Techniques</a>
-      <a href="progress.html">Progress</a>
-    </div>
-  </nav>
+<body data-theme-v2>
+  <nav id="sitenav"><div class="nav-links"><a href="https://kevinvariant08.github.io/index.html">Home</a> <a href="https://kevinvariant08.github.io/drill.html">Drill</a> <a href="https://kevinvariant08.github.io/arena.html">Arena</a> <a href="https://kevinvariant08.github.io/bank.html">Question bank</a></div></nav>
   <main class="container hu">
 
     <section id="hub">
@@ -331,11 +319,13 @@ function finishDrill(){
   S=null; window.scrollTo({top:0});
 }
 document.getElementById('startPaper').addEventListener('click',function(){ var p=document.getElementById('paper').value, lim=parseInt(document.getElementById('timing').value,10); save('hu_drill_timing',lim); start('paper',QUESTIONS.filter(function(q){return q.paper===p;}).map(function(q){return q.id;}),lim); });
-(function(){ var t=load('hu_drill_timing',null); if(t!=null&&TIMINGS.hasOwnProperty(t)) document.getElementById('timing').value=String(t); })();
+(function(){ var t=load('hu_drill_timing',null); if(t!=null&&TIMINGS.hasOwnProperty(t)) document.getElementById('timing').value=String(t);
+  var pp=new URLSearchParams(location.search).get('paper'); if(pp&&PAPER_NAME[pp]){ document.getElementById('paper').value=pp; var sb=document.getElementById('startPaper'); sb.scrollIntoView({block:'center'}); sb.focus(); } })();
 document.getElementById('startTech').addEventListener('click',function(){ var ids=QUESTIONS.filter(function(q){return q.tags.some(function(t){return selTech[t];});}).map(function(q){return q.id;}); if(!ids.length){ document.getElementById('techcount').textContent='Pick at least one technique.'; return; } ids.sort(function(){return Math.random()-0.5;}); start('tech',ids); });
 document.getElementById('startWeak').addEventListener('click',function(){ var ids=weakQueue(); if(!ids.length) ids=QUESTIONS.slice().sort(function(){return Math.random()-0.5;}).slice(0,10).map(function(q){return q.id;}); start('weak',ids); });
 window.addEventListener('beforeunload',function(e){ if(S&&S.mode==='paper'){ e.preventDefault(); e.returnValue=''; } });
 renderHub();
 </script>
+<script src="site.js"></script>
 </body>
 </html>
