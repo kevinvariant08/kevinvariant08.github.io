@@ -112,7 +112,7 @@ code{font-size:.92em;background:var(--bg-deep);padding:.1em .35em;border-radius:
 }
 /* account slot */
 .site-nav .acct{margin-left:.4rem}
-.site-nav .acct .signin{border:1px solid rgba(79,216,232,.5);color:var(--aqua)}
+.site-nav .acct .signin{border:1px solid rgba(79,216,232,.5);color:var(--aqua);gap:.3rem}
 .site-nav .acct .signin:hover{background:var(--aqua-wash);color:var(--aqua)}
 .site-nav .acct .who{gap:.5rem;padding:.3rem .7rem .3rem .3rem;border:1px solid var(--line)}
 .site-nav .acct .av{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:.85rem;color:#15173B;background:conic-gradient(var(--aqua),var(--rose),var(--saffron),var(--aqua))}
