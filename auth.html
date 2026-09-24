@@ -309,6 +309,8 @@
       });
     });
   }
+  /* follow #signin / #signup / #forgot links, including from the nav menu while already on this page */
+  window.addEventListener('hashchange',function(){ var h=location.hash.slice(1); if(['signin','signup','forgot'].indexOf(h)>=0&&h!==current&&!(A_()&&A_().user())) show(h); });
   if(window.HU_AUTH) boot(); else window.addEventListener('hu-auth-ready',boot,{once:true});
   setTimeout(function(){ if(!window.HU_AUTH) show('off'); },8000);
 })();
