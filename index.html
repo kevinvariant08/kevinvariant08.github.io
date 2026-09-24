@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Kevin Hu - Mathematics</title>
-  <meta name="description" content="Olympiad Geometry Annotated Problem Collection aimed at ambitious high schoolers, TMUA mock papers harder than any official past paper, and tools to practise them: timed drills, a question bank, a race against a bot, and mock interviews.">
+  <meta name="description" content="Original olympiad geometry, TMUA mock papers harder than the real thing, and tools to practise them: timed drills, a question bank, a race against a bot, and mock interviews.">
   <link rel="icon" href="/favicon.ico" sizes="32x32">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -35,6 +35,9 @@
     .setc h2{margin:0 0 .4rem}
     .setc>p{color:var(--ink-soft)}
     .papers{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-top:1.2rem}
+    .papers.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .papers.three .links{display:grid;grid-template-columns:auto auto;justify-content:start;gap:.25rem 1.2rem}
+    @media (max-width:1000px){.papers.three{grid-template-columns:1fr}}
     @media (max-width:760px){.papers{grid-template-columns:1fr}.setc{padding:1.5rem 1.2rem}}
     .paper{background:rgba(15,17,48,.55);border:1px solid var(--line-soft);border-radius:var(--r-lg);padding:1.3rem 1.3rem 1rem}
     .paper h3{margin:0 0 .3rem;display:flex;align-items:center;gap:.6rem}
@@ -73,7 +76,7 @@
         <h1>Kevin Hu</h1>
         <p class="lede">Sixth-form mathematician at Dubai College, BMO1 silver medallist, and author of <em>Beyond the Incenter</em>. Here you'll find original olympiad problems, TMUA papers that are harder than the real thing, and tools for practising them properly.</p>
         <div class="cta">
-          <a class="btn" href="drill.html?paper=C1">Sit Set C timed</a>
+          <a class="btn" href="drill.html?paper=D1">Sit the newest mock</a>
           <a class="btn secondary" href="arena.html">Race the bot</a>
         </div>
       </div>
@@ -85,20 +88,26 @@
     </section>
 
     <section class="setc" aria-labelledby="setc-h">
-      <h2 id="setc-h">Set C, the newest TMUA mock</h2>
-      <p>Pitched well above the 2025 TMUA while staying inside its syllabus. Sit either paper in the Drill with standard time, extra time or untimed, and an emergency pause.</p>
-      <div class="papers">
+      <h2 id="setc-h">Sets D, E and F: three new full mocks</h2>
+      <p>Six papers, 120 original questions, each with a worked solution that names the trap it was built around. Everything is AS content; the difficulty comes from how it is used. Across the three sets every TMUA question type appears, from parameters that change the case to flawed proofs and conditions that turn out to be independent.</p>
+      <div class="papers three">
         <div class="paper">
-          <h3><span class="dot" style="background:var(--rose)"></span>Paper 1</h3>
-          <p>Integration that needs a trick: substitutions inside the function, the inverse-function rectangle, pairing <em>x</em> with <em>a</em>&minus;<em>x</em>, integrals that turn out to be constants. Plus a run of trigonometric inequalities.</p>
-          <a class="btn" href="drill.html?paper=C1">Sit it timed</a>
-          <div class="links"><a href="HU_Collection_TMUA_SetC_Paper1.pdf" target="_blank">Question paper</a><a href="HU_Collection_TMUA_SetC_Paper1_Solutions.pdf" target="_blank">Worked solutions</a></div>
+          <h3><span class="dot" style="background:var(--rose)"></span>Set D</h3>
+          <p>Logarithm chains, roots confined to an interval, the vertical line that y = kx misses, and a sequence bounded by keeping the error terms.</p>
+          <a class="btn" href="drill.html?paper=D1">Sit Paper 1</a> <a class="btn secondary" href="drill.html?paper=D2">Sit Paper 2</a>
+          <div class="links"><a href="HU_Collection_TMUA_SetD_Paper1.pdf" target="_blank">Paper 1</a><a href="HU_Collection_TMUA_SetD_Paper1_Solutions.pdf" target="_blank">Paper 1 solutions</a><a href="HU_Collection_TMUA_SetD_Paper2.pdf" target="_blank">Paper 2</a><a href="HU_Collection_TMUA_SetD_Paper2_Solutions.pdf" target="_blank">Paper 2 solutions</a></div>
         </div>
         <div class="paper">
-          <h3><span class="dot" style="background:var(--aqua)"></span>Paper 2</h3>
-          <p>Implications and their negations, conditions that are or are not independent, counterexamples, proofs by contradiction, and reasoning with trigonometric inequalities and integrals.</p>
-          <a class="btn" href="drill.html?paper=C2">Sit it timed</a>
-          <div class="links"><a href="HU_Collection_TMUA_SetC_Paper2.pdf" target="_blank">Question paper</a><a href="HU_Collection_TMUA_SetC_Paper2_Solutions.pdf" target="_blank">Worked solutions</a></div>
+          <h3><span class="dot" style="background:var(--saffron)"></span>Set E</h3>
+          <p>Telescoping with a gap of two, the extra value of tan x, recurrences you complete the square on, and a chain of powers between 0 and 1.</p>
+          <a class="btn" href="drill.html?paper=E1">Sit Paper 1</a> <a class="btn secondary" href="drill.html?paper=E2">Sit Paper 2</a>
+          <div class="links"><a href="HU_Collection_TMUA_SetE_Paper1.pdf" target="_blank">Paper 1</a><a href="HU_Collection_TMUA_SetE_Paper1_Solutions.pdf" target="_blank">Paper 1 solutions</a><a href="HU_Collection_TMUA_SetE_Paper2.pdf" target="_blank">Paper 2</a><a href="HU_Collection_TMUA_SetE_Paper2_Solutions.pdf" target="_blank">Paper 2 solutions</a></div>
+        </div>
+        <div class="paper">
+          <h3><span class="dot" style="background:var(--aqua)"></span>Set F</h3>
+          <p>A remainder you find without dividing, the bound AM-GM cannot reach, a cycle of implications, and conditions a+b+c = 0 quietly force.</p>
+          <a class="btn" href="drill.html?paper=F1">Sit Paper 1</a> <a class="btn secondary" href="drill.html?paper=F2">Sit Paper 2</a>
+          <div class="links"><a href="HU_Collection_TMUA_SetF_Paper1.pdf" target="_blank">Paper 1</a><a href="HU_Collection_TMUA_SetF_Paper1_Solutions.pdf" target="_blank">Paper 1 solutions</a><a href="HU_Collection_TMUA_SetF_Paper2.pdf" target="_blank">Paper 2</a><a href="HU_Collection_TMUA_SetF_Paper2_Solutions.pdf" target="_blank">Paper 2 solutions</a></div>
         </div>
       </div>
     </section>
@@ -115,7 +124,7 @@
       </a>
       <a class="tool" href="bank.html">
         <svg viewBox="0 0 40 40" aria-hidden="true"><rect x="7" y="24" width="6" height="10" rx="2" fill="#4FD8E8"/><rect x="17" y="16" width="6" height="18" rx="2" fill="#FFC53D"/><rect x="27" y="7" width="6" height="27" rx="2" fill="#FF6B8B"/></svg>
-        <div><h3>Question bank</h3><p>All eighty questions ranked from 4.5 to 9.0, filterable by paper and technique, each playable on the spot.</p></div>
+        <div><h3>Question bank</h3><p>All 200 questions ranked from 4.5 to 9.0, filterable by paper and technique, each playable on the spot.</p></div>
       </a>
       <a class="tool" href="interviews.html">
         <svg viewBox="0 0 40 40" aria-hidden="true"><path d="M7 10 h26 v16 h-14 l-7 6 v-6 h-5 Z" fill="none" stroke="#FFC53D" stroke-width="3" stroke-linejoin="round"/></svg>
@@ -171,6 +180,10 @@
     <h2>Papers and solutions</h2>
     <p class="section-intro">Every paper is original. Solutions are separate downloads, so each paper can be sat cold.</p>
     <div class="archive">
+      <div class="arow">
+        <div><h3>TMUA mock Set C</h3><p>Pitched above the 2025 TMUA and weighted towards integration tricks, trigonometric inequalities and negating implications.</p></div>
+        <div class="files"><a href="drill.html?paper=C1">Sit Paper 1 timed</a><a href="HU_Collection_TMUA_SetC_Paper1.pdf" target="_blank">Paper 1</a><a href="HU_Collection_TMUA_SetC_Paper1_Solutions.pdf" target="_blank">Paper 1 solutions</a><a href="drill.html?paper=C2">Sit Paper 2 timed</a><a href="HU_Collection_TMUA_SetC_Paper2.pdf" target="_blank">Paper 2</a><a href="HU_Collection_TMUA_SetC_Paper2_Solutions.pdf" target="_blank">Paper 2 solutions</a></div>
+      </div>
       <div class="arow">
         <div><h3>TMUA mock Set B</h3><p>No routine questions: invariants, Ptolemy on a heptagon, interpolating an exponential, a sign-change argument for integrals.</p></div>
         <div class="files"><a href="drill.html?paper=B1">Sit Paper 1 timed</a><a href="HU_Collection_TMUA_SetB_Paper1.pdf" target="_blank">Paper 1</a><a href="HU_Collection_TMUA_SetB_Paper1_Solutions.pdf" target="_blank">Paper 1 solutions</a><a href="drill.html?paper=B2">Sit Paper 2 timed</a><a href="HU_Collection_TMUA_SetB_Paper2.pdf" target="_blank">Paper 2</a><a href="HU_Collection_TMUA_SetB_Paper2_Solutions.pdf" target="_blank">Paper 2 solutions</a></div>
