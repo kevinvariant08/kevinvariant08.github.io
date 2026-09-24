@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Kevin Hu - Mathematics</title>
-  <meta name="description" content="Original olympiad geometry, TMUA mock papers harder than the real thing, and tools to practise them: timed drills, a question bank, a race against a bot, and mock interviews.">
+  <meta name="description" content="Olympiad Geometry Annotated Problem Collection aimed at ambitious high schoolers, TMUA mock papers harder than any official past paper, and tools to practise them: timed drills, a question bank, a race against a bot, and mock interviews.">
   <link rel="icon" href="/favicon.ico" sizes="32x32">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -237,7 +237,9 @@
       ln.setAttribute('x1',p.x); ln.setAttribute('y1',p.y); ln.setAttribute('x2',q.x); ln.setAttribute('y2',q.y);
       var dx=q.x-p.x,dy=q.y-p.y,t=((Ic.x-p.x)*dx+(Ic.y-p.y)*dy)/(dx*dx+dy*dy);
       T[i].setAttribute('cx',p.x+t*dx); T[i].setAttribute('cy',p.y+t*dy);
-      if(first){ ln.style.setProperty('--len',Math.hypot(dx,dy)); ln.setAttribute('class','draw'); ln.style.animationDelay=(i*.18)+'s'; }
+      if(first){ ln.style.setProperty('--len',Math.hypot(dx,dy)); ln.setAttribute('class','draw'); ln.style.animationDelay=(i*.18)+'s';
+        /* the draw-in uses a dash exactly as long as the side; drop it once finished, or longer sides get cut off */
+        ln.addEventListener('animationend',function(){ ln.removeAttribute('class'); ln.style.animationDelay=''; },{once:true}); }
     });
     var gx=(A.x+B.x+C.x)/3, gy=(A.y+B.y+C.y)/3;
     P.forEach(function(p,i){ V[i].setAttribute('cx',p.x); V[i].setAttribute('cy',p.y);
@@ -250,7 +252,7 @@
   var drag=null;
   function pt(e){ var r=svg.getBoundingClientRect(); return {x:(e.clientX-r.left)*560/r.width,y:(e.clientY-r.top)*430/r.height}; }
   V.forEach(function(v,i){
-    v.addEventListener('pointerdown',function(e){ drag=i; v.setPointerCapture(e.pointerId); });
+    v.addEventListener('pointerdown',function(e){ drag=i; v.setPointerCapture(e.pointerId); sides.forEach(function(l){ l.removeAttribute('class'); }); });
     v.addEventListener('keydown',function(e){ var k={ArrowLeft:[-8,0],ArrowRight:[8,0],ArrowUp:[0,-8],ArrowDown:[0,8]}[e.key]; if(k){ e.preventDefault(); P[i].x=Math.max(20,Math.min(540,P[i].x+k[0])); P[i].y=Math.max(20,Math.min(410,P[i].y+k[1])); draw(); } });
   });
   svg.addEventListener('pointermove',function(e){ if(drag==null) return; var p=pt(e); P[drag].x=Math.max(20,Math.min(540,p.x)); P[drag].y=Math.max(20,Math.min(410,p.y)); draw(); });
