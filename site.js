@@ -35,7 +35,7 @@
     var menus=nav.querySelectorAll('.links>li>button');
     function closeAll(except){ menus.forEach(function(b){ if(b!==except){ b.setAttribute('aria-expanded','false'); document.getElementById(b.getAttribute('aria-controls')).classList.remove('open'); } }); }
     menus.forEach(function(b){ b.addEventListener('click',function(e){ e.stopPropagation(); var open=b.getAttribute('aria-expanded')!=='true'; closeAll(b); b.setAttribute('aria-expanded',String(open)); document.getElementById(b.getAttribute('aria-controls')).classList.toggle('open',open); }); });
-    document.addEventListener('click',function(){ closeAll(null); });
+    document.addEventListener('click',function(){ closeAll(null); nav.querySelectorAll('.acct .menu.open').forEach(function(m){ m.classList.remove('open'); var b=m.previousElementSibling; if(b) b.setAttribute('aria-expanded','false'); }); });
     document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeAll(null); });
     var t=nav.querySelector('.toggle'); t.addEventListener('click',function(e){ e.stopPropagation(); var o=!nav.classList.contains('open'); nav.classList.toggle('open',o); t.setAttribute('aria-expanded',String(o)); });
   }
@@ -47,7 +47,18 @@
     var li=document.createElement('li'); li.className='acct'; ul.appendChild(li);
     function paint(u){
       if(!window.HU_AUTH||!window.HU_AUTH.configured){ li.innerHTML=''; return; }
-      if(!u){ li.innerHTML='<a class="signin" href="auth.html"'+(here==='auth.html'?' aria-current="page"':'')+'>Sign in</a>'; return; }
+      if(!u){
+        li.innerHTML='<button type="button" class="signin" aria-expanded="false" aria-controls="mguest">Sign in'+caret()+'</button>'
+          +'<ul class="menu right" id="mguest">'
+          +'<li><a href="auth.html#signin">Sign in<small>Pick up where you left off</small></a></li>'
+          +'<li><a href="auth.html#signup">Create an account<small>Free; syncs your progress across devices</small></a></li>'
+          +'<li><a href="auth.html#forgot">Forgot your password?<small>We\'ll email you a reset link</small></a></li></ul>';
+        var gb=li.querySelector('.signin'), gm=li.querySelector('.menu');
+        gb.addEventListener('click',function(e){ e.stopPropagation(); var o=gb.getAttribute('aria-expanded')!=='true'; nav.querySelectorAll('.menu.open').forEach(function(x){ if(x!==gm) x.classList.remove('open'); }); gb.setAttribute('aria-expanded',String(o)); gm.classList.toggle('open',o); });
+        /* on auth.html itself, switch views in place rather than reloading */
+        if(here==='auth.html') gm.querySelectorAll('a').forEach(function(a){ a.addEventListener('click',function(){ gm.classList.remove('open'); gb.setAttribute('aria-expanded','false'); setTimeout(function(){ window.dispatchEvent(new HashChangeEvent('hashchange')); },0); }); });
+        return;
+      }
       var name=(u.user_metadata&&u.user_metadata.display_name)||u.email||'Account', init=name.trim().charAt(0).toUpperCase();
       li.innerHTML='<button type="button" class="who" aria-expanded="false" aria-controls="macct"><span class="av">'+esc(init)+'</span><span class="nm">'+esc(name.split('@')[0])+'</span>'+caret()+'</button>'
         +'<ul class="menu right" id="macct"><li class="me">'+esc(u.email||'')+'</li><li><a href="account.html"'+(here==='account.html'?' aria-current="page"':'')+'>Your account<small>Profile, password and synced progress</small></a></li><li><a href="progress.html">My progress<small>Synced across your devices</small></a></li><li><button type="button" class="out">Sign out</button></li></ul>';
