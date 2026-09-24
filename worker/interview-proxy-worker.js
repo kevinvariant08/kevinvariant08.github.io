@@ -36,7 +36,7 @@ const CONFIG = {
   maxChars: 60000,             // reject oversized payloads (long written proofs are fine)
 };
 
-const PAPERS = { "setA-p1": 20, "setA-p2": 20, "setB-p1": 20, "setB-p2": 20, "setC-p1": 20, "setC-p2": 20, "setD-p1": 20, "setD-p2": 20, "setE-p1": 20, "setE-p2": 20, "setF-p1": 20, "setF-p2": 20 }; // id -> max score
+const PAPERS = { "setA-p1": 20, "setA-p2": 20, "setB-p1": 20, "setB-p2": 20, "setC-p1": 20, "setC-p2": 20, "setD-p1": 20, "setD-p2": 20, "setE-p1": 20, "setE-p2": 20, "setF-p1": 20, "setF-p2": 20, "setG-p1": 20, "setG-p2": 20, "setH-p1": 20, "setH-p2": 20 }; // id -> max score
 const SCORES_PER_IP_PER_DAY = 8;
 
 const DAY = () => new Date().toISOString().slice(0, 10);
