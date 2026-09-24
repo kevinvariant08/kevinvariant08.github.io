@@ -1,152 +1,250 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Kevin Hu - Progress</title>
-  <link rel="icon" href="/favicon.ico" sizes="32x32">
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-  <link rel="manifest" href="/site.webmanifest">
-  <meta name="theme-color" content="#1A2230">
-  <link rel="stylesheet" href="style.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
-  <style>
-    .hu{--ink:#1A2230;--soft:#586374;--faint:#8A93A1;--rule:#D9D6CC;--paper:#FBFAF6;--ok:#2C5545;--bad:#8C2F2F;--warn:#8A5A12;--acc:#534AB7;--acc2:#AFA9EC;
-        --serif:"IBM Plex Serif",Georgia,serif;--sans:"IBM Plex Sans",system-ui,sans-serif;font-family:var(--sans);color:var(--ink);line-height:1.55}
-    .hu h2{font-family:var(--serif);font-weight:600}
-    .hu h3{font-family:var(--serif);font-weight:600;font-size:1.05rem;margin:1.2rem 0 .4rem}
-    .hu p{max-width:70ch}
-    .hu .lead{font-size:1.05rem;color:var(--soft)}
-    .hu .hidden{display:none!important}
-    .hu .btn2{font-family:var(--sans);font-size:.95rem;font-weight:500;color:var(--ink);background:transparent;border:1px solid var(--ink);border-radius:2px;padding:.5rem 1rem;cursor:pointer}
-    .hu .btn2:hover{background:var(--ink);color:#fff}
-    .hu .btn2.quiet{border-color:var(--rule);color:var(--soft);font-weight:400}
-    .hu .btn2.quiet:hover{background:transparent;border-color:var(--ink);color:var(--ink)}
-    .hu .btn2[disabled]{opacity:.35;cursor:default}
-    .hu .row{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;margin-top:.9rem}
-    .hu .panel{border:1px solid var(--rule);padding:1rem 1.2rem;margin:1.2rem 0}
-    .hu select,.hu input[type=text],.hu textarea{font-family:var(--sans);font-size:.95rem;padding:.45rem .6rem;border:1px solid var(--rule);border-radius:2px;background:#fff;color:var(--ink)}
-    .hu textarea{width:100%;resize:vertical;line-height:1.5}
-    .hu .tally{color:var(--faint);font-size:.88rem}
-    .hu .err{color:var(--bad);font-size:.9rem}
-    .hu .ok{color:var(--ok)} .hu .bad{color:var(--bad)}
-    .hu .stats{display:flex;gap:2.2rem;flex-wrap:wrap;margin:1.2rem 0}
-    .hu .stat .big{font-family:var(--serif);font-weight:600;font-size:2.2rem;line-height:1}
-    .hu .stat .lab{font-size:.82rem;color:var(--faint)}
-    .hu .two{display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:start}
-    @media (max-width:820px){.hu .two{grid-template-columns:1fr}}
-    .hu svg{display:block;width:100%;height:auto}
-    .hu .bar{height:6px;background:var(--rule);position:relative;margin:.2rem 0 .7rem;max-width:26rem}
-    .hu .bar span{position:absolute;left:0;top:0;height:100%;background:var(--acc)}
-    .hu .trow{display:flex;justify-content:space-between;align-items:baseline;gap:.6rem;font-size:.92rem;max-width:26rem}
-    .hu .trow a{font-size:.82rem;color:var(--soft)}
-    .hu .heat{display:grid;grid-template-columns:repeat(12,1fr);gap:3px;max-width:22rem}
-    .hu .heat div{aspect-ratio:1;background:var(--rule)}
-    .hu .heat div.l1{background:#CFCBF0} .hu .heat div.l2{background:#9F97E0} .hu .heat div.l3{background:var(--acc)}
-    .hu table{border-collapse:collapse;font-size:.9rem}
-    .hu td,.hu th{border-bottom:1px solid var(--rule);padding:.3rem .9rem .3rem 0;text-align:left;font-weight:400}
-    .hu th{color:var(--faint)}
-    .hu .rec{border-left:2px solid var(--acc);padding:.3rem 0 .3rem 1rem;font-family:var(--serif);font-size:1.02rem;margin:1.2rem 0}
-  </style>
-</head>
-<body>
-  <nav>
-    <div class="nav-links">
-      <a href="index.html">Mathematics</a>
-      <a href="music.html">Music &amp; Piano</a>
-      <a href="geometry.html">Geometry Lab</a>
-      <a href="sandbox.html">Sandbox</a>
-      <a href="drill.html">Drill</a>
-      <a href="interviews.html">Mock interviews</a>
-      <a href="marker.html">Marker</a>
-      <a href="techniques.html">Techniques</a>
-      <a href="progress.html" aria-current="page">Progress</a>
-    </div>
-  </nav>
-  <main class="container hu">
-    <h1>Progress</h1>
-    <p class="lead">Everything you have done on this site, in one place: drill accuracy by technique, how long questions take you, how your interview scores are moving, and what to do next. It is all read from this browser, so it is yours alone.</p>
-    <div id="body"></div>
-  </main>
+// Cloudflare Worker: the free AI interviewer for the mock interview page,
+// plus the anonymous score log used by results.html.
+//   POST /            chat (interviewer)         body: {system, messages, max_tokens}
+//   POST /score       log a score                body: {paper, score}
+//   GET  /stats       read a distribution        ?paper=setB-p1
+//
+// It holds the API key server-side, so visitors need no key and no sign-up.
+// It caps spending three ways: a per-visitor daily limit, a site-wide daily
+// limit, and a hard cap on tokens per request. It can run on Anthropic or on
+// Google's Gemini free tier, and returns the Anthropic response shape either
+// way, so the page needs no changes when you switch.
+//
+// SETUP
+//   1. npm i -g wrangler && wrangler login
+//   2. wrangler kv namespace create IV        (put the id in wrangler.toml)
+//   3. wrangler secret put ANTHROPIC_API_KEY  (and/or GEMINI_API_KEY)
+//   4. wrangler deploy
+//   5. Paste the deployed URL into FREE_PROXY at the top of the script in
+//      interviews.html, then push the site.
+//   6. Set a monthly spend limit in the Anthropic console as a backstop.
 
-<script>
-function load(k,d){ try{ return JSON.parse(localStorage.getItem(k)||'null')||d; }catch(e){ return d; } }
-function esc(s){return String(s).replace(/[&<>]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c];});}
-function fmt(s){ s=Math.max(0,Math.round(s)); var m=Math.floor(s/60), r=s%60; return m+':'+(r<10?'0':'')+r; }
-var TECH={sym:'Symmetry and substitution',tel:'Telescoping',two:'Counting two ways',inv:'Invariants',pig:'Pigeonhole',mod:'Modular arithmetic',vie:'Vieta and symmetric functions',trg:'Trigonometric identities and bounds',arint:'Integrals as areas or by symmetry',fint:'Integral reasoning',root:'Root counting via monotonicity',ext:'Extremal principle',col:'Colouring and parity',game:'Games and losing positions',log:'Quantifiers, negation and vacuous truth',prf:'Proof analysis',ns:'Necessary and sufficient',ineq:'Inequalities',circ:'Circle geometry',ser:'Series and sequences',poly:'Polynomials',cnt:'Counting arguments'};
-var PAPER_NAME={C1:'Set C Paper 1',C2:'Set C Paper 2',B1:'Set B Paper 1',B2:'Set B Paper 2','setC-p1':'Set C Paper 1','setC-p2':'Set C Paper 2','setB-p1':'Set B Paper 1','setB-p2':'Set B Paper 2','setA-p1':'Set A Paper 1','setA-p2':'Set A Paper 2'};
+const ALLOWED_ORIGINS = [
+  "https://kevinvariant08.github.io",
+  // add a custom domain here if you buy one
+];
 
-var L=load('hu_drill_log',[]), A=load('hu_drill_attempts',[]), IV=load('hu_iv_hist',[]), SC=load('hu_scores',[]);
-var out='';
-if(!L.length&&!A.length&&!IV.length&&!SC.length){
-  out='<div class="panel"><p>Nothing recorded yet. Start with a <a href="drill.html">drill</a> or a <a href="interviews.html">mock interview</a> and this page fills itself in.</p></div>';
-} else {
-  var correct=L.filter(function(e){return e.correct;}).length, med=null;
-  if(L.length){ var t=L.map(function(e){return e.secs;}).sort(function(a,b){return a-b;}); med=t[Math.floor(t.length/2)]; }
-  var days={}; L.forEach(function(e){days[new Date(e.t).toISOString().slice(0,10)]=(days[new Date(e.t).toISOString().slice(0,10)]||0)+1;}); IV.forEach(function(r){days[r.date]=(days[r.date]||0)+3;}); SC.forEach(function(r){days[r.date]=(days[r.date]||0)+2;});
-  var streak=0, d=new Date(); for(var i=0;i<400;i++){ var k=d.toISOString().slice(0,10); if(days[k]) streak++; else if(i>0) break; d.setDate(d.getDate()-1); }
-  var ivScores=IV.filter(function(r){return r.score!=null;}).map(function(r){return r.score;}).reverse();
-  out+='<div class="stats"><div class="stat"><div class="big">'+L.length+'</div><div class="lab">questions answered</div></div>'
-     +(L.length?'<div class="stat"><div class="big">'+Math.round(100*correct/L.length)+'%</div><div class="lab">accuracy</div></div><div class="stat"><div class="big">'+fmt(med)+'</div><div class="lab">median time per question</div></div>':'')
-     +'<div class="stat"><div class="big">'+IV.length+'</div><div class="lab">interviews</div></div>'
-     +(ivScores.length?'<div class="stat"><div class="big">'+ivScores[ivScores.length-1]+'</div><div class="lab">latest interview score</div></div>':'')
-     +'<div class="stat"><div class="big">'+streak+'</div><div class="lab">day streak</div></div></div>';
+const CONFIG = {
+  backend: "workers-ai",       // "workers-ai" (free, built into Cloudflare), "gemini" (free tier) or "anthropic" (paid)
+  workersModel: "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+  anthropicModel: "claude-haiku-4-5-20251001",
+  geminiModel: "gemini-2.5-flash",   // stable and on the free tier; 2.0 Flash was shut down in June 2026
+  maxTokensCap: 1500,          // per reply (the proof marker needs room for its JSON report)
+  perVisitorPerDay: 45,        // ~2 full interviews
+  sitePerDay: 450,             // site-wide circuit breaker; Cloudflare also enforces its own free daily allowance
+  maxMessages: 60,             // reject runaway conversations
+  maxChars: 60000,             // reject oversized payloads (long written proofs are fine)
+};
 
-  // technique stats
-  var st={}; L.forEach(function(e){ e.tags.forEach(function(t){ st[t]=st[t]||{n:0,c:0,secs:0}; st[t].n++; st[t].secs+=e.secs; if(e.correct) st[t].c++; }); });
-  var keys=Object.keys(st).filter(function(k){return TECH[k];});
-  if(keys.length){
-    keys.sort(function(a,b){return (st[a].c/st[a].n)-(st[b].c/st[b].n);});
-    var weakest=keys.filter(function(k){return st[k].n>=2;})[0]||keys[0];
-    out+='<div class="rec">Weakest technique with enough data: <strong>'+esc(TECH[weakest])+'</strong> at '+Math.round(100*st[weakest].c/st[weakest].n)+'% over '+st[weakest].n+' questions. <a href="drill.html?tech='+weakest+'">Drill it now</a>, or run <a href="drill.html">Weakest first</a>.</div>';
-    // radar
-    var rk=keys.slice().sort(function(a,b){return TECH[a].localeCompare(TECH[b]);}), n=rk.length, cx=200,cy=190,R=130, radar='';
-    if(n>=3){
-      var pts=rk.map(function(k,i){ var a=-Math.PI/2+i*2*Math.PI/n, r=R*(st[k].c/st[k].n); return [cx+r*Math.cos(a),cy+r*Math.sin(a),a]; });
-      radar='<svg viewBox="0 0 400 380" role="img" aria-label="Technique accuracy radar">';
-      [0.25,0.5,0.75,1].forEach(function(f){ radar+='<polygon points="'+rk.map(function(k,i){var a=-Math.PI/2+i*2*Math.PI/n; return (cx+R*f*Math.cos(a))+','+(cy+R*f*Math.sin(a));}).join(' ')+'" fill="none" stroke="#D9D6CC" stroke-width="'+(f===1?1:0.5)+'"/>'; });
-      radar+='<polygon points="'+pts.map(function(p){return p[0]+','+p[1];}).join(' ')+'" fill="#AFA9EC" fill-opacity=".35" stroke="#534AB7" stroke-width="1.5"/>';
-      rk.forEach(function(k,i){ var a=-Math.PI/2+i*2*Math.PI/n, lx=cx+(R+16)*Math.cos(a), ly=cy+(R+16)*Math.sin(a); var anchor=Math.abs(Math.cos(a))<0.2?'middle':(Math.cos(a)>0?'start':'end'); radar+='<text x="'+lx+'" y="'+(ly+4)+'" text-anchor="'+anchor+'" font-family="IBM Plex Sans,sans-serif" font-size="10.5" fill="#586374">'+esc(TECH[k].split(' ')[0])+'</text>'; });
-      radar+='</svg>';
-    }
-    var bars=keys.map(function(k){ var pc=Math.round(100*st[k].c/st[k].n); return '<div class="trow"><span>'+esc(TECH[k])+' <span class="tally">'+st[k].c+'/'+st[k].n+' \u00b7 '+fmt(st[k].secs/st[k].n)+' avg</span></span><a href="drill.html?tech='+k+'">drill</a></div><div class="bar"><span style="width:'+pc+'%"></span></div>'; }).join('');
-    out+='<div class="two"><div><h3>Accuracy by technique</h3>'+bars+'</div><div><h3>Shape of your strengths</h3>'+(radar||'<p class="tally">The radar appears once three techniques have data.</p>')+'</div></div>';
-  }
+const PAPERS = { "setA-p1": 20, "setA-p2": 20, "setB-p1": 20, "setB-p2": 20, "setC-p1": 20, "setC-p2": 20, "setD-p1": 20, "setD-p2": 20, "setE-p1": 20, "setE-p2": 20, "setF-p1": 20, "setF-p2": 20 }; // id -> max score
+const SCORES_PER_IP_PER_DAY = 8;
 
-  // time distribution
-  if(L.length){
-    var buckets=[[0,60,'under 1 min'],[60,120,'1 to 2'],[120,180,'2 to 3'],[180,240,'3 to 4'],[240,1e9,'over 4']], mx=1;
-    var bd=buckets.map(function(b){ var inb=L.filter(function(e){return e.secs>=b[0]&&e.secs<b[1];}); var c=inb.filter(function(e){return e.correct;}).length; mx=Math.max(mx,inb.length); return {lab:b[2],n:inb.length,c:c}; });
-    var W=520,H=170,bw=W/bd.length, svg='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Time per question">';
-    bd.forEach(function(b,i){ var h=(b.n/mx)*(H-50), x=i*bw+12, y=H-30-h, hc=b.n?h*b.c/b.n:0;
-      svg+='<rect x="'+x+'" y="'+y+'" width="'+(bw-24)+'" height="'+h+'" fill="#F1CFCB"/><rect x="'+x+'" y="'+(y+h-hc)+'" width="'+(bw-24)+'" height="'+hc+'" fill="#CFE7DB"/>';
-      svg+='<text x="'+(x+(bw-24)/2)+'" y="'+(H-12)+'" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#586374">'+b.lab+'</text>';
-      if(b.n) svg+='<text x="'+(x+(bw-24)/2)+'" y="'+(y-4)+'" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#8A93A1">'+b.c+'/'+b.n+'</text>'; });
-    svg+='</svg>';
-    out+='<h3>Time per question</h3><p class="tally">Green is correct, red is wrong. A TMUA question has 3 minutes 45 seconds on average; a high wrong count in the long buckets means you are spending time without converting it, which is the main thing to change.</p>'+svg;
-  }
+const DAY = () => new Date().toISOString().slice(0, 10);
 
-  // interviews + papers
-  var rows='';
-  if(ivScores.length>=2){
-    var W2=520,H2=140,n2=ivScores.length, pts2=ivScores.map(function(s,i){return [30+i*(W2-60)/(n2-1),H2-20-s*(H2-40)/10];});
-    var line='<svg viewBox="0 0 '+W2+' '+H2+'" role="img" aria-label="Interview scores"><line x1="30" y1="'+(H2-20)+'" x2="'+(W2-30)+'" y2="'+(H2-20)+'" stroke="#D9D6CC"/><line x1="30" y1="'+(H2-20-6*(H2-40)/10)+'" x2="'+(W2-30)+'" y2="'+(H2-20-6*(H2-40)/10)+'" stroke="#D9D6CC" stroke-dasharray="4 3"/><text x="'+(W2-28)+'" y="'+(H2-22-6*(H2-40)/10)+'" font-family="IBM Plex Sans,sans-serif" font-size="10" fill="#8A93A1">offer level</text>'
-      +'<polyline points="'+pts2.map(function(p){return p[0]+','+p[1];}).join(' ')+'" fill="none" stroke="#534AB7" stroke-width="1.6"/>'+pts2.map(function(p,i){return '<circle cx="'+p[0]+'" cy="'+p[1]+'" r="3.5" fill="#534AB7"/><text x="'+p[0]+'" y="'+(p[1]-8)+'" text-anchor="middle" font-family="IBM Plex Sans,sans-serif" font-size="11" fill="#586374">'+ivScores[i]+'</text>';}).join('')+'</svg>';
-    out+='<h3>Interview scores</h3>'+line;
-  }
-  if(A.length){ var TIM={4500:'standard',5400:'+20%',5625:'+25%',6750:'+50%',9000:'+100%',0:'untimed'};
-    rows=A.slice(0,10).map(function(a){return '<tr><td>'+esc(a.date)+'</td><td>'+esc(PAPER_NAME[a.paper]||a.paper)+'</td><td>'+a.score+'/20</td><td>'+fmt(a.secs)+'</td><td>'+esc(TIM[a.timing==null?4500:a.timing]||'')+(a.pauses?', paused '+a.pauses+'\u00d7':'')+'</td></tr>';}).join('');
-    out+='<h3>Timed papers</h3><table><tr><th>Date</th><th>Paper</th><th>Score</th><th>Time</th><th>Conditions</th></tr>'+rows+'</table><p class="tally"><a href="results.html">Compare against everyone else.</a></p>'; }
-
-  // heatmap 12 weeks
-  var cells='', today=new Date(); today.setHours(0,0,0,0);
-  var start=new Date(today); start.setDate(start.getDate()-83); start.setDate(start.getDate()-((start.getDay()+6)%7));
-  for(var wk=0;wk<12;wk++) for(var dd=0;dd<7;dd++){ var dt=new Date(start); dt.setDate(dt.getDate()+wk*7+dd); if(dt>today){ cells+='<div style="visibility:hidden"></div>'; continue; } var kk=dt.toISOString().slice(0,10), v=days[kk]||0; cells+='<div class="'+(v>=8?'l3':v>=4?'l2':v>0?'l1':'')+'" title="'+kk+': '+v+'"></div>'; }
-  out+='<h3>Activity, last twelve weeks</h3><div class="heat">'+cells+'</div>';
+function corsFor(origin) {
+  const allowed = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
+  return {
+    "Access-Control-Allow-Origin": allowed,
+    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+    "Access-Control-Allow-Headers": "content-type",
+    "Vary": "Origin",
+  };
 }
-document.getElementById('body').innerHTML=out;
-</script>
-</body>
-</html>
+
+function refuse(status, message, cors) {
+  return new Response(JSON.stringify({ message }), {
+    status,
+    headers: { ...cors, "content-type": "application/json" },
+  });
+}
+
+// Count a request against a KV counter that expires at the end of the day.
+async function bump(kv, key, limit) {
+  const current = parseInt((await kv.get(key)) || "0", 10);
+  if (current >= limit) return false;
+  await kv.put(key, String(current + 1), { expirationTtl: 60 * 60 * 26 });
+  return true;
+}
+
+async function callAnthropic(env, body) {
+  const res = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      "x-api-key": env.ANTHROPIC_API_KEY,
+      "anthropic-version": "2023-06-01",
+    },
+    body: JSON.stringify({
+      model: CONFIG.anthropicModel,
+      max_tokens: body.max_tokens,
+      system: body.system,
+      messages: body.messages,
+    }),
+  });
+  return { status: res.status, text: await res.text() };
+}
+
+// Gemini speaks a different dialect; translate in and out so the page sees
+// the Anthropic shape it already understands.
+async function callGemini(env, body) {
+  // Gemini wants alternating user/model turns, so merge any consecutive same-role messages.
+  const contents = [];
+  for (const m of body.messages) {
+    const role = m.role === "assistant" ? "model" : "user";
+    const text = String(m.content);
+    if (contents.length && contents[contents.length - 1].role === role) contents[contents.length - 1].parts[0].text += "\n\n" + text;
+    else contents.push({ role, parts: [{ text }] });
+  }
+  if (contents.length && contents[0].role !== "user") contents.unshift({ role: "user", parts: [{ text: "(start)" }] });
+  const payload = {
+    contents,
+    systemInstruction: { parts: [{ text: body.system }] },
+    // thinkingBudget 0 stops 2.5 Flash spending the output allowance on hidden reasoning,
+    // which would otherwise truncate the JSON reports.
+    generationConfig: { maxOutputTokens: body.max_tokens, temperature: 0.6, thinkingConfig: { thinkingBudget: 0 } },
+  };
+  const url =
+    "https://generativelanguage.googleapis.com/v1beta/models/" +
+    CONFIG.geminiModel +
+    ":generateContent?key=" +
+    env.GEMINI_API_KEY;
+  const res = await fetch(url, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) return { status: res.status, text: await res.text() };
+  const data = await res.json();
+  const cand = data?.candidates?.[0];
+  const text = (cand?.content?.parts || []).map((p) => p.text || "").join("\n");
+  if (!text) {
+    const why = cand?.finishReason || data?.promptFeedback?.blockReason || "no text returned";
+    return { status: 502, text: JSON.stringify({ error: { message: "Gemini returned an empty reply (" + why + ")" } }) };
+  }
+  return {
+    status: 200,
+    text: JSON.stringify({ content: [{ type: "text", text }] }),
+  };
+}
+
+// Workers AI runs on Cloudflare itself: no external key, no card, billed against
+// the free daily allowance on the account. Needs `[ai] binding = "AI"` in wrangler.toml.
+async function callWorkersAI(env, body) {
+  if (!env.AI) return { status: 500, text: JSON.stringify({ error: { message: "Workers AI binding missing. Add [ai] binding = \"AI\" to wrangler.toml and redeploy." } }) };
+  const messages = [{ role: "system", content: body.system }];
+  for (const m of body.messages) {
+    const role = m.role === "assistant" ? "assistant" : "user";
+    const text = String(m.content);
+    const last = messages[messages.length - 1];
+    if (last.role === role) last.content += "\n\n" + text; else messages.push({ role, content: text });
+  }
+  const base = { messages, max_tokens: body.max_tokens, temperature: body.json_schema ? 0.2 : 0.6 };
+  try {
+    let out;
+    if (body.json_schema) {
+      // Constrained decoding guarantees valid JSON. If the model does not support it, fall back to plain output.
+      try { out = await env.AI.run(CONFIG.workersModel, { ...base, response_format: { type: "json_schema", json_schema: body.json_schema } }); }
+      catch (e) { if (/4006|neuron|daily free allocation/i.test(String(e && e.message || e))) throw e; out = await env.AI.run(CONFIG.workersModel, base); }
+    } else {
+      out = await env.AI.run(CONFIG.workersModel, base);
+    }
+    const r = out?.response;
+    const text = typeof r === "string" ? r
+               : (r && typeof r === "object") ? JSON.stringify(r)
+               : (out?.choices?.[0]?.message?.content || (typeof out === "string" ? out : ""));
+    if (!text) return { status: 502, text: JSON.stringify({ error: { message: "Workers AI returned an empty reply" } }) };
+    return { status: 200, text: JSON.stringify({ content: [{ type: "text", text }] }) };
+  } catch (e) {
+    const msg = String(e && e.message || e);
+    if (/4006|neuron|daily free allocation/i.test(msg)) return { status: 429, text: JSON.stringify({ error: { message: "quota" } }) };
+    return { status: 502, text: JSON.stringify({ error: { message: msg.slice(0, 160) } }) };
+  }
+}
+
+export default {
+  async fetch(request, env) {
+    const origin = request.headers.get("Origin") || "";
+    const cors = corsFor(origin);
+
+    if (request.method === "OPTIONS") return new Response(null, { headers: cors });
+    const path = new URL(request.url).pathname;
+
+    // ---- score distribution (read) ----
+    if (request.method === "GET" && path === "/stats") {
+      const paper = new URL(request.url).searchParams.get("paper");
+      if (!PAPERS[paper]) return refuse(400, "Unknown paper.", cors);
+      const raw = await env.IV.get(`stats:${paper}`);
+      const counts = raw ? JSON.parse(raw) : new Array(PAPERS[paper] + 1).fill(0);
+      return new Response(JSON.stringify({ paper, counts }), { headers: { ...cors, "content-type": "application/json", "cache-control": "no-store" } });
+    }
+
+    if (request.method !== "POST") return refuse(405, "POST only", cors);
+    if (!ALLOWED_ORIGINS.includes(origin)) return refuse(403, "This service only serves the site it was built for.", cors);
+
+    // ---- score log (write) ----
+    if (path === "/score") {
+      let sb;
+      try { sb = await request.json(); } catch { return refuse(400, "Malformed request.", cors); }
+      const max = PAPERS[sb.paper];
+      const s = Number(sb.score);
+      if (!max) return refuse(400, "Unknown paper.", cors);
+      if (!Number.isInteger(s) || s < 0 || s > max) return refuse(400, "Score out of range.", cors);
+      const ip = request.headers.get("CF-Connecting-IP") || "unknown";
+      if (!(await bump(env.IV, `sc:${ip}:${DAY()}`, SCORES_PER_IP_PER_DAY)))
+        return refuse(429, "That is enough scores for one day from this connection.", cors);
+      const key = `stats:${sb.paper}`;
+      const raw = await env.IV.get(key);
+      const counts = raw ? JSON.parse(raw) : new Array(max + 1).fill(0);
+      counts[s] = (counts[s] || 0) + 1;
+      await env.IV.put(key, JSON.stringify(counts));
+      return new Response(JSON.stringify({ ok: true, counts }), { headers: { ...cors, "content-type": "application/json" } });
+    }
+
+    // ---- interviewer chat ----
+
+    let body;
+    try {
+      body = await request.json();
+    } catch {
+      return refuse(400, "Malformed request.", cors);
+    }
+    if (!Array.isArray(body.messages) || !body.system) return refuse(400, "Missing system or messages.", cors);
+    if (body.messages.length > CONFIG.maxMessages) return refuse(400, "That conversation is longer than the interviewer accepts.", cors);
+    if (JSON.stringify(body).length > CONFIG.maxChars) return refuse(400, "That request is too large.", cors);
+    body.max_tokens = Math.min(Number(body.max_tokens) || 600, CONFIG.maxTokensCap);
+
+    const day = DAY();
+    const ip = request.headers.get("CF-Connecting-IP") || "unknown";
+
+    if (!(await bump(env.IV, `site:${day}`, CONFIG.sitePerDay)))
+      return refuse(429, "The free interviewer has used up today's budget. Switch to self-guided in settings, or add your own key to carry on now.", cors);
+
+    if (!(await bump(env.IV, `ip:${ip}:${day}`, CONFIG.perVisitorPerDay)))
+      return refuse(429, "You have used today's free interviews. Come back tomorrow, run self-guided, or add your own key.", cors);
+
+    const useWorkersAI = CONFIG.backend === "workers-ai";
+    const useGemini = CONFIG.backend === "gemini" && env.GEMINI_API_KEY;
+    if (CONFIG.backend === "gemini" && !env.GEMINI_API_KEY) return refuse(500, "Missing GEMINI_API_KEY secret on the worker. Run: npx wrangler secret put GEMINI_API_KEY", cors);
+    if (!useWorkersAI && !useGemini && !env.ANTHROPIC_API_KEY) return refuse(500, "Missing ANTHROPIC_API_KEY secret on the worker. Run: npx wrangler secret put ANTHROPIC_API_KEY", cors);
+    let out;
+    try {
+      out = useWorkersAI ? await callWorkersAI(env, body) : useGemini ? await callGemini(env, body) : await callAnthropic(env, body);
+    } catch (e) {
+      console.log("Fetch failed", String(e));
+      return refuse(502, "The AI service could not be reached: " + String(e).slice(0, 120), cors);
+    }
+    if (out.status === 429) return refuse(429, "The free AI allowance for today has been used up. It resets at 04:00 UAE time; until then, use self-guided mode.", cors);
+    if (out.status !== 200) {
+      // Surface the real reason so problems can be diagnosed from the page.
+      let reason = "";
+      try { const e = JSON.parse(out.text); reason = (e.error && (e.error.message || e.error.type)) || e.message || ""; } catch { reason = out.text.slice(0, 160); }
+      console.log("Upstream error", out.status, out.text.slice(0, 500));
+      return refuse(502, `The AI service returned an error (${out.status})${reason ? ": " + reason : ""}.`, cors);
+    }
+
+    return new Response(out.text, {
+      status: 200,
+      headers: { ...cors, "content-type": "application/json" },
+    });
+  },
+};
