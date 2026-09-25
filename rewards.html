@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rewards | Kevinvariant</title>
+  <meta name="description" content="Levels, streaks, badges, weekly quests and a daily challenge for TMUA practice.">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <meta name="theme-color" content="#15173B">
+  <link rel="stylesheet" href="style.css">
+  <script>window.MathJax={tex:{inlineMath:[['$','$']],displayMath:[['\\[','\\]']],processEscapes:true},options:{skipHtmlTags:['script','noscript','style','textarea','pre']}};</script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js" async></script>
+  <style>
+    .wrap{max-width:1100px;margin:0 auto;padding:1.5rem 1.2rem 4rem}
+    .panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:1.4rem 1.5rem;margin-top:1.3rem}
+    .panel h2{font:800 1.35rem var(--display);margin:0 0 .3rem}
+    .sub{color:var(--ink-soft);margin:0 0 1rem;font-size:.95rem}
+    .hero{display:grid;grid-template-columns:auto 1fr auto;gap:1.6rem;align-items:center}
+    .ring{position:relative;width:150px;height:150px}.ring svg{width:150px;height:150px;transform:rotate(-90deg)}
+    .ring .in{position:absolute;inset:0;display:grid;place-items:center;text-align:center}
+    .ring .in b{font:800 2.6rem/1 var(--display);display:block}.ring .in span{font:600 .75rem var(--display);color:var(--ink-faint);letter-spacing:.08em;text-transform:uppercase}
+    .title{font:800 2rem var(--display);margin:0}.xpline{color:var(--ink-soft);margin:.3rem 0 .8rem}
+    .bar{height:10px;border-radius:99px;background:var(--bg-deep);overflow:hidden}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--aqua),var(--rose),var(--saffron));border-radius:99px;transition:width .6s}
+    .stats{display:grid;gap:.6rem;min-width:11rem}
+    .stat{background:var(--bg-deep);border:1px solid var(--line-soft);border-radius:var(--r-md);padding:.6rem .8rem}
+    .stat b{font:800 1.4rem var(--display);display:flex;align-items:center;gap:.35rem}.stat b svg{width:20px;height:20px}.stat span{color:var(--ink-faint);font-size:.8rem}
+    .grid2{display:grid;grid-template-columns:1.25fr 1fr;gap:1.3rem}.grid2 .panel{margin-top:1.3rem}
+    .q{background:var(--bg-deep);border:1px solid var(--line-soft);border-radius:var(--r-md);padding:1rem 1.1rem;margin:.6rem 0}
+    .opts{display:grid;gap:.45rem;margin-top:.7rem}
+    .opt{display:flex;gap:.7rem;align-items:flex-start;text-align:left;background:var(--surface-2);border:1px solid var(--line);border-radius:var(--r-sm);padding:.55rem .75rem;color:var(--ink);font:inherit;cursor:pointer}
+    .opt:hover:not(:disabled){border-color:var(--aqua)}.opt b{font-family:var(--display);min-width:1.1rem}
+    .opt.right{border-color:var(--mint);background:var(--mint-wash)}.opt.wrong{border-color:var(--rose);background:var(--rose-wash)}
+    .row{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center}
+    .timer{font:700 1.05rem var(--display);color:var(--saffron)}
+    .sol{margin-top:.8rem;color:var(--ink-soft)}
+    .quest{display:grid;grid-template-columns:1fr auto;gap:.3rem .8rem;align-items:center;padding:.8rem 0;border-top:1px solid var(--line-soft)}.quest:first-of-type{border-top:0}
+    .quest .nm{font-weight:600}.quest .xp{font:700 .85rem var(--display);color:var(--saffron)}.quest .bar{grid-column:1/-1;height:7px}
+    .claim{font:700 .85rem var(--display);border:0;border-radius:99px;padding:.35rem .9rem;cursor:pointer;background:var(--mint);color:#15173B}.claim:disabled{background:var(--surface-2);color:var(--ink-faint);cursor:default}
+    .heat{display:grid;grid-auto-flow:column;grid-template-rows:repeat(7,14px);grid-auto-columns:14px;justify-content:start;gap:3px;overflow-x:auto;padding-bottom:.3rem}
+    .heat i{width:14px;height:14px;border-radius:3px;background:var(--bg-deep);border:1px solid var(--line-soft)}
+    .badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.8rem}
+    .badge{background:var(--bg-deep);border:1px solid var(--line-soft);border-radius:var(--r-md);padding:.9rem .7rem;text-align:center}
+    .badge.lock{opacity:.55}.badge h3{font:700 .95rem var(--display);margin:.4rem 0 .2rem}.badge p{font-size:.78rem;color:var(--ink-faint);margin:0}.badge .t{font:700 .68rem var(--display);letter-spacing:.08em;text-transform:uppercase}
+    .themes{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.7rem}
+    .theme{border:1px solid var(--line);border-radius:var(--r-md);padding:.7rem;background:var(--bg-deep);color:var(--ink);font:inherit;text-align:left;cursor:pointer}
+    .theme[aria-pressed="true"]{outline:2px solid var(--saffron)}.theme:disabled{cursor:not-allowed;opacity:.5}
+    .sw{display:flex;gap:4px;margin-bottom:.45rem}.sw i{flex:1;height:18px;border-radius:5px}.theme b{font-family:var(--display)}.theme small{display:block;color:var(--ink-faint)}
+    table.lb{width:100%;border-collapse:collapse;font-size:.92rem}table.lb th,table.lb td{padding:.45rem .5rem;border-bottom:1px solid var(--line-soft);text-align:left}table.lb td.n{text-align:right;font-variant-numeric:tabular-nums}
+    table.lb tr.me td{color:var(--saffron);font-weight:700}
+    .tabs{display:flex;gap:.4rem;margin-bottom:.7rem}.tabs button{font:600 .85rem var(--display);background:var(--bg-deep);color:var(--ink-soft);border:1px solid var(--line);border-radius:99px;padding:.3rem .8rem;cursor:pointer}.tabs button[aria-pressed="true"]{color:var(--ink);border-color:var(--aqua)}
+    input.nm{background:var(--bg-deep);border:1px solid var(--line);color:var(--ink);border-radius:var(--r-sm);padding:.45rem .6rem;font:inherit}
+    table.rules td{padding:.3rem .6rem .3rem 0;color:var(--ink-soft);font-size:.9rem}table.rules td:first-child{color:var(--ink);font-weight:600}
+    @media (max-width:860px){.hero{grid-template-columns:1fr;justify-items:center;text-align:center}.stats{grid-template-columns:repeat(3,1fr);width:100%}.grid2{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+<nav id="site-nav"></nav>
+<main class="wrap">
+  <section class="panel hero" aria-label="Your level">
+    <div class="ring"><svg viewBox="0 0 150 150"><circle cx="75" cy="75" r="64" fill="none" stroke="var(--bg-deep)" stroke-width="12"/><circle id="ringArc" cx="75" cy="75" r="64" fill="none" stroke="url(#rg)" stroke-width="12" stroke-linecap="round" stroke-dasharray="402" stroke-dashoffset="402"/><defs><linearGradient id="rg"><stop offset="0" stop-color="var(--aqua)"/><stop offset=".5" stop-color="var(--rose)"/><stop offset="1" stop-color="var(--saffron)"/></linearGradient></defs></svg>
+      <div class="in"><div><span>Level</span><b id="lvl">1</b></div></div></div>
+    <div><p class="title" id="ttl">Point</p><p class="xpline" id="xpl">0 XP</p><div class="bar"><i id="xpbar" style="width:0"></i></div><p class="sub" id="nextTitle" style="margin-top:.6rem"></p></div>
+    <div class="stats">
+      <div class="stat"><b id="stk">0</b><span>day streak</span></div>
+      <div class="stat"><b id="frz">0</b><span>streak freezes held</span></div>
+      <div class="stat"><b id="wk">0</b><span>XP this week</span></div>
+    </div>
+  </section>
+
+  <div class="grid2">
+    <section class="panel" aria-labelledby="dh">
+      <h2 id="dh">Daily challenge <span id="dnum" style="color:var(--ink-faint);font-weight:600"></span></h2>
+      <p class="sub">Everyone gets the same question today. One attempt, timed from when you reveal it.</p>
+      <div id="daily"></div>
+    </section>
+    <section class="panel" aria-labelledby="qh">
+      <h2 id="qh">This week&rsquo;s quests</h2>
+      <p class="sub" id="qreset"></p>
+      <div id="quests"></div>
+    </section>
+  </div>
+
+  <section class="panel" aria-labelledby="hh">
+    <h2 id="hh">Activity</h2>
+    <p class="sub" id="hsum"></p>
+    <div class="heat" id="heat"></div>
+  </section>
+
+  <section class="panel" aria-labelledby="bh">
+    <h2 id="bh">Badges <span id="bcount" style="color:var(--ink-faint);font-weight:600"></span></h2>
+    <p class="sub">Bronze, silver and gold. Locked badges show what they take.</p>
+    <div class="badges" id="badges"></div>
+  </section>
+
+  <section class="panel" aria-labelledby="th">
+    <h2 id="th">Themes</h2>
+    <p class="sub">Unlocked by level. Your choice re-colours the whole site.</p>
+    <div class="themes" id="themes"></div>
+  </section>
+
+  <section class="panel" aria-labelledby="lh">
+    <h2 id="lh">Leaderboard</h2>
+    <div id="lbwrap"></div>
+  </section>
+
+  <section class="panel" aria-labelledby="rh">
+    <h2 id="rh">How experience works</h2>
+    <table class="rules" id="rules"></table>
+    <p class="sub" style="margin-top:.8rem">Practising on any day keeps your streak alive. Every 7 days of streak earns a freeze (you can hold two), which covers a missed day automatically. Experience is banked day by day, so it never goes down.</p>
+  </section>
+</main>
+<script src="questions.js"></script>
+<script src="site.js"></script>
+<script>
+(function(){
+  function ready(f){ if(window.HU_REWARDS) f(); else setTimeout(function(){ ready(f); },80); }
+  function $(id){ return document.getElementById(id); }
+  var Qmap={}; (window.HU_QUESTIONS||[]).forEach(function(q){ Qmap[q.id]=q; });
+  function typeset(el){ if(window.MathJax&&MathJax.typesetPromise) MathJax.typesetPromise([el]).catch(function(){}); }
+  function fmt(s){ s=Math.round(s); return Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); }
+
+  ready(function(){
+    var H=window.HU_REWARDS, esc=H.esc;
+    H.XP_RULES.forEach(function(r){ $('rules').insertAdjacentHTML('beforeend','<tr><td>'+r[0]+'</td><td>'+r[1]+'</td></tr>'); });
+
+    function paint(s){
+      $('lvl').textContent=s.level; $('ttl').textContent=s.title;
+      var into=s.xp-s.cur, span=s.next-s.cur, frac=Math.max(0,Math.min(1,into/span));
+      $('xpl').textContent=s.xp.toLocaleString()+' XP, '+(s.next-s.xp).toLocaleString()+' to level '+(s.level+1);
+      $('xpbar').style.width=(frac*100)+'%'; $('ringArc').setAttribute('stroke-dashoffset',String(402*(1-frac)));
+      $('nextTitle').textContent='Next title: '+H.titleOf(s.level+1)+'.';
+      $('stk').innerHTML=(s.streak?H.FLAME:'')+s.streak; $('frz').textContent=s.freezes; $('wk').textContent=s.weekXP.toLocaleString();
+      paintQuests(s); paintHeat(s); paintBadges(s); paintThemes(s); paintDaily(s);
+    }
+
+    /* quests */
+    function paintQuests(s){ var Q=H.weekQuests(s), el=$('quests'); var end=H.shift(s.week,7), days=Math.round((new Date(end.split('-')[0],end.split('-')[1]-1,end.split('-')[2])-Date.now())/86400000);
+      $('qreset').textContent='New quests every Monday; these reset in '+Math.max(1,days)+(days===1?' day.':' days.');
+      el.innerHTML=Q.map(function(x){ return '<div class="quest"><span class="nm">'+esc(x.q.name)+'</span><span class="xp">+'+x.q.xp+' XP</span><div class="bar"><i style="width:'+(100*x.progress/x.q.goal)+'%"></i></div>'
+        +'<span style="color:var(--ink-faint);font-size:.82rem">'+x.progress+' / '+x.q.goal+'</span>'
+        +'<button class="claim" type="button" data-k="'+x.key+'" data-xp="'+x.q.xp+'"'+(x.claimed||!x.done?' disabled':'')+'>'+(x.claimed?'Claimed':x.done?'Claim':'In progress')+'</button></div>'; }).join('');
+      el.querySelectorAll('.claim').forEach(function(b){ b.addEventListener('click',function(){ H.claim(b.dataset.k,+b.dataset.xp); }); }); }
+
+    /* heatmap: last 18 weeks */
+    function paintHeat(s){ var el=$('heat'), t=s.today, start=H.shift(t,-7*18+1), html='', total=0, act=0;
+      var p=start.split('-'), wd=(new Date(+p[0],p[1]-1,+p[2]).getDay()+6)%7; start=H.shift(start,-wd);
+      for(var d=start; d<=t; d=H.shift(d,1)){ var v=s.perDay[d]||0; total+=v; if(v>0) act++;
+        var a=v===0?0:v<60?.3:v<200?.55:v<400?.8:1; html+='<i title="'+d+': '+v+' XP" style="'+(v?'background:color-mix(in srgb,var(--aqua) '+Math.round(a*100)+'%,var(--bg-deep));border-color:transparent':'')+'"></i>'; }
+      el.innerHTML=html; $('hsum').textContent=act+' active days and '+total.toLocaleString()+' XP in the last 18 weeks. Longest streak: '+s.best+(s.best===1?' day.':' days.'); }
+
+    /* badges */
+    function paintBadges(s){ var got=H.earnedBadges(s); $('bcount').textContent=got.length+' / '+H.BADGES.length;
+      $('badges').innerHTML=H.BADGES.map(function(b){ var g=got.indexOf(b.id)>=0; return '<div class="badge'+(g?'':' lock')+'">'+H.medal(b,g,58)+'<div class="t" style="color:'+(g?H.TIERCOL[b.tier]:'var(--ink-faint)')+'">'+H.TIER[b.tier]+'</div><h3>'+esc(b.name)+'</h3><p>'+esc(b.d)+'</p></div>'; }).join(''); }
+
+    /* themes */
+    function paintThemes(s){ var cur=s.R.theme||'indigo';
+      $('themes').innerHTML=H.THEMES.map(function(t){ var ok=s.level>=t.lvl, v=t.v, a=v['--aqua']||'#4FD8E8', r=v['--rose']||'#FF6B8B', y=v['--saffron']||'#FFC53D';
+        return '<button class="theme" type="button" data-id="'+t.id+'" aria-pressed="'+(cur===t.id)+'"'+(ok?'':' disabled')+'><div class="sw"><i style="background:'+a+'"></i><i style="background:'+r+'"></i><i style="background:'+y+'"></i></div><b>'+t.name+'</b><small>'+(ok?(cur===t.id?'In use':'Unlocked'):'Unlocks at level '+t.lvl)+'</small></button>'; }).join('');
+      $('themes').querySelectorAll('.theme').forEach(function(b){ b.addEventListener('click',function(){ H.setTheme(b.dataset.id); H.tick(); }); }); }
+
+    /* daily challenge */
+    var dstate=null;
+    function paintDaily(s){ var k=s.today, id=H.dailyId(k), q=Qmap[id], rec=s.R.daily[k], el=$('daily');
+      $('dnum').textContent='#'+H.dailyNumber(k);
+      if(!q){ el.innerHTML='<p class="sub">Today&rsquo;s question could not be loaded.</p>'; return; }
+      if(dstate&&dstate.k===k&&!rec) return;           // mid-attempt: leave it alone
+      if(rec){ if(el.dataset.done===k) return; el.dataset.done=k;
+        var shareTxt='Kevinvariant daily #'+H.dailyNumber(k)+': '+(rec.ok?'solved in '+fmt(rec.secs):'missed')+(s.streak?', '+s.streak+'-day streak':'')+'\n'+location.origin+location.pathname;
+        el.innerHTML='<div class="q"><p style="margin:0 0 .4rem;font-weight:700;color:'+(rec.ok?'var(--mint)':'var(--rose)')+'">'+(rec.ok?'Solved in '+fmt(rec.secs):'Not this time')+'. +'+rec.xp+' XP</p>'+q.q
+          +'<div class="sol"><strong>Answer '+q.ans+'.</strong> '+q.sol+'</div></div><div class="row"><button class="btn" type="button" id="share">Copy result to share</button><span class="sub" id="shared" style="margin:0"></span></div><p class="sub" style="margin-top:.6rem">A new question appears at midnight.</p>';
+        $('share').addEventListener('click',function(){ (navigator.clipboard?navigator.clipboard.writeText(shareTxt):Promise.reject()).then(function(){ $('shared').textContent='Copied.'; },function(){ $('shared').textContent=shareTxt; }); });
+        typeset(el); return; }
+      el.dataset.done=''; el.innerHTML='<div class="q"><p style="margin:0">Rated '+q.rating.toFixed(1)+' out of 9. Solving it is worth '+(60+5*Math.min(10,s.streak+1))+' XP, plus the usual XP for the answer.</p></div><button class="btn" type="button" id="dstart">Reveal today&rsquo;s question</button>';
+      $('dstart').addEventListener('click',function(){ start(q,k); }); }
+    function start(q,k){ var el=$('daily'), t0=performance.now(); dstate={k:k};
+      el.innerHTML='<div class="row" style="justify-content:space-between"><span class="sub" style="margin:0">One attempt</span><span class="timer" id="dt">0:00</span></div><div class="q">'+q.q+'<div class="opts">'
+        +q.opts.map(function(o,i){ var L=String.fromCharCode(65+i); return '<button class="opt" type="button" data-l="'+L+'"><b>'+L+'</b><span>'+o+'</span></button>'; }).join('')+'</div></div>';
+      typeset(el); var iv=setInterval(function(){ var e=$('dt'); if(!e){ clearInterval(iv); return; } e.textContent=fmt((performance.now()-t0)/1000); },500);
+      el.querySelectorAll('.opt').forEach(function(b){ b.addEventListener('click',function(){ clearInterval(iv); var ok=b.dataset.l===q.ans, secs=(performance.now()-t0)/1000;
+        el.querySelectorAll('.opt').forEach(function(x){ x.disabled=true; if(x.dataset.l===q.ans) x.classList.add('right'); });
+        if(!ok) b.classList.add('wrong'); dstate=null; setTimeout(function(){ H.recordDaily(ok,secs,q.id,b.dataset.l,q.tags); },900); }); }); }
+
+    /* leaderboard */
+    var weekly=true;
+    function paintLB(){ var A=window.HU_AUTH, s=H.snapshot(), el=$('lbwrap');
+      if(!A||!A.configured){ el.innerHTML='<p class="sub">The leaderboard needs accounts, which are not switched on for this site yet.</p>'; return; }
+      var u=A.user();
+      if(!u){ el.innerHTML='<p class="sub">Compete with friends on weekly and all-time experience. <a href="auth.html">Sign in</a> to join.</p>'; return; }
+      var on=!!s.R.lb;
+      el.innerHTML='<div class="row" style="margin-bottom:.9rem"><label class="row" style="gap:.4rem"><input type="checkbox" id="lbon"'+(on?' checked':'')+'> Show me on the leaderboard as</label><input class="nm" id="lbname" maxlength="24" value="'+esc(H.displayName(u))+'"><button class="btn secondary" type="button" id="lbsave">Save</button></div>'
+        +'<div class="tabs"><button type="button" data-w="1" aria-pressed="'+weekly+'">This week</button><button type="button" data-w="0" aria-pressed="'+!weekly+'">All time</button></div><div id="lbt"><p class="sub">Loading&hellip;</p></div>';
+      $('lbsave').addEventListener('click',function(){ H.setLeaderboard($('lbon').checked,$('lbname').value); setTimeout(paintLB,1200); });
+      $('lbon').addEventListener('change',function(){ H.setLeaderboard($('lbon').checked,$('lbname').value); setTimeout(paintLB,1200); });
+      el.querySelectorAll('.tabs button').forEach(function(b){ b.addEventListener('click',function(){ weekly=b.dataset.w==='1'; paintLB(); }); });
+      H.fetchLeaderboard(weekly).then(function(r){ var t=$('lbt'); if(!t) return;
+        if(r.error){ t.innerHTML='<p class="sub">The leaderboard table has not been created yet. (Site owner: run <code>supabase/leaderboard.sql</code>.)</p>'; return; }
+        if(!r.rows.length){ t.innerHTML='<p class="sub">Nobody on the board yet'+(weekly?' this week':'')+'. Be the first.</p>'; return; }
+        t.innerHTML='<table class="lb"><thead><tr><th>#</th><th>Name</th><th>Level</th><th class="n">Streak</th><th class="n">'+(weekly?'XP this week':'XP')+'</th></tr></thead><tbody>'
+          +r.rows.map(function(x,i){ return '<tr'+(x.user_id===u.id?' class="me"':'')+'><td>'+(i+1)+'</td><td>'+esc(x.name)+'</td><td>'+x.level+' <span style="color:var(--ink-faint)">'+esc(H.titleOf(x.level))+'</span></td><td class="n">'+x.streak+'</td><td class="n">'+(weekly?x.week_xp:x.xp).toLocaleString()+'</td></tr>'; }).join('')+'</tbody></table>'; }); }
+
+    paint(H.snapshot());
+    window.addEventListener('hu-rewards',function(e){ paint(e.detail); });
+    if(window.HU_AUTH) paintLB(); else { window.addEventListener('hu-auth-ready',paintLB,{once:true}); setTimeout(function(){ if(!window.HU_AUTH) paintLB(); },9000); }
+    window.addEventListener('hu-auth-event',function(){ setTimeout(paintLB,800); });
+  });
+})();
+</script>
+</body>
+</html>
