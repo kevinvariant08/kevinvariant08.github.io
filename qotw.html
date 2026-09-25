@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Problem of the week | Kevinvariant</title>
+  <meta name="description" content="One hard TMUA problem a week, with a discussion that unlocks once you have answered.">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <meta name="theme-color" content="#15173B">
+  <link rel="stylesheet" href="style.css">
+  <script>window.MathJax={tex:{inlineMath:[['$','$']],displayMath:[['\\[','\\]']],processEscapes:true},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};</script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js" async></script>
+  <style>
+    .wrap{max-width:820px;margin:0 auto;padding:1.5rem 1.2rem 4rem}
+    .panel{background:var(--surface);border:1px solid var(--line-soft);border-radius:var(--r-lg);padding:1.4rem 1.5rem;margin-top:1.2rem}
+    h1{font:800 2.1rem var(--display);margin:.6rem 0 .2rem}
+    .meta{display:flex;flex-wrap:wrap;gap:.4rem 1rem;color:var(--ink-faint);font:600 .85rem var(--display)}
+    .weeks{display:flex;gap:.4rem;flex-wrap:wrap;margin-top:1rem}
+    .weeks button{font:600 .85rem var(--display);background:var(--bg-deep);color:var(--ink-soft);border:1px solid var(--line);border-radius:99px;padding:.3rem .8rem;cursor:pointer}
+    .weeks button[aria-pressed="true"]{color:var(--ink);border-color:var(--aqua)}
+    .q{font-size:1.05rem;line-height:1.65}
+    .opts{list-style:none;padding:0;margin:1rem 0 0;display:grid;grid-template-columns:1fr 1fr;gap:.45rem}
+    .opts button{width:100%;display:flex;gap:.7rem;align-items:flex-start;text-align:left;background:var(--bg-deep);border:1px solid var(--line);border-radius:var(--r-md);padding:.6rem .8rem;color:var(--ink);font:inherit;cursor:pointer}
+    .opts button:hover:not(:disabled){border-color:var(--aqua)}.opts button[aria-pressed="true"]{border-color:var(--saffron);background:var(--saffron-wash)}
+    .opts button b{font-family:var(--display);min-width:1.1rem}.opts button.right{border-color:var(--mint);background:var(--mint-wash)}.opts button.wrong{border-color:var(--rose);background:var(--rose-wash)}
+    .act{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;margin-top:1rem}
+    .note{color:var(--ink-faint);font-size:.85rem}
+    .verdict{margin-top:1rem;padding:.8rem 1rem;border-radius:var(--r-md);background:var(--bg-deep);border:1px solid var(--line-soft)}
+    details.sol{margin-top:.7rem;color:var(--ink-soft)}details.sol summary{cursor:pointer;color:var(--aqua);font:600 .9rem var(--display)}
+    .lock{display:flex;gap:.9rem;align-items:center;color:var(--ink-soft)}.lock svg{flex:none}
+    .post{padding:.9rem 0;border-top:1px solid var(--line-soft)}.post:first-child{border-top:0}
+    .post .who{display:flex;gap:.5rem;align-items:center;font:700 .9rem var(--display)}.post .who .t{color:var(--ink-faint);font-weight:500}
+    .chip{font:700 .7rem var(--display);padding:.1rem .45rem;border-radius:99px;background:var(--mint-wash);color:var(--mint)}
+    .post .body{margin-top:.35rem;line-height:1.6;overflow-wrap:anywhere}
+    .post .del{margin-left:auto;background:none;border:0;color:var(--ink-faint);cursor:pointer;font:600 .8rem var(--display)}
+    textarea{width:100%;min-height:7rem;box-sizing:border-box;background:var(--bg-deep);border:1px solid var(--line);color:var(--ink);border-radius:var(--r-md);padding:.7rem .8rem;font:1rem/1.5 var(--serif);resize:vertical}
+    .preview{margin-top:.6rem;padding:.7rem .9rem;border:1px dashed var(--line);border-radius:var(--r-md);color:var(--ink-soft);min-height:1.5rem}
+    @media (max-width:640px){.opts{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+<nav id="site-nav"></nav>
+<main class="wrap">
+  <h1>Problem of the week</h1>
+  <div class="meta"><span id="wlabel"></span><span id="wnext"></span></div>
+  <div class="weeks" id="weeks"></div>
+
+  <section class="panel" id="card" aria-live="polite"></section>
+
+  <section class="panel" aria-labelledby="dh">
+    <h2 id="dh" style="font:800 1.25rem var(--display);margin:0 0 .6rem">Discussion</h2>
+    <div id="disc"></div>
+  </section>
+</main>
+<script src="questions.js"></script>
+<script src="site.js"></script>
+<script>
+(function(){
+  var Q=window.HU_QUESTIONS||[], byId={}; Q.forEach(function(q){ byId[q.id]=q; });
+  var POOL=Q.filter(function(q){return q.rating>=7.8;}).map(function(q){return q.id;}).sort();
+  function $(id){ return document.getElementById(id); }
+  function load(k,d){ try{ var v=localStorage.getItem(k); return v==null?d:JSON.parse(v); }catch(e){ return d; } }
+  function save(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} }
+  function esc(s){ return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
+  function pad(n){ return (n<10?'0':'')+n; }
+  function dkey(d){ return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); }
+  function monday(offset){ var d=new Date(); d.setHours(0,0,0,0); d.setDate(d.getDate()-((d.getDay()+6)%7)+7*(offset||0)); return d; }
+  function hash(s){ var h=2166136261; for(var i=0;i<s.length;i++){ h^=s.charCodeAt(i); h=Math.imul(h,16777619); } return h>>>0; }
+  function weekQ(wk){ return POOL[hash('qotw'+wk)%POOL.length]; }
+  function typeset(el){ if(window.MathJax&&MathJax.typesetPromise) MathJax.typesetPromise([el]).catch(function(){}); }
+  function fmt(s){ s=Math.round(s); return Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); }
+  function ago(ts){ var s=(Date.now()-new Date(ts).getTime())/1000; if(s<60) return 'just now'; if(s<3600) return Math.floor(s/60)+' min ago'; if(s<86400) return Math.floor(s/3600)+' h ago'; return Math.floor(s/86400)+' d ago'; }
+  function body(t){ return esc(t).replace(/\n/g,'<br>'); }
+
+  var offset=0, chosen=null, t0=0;
+  var nextMon=monday(1); var daysLeft=Math.ceil((nextMon-new Date())/86400000);
+  $('wnext').textContent='A new problem in '+daysLeft+(daysLeft===1?' day':' days');
+  function paintWeeks(){ var labels=['This week','Last week','2 weeks ago','3 weeks ago'];
+    $('weeks').innerHTML=labels.map(function(l,i){ return '<button type="button" data-o="'+(-i)+'" aria-pressed="'+(offset===-i)+'">'+l+'</button>'; }).join('');
+    $('weeks').querySelectorAll('button').forEach(function(b){ b.addEventListener('click',function(){ offset=+b.dataset.o; paint(); }); }); }
+
+  function paint(){ paintWeeks(); var wk=dkey(monday(offset)), q=byId[weekQ(wk)], rec=load('hu_qotw',{})[wk], card=$('card');
+    var d=monday(offset); $('wlabel').textContent='Week of '+d.toLocaleDateString('en-GB',{day:'numeric',month:'long'})+'  \u00b7  rated '+q.rating.toFixed(1)+' out of 9';
+    chosen=null; t0=performance.now();
+    if(rec){ card.innerHTML='<div class="q">'+q.q+'</div><ul class="opts">'+q.opts.map(function(o,k){ var L=String.fromCharCode(65+k), cls=L===q.ans?'right':(L===rec.chosen?'wrong':''); return '<li><button type="button" disabled class="'+cls+'"><b>'+L+'</b><span>'+o+'</span></button></li>'; }).join('')+'</ul>'
+        +'<div class="verdict">'+(rec.gaveUp?'You revealed this one without answering.':rec.ok?'<strong style="color:var(--mint)">Solved</strong> in '+fmt(rec.secs)+'.':'<strong style="color:var(--rose)">Not this time.</strong> The answer is '+q.ans+'.')
+        +'<details class="sol"><summary>Official solution</summary><div style="margin-top:.5rem">'+q.sol+'</div></details></div>'; }
+    else{ card.innerHTML='<div class="q">'+q.q+'</div><ul class="opts" id="opts">'+q.opts.map(function(o,k){ var L=String.fromCharCode(65+k); return '<li><button type="button" data-l="'+L+'" aria-pressed="false"><b>'+L+'</b><span>'+o+'</span></button></li>'; }).join('')+'</ul>'
+        +'<div class="act"><button class="btn" type="button" id="commit" disabled>Commit my answer</button>'+(offset<0?'<button class="btn secondary" type="button" id="giveup">Reveal without answering</button>':'')+'<span class="note">One attempt. Take as long as you like.</span></div>';
+      card.querySelectorAll('#opts button').forEach(function(b){ b.addEventListener('click',function(){ chosen=b.dataset.l; card.querySelectorAll('#opts button').forEach(function(x){ x.setAttribute('aria-pressed',String(x===b)); }); $('commit').disabled=false; }); });
+      $('commit').addEventListener('click',function(){ commit(wk,q,false); });
+      if($('giveup')) $('giveup').addEventListener('click',function(){ commit(wk,q,true); }); }
+    typeset(card); paintDisc(wk,q,rec); }
+
+  function commit(wk,q,gaveUp){ var secs=(performance.now()-t0)/1000, ok=!gaveUp&&chosen===q.ans, all=load('hu_qotw',{});
+    if(all[wk]) return; all[wk]={id:q.id,chosen:gaveUp?null:chosen,ok:ok,secs:Math.round(secs),t:Date.now(),gaveUp:gaveUp}; save('hu_qotw',all);
+    if(!gaveUp){ var L=load('hu_drill_log',[]); L.push({t:Date.now(),id:q.id,paper:q.paper,correct:ok,chosen:chosen,secs:Math.round(secs),mode:'qotw',tags:q.tags}); save('hu_drill_log',L.slice(-2000)); }
+    if(window.HU_REWARDS) HU_REWARDS.tick(); paint(); }
+
+  /* ---------- discussion: locked until you have answered */
+  var LOCK='<svg width="34" height="34" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10" width="14" height="10" rx="2.5" fill="none" stroke="var(--saffron)" stroke-width="1.8"/><path d="M8 10V7.5a4 4 0 0 1 8 0V10" fill="none" stroke="var(--saffron)" stroke-width="1.8"/></svg>';
+  function client(){ var A=window.HU_AUTH; return A&&A.configured?A:null; }
+  function paintDisc(wk,q,rec){ var el=$('disc'), A=client();
+    if(!A){ el.innerHTML='<p class="note">The discussion needs accounts, which are not switched on for this site yet.</p>'; return; }
+    var countQ=A.client.from('discussion').select('id',{count:'exact',head:true}).eq('week',wk);
+    if(!rec){ el.innerHTML='<div class="lock">'+LOCK+'<div><strong>Commit an answer to unlock the discussion.</strong><br><span class="note" id="cnt">Nobody has seen other people&rsquo;s methods before trying it themselves.</span></div></div>';
+      countQ.then(function(r){ if(!r.error&&r.count&&$('cnt')) $('cnt').textContent=r.count+(r.count===1?' person has':' people have')+' posted a method. Yours could be next.'; }); return; }
+    el.innerHTML='<div id="posts"><p class="note">Loading&hellip;</p></div><div id="compose" style="margin-top:1rem"></div>';
+    var u=A.user();
+    if(!u) $('compose').innerHTML='<p class="note"><a href="auth.html">Sign in</a> to share your method.</p>';
+    else{ $('compose').innerHTML='<label class="note" for="msg">Share your method. Write maths between dollar signs, for example <code>$x^2+1$</code>.</label><textarea id="msg" maxlength="2000" placeholder="The key step was..."></textarea><div class="preview" id="pv"><span class="note">Preview appears here.</span></div><div class="act"><button class="btn" type="button" id="post">Post</button><span class="note" id="pst"></span></div>';
+      var pv=$('pv'), ta=$('msg'), tmr=null;
+      ta.addEventListener('input',function(){ clearTimeout(tmr); tmr=setTimeout(function(){ pv.innerHTML=ta.value.trim()?body(ta.value):'<span class="note">Preview appears here.</span>'; typeset(pv); },300); });
+      $('post').addEventListener('click',function(){ var t=ta.value.trim(); if(!t){ $('pst').textContent='Write something first.'; return; } $('post').disabled=true; $('pst').textContent='Posting\u2026';
+        var nm=(window.HU_REWARDS?HU_REWARDS.displayName(u):(u.email||'Player').split('@')[0]).slice(0,24);
+        A.client.from('discussion').insert({week:wk,qid:q.id,user_id:u.id,name:nm,body:t.slice(0,2000),solved:!!rec.ok}).then(function(r){ $('post').disabled=false;
+          if(r.error){ $('pst').textContent=/relation|does not exist/i.test(r.error.message)?'The discussion table has not been created yet.':'Could not post: '+r.error.message; return; }
+          ta.value=''; pv.innerHTML='<span class="note">Preview appears here.</span>'; $('pst').textContent='Posted.'; loadPosts(wk); }); }); }
+    loadPosts(wk); }
+  function loadPosts(wk){ var A=client(), u=A.user();
+    A.client.from('discussion').select('id,name,body,solved,created_at,user_id').eq('week',wk).order('created_at',{ascending:true}).limit(200).then(function(r){ var el=$('posts'); if(!el) return;
+      if(r.error){ el.innerHTML='<p class="note">'+(/relation|does not exist/i.test(r.error.message)?'The discussion table has not been created yet. (Site owner: run <code>supabase/discussion.sql</code>.)':'Could not load the discussion.')+'</p>'; return; }
+      if(!r.data.length){ el.innerHTML='<p class="note">No methods posted yet. Be the first to explain yours.</p>'; return; }
+      el.innerHTML=r.data.map(function(p){ return '<div class="post"><div class="who">'+esc(p.name)+(p.solved?'<span class="chip">solved</span>':'')+'<span class="t">'+ago(p.created_at)+'</span>'+(u&&p.user_id===u.id?'<button class="del" type="button" data-id="'+p.id+'">Delete</button>':'')+'</div><div class="body">'+body(p.body)+'</div></div>'; }).join('');
+      el.querySelectorAll('.del').forEach(function(b){ b.addEventListener('click',function(){ if(!confirm('Delete this post?')) return; A.client.from('discussion').delete().eq('id',b.dataset.id).then(function(){ loadPosts(wk); }); }); });
+      typeset(el); }); }
+
+  function boot(){ paint(); }
+  if(window.HU_AUTH) boot(); else { var done=false; window.addEventListener('hu-auth-ready',function(){ if(!done){ done=true; boot(); } },{once:true}); setTimeout(function(){ if(!done){ done=true; boot(); } },2500); }
+  window.addEventListener('hu-auth-event',function(){ var wk=dkey(monday(offset)); paintDisc(wk,byId[weekQ(wk)],load('hu_qotw',{})[wk]); });
+})();
+</script>
+</body>
+</html>
