@@ -115,12 +115,12 @@
       $('post').addEventListener('click',function(){ var t=ta.value.trim(); if(!t){ $('pst').textContent='Write something first.'; return; } $('post').disabled=true; $('pst').textContent='Posting\u2026';
         var nm=(window.HU_REWARDS?HU_REWARDS.displayName(u):(u.email||'Player').split('@')[0]).slice(0,24);
         A.client.from('discussion').insert({week:wk,qid:q.id,user_id:u.id,name:nm,body:t.slice(0,2000),solved:!!rec.ok}).then(function(r){ $('post').disabled=false;
-          if(r.error){ $('pst').textContent=/relation|does not exist/i.test(r.error.message)?'The discussion table has not been created yet.':'Could not post: '+r.error.message; return; }
+          if(r.error){ $('pst').textContent=/relation|does not exist|schema cache|could not find the table/i.test(r.error.message)?'The discussion table has not been created yet.':'Could not post: '+r.error.message; return; }
           ta.value=''; pv.innerHTML='<span class="note">Preview appears here.</span>'; $('pst').textContent='Posted.'; loadPosts(wk); }); }); }
     loadPosts(wk); }
   function loadPosts(wk){ var A=client(), u=A.user();
     A.client.from('discussion').select('id,name,body,solved,created_at,user_id').eq('week',wk).order('created_at',{ascending:true}).limit(200).then(function(r){ var el=$('posts'); if(!el) return;
-      if(r.error){ el.innerHTML='<p class="note">'+(/relation|does not exist/i.test(r.error.message)?'The discussion table has not been created yet. (Site owner: run <code>supabase/discussion.sql</code>.)':'Could not load the discussion.')+'</p>'; return; }
+      if(r.error){ el.innerHTML='<p class="note">'+(/relation|does not exist|schema cache|could not find the table/i.test(r.error.message)?'The discussion table has not been created yet. (Site owner: run <code>supabase/discussion.sql</code>.)':'Could not load the discussion.')+'</p>'; return; }
       if(!r.data.length){ el.innerHTML='<p class="note">No methods posted yet. Be the first to explain yours.</p>'; return; }
       el.innerHTML=r.data.map(function(p){ return '<div class="post"><div class="who">'+esc(p.name)+(p.solved?'<span class="chip">solved</span>':'')+'<span class="t">'+ago(p.created_at)+'</span>'+(u&&p.user_id===u.id?'<button class="del" type="button" data-id="'+p.id+'">Delete</button>':'')+'</div><div class="body">'+body(p.body)+'</div></div>'; }).join('');
       el.querySelectorAll('.del').forEach(function(b){ b.addEventListener('click',function(){ if(!confirm('Delete this post?')) return; A.client.from('discussion').delete().eq('id',b.dataset.id).then(function(){ loadPosts(wk); }); }); });
