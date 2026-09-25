@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Friend duel | Kevinvariant</title>
+  <meta name="description" content="Challenge a friend: five TMUA questions, and they race your ghost.">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <meta name="theme-color" content="#15173B">
+  <link rel="stylesheet" href="style.css">
+  <script>window.MathJax={tex:{inlineMath:[['$','$']],displayMath:[['\\[','\\]']],processEscapes:true},options:{skipHtmlTags:['script','noscript','style','textarea','pre']}};</script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js" async></script>
+  <style>
+    .wrap{max-width:820px;margin:0 auto;padding:1.5rem 1.2rem 4rem}
+    .panel{background:var(--surface);border:1px solid var(--line-soft);border-radius:var(--r-lg);padding:1.4rem 1.5rem;margin-top:1.2rem}
+    h1{font:800 2.1rem var(--display);margin:.6rem 0 .3rem}
+    .lede{color:var(--ink-soft);max-width:58ch;margin:0}
+    .field{display:grid;gap:.35rem;margin:1rem 0}.field span{font:600 .85rem var(--display);color:var(--ink-soft)}
+    input.txt{background:var(--bg-deep);border:1px solid var(--line);color:var(--ink);border-radius:var(--r-sm);padding:.55rem .7rem;font:inherit;max-width:20rem}
+    .seg{display:flex;flex-wrap:wrap;gap:.45rem}
+    .seg button{font:600 .9rem var(--display);background:var(--bg-deep);color:var(--ink-soft);border:1px solid var(--line);border-radius:var(--r-md);padding:.55rem .9rem;cursor:pointer;text-align:left}
+    .seg button small{display:block;font-weight:500;color:var(--ink-faint);font-size:.75rem}
+    .seg button[aria-pressed="true"]{color:var(--ink);border-color:var(--aqua);background:var(--aqua-wash)}
+    .hist{list-style:none;padding:0;margin:.4rem 0 0}.hist li{display:flex;justify-content:space-between;gap:1rem;padding:.5rem 0;border-top:1px solid var(--line-soft);font-size:.92rem}
+    .hist li:first-child{border-top:0}.w{color:var(--mint)}.l{color:var(--rose)}.d{color:var(--saffron)}
+    .top{display:flex;justify-content:space-between;align-items:center;gap:1rem;color:var(--ink-soft);font:600 .9rem var(--display)}
+    .pips{display:flex;gap:.3rem}.pips i{width:26px;height:6px;border-radius:99px;background:var(--line-soft)}.pips i.on{background:var(--aqua)}.pips i.done{background:var(--ink-faint)}
+    .lane{margin-top:.9rem;display:grid;grid-template-columns:auto 1fr auto;gap:.7rem;align-items:center;font-size:.85rem;color:var(--ink-soft)}
+    .lane .track{height:6px;border-radius:99px;background:var(--bg-deep);overflow:hidden}.lane .track i{display:block;height:100%;width:0;background:var(--rose);border-radius:99px}
+    .lane .st{font:700 .8rem var(--display);min-width:5.5rem;text-align:right}
+    .q{font-size:1.05rem;line-height:1.6;margin-top:1rem}
+    .opts{list-style:none;padding:0;margin:1rem 0 0;display:grid;grid-template-columns:1fr 1fr;gap:.45rem}
+    .opts button{width:100%;display:flex;gap:.7rem;align-items:flex-start;text-align:left;background:var(--bg-deep);border:1px solid var(--line);border-radius:var(--r-md);padding:.6rem .8rem;color:var(--ink);font:inherit;cursor:pointer}
+    .opts button:hover:not(:disabled){border-color:var(--aqua)}.opts button[aria-pressed="true"]{border-color:var(--saffron);background:var(--saffron-wash)}
+    .opts button b{font-family:var(--display);min-width:1.1rem}.opts button.right{border-color:var(--mint);background:var(--mint-wash)}.opts button.wrong{border-color:var(--rose);background:var(--rose-wash)}
+    .act{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;margin-top:1rem}
+    .verdict{margin-top:1rem;padding:.8rem 1rem;border-radius:var(--r-md);background:var(--bg-deep);border:1px solid var(--line-soft)}
+    details.sol{margin-top:.7rem;color:var(--ink-soft)}details.sol summary{cursor:pointer;color:var(--aqua);font:600 .9rem var(--display)}
+    .big{font:800 2.4rem var(--display);margin:.2rem 0}
+    table.res{width:100%;border-collapse:collapse;margin-top:1rem;font-size:.92rem}table.res th,table.res td{padding:.45rem .4rem;border-bottom:1px solid var(--line-soft);text-align:left}
+    table.res td.c{text-align:center}.tick{color:var(--mint)}.cross{color:var(--rose)}
+    .share{display:flex;gap:.5rem;margin-top:.8rem}.share input{flex:1;max-width:none}
+    .kbd{color:var(--ink-faint);font-size:.8rem}
+    .hidden{display:none}
+    @media (max-width:640px){.opts{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+<nav id="site-nav"></nav>
+<main class="wrap">
+  <section id="hub">
+    <h1>Friend duel</h1>
+    <p class="lede">Play five questions. You get a link to send; your friend races your ghost on the same five, seeing when you answered but not whether you were right. Each question goes to the faster correct answer.</p>
+    <div class="panel" id="incoming" hidden></div>
+    <div class="panel" id="create">
+      <label class="field"><span>Your name, as your friend will see it</span><input class="txt" id="name" maxlength="20" autocomplete="nickname"></label>
+      <div class="field"><span>Difficulty</span><div class="seg" id="diff"></div></div>
+      <div class="act"><button class="btn" type="button" id="go">Play and create a challenge</button></div>
+    </div>
+    <div class="panel" id="histp" hidden><h2 style="font:800 1.15rem var(--display);margin:0">Recent duels</h2><ul class="hist" id="hist"></ul></div>
+  </section>
+
+  <section id="play" class="hidden" aria-live="polite">
+    <div class="panel">
+      <div class="top"><span id="qn"></span><div class="pips" id="pips"></div><span id="clock">0:00</span></div>
+      <div class="lane" id="lane" hidden><span id="gname"></span><div class="track"><i id="gbar"></i></div><span class="st" id="gst">thinking</span></div>
+      <div class="q" id="qtext"></div>
+      <ul class="opts" id="opts"></ul>
+      <div class="act"><button class="btn" type="button" id="lock" disabled>Lock in</button><span class="kbd">Keys A to H choose, Enter locks in.</span></div>
+      <div id="after"></div>
+    </div>
+  </section>
+
+  <section id="done" class="hidden"></section>
+</main>
+<script src="questions.js"></script>
+<script src="site.js"></script>
+<script>
+(function(){
+  var Q=window.HU_QUESTIONS||[], byId={}; Q.forEach(function(q){ byId[q.id]=q; });
+  var DIFFS=[{id:'w',name:'Warm-up',note:'rated 5 to 6.5',lo:4.5,hi:6.5},{id:'s',name:'Standard',note:'rated 6.5 to 7.5',lo:6.5,hi:7.5},{id:'h',name:'Hard',note:'rated 7.5 and above',lo:7.5,hi:9.1},{id:'m',name:'Mixed',note:'a rising ramp',lo:0,hi:9.1}];
+  function $(id){ return document.getElementById(id); }
+  function load(k,d){ try{ var v=localStorage.getItem(k); return v==null?d:JSON.parse(v); }catch(e){ return d; } }
+  function save(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} }
+  function esc(s){ return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
+  function fmt(s){ s=Math.max(0,Math.round(s)); return Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); }
+  function ft(s){ s=Math.round(s*10)/10; return s<60?s.toFixed(1)+' s':Math.floor(s/60)+':'+(s%60).toFixed(1).padStart(4,'0'); }
+  function typeset(el){ if(window.MathJax&&MathJax.typesetPromise) MathJax.typesetPromise([el]).catch(function(){}); }
+  function enc(o){ return btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); }
+  function dec(s){ try{ s=s.replace(/-/g,'+').replace(/_/g,'/'); while(s.length%4) s+='='; return JSON.parse(decodeURIComponent(escape(atob(s)))); }catch(e){ return null; } }
+  function show(id){ ['hub','play','done'].forEach(function(x){ $(x).classList.toggle('hidden',x!==id); }); window.scrollTo(0,0); }
+  function logAnswer(q,chosen,secs){ var L=load('hu_drill_log',[]); L.push({t:Date.now(),id:q.id,paper:q.paper,correct:chosen===q.ans,chosen:chosen,secs:Math.round(secs),mode:'duel',tags:q.tags}); save('hu_drill_log',L.slice(-2000)); }
+
+  function pick(d){ var pool=Q.filter(function(q){ return q.rating>=d.lo&&q.rating<d.hi; }), out=[];
+    if(d.id==='m'){ [[4.5,6],[6,6.8],[6.8,7.4],[7.4,8],[8,9.1]].forEach(function(b){ var p=Q.filter(function(q){return q.rating>=b[0]&&q.rating<b[1];}); out.push(p[Math.floor(Math.random()*p.length)]); }); return out.map(function(q){return q.id;}); }
+    pool=pool.slice(); while(out.length<5&&pool.length){ out.push(pool.splice(Math.floor(Math.random()*pool.length),1)[0]); } out.sort(function(a,b){return a.rating-b.rating;}); return out.map(function(q){return q.id;}); }
+
+  /* ---------- hub */
+  var diff='s', incoming=null;
+  $('name').value=load('hu_duel_name','')||'';
+  function paintDiff(){ $('diff').innerHTML=DIFFS.map(function(d){ return '<button type="button" data-d="'+d.id+'" aria-pressed="'+(diff===d.id)+'">'+d.name+'<small>'+d.note+'</small></button>'; }).join('');
+    $('diff').querySelectorAll('button').forEach(function(b){ b.addEventListener('click',function(){ diff=b.dataset.d; paintDiff(); }); }); }
+  paintDiff();
+  function paintHist(){ var H=load('hu_duels',[]); $('histp').hidden=!H.length;
+    $('hist').innerHTML=H.slice(0,8).map(function(h){ var cls=h.res==='win'?'w':h.res==='loss'?'l':'d', word=h.res==='win'?'Won':h.res==='loss'?'Lost':'Drew';
+      return '<li><span>'+(h.opp?'vs '+esc(h.opp):'Challenge created')+' <span style="color:var(--ink-faint)">'+esc(h.diffName||'')+'</span></span><span class="'+(h.opp?cls:'')+'">'+(h.opp?word+' '+h.you+'&ndash;'+h.them:h.you+' / 5')+'</span></li>'; }).join(''); }
+  paintHist();
+  function name(){ var n=$('name').value.trim().slice(0,20)||'A friend'; save('hu_duel_name',n); return n; }
+
+  var h=location.hash.match(/d=([A-Za-z0-9_-]+)/); if(h){ incoming=dec(h[1]); }
+  if(incoming&&incoming.q&&incoming.q.every(function(id){return byId[id];})){
+    var d=DIFFS.filter(function(x){return x.id===incoming.d;})[0]||DIFFS[1];
+    $('incoming').hidden=false;
+    $('incoming').innerHTML='<h2 style="font:800 1.3rem var(--display);margin:0 0 .3rem">'+esc(incoming.n)+' has challenged you</h2><p class="lede">'+incoming.q.length+' questions, '+d.name.toLowerCase()+'. Their score stays hidden until you finish; you will see their progress on each question as you go.</p>'
+      +'<div class="act"><button class="btn" type="button" id="accept">Accept the duel</button></div>';
+    $('go').textContent='Or create your own challenge';
+    $('accept').addEventListener('click',function(){ start(incoming.q,incoming,incoming.d); });
+  } else if(h){ $('incoming').hidden=false; $('incoming').innerHTML='<p class="lede">That challenge link looks damaged. Ask for it again, or create your own below.</p>'; }
+  $('go').addEventListener('click',function(){ start(pick(DIFFS.filter(function(x){return x.id===diff;})[0]),null,diff); });
+
+  /* ---------- play */
+  var S=null;
+  function start(ids,ghost,d){ var me=name(); S={ids:ids,ghost:ghost,d:d,me:me,i:0,runs:[],t0:0,chosen:null,locked:false,timer:null}; show('play'); ask(); }
+  function ask(){ var q=byId[S.ids[S.i]]; S.chosen=null; S.locked=false; S.t0=performance.now();
+    $('qn').textContent='Question '+(S.i+1)+' of '+S.ids.length+'  \u00b7  rated '+q.rating.toFixed(1);
+    $('pips').innerHTML=S.ids.map(function(_,j){ return '<i class="'+(j<S.i?'done':j===S.i?'on':'')+'"></i>'; }).join('');
+    $('qtext').innerHTML=q.q; $('qtext').dataset.id=q.id; $('after').innerHTML=''; $('lock').disabled=true; $('lock').hidden=false;
+    $('opts').innerHTML=q.opts.map(function(o,k){ var L=String.fromCharCode(65+k); return '<li><button type="button" data-l="'+L+'" aria-pressed="false"><b>'+L+'</b><span>'+o+'</span></button></li>'; }).join('');
+    $('opts').querySelectorAll('button').forEach(function(b){ b.addEventListener('click',function(){ choose(b.dataset.l); }); });
+    var g=S.ghost&&S.ghost.r[S.i]; $('lane').hidden=!g;
+    if(g){ $('gname').textContent=S.ghost.n; $('gbar').style.width='0'; $('gst').textContent='thinking'; $('gst').style.color=''; }
+    clearInterval(S.timer); S.timer=setInterval(tickClock,100); typeset($('play')); }
+  function tickClock(){ var e=(performance.now()-S.t0)/1000; $('clock').textContent=fmt(e); var g=S.ghost&&S.ghost.r[S.i];
+    if(g&&!S.locked){ var f=Math.min(1,e/Math.max(1,g[1])); $('gbar').style.width=(f*100)+'%'; if(f>=1){ $('gst').textContent='answered'; $('gst').style.color='var(--rose)'; } } }
+  function choose(L){ if(S.locked) return; S.chosen=L; $('opts').querySelectorAll('button').forEach(function(b){ b.setAttribute('aria-pressed',String(b.dataset.l===L)); }); $('lock').disabled=false; }
+  function lock(){ if(S.locked||!S.chosen) return; S.locked=true; clearInterval(S.timer);
+    var q=byId[S.ids[S.i]], secs=Math.round((performance.now()-S.t0)/100)/10, ok=S.chosen===q.ans; S.runs.push([ok?1:0,secs]); logAnswer(q,S.chosen,secs);
+    $('opts').querySelectorAll('button').forEach(function(b){ b.disabled=true; if(b.dataset.l===q.ans) b.classList.add('right'); else if(b.dataset.l===S.chosen) b.classList.add('wrong'); });
+    $('lock').hidden=true;
+    var g=S.ghost&&S.ghost.r[S.i], line=ok?'<strong class="tick">Correct</strong> in '+ft(secs)+'.':'<strong class="cross">Not this one.</strong> The answer is '+q.ans+'.';
+    if(g){ $('gbar').style.width='100%'; var who=point(ok,secs,g[0],g[1]);
+      line+=' '+esc(S.ghost.n)+' was '+(g[0]?'right':'wrong')+' in '+ft(g[1])+'. '+(who==='me'?'<strong class="tick">Your point.</strong>':who==='them'?'<strong class="cross">Their point.</strong>':'No point.'); }
+    var last=S.i===S.ids.length-1;
+    $('after').innerHTML='<div class="verdict">'+line+'<details class="sol"><summary>Solution</summary><div style="margin-top:.5rem">'+q.sol+'</div></details></div><div class="act"><button class="btn" type="button" id="next">'+(last?'See the result':'Next question')+'</button><span class="kbd">Enter continues.</span></div>';
+    $('next').addEventListener('click',next); typeset($('after')); $('next').focus(); }
+  function point(ok,secs,gok,gsecs){ if(ok&&gok) return secs<gsecs?'me':secs>gsecs?'them':'none'; if(ok) return 'me'; if(gok) return 'them'; return 'none'; }
+  function next(){ if(S.i<S.ids.length-1){ S.i++; ask(); } else finish(); }
+  document.addEventListener('keydown',function(e){ if($('play').classList.contains('hidden')||e.target.tagName==='INPUT') return;
+    var k=e.key.toUpperCase(); if(/^[A-H]$/.test(k)&&!S.locked){ var b=$('opts').querySelector('[data-l="'+k+'"]'); if(b) choose(k); }
+    else if(e.key==='Enter'){ e.preventDefault(); if(!S.locked) lock(); else if($('next')) next(); } });
+  $('lock').addEventListener('click',lock);
+
+  /* ---------- result */
+  function finish(){ var d=DIFFS.filter(function(x){return x.id===S.d;})[0]||DIFFS[1], mine=S.runs.reduce(function(a,r){return a+r[0];},0);
+    var payload={v:1,n:S.me,d:S.d,q:S.ids,r:S.runs,t:Date.now()}, link=location.origin+location.pathname+'#d='+enc(payload), f=$('done'), H=load('hu_duels',[]);
+    var rows=S.ids.map(function(id,j){ var q=byId[id], r=S.runs[j], g=S.ghost&&S.ghost.r[j];
+      return '<tr><td>'+(j+1)+'</td><td>'+q.rating.toFixed(1)+'</td><td class="c">'+(r[0]?'<span class="tick">\u2713</span>':'<span class="cross">\u2717</span>')+' '+ft(r[1])+'</td>'+(g?'<td class="c">'+(g[0]?'<span class="tick">\u2713</span>':'<span class="cross">\u2717</span>')+' '+ft(g[1])+'</td><td class="c">'+({me:'You',them:esc(S.ghost.n),none:'&ndash;'})[point(r[0],r[1],g[0],g[1])]+'</td>':'')+'</tr>'; }).join('');
+    var head='<tr><th>Q</th><th>Rating</th><th class="c">You</th>'+(S.ghost?'<th class="c">'+esc(S.ghost.n)+'</th><th class="c">Point</th>':'')+'</tr>';
+    if(!S.ghost){
+      H.unshift({t:Date.now(),opp:null,you:mine,them:0,res:'made',diffName:d.name}); save('hu_duels',H.slice(0,30));
+      f.innerHTML='<div class="panel"><p class="kbd" style="margin:0">Challenge ready</p><p class="big">'+mine+' / '+S.ids.length+'</p><p class="lede">Send this link to a friend. They play the same five questions against your ghost, and your score stays hidden until they finish.</p>'
+        +'<div class="share"><input class="txt" id="lnk" readonly value="'+esc(link)+'"><button class="btn" type="button" id="cp">Copy link</button></div><p class="kbd" id="cpd"></p>'
+        +'<table class="res"><thead>'+head+'</thead><tbody>'+rows+'</tbody></table><div class="act"><a class="btn secondary" href="duel.html">Back to duels</a></div></div>';
+      $('cp').addEventListener('click',function(){ copy(S.me+' challenged you to a TMUA duel on Kevinvariant: '+link); });
+    } else {
+      var you=0, them=0, ty=0, tt=0; S.runs.forEach(function(r,j){ var g=S.ghost.r[j], w=point(r[0],r[1],g[0],g[1]); if(w==='me') you++; if(w==='them') them++; if(r[0]) ty+=r[1]; if(g[0]) tt+=g[1]; });
+      var res=you>them?'win':you<them?'loss':(ty&&tt?(ty<tt?'win':ty>tt?'loss':'draw'):'draw');
+      H.unshift({t:Date.now(),opp:S.ghost.n,you:you,them:them,res:res,diffName:d.name}); save('hu_duels',H.slice(0,30));
+      var title=res==='win'?'You win':res==='loss'?esc(S.ghost.n)+' wins':'A draw';
+      var tieNote=you===them&&res!=='draw'?' Level on points, decided by total time on correct answers.':'';
+      var rematch=location.origin+location.pathname+'#d='+enc({v:1,n:S.me,d:S.d,q:S.ids,r:S.runs,t:Date.now()});
+      f.innerHTML='<div class="panel"><p class="kbd" style="margin:0">Duel against '+esc(S.ghost.n)+'</p><p class="big">'+title+'</p><p class="lede">'+you+' points to '+them+'.'+tieNote+'</p>'
+        +'<table class="res"><thead>'+head+'</thead><tbody>'+rows+'</tbody></table>'
+        +'<div class="act"><button class="btn" type="button" id="rm">Send a rematch</button><button class="btn secondary" type="button" id="cpr">Copy result</button><a class="btn secondary" href="duel.html">New duel</a></div><p class="kbd" id="cpd"></p>'
+        +'<p class="kbd" style="margin-top:.6rem">A rematch sends the same five questions back, with your run as the ghost.</p></div>';
+      $('rm').addEventListener('click',function(){ copy(S.me+' wants a rematch on Kevinvariant: '+rematch); });
+      $('cpr').addEventListener('click',function(){ copy('Kevinvariant duel: '+S.me+' '+you+', '+S.ghost.n+' '+them+'. '+(res==='win'?S.me+' wins.':res==='loss'?S.ghost.n+' wins.':'A draw.')); });
+    }
+    show('done'); if(location.hash) history.replaceState(null,'',location.pathname); paintHist(); }
+  function copy(t){ (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(function(){ $('cpd').textContent='Copied. Paste it into your chat.'; },function(){ $('cpd').textContent=t; }); }
+})();
+</script>
+</body>
+</html>
