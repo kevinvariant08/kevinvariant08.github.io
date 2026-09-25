@@ -21,7 +21,7 @@
   function answerXP(e){ return e.correct?Math.round(rating(e.id)*2):2; }
   function paperXP(a){ return 50+5*(a.score||0); }
   function duelXP(h){ return h.you>h.them?40:(h.you===h.them?20:10); }
-  var XP_RULES=[['Correct answer','twice the question\u2019s rating (9 to 18)'],['Wrong answer','2, for the attempt'],['Finishing a timed paper','50, plus 5 per mark'],['Arena duel','40 for a win, 20 for a draw, 10 for a loss'],['Daily challenge','60 if correct plus 5 per streak day (up to 50), 15 if not'],['Weekly quest','150 to 250 each']];
+  var XP_RULES=[['Correct answer','twice the question\u2019s rating (9 to 18)'],['Wrong answer','2, for the attempt'],['Finishing a timed paper','50, plus 5 per mark'],['Arena duel','40 for a win, 20 for a draw, 10 for a loss'],['Daily challenge','60 if correct plus 5 per streak day (up to 50), 15 if not'],['Weekly quest','150 to 250 each'],['Friend duel','40 for a win, 20 for a draw, 10 for a loss, 15 for sending a challenge'],['Problem of the week','100 if solved, 25 for an attempt']];
 
   /* ---------------- levels: need(n) = 50 n (n-1) */
   var TITLES=['Point','Segment','Ray','Angle','Triangle','Median','Centroid','Incircle','Circumcircle','Orthocentre','Euler Line','Nine-Point Circle','Feuerbach Point','Symmedian','Brocard Point','Excircle','Mixtilinear Circle','Isogonal Conjugate','Simson Line','Morley Triangle','Poncelet Porism','Radical Axis','Pole and Polar','Inversion','Invariant'];
@@ -51,6 +51,8 @@
     L.forEach(function(e){ var k=dkey(e.t); days[k]=(days[k]||0)+answerXP(e); });
     A.forEach(function(a){ if(a.date) days[a.date]=(days[a.date]||0)+paperXP(a); });
     (AR.history||[]).forEach(function(h){ var k=dkey(h.t); days[k]=(days[k]||0)+duelXP(h); });
+    load('hu_duels',[]).forEach(function(h){ var k=dkey(h.t); days[k]=(days[k]||0)+(h.opp?(h.res==='win'?40:h.res==='draw'?20:10):15); });
+    var QW=load('hu_qotw',{}); Object.keys(QW).forEach(function(w){ var e=QW[w]; if(e&&e.t&&!e.gaveUp){ var k=dkey(e.t); days[k]=(days[k]||0)+(e.ok?100:25); } });
     Object.keys(days).forEach(function(k){ R.bank[k]=Math.max(R.bank[k]||0,days[k]); });
     R.maxAnswers=Math.max(R.maxAnswers||0,L.length);
     var bonus={};
@@ -109,7 +111,9 @@
     {id:'month',name:'Month of Maths',tier:2,d:'Practise on 30 days running.',f:function(s){return s.best>=30;}},
     {id:'devotee',name:'Daily Devotee',tier:1,d:'Solve 7 daily challenges.',f:function(s){return Object.keys(s.R.daily).filter(function(k){return s.R.daily[k].ok;}).length>=7;}},
     {id:'owl',name:'Night Owl',tier:0,d:'Get a question right between midnight and 5am.',f:function(s){return s.L.some(function(e){return e.correct&&new Date(e.t).getHours()<5;});}},
-    {id:'viva',name:'Viva Survivor',tier:1,d:'Finish a mock interview.',f:function(s){return s.IV.length>0;}}];
+    {id:'viva',name:'Viva Survivor',tier:1,d:'Finish a mock interview.',f:function(s){return s.IV.length>0;}},
+    {id:'rival',name:'Friendly Rival',tier:1,d:'Win a duel against a friend.',f:function(){return load('hu_duels',[]).some(function(h){return h.opp&&h.res==='win';});}},
+    {id:'weekly',name:'Problem Solver',tier:2,d:'Solve four problems of the week.',f:function(){var QW=load('hu_qotw',{}); return Object.keys(QW).filter(function(w){return QW[w]&&QW[w].ok;}).length>=4;}}];
   var TIER=['Bronze','Silver','Gold'], TIERCOL=['var(--aqua)','var(--rose)','var(--saffron)'];
   function earnedBadges(s){ return BADGES.filter(function(b){ try{ return b.f(s); }catch(e){ return false; } }).map(function(b){return b.id;}); }
   function medal(b,got,size){ size=size||64; var c=got?TIERCOL[b.tier]:'#4A4E8C', f=got?'#F3F1FF':'#4A4E8C';

@@ -7,6 +7,8 @@
     {label:'Practise', items:[
       {href:'drill.html', name:'Drill', note:'Full papers, timed, with extra-time options'},
       {href:'arena.html', name:'Arena', note:'Race a bot to the right answer'},
+      {href:'duel.html', name:'Friend duel', note:'Five questions; your friend races your ghost'},
+      {href:'qotw.html', name:'Problem of the week', note:'One hard problem, discussion unlocks when you answer'},
       {href:'bank.html', name:'Question bank', note:'Every question, rated 4.5 to 9.0'},
       {href:'interviews.html', name:'Mock interviews', note:'Twenty-five minutes, one problem'},
       {href:'marker.html', name:'Proof marker', note:'Get a written solution marked'}]},
@@ -15,6 +17,7 @@
       {href:'sandbox.html', name:'Conjecture sandbox', note:'Build a figure, find what stays true'},
       {href:'techniques.html', name:'Technique index', note:'Questions filed by method'}]},
     {label:'Progress', items:[
+      {href:'rewards.html', name:'Rewards', note:'Levels, badges, quests and the daily challenge'},
       {href:'progress.html', name:'My progress', note:'Accuracy, timing and streaks'},
       {href:'results.html', name:'Results', note:'Your scores against everyone else'}]},
     {label:'Music', href:'music.html'}
@@ -69,19 +72,20 @@
     window.addEventListener('hu-auth-ready',function(){ window.HU_AUTH.onChange(paint); });
     if(window.HU_AUTH) window.HU_AUTH.onChange(paint);
   }
+  function loadRewards(){ if(window.HU_REWARDS) return; var sc=document.createElement('script'); sc.src='rewards.js?v=20260925'; sc.defer=true; document.head.appendChild(sc); }
   function loadAccounts(){
     if(window.HU_AUTH) return;
-    loadScript('auth-config.js').catch(function(){}).then(function(){
+    loadScript('auth-config.js?v=20260925').catch(function(){}).then(function(){
       var c=window.HU_AUTH_CONFIG||{};
       var lib=(c.url&&c.anonKey)?loadScript('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js').catch(function(){}):Promise.resolve();
-      return lib.then(function(){ return loadScript('account.js'); });
+      return lib.then(function(){ return loadScript('account.js?v=20260925'); });
     }).catch(function(){});
   }
   function init(){
     document.body.setAttribute('data-theme-v2','');
     var nav=document.getElementById('sitenav')||document.querySelector('body>nav');
     if(nav){ build(nav); accountSlot(nav); }
-    loadAccounts();
+    loadAccounts(); loadRewards();
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init); else init();
 })();

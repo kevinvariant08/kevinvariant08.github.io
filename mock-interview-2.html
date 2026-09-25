@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mock interview 2: lattice points under a hyperbola</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Serif:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  --paper:#FBFAF6;
+  --grid:rgba(40,70,120,.07);
+  --ink:#1A2230;
+  --ink-soft:#586374;
+  --ink-faint:#8A93A1;
+  --rule:#D9D6CC;
+  --clock:#1A2230;
+  --warn:#8A5A12;
+  --urgent:#8C2F2F;
+  --mark:#2C5545;
+  --serif:"IBM Plex Serif",Georgia,"Times New Roman",serif;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#12151B;--grid:rgba(120,160,220,.07);--ink:#E6E4DD;--ink-soft:#A7AEBB;
+    --ink-faint:#737C8B;--rule:#2B313B;--clock:#E6E4DD;
+    --warn:#D9A64E;--urgent:#E07A6F;--mark:#7FBFA3;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#12151B;--grid:rgba(120,160,220,.07);--ink:#E6E4DD;--ink-soft:#A7AEBB;
+  --ink-faint:#737C8B;--rule:#2B313B;--clock:#E6E4DD;--warn:#D9A64E;
+  --urgent:#E07A6F;--mark:#7FBFA3;
+}
+*,*::before,*::after{box-sizing:inherit}
+body{
+  margin:0;background-color:var(--paper);color:var(--ink);
+  font-family:var(--sans);font-size:17px;line-height:1.6;
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:26px 26px;
+}
+.wrap{max-width:43rem;margin:0 auto;padding:2.2rem 1.3rem 5rem}
+h1{font-family:var(--serif);font-weight:600;font-size:1.6rem;line-height:1.25;margin:0 0 .2rem}
+.sub{color:var(--ink-soft);font-size:.95rem;margin:0 0 2rem}
+.clockbox{border-top:2px solid var(--ink);border-bottom:1px solid var(--rule);padding:1.1rem 0 .9rem;margin-bottom:1.8rem}
+.clockrow{display:flex;align-items:baseline;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+#clock{font-family:var(--serif);font-weight:600;font-size:3.4rem;line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums;color:var(--clock)}
+#clock.warn{color:var(--warn)}
+#clock.urgent{color:var(--urgent)}
+.clocknote{color:var(--ink-faint);font-size:.88rem;text-align:right;max-width:17rem}
+.drain{height:2px;background:var(--rule);margin-top:.9rem;overflow:hidden}
+#drainbar{height:100%;width:0%;background:var(--ink);transition:width 1s linear}
+#drainbar.warn{background:var(--warn)}
+#drainbar.urgent{background:var(--urgent)}
+@media (prefers-reduced-motion:reduce){#drainbar{transition:none}}
+p{margin:0 0 1rem;max-width:66ch}
+.serif{font-family:var(--serif)}
+.setup{font-family:var(--serif);font-size:1.08rem;line-height:1.7}
+.eq{font-family:var(--serif);font-style:italic;white-space:nowrap}
+.part{border-left:2px solid var(--rule);padding:.1rem 0 .1rem 1.1rem;margin:0 0 1.7rem}
+.part.live{border-left-color:var(--ink)}
+.part.done{opacity:.55}
+.plabel{font-family:var(--serif);font-weight:600;font-size:1rem;margin:0 0 .35rem}
+.ptext{font-family:var(--serif);font-size:1.06rem;line-height:1.7;margin:0}
+.hint{margin:.9rem 0 0;padding:.75rem .9rem;border:1px dashed var(--rule);font-size:.95rem;color:var(--ink-soft);background:transparent}
+.hint .who{font-family:var(--sans);font-weight:500;color:var(--ink);display:block;margin-bottom:.2rem;font-size:.85rem}
+button{
+  font-family:var(--sans);font-size:.95rem;font-weight:500;color:var(--ink);
+  background:transparent;border:1px solid var(--ink);border-radius:2px;
+  padding:.5rem 1rem;cursor:pointer;
+}
+button:hover{background:var(--ink);color:var(--paper)}
+button:focus-visible{outline:2px solid var(--urgent);outline-offset:2px}
+button.quiet{border-color:var(--rule);color:var(--ink-soft);font-weight:400}
+button.quiet:hover{background:transparent;border-color:var(--ink);color:var(--ink)}
+button[disabled]{opacity:.35;cursor:default}
+button[disabled]:hover{background:transparent;color:var(--ink)}
+.controls{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;margin-top:1.2rem}
+.hidden{display:none}
+.tally{color:var(--ink-faint);font-size:.88rem}
+.debrief{border-top:2px solid var(--ink);margin-top:2.6rem;padding-top:1.4rem}
+.debrief h2{font-family:var(--serif);font-weight:600;font-size:1.25rem;margin:2rem 0 .6rem}
+.debrief h3{font-family:var(--serif);font-weight:600;font-size:1.02rem;margin:1.4rem 0 .3rem}
+.debrief p,.debrief li{font-family:var(--serif);font-size:1.02rem;line-height:1.7}
+.stats{font-family:var(--sans);font-size:.95rem;color:var(--ink-soft);border:1px solid var(--rule);padding:.8rem 1rem;margin-bottom:1.4rem}
+.stats b{color:var(--ink);font-weight:500}
+.turn{margin:0 0 .7rem;font-family:var(--serif);font-size:1rem;line-height:1.65}
+.turn .sp{font-family:var(--sans);font-size:.8rem;font-weight:500;color:var(--ink-faint);display:block}
+.verdict{border-left:2px solid var(--mark);padding-left:1rem;color:var(--ink-soft);font-style:italic}
+footer{margin-top:3rem;color:var(--ink-faint);font-size:.85rem;font-family:var(--sans)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>Lattice points under a hyperbola</h1>
+<p class="sub">Mock interview 2 &nbsp;·&nbsp; 25 minutes &nbsp;·&nbsp; HU Collection</p>
+
+<div class="clockbox">
+  <div class="clockrow">
+    <div id="clock">25:00</div>
+    <div class="clocknote" id="clocknote">Paper and pen only. Speak every thought aloud, ideally recording yourself.</div>
+  </div>
+  <div class="drain"><div id="drainbar"></div></div>
+</div>
+
+<div id="preamble">
+  <p>This runs like a real interview. The problem arrives in parts, one at a time, and you cannot see what is coming. When you are stuck you may ask for a nudge, exactly as you would in the room, and the number you use is recorded. The mark scheme and two sample performances stay locked until you end the session.</p>
+  <p>Do not read ahead, and do not stop the clock to think. Start when you have a pen in your hand.</p>
+  <div class="controls"><button id="start">Start the interview</button></div>
+</div>
+
+<div id="stage" class="hidden">
+  <p class="setup" id="setup">For a positive integer <span class="eq">n</span>, let <span class="eq">A(n)</span> be the number of ordered pairs of positive integers <span class="eq">(a, b)</span> with <span class="eq">ab &le; n</span>.</p>
+  <div id="parts"></div>
+  <div class="controls">
+    <button id="hintbtn" class="quiet">Ask for a nudge</button>
+    <button id="nextbtn">Next part</button>
+    <button id="endbtn" class="quiet">End and see the debrief</button>
+    <span class="tally" id="tally">Nudges used: 0</span>
+  </div>
+</div>
+
+<div id="debrief" class="debrief hidden"></div>
+
+<footer>Written for interview practice. Part (e) uses a known technique; everything else is yours to find.</footer>
+</div>
+
+<script>
+var PARTS = [
+  { label:"(a)",
+    text:"Find A(10).",
+    hint:"Do not list pairs at random. Fix the value of a, and ask how many values of b are allowed." },
+  { label:"(b)",
+    text:"Find a formula for A(n) as a sum of n terms.",
+    hint:"You already did this for n = 10. Write out that same count with n in place of 10, one term per value of a." },
+  { label:"(c)",
+    text:"Count the same pairs a second way, by grouping them according to the value of the product ab. What does this tell you about the total number of divisors of all the integers from 1 to n? What is the average number of divisors of an integer up to n?",
+    hint:"For a fixed m, how many pairs (a, b) satisfy ab = m exactly?" },
+  { label:"(d)",
+    text:"Show that the average number of divisors of an integer up to n is roughly ln n. Be as precise as you can about roughly.",
+    hint:"The floor of n/k differs from n/k by less than 1, and there are n terms. What do you know about 1 + 1/2 + 1/3 + ... + 1/n?" },
+  { label:"(e)",
+    text:"Your formula in (b) needs n terms, so computing A(10\u00B9\u00B2) that way is hopeless. Find a formula that needs only about 2\u221An terms.",
+    hint:"If ab \u2264 n, what can you say about the smaller of a and b? Draw the region under the hyperbola and the line a = b through it." }
+];
+
+var TOTAL = 25*60, left = TOTAL, idx = -1, nudges = 0, tick = null, ended = false;
+
+var clock = document.getElementById('clock'),
+    bar = document.getElementById('drainbar'),
+    note = document.getElementById('clocknote'),
+    parts = document.getElementById('parts'),
+    hintbtn = document.getElementById('hintbtn'),
+    nextbtn = document.getElementById('nextbtn'),
+    endbtn = document.getElementById('endbtn'),
+    tally = document.getElementById('tally');
+
+function fmt(s){ var m = Math.floor(s/60), r = s%60; return m + ":" + (r<10?"0":"") + r; }
+
+function paint(){
+  clock.textContent = fmt(Math.max(left,0));
+  var used = (TOTAL-left)/TOTAL*100;
+  bar.style.width = used + "%";
+  clock.className = ""; bar.className = "";
+  if(left <= 60){ clock.className = "urgent"; bar.className = "urgent"; }
+  else if(left <= 300){ clock.className = "warn"; bar.className = "warn"; }
+}
+
+function showPart(i){
+  var prev = parts.querySelector('.part.live');
+  if(prev){ prev.classList.remove('live'); prev.classList.add('done'); }
+  var p = PARTS[i];
+  var d = document.createElement('div');
+  d.className = 'part live';
+  d.innerHTML = '<p class="plabel">' + p.label + '</p><p class="ptext">' + p.text + '</p>';
+  parts.appendChild(d);
+  hintbtn.disabled = false;
+  hintbtn.textContent = "Ask for a nudge";
+  nextbtn.textContent = (i === PARTS.length-1) ? "That is the last part" : "Next part";
+  nextbtn.disabled = (i === PARTS.length-1);
+  d.scrollIntoView({behavior:'smooth', block:'center'});
+}
+
+document.getElementById('start').addEventListener('click', function(){
+  document.getElementById('preamble').classList.add('hidden');
+  document.getElementById('stage').classList.remove('hidden');
+  idx = 0; showPart(0);
+  note.textContent = "Say what you are trying before you try it. If you go quiet, you are losing marks you cannot see.";
+  tick = setInterval(function(){
+    left--; paint();
+    if(left <= 0){
+      clearInterval(tick); tick = null;
+      note.textContent = "Time is up. Finish the sentence you are on, then end the session.";
+    }
+  }, 1000);
+  paint();
+});
+
+hintbtn.addEventListener('click', function(){
+  var live = parts.querySelector('.part.live');
+  if(!live || live.querySelector('.hint')) return;
+  nudges++;
+  tally.textContent = "Nudges used: " + nudges;
+  var h = document.createElement('div');
+  h.className = 'hint';
+  h.innerHTML = '<span class="who">Interviewer</span>' + PARTS[idx].hint;
+  live.appendChild(h);
+  hintbtn.disabled = true;
+  hintbtn.textContent = "Nudge given";
+});
+
+nextbtn.addEventListener('click', function(){
+  if(idx >= PARTS.length-1) return;
+  idx++; showPart(idx);
+});
+
+endbtn.addEventListener('click', function(){
+  if(ended) return;
+  ended = true;
+  if(tick){ clearInterval(tick); tick = null; }
+  hintbtn.disabled = true; nextbtn.disabled = true; endbtn.disabled = true;
+  var used = TOTAL - Math.max(left,0);
+  var reached = idx + 1;
+  var box = document.getElementById('debrief');
+  box.innerHTML =
+    '<div class="stats">Time used: <b>' + fmt(used) + '</b> of 25:00 &nbsp;&nbsp; Parts reached: <b>' +
+    reached + ' of 5</b> &nbsp;&nbsp; Nudges used: <b>' + nudges + '</b></div>' + DEBRIEF;
+  box.classList.remove('hidden');
+  box.scrollIntoView({behavior:'smooth', block:'start'});
+});
+
+var DEBRIEF = [
+'<h2>Mark scheme</h2>',
+
+'<h3>(a) A(10) = 27</h3>',
+'<p>Fix <i>a</i> and count the allowed <i>b</i>: for <i>a</i> = 1 there are 10, then 5, 3, 2, 2, and then 1 each for <i>a</i> = 6 to 10. That gives 10 + 5 + 3 + 2 + 2 + 1 + 1 + 1 + 1 + 1 = 27. A candidate who lists pairs unsystematically usually loses one or two and does not notice.</p>',
+
+'<h3>(b) A(n) = &#8721; &#8970;n/k&#8971; for k from 1 to n</h3>',
+'<p>Identical reasoning: for each <i>a</i> = <i>k</i>, the values of <i>b</i> that work are 1 up to &#8970;n/k&#8971;. The terms vanish for <i>k</i> &gt; <i>n</i>, so the sum can be written as running to <i>n</i> or to infinity, whichever is convenient.</p>',
+
+'<h3>(c) The same set, counted by product value</h3>',
+'<p>Group the pairs by <i>m</i> = <i>ab</i>. The pairs with <i>ab</i> = <i>m</i> correspond exactly to the divisors of <i>m</i>, so there are <i>d</i>(<i>m</i>) of them. Since every pair counted by A(n) has its product somewhere in 1 to <i>n</i>,</p>',
+'<p style="text-align:center">A(n) = <i>d</i>(1) + <i>d</i>(2) + &hellip; + <i>d</i>(n).</p>',
+'<p>So the two expressions for A(n) are equal, which is a fact about divisors obtained purely by counting one set two ways. Dividing by <i>n</i>, the average number of divisors of an integer up to <i>n</i> is A(n)/<i>n</i>.</p>',
+
+'<h3>(d) That average is within 1 of ln n</h3>',
+'<p>Since <i>n</i>/<i>k</i> &minus; 1 &lt; &#8970;n/k&#8971; &le; <i>n</i>/<i>k</i>, summing over the <i>n</i> terms gives <i>n</i>H<sub>n</sub> &minus; <i>n</i> &lt; A(n) &le; <i>n</i>H<sub>n</sub>, where H<sub>n</sub> is the harmonic sum. Comparing that sum with the area under 1/<i>x</i> gives ln <i>n</i> &lt; H<sub>n</sub> &le; 1 + ln <i>n</i>. Hence A(n)/<i>n</i> lies between ln <i>n</i> &minus; 1 and ln <i>n</i> + 1.</p>',
+'<p>Worth saying aloud: this is strange. Most integers have very few divisors, and half of them have exactly two or four, yet the average grows without bound. The growth is carried by rare, highly composite numbers, and it is slow enough that at <i>n</i> = a million the average is only about 14.</p>',
+
+'<h3>(e) A(n) = 2&#8721;&#8970;n/a&#8971; &minus; &#8970;&#8730;n&#8971;&#178;, the sum over a up to &#8730;n</h3>',
+'<p>If <i>ab</i> &le; <i>n</i> then the smaller of <i>a</i> and <i>b</i> is at most &#8730;<i>n</i>, since otherwise both exceed &#8730;<i>n</i> and the product exceeds <i>n</i>. So every pair we want has <i>a</i> &le; &#8730;<i>n</i> or <i>b</i> &le; &#8730;<i>n</i>. Counting those two families gives &#8721;&#8970;n/a&#8971; each by symmetry, and the overlap is the set of pairs with both coordinates at most &#8730;<i>n</i>, all of which automatically satisfy <i>ab</i> &le; <i>n</i>. That overlap is a square of &#8970;&#8730;n&#8971;&#178; pairs, so inclusion and exclusion gives the formula.</p>',
+'<p>Check it on <i>n</i> = 10: 2(10 + 5 + 3) &minus; 3&#178; = 36 &minus; 9 = 27. The work has dropped from <i>n</i> terms to about 2&#8730;<i>n</i>, which is what makes A(10&#185;&#178;) a one-second computation rather than an impossible one.</p>',
+
+'<h2>What the scoring turns on</h2>',
+'<p>Organising the count in (a) rather than listing. Seeing that (b) is (a) with a letter. Realising in (c) that nothing new is being computed, only the same set counted along a different axis, and saying the phrase "counting two ways". Not being satisfied in (d) with "it is about ln <i>n</i>" but bracketing it. In (e), extracting the condition min(<i>a</i>,<i>b</i>) &le; &#8730;<i>n</i> from the inequality itself rather than guessing, and handling the double count without being told.</p>',
+'<p>The single most valuable remark available anywhere in this problem is in (c): the observation that a hard-looking fact about divisors falls out of counting an easy set two ways. A candidate who says that unprompted has shown the tutor what they want to see.</p>',
+
+'<h2>Sample performance: score 0</h2>',
+'<p class="turn"><span class="sp">Interviewer</span>Find A(10).</p>',
+'<p class="turn"><span class="sp">Candidate</span>So pairs where <i>ab</i> is less than 10. One times one, one times two &hellip; is two times one different from one times two?</p>',
+'<p class="turn"><span class="sp">Interviewer</span>The pairs are ordered, so yes, those are different. And the condition is <i>ab</i> at most 10.</p>',
+'<p class="turn"><span class="sp">Candidate</span>Right. So 1 and 1, 1 and 2, up to 1 and 10, that is ten. Then 2 and 1, 2 and 2, 2 and 3, 2 and 4. [writes for ninety seconds] I get 24.</p>',
+'<p class="turn"><span class="sp">Interviewer</span>Check the <i>a</i> = 2 row again.</p>',
+'<p class="turn"><span class="sp">Candidate</span>[silence] I think it is 24.</p>',
+'<p class="turn"><span class="sp">Interviewer</span>How many <i>b</i> satisfy 2<i>b</i> at most 10?</p>',
+'<p class="turn"><span class="sp">Candidate</span>Four. No, five. So 25? Or 27?</p>',
+'<p class="turn"><span class="sp">Interviewer</span>Let us move on. Can you write A(n) as a sum?</p>',
+'<p class="turn"><span class="sp">Candidate</span>Is it <i>n</i> squared over something? I have not done this topic.</p>',
+'<p class="verdict">Nothing was generated, the arithmetic was not checked when queried, and the response to being stuck was silence followed by guessing. The topic remark is the last thing a tutor wants to hear: there is no topic here, only counting.</p>',
+
+'<h2>Sample performance: score 10</h2>',
+'<p class="turn"><span class="sp">Candidate</span>Before I count anything: the pairs with <i>ab</i> at most <i>n</i> are the lattice points in the first quadrant under the hyperbola <i>xy</i> = <i>n</i>. So this is an area-ish quantity and I should expect an answer near the area under the hyperbola, which is a logarithm. Let me hold that thought. For A(10) I will go by columns: 10, 5, 3, 2, 2, then five ones. 27.</p>',
+'<p class="turn"><span class="sp">Interviewer</span>General <i>n</i>?</p>',
+'<p class="turn"><span class="sp">Candidate</span>The same count: A(n) is the sum of &#8970;n/k&#8971; over <i>k</i> from 1 to <i>n</i>. Columns is one axis to count along. The other obvious one is by the value of the product, and the pairs with <i>ab</i> = <i>m</i> are just the divisors of <i>m</i>, so A(n) is also the sum of <i>d</i>(<i>m</i>) up to <i>n</i>. That is nice, because the divisor function is awkward and the floor sum is not, and I got a relation between them for free by counting one set two ways.</p>',
+'<p class="turn"><span class="sp">Interviewer</span>So the average number of divisors?</p>',
+'<p class="turn"><span class="sp">Candidate</span>A(n) over <i>n</i>. And now the logarithm I predicted should appear: each &#8970;n/k&#8971; is within 1 of <i>n</i>/<i>k</i>, and there are <i>n</i> terms, so A(n) is within <i>n</i> of <i>n</i>H<sub>n</sub>. Comparing H<sub>n</sub> with the integral of 1/<i>x</i> puts it between ln <i>n</i> and 1 + ln <i>n</i>, so the average divisor count is ln <i>n</i> give or take 1. I want to flag that this is counterintuitive: a typical number has two or four divisors, so the average is being dragged up by rare highly composite numbers, and the drag grows without limit but only logarithmically.</p>',
+'<p class="turn"><span class="sp">Interviewer</span>Your formula needs <i>n</i> terms. Can you do better?</p>',
+'<p class="turn"><span class="sp">Candidate</span>The hyperbola picture should pay off here. It is symmetric in the line <i>a</i> = <i>b</i>, and that line crosses the curve at &#8730;<i>n</i>. If <i>ab</i> at most <i>n</i>, the smaller coordinate cannot exceed &#8730;<i>n</i>, so every point lies in the vertical strip <i>a</i> at most &#8730;<i>n</i>, or the horizontal one, or both. The two strips have the same count by symmetry, and the overlap is the square below &#8730;<i>n</i> in both coordinates, which sits entirely under the curve. So A(n) is twice the sum of &#8970;n/a&#8971; for <i>a</i> up to &#8730;<i>n</i>, minus &#8970;&#8730;n&#8971; squared. On <i>n</i> = 10 that is 36 minus 9, which is 27, matching.</p>',
+'<p class="turn"><span class="sp">Candidate</span>Can I ask something? The error in approximating A(n) by <i>n</i> ln <i>n</i> came out as order <i>n</i> from my crude bound, but the geometry suggests the real error should be much smaller, more like the boundary of the region, so order &#8730;<i>n</i>. Is that known, and is it sharp?</p>',
+'<p class="verdict">The candidate set up a geometric picture in the first fifteen seconds and then cashed it three separate times: to predict the logarithm, to find the symmetry, and to guess the size of the error. The closing question is the Dirichlet divisor problem, which is open. Nothing was prompted.</p>',
+
+'<h2>Where you probably sit</h2>',
+'<p>Count the parts you reached before the clock and the nudges you needed. Five parts with no nudges and the two-ways remark said aloud is an 8 or better. Four parts with one or two nudges is a 6. Reaching (c) at all, with help, is a 4. If (a) took more than three minutes, the issue is organisation of work rather than mathematics, and that is the cheapest thing on this list to fix.</p>'
+].join('');
+
+paint();
+</script>
+</body>
+</html>

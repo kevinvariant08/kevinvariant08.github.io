@@ -47,7 +47,7 @@
   }
 
   /* ---------------------------------------------------------- progress sync */
-  var KEYS=['hu_drill_log','hu_drill_attempts','hu_iv_hist','hu_scores','hu_arena','hu_ladder_best'];
+  var KEYS=['hu_drill_log','hu_drill_attempts','hu_iv_hist','hu_scores','hu_arena','hu_ladder_best','hu_rewards','hu_duels','hu_qotw'];
   function readLocal(){ var o={}; KEYS.forEach(function(k){ try{ var v=localStorage.getItem(k); if(v!=null) o[k]=JSON.parse(v); }catch(e){} }); return o; }
   function writeLocal(o){ KEYS.forEach(function(k){ if(o[k]!==undefined){ try{ localStorage.setItem(k,JSON.stringify(o[k])); }catch(e){} } }); }
   function unionBy(a,b,keyFn,cap,sortFn){ var seen={}, out=[]; (a||[]).concat(b||[]).forEach(function(x){ var k=keyFn(x); if(!seen[k]){ seen[k]=1; out.push(x); } }); if(sortFn) out.sort(sortFn); return cap?out.slice(-cap):out; }
@@ -62,6 +62,17 @@
       o.hu_arena.best=Math.max((la&&la.best)||0,(ca&&ca.best)||0);
       o.hu_arena.history=unionBy(base.history,other&&other.history,function(h){return h.t;},30,function(x,y){return y.t-x.t;}); }
     o.hu_ladder_best=Math.max(L.hu_ladder_best||0,C.hu_ladder_best||0);
+    // rewards: banked days take the larger value, one-off events are unioned, so nothing is counted twice
+    var lr=L.hu_rewards, cr=C.hu_rewards;
+    if(lr||cr){ lr=lr||{}; cr=cr||{}; var rw={bank:{},daily:{},claimed:{}};
+      [lr.bank||{},cr.bank||{}].forEach(function(b){ Object.keys(b).forEach(function(k){ rw.bank[k]=Math.max(rw.bank[k]||0,b[k]); }); });
+      rw.daily=Object.assign({},cr.daily||{},lr.daily||{}); rw.claimed=Object.assign({},cr.claimed||{},lr.claimed||{});
+      rw.frozen=unionBy(lr.frozen,cr.frozen,function(x){return x;}); rw.milestones=unionBy(lr.milestones,cr.milestones,function(x){return x;});
+      rw.maxAnswers=Math.max(lr.maxAnswers||0,cr.maxAnswers||0); rw.theme=lr.theme||cr.theme||'indigo';
+      rw.lb=(lr.lb!=null?lr.lb:cr.lb)||false; rw.lbName=lr.lbName||cr.lbName||'';
+      o.hu_rewards=rw; }
+    o.hu_duels=unionBy(L.hu_duels,C.hu_duels,function(h){return h.t;},30,function(x,y){return y.t-x.t;});
+    o.hu_qotw=Object.assign({},C.hu_qotw||{},L.hu_qotw||{});
     return o;
   }
   var lastPushed='', syncing=false, lastSync=null;
