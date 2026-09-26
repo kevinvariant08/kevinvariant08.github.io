@@ -21,7 +21,7 @@
   function answerXP(e){ return e.correct?Math.round(rating(e.id)*2):2; }
   function paperXP(a){ return 50+5*(a.score||0); }
   function duelXP(h){ return h.you>h.them?40:(h.you===h.them?20:10); }
-  var XP_RULES=[['Correct answer','twice the question\u2019s rating (9 to 18)'],['Wrong answer','2, for the attempt'],['Finishing a timed paper','50, plus 5 per mark'],['Arena duel','40 for a win, 20 for a draw, 10 for a loss'],['Daily challenge','60 if correct plus 5 per streak day (up to 50), 15 if not'],['Weekly quest','150 to 250 each'],['Friend duel','40 for a win, 20 for a draw, 10 for a loss, 15 for sending a challenge'],['Problem of the week','100 if solved, 25 for an attempt']];
+  var XP_RULES=[['Correct answer','twice the question\u2019s rating (9 to 18)'],['Wrong answer','2, for the attempt'],['Finishing a timed paper','50, plus 5 per mark'],['Arena duel','40 for a win, 20 for a draw, 10 for a loss'],['Daily challenge','60 if correct plus 5 per streak day (up to 50), 15 if not'],['Weekly quest','150 to 250 each'],['Friend duel','40 for a win, 20 for a draw, 10 for a loss, 15 for sending a challenge'],['Problem of the week','100 if solved, 25 for an attempt'],['Mistake review','the usual answer XP for each review']];
 
   /* ---------------- levels: need(n) = 50 n (n-1) */
   var TITLES=['Point','Segment','Ray','Angle','Triangle','Median','Centroid','Incircle','Circumcircle','Orthocentre','Euler Line','Nine-Point Circle','Feuerbach Point','Symmedian','Brocard Point','Excircle','Mixtilinear Circle','Isogonal Conjugate','Simson Line','Morley Triangle','Poncelet Porism','Radical Axis','Pole and Polar','Inversion','Invariant'];
@@ -113,7 +113,8 @@
     {id:'owl',name:'Night Owl',tier:0,d:'Get a question right between midnight and 5am.',f:function(s){return s.L.some(function(e){return e.correct&&new Date(e.t).getHours()<5;});}},
     {id:'viva',name:'Viva Survivor',tier:1,d:'Finish a mock interview.',f:function(s){return s.IV.length>0;}},
     {id:'rival',name:'Friendly Rival',tier:1,d:'Win a duel against a friend.',f:function(){return load('hu_duels',[]).some(function(h){return h.opp&&h.res==='win';});}},
-    {id:'weekly',name:'Problem Solver',tier:2,d:'Solve four problems of the week.',f:function(){var QW=load('hu_qotw',{}); return Object.keys(QW).filter(function(w){return QW[w]&&QW[w].ok;}).length>=4;}}];
+    {id:'weekly',name:'Problem Solver',tier:2,d:'Solve four problems of the week.',f:function(){var QW=load('hu_qotw',{}); return Object.keys(QW).filter(function(w){return QW[w]&&QW[w].ok;}).length>=4;}},
+    {id:'second',name:'Second Chance',tier:1,d:'Master 10 questions from your mistake review queue.',f:function(){var S=load('hu_review',{}),I=S.items||{}; return Object.keys(I).filter(function(k){return I[k].mastered;}).length>=10;}}];
   var TIER=['Bronze','Silver','Gold'], TIERCOL=['var(--aqua)','var(--rose)','var(--saffron)'];
   function earnedBadges(s){ return BADGES.filter(function(b){ try{ return b.f(s); }catch(e){ return false; } }).map(function(b){return b.id;}); }
   function medal(b,got,size){ size=size||64; var c=got?TIERCOL[b.tier]:'#4A4E8C', f=got?'#F3F1FF':'#4A4E8C';
@@ -146,13 +147,31 @@
     var L=load('hu_drill_log',[]); L.push({t:Date.now(),id:id,paper:id.split('-')[0],correct:ok,chosen:chosen||null,secs:Math.round(secs),mode:'daily',tags:tags||[]}); save('hu_drill_log',L.slice(-2000));
     tick(); return R.daily[k]; }
 
+
+  /* ---------------- mistake review queue: back after 1, 3 and 7 days; clearing the 7-day review masters it */
+  var GAPS=[1,3,7];
+  function reviewState(){ var S=load('hu_review',{}); S.items=S.items||{}; S.upto=S.upto||0; return S; }
+  function reviewSync(){ var S=reviewState(), L=load('hu_drill_log',[]), changed=false;
+    L.forEach(function(e){ if(e.t<=S.upto||e.mode==='review'||e.correct||!RATING[e.id]) return;
+      var old=S.items[e.id]||{}; S.items[e.id]={stage:0,due:shift(dkey(e.t),1),added:old.added||e.t,last:e.t,mastered:false,misses:(old.misses||0)+1}; changed=true; });
+    if(L.length&&L[L.length-1].t>S.upto){ S.upto=L[L.length-1].t; changed=true; }
+    if(changed) save('hu_review',S); return S; }
+  function reviewDue(){ var S=reviewSync(), t=today();
+    return Object.keys(S.items).filter(function(id){ var it=S.items[id]; return !it.mastered&&it.due<=t; })
+      .sort(function(a,b){ return S.items[a].due<S.items[b].due?-1:S.items[a].due>S.items[b].due?1:rating(a)-rating(b); }); }
+  function reviewRecord(id,ok,chosen,secs,tags){ var S=reviewSync(), it=S.items[id]; if(!it) return null; var t=today();
+    if(ok){ if(it.stage>=GAPS.length-1){ it.mastered=true; it.masteredAt=Date.now(); } else { it.stage++; it.due=shift(t,GAPS[it.stage]); } }
+    else { it.stage=0; it.due=shift(t,1); it.misses=(it.misses||0)+1; }
+    it.last=Date.now(); S.items[id]=it;
+    var L=load('hu_drill_log',[]); L.push({t:Date.now(),id:id,paper:id.split('-')[0],correct:ok,chosen:chosen,secs:Math.round(secs),mode:'review',tags:tags||[]}); save('hu_drill_log',L.slice(-2000));
+    S.upto=Math.max(S.upto,Date.now()); save('hu_review',S); tick(); return it; }
   /* ---------------- on-page feedback */
   var css='.rw-toasts{position:fixed;right:1rem;bottom:1rem;z-index:9999;display:flex;flex-direction:column;gap:.5rem;align-items:flex-end;pointer-events:none}'
    +'.rw-toast{pointer-events:auto;display:flex;align-items:center;gap:.7rem;background:var(--surface-2,#252964);border:1px solid var(--line,#343A82);border-radius:14px;padding:.6rem .9rem;color:var(--ink,#F3F1FF);font:600 .92rem var(--display,system-ui);box-shadow:0 10px 30px rgba(0,0,0,.35);animation:rwIn .35s ease-out}'
    +'.rw-toast small{display:block;font-weight:500;color:var(--ink-soft,#BDBBE6);font-size:.8rem}.rw-toast.xp{padding:.4rem .75rem;font-size:.85rem}.rw-toast.xp b{color:var(--saffron,#FFC53D)}'
    +'@keyframes rwIn{from{transform:translateY(12px);opacity:0}to{transform:none;opacity:1}}'
-   +'.rw-pill{display:inline-flex;align-items:center;gap:.4rem;padding:.3rem .65rem;border-radius:999px;border:1px solid var(--line,#343A82);color:var(--ink,#F3F1FF);text-decoration:none;font:600 .85rem var(--display,system-ui);white-space:nowrap}'
-   +'.rw-pill:hover{background:var(--surface-2,#252964)}.rw-pill .lv{color:var(--saffron,#FFC53D)}.rw-pill svg{width:14px;height:14px}'
+   +'.site-nav .links a.rw-pill{display:inline-flex;align-items:center;gap:.4rem;padding:.3rem .65rem;min-height:0;border-radius:999px;border:1px solid var(--line,#343A82);color:var(--ink,#F3F1FF);text-decoration:none;font:600 .85rem var(--display,system-ui);white-space:nowrap}'
+   +'.site-nav .links a.rw-pill:hover{background:var(--surface-2,#252964)}.site-nav .links a.rw-pill.rv{border-color:var(--rose,#FF6B8B);color:var(--rose,#FF6B8B)}.site-nav .rw{display:flex;gap:.35rem;align-items:center}.site-nav .links a.rw-pill .lv{color:var(--saffron,#FFC53D)}.site-nav .links a.rw-pill svg{width:14px;height:14px}'
    +'.rw-modal{position:fixed;inset:0;z-index:10000;display:grid;place-items:center;background:rgba(10,11,35,.72);animation:rwIn .3s}'
    +'.rw-modal .card{background:var(--surface,#1D2052);border:1px solid var(--line,#343A82);border-radius:22px;padding:2rem 2.2rem;text-align:center;max-width:24rem;color:var(--ink,#F3F1FF)}'
    +'.rw-modal h2{font:800 1.9rem var(--display,system-ui);margin:.4rem 0 .2rem}.rw-modal p{color:var(--ink-soft,#BDBBE6);margin:.3rem 0 1rem}'
@@ -172,7 +191,8 @@
     document.body.appendChild(m); confetti(); m.querySelector('button').focus(); m.addEventListener('click',function(e){ if(e.target===m||e.target.tagName==='BUTTON') m.remove(); }); }
   var FLAME='<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1c1 3 4 4.5 4 8a4 4 0 0 1-8 0c0-2 1-3 2-4 0 1.5.5 2.5 1.5 3C7.5 6 7 3.5 8 1z" fill="var(--rose,#FF6B8B)"/></svg>';
   function paintPill(s){ var li=document.querySelector('.site-nav .rw'); if(!li){ var ul=document.querySelector('.site-nav .links'); if(!ul) return; li=document.createElement('li'); li.className='rw'; var acct=ul.querySelector('.acct'); ul.insertBefore(li,acct||null); }
-    li.innerHTML='<a class="rw-pill" href="rewards.html" title="'+esc(s.title)+', '+s.xp+' XP"><span class="lv">Lv '+s.level+'</span>'+(s.streak?FLAME+s.streak:'')+'</a>'; }
+    var due=reviewDue().length;
+    li.innerHTML=(due?'<a class="rw-pill rv" href="review.html" title="Mistakes due for review">'+due+' to review</a> ':'')+'<a class="rw-pill" href="rewards.html" title="'+esc(s.title)+', '+s.xp+' XP"><span class="lv">Lv '+s.level+'</span>'+(s.streak?FLAME+s.streak:'')+'</a>'; }
 
   /* ---------------- tick: recompute, notify, sync the leaderboard */
   var last=null, lbPushed=0;
@@ -199,7 +219,8 @@
 
   window.HU_REWARDS={snapshot:snapshot,tick:tick,BADGES:BADGES,TIER:TIER,TIERCOL:TIERCOL,medal:medal,THEMES:THEMES,setTheme:setTheme,weekQuests:weekQuests,claim:claim,
     dailyId:dailyId,dailyNumber:dailyNumber,recordDaily:recordDaily,earnedBadges:earnedBadges,titleOf:titleOf,need:need,XP_RULES:XP_RULES,rating:rating,
-    setLeaderboard:setLeaderboard,fetchLeaderboard:fetchLeaderboard,displayName:displayName,dkey:dkey,shift:shift,today:today,esc:esc,FLAME:FLAME};
+    setLeaderboard:setLeaderboard,fetchLeaderboard:fetchLeaderboard,displayName:displayName,dkey:dkey,shift:shift,today:today,esc:esc,FLAME:FLAME,
+    review:{sync:reviewSync,due:reviewDue,record:reviewRecord,state:reviewState,GAPS:GAPS}};
   applyTheme(state().theme);
   function boot(){ inject(); tick(); setInterval(tick,4000); window.addEventListener('storage',function(e){ if(!e.key||e.key.indexOf('hu_')===0) tick(); }); window.addEventListener('hu-auth-event',function(){ setTimeout(tick,1500); }); }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot); else boot();

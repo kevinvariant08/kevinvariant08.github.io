@@ -7,6 +7,7 @@
     {label:'Practise', items:[
       {href:'drill.html', name:'Drill', note:'Full papers, timed, with extra-time options'},
       {href:'arena.html', name:'Arena', note:'Race a bot to the right answer'},
+      {href:'review.html', name:'Review mistakes', note:'Wrong answers return after 1, 3 and 7 days'},
       {href:'duel.html', name:'Friend duel', note:'Five questions; your friend races your ghost'},
       {href:'qotw.html', name:'Problem of the week', note:'One hard problem, discussion unlocks when you answer'},
       {href:'bank.html', name:'Question bank', note:'Every question, rated 4.5 to 9.0'},
@@ -72,13 +73,13 @@
     window.addEventListener('hu-auth-ready',function(){ window.HU_AUTH.onChange(paint); });
     if(window.HU_AUTH) window.HU_AUTH.onChange(paint);
   }
-  function loadRewards(){ if(window.HU_REWARDS) return; var sc=document.createElement('script'); sc.src='rewards.js?v=20260925'; sc.defer=true; document.head.appendChild(sc); }
+  function loadRewards(){ if(window.HU_REWARDS) return; var sc=document.createElement('script'); sc.src='rewards.js?v=20260926'; sc.defer=true; document.head.appendChild(sc); }
   function loadAccounts(){
     if(window.HU_AUTH) return;
-    loadScript('auth-config.js?v=20260925').catch(function(){}).then(function(){
+    loadScript('auth-config.js?v=20260926').catch(function(){}).then(function(){
       var c=window.HU_AUTH_CONFIG||{};
       var lib=(c.url&&c.anonKey)?loadScript('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js').catch(function(){}):Promise.resolve();
-      return lib.then(function(){ return loadScript('account.js?v=20260925'); });
+      return lib.then(function(){ return loadScript('account.js?v=20260926'); });
     }).catch(function(){});
   }
   function init(){
