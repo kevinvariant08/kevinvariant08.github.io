@@ -73,13 +73,13 @@
     window.addEventListener('hu-auth-ready',function(){ window.HU_AUTH.onChange(paint); });
     if(window.HU_AUTH) window.HU_AUTH.onChange(paint);
   }
-  function loadRewards(){ if(window.HU_REWARDS) return; var sc=document.createElement('script'); sc.src='rewards.js?v=20260926'; sc.defer=true; document.head.appendChild(sc); }
+  function loadRewards(){ if(window.HU_REWARDS) return; var sc=document.createElement('script'); sc.src='rewards.js?v=20260927'; sc.defer=true; document.head.appendChild(sc); }
   function loadAccounts(){
     if(window.HU_AUTH) return;
-    loadScript('auth-config.js?v=20260926').catch(function(){}).then(function(){
+    loadScript('auth-config.js?v=20260927').catch(function(){}).then(function(){
       var c=window.HU_AUTH_CONFIG||{};
       var lib=(c.url&&c.anonKey)?loadScript('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js').catch(function(){}):Promise.resolve();
-      return lib.then(function(){ return loadScript('account.js?v=20260926'); });
+      return lib.then(function(){ return loadScript('account.js?v=20260927'); });
     }).catch(function(){});
   }
   function init(){

@@ -39,9 +39,23 @@
     .claim{font:700 .85rem var(--display);border:0;border-radius:99px;padding:.35rem .9rem;cursor:pointer;background:var(--mint);color:#15173B}.claim:disabled{background:var(--surface-2);color:var(--ink-faint);cursor:default}
     .heat{display:grid;grid-auto-flow:column;grid-template-rows:repeat(7,14px);grid-auto-columns:14px;justify-content:start;gap:3px;overflow-x:auto;padding-bottom:.3rem}
     .heat i{width:14px;height:14px;border-radius:3px;background:var(--bg-deep);border:1px solid var(--line-soft)}
-    .badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.8rem}
-    .badge{background:var(--bg-deep);border:1px solid var(--line-soft);border-radius:var(--r-md);padding:.9rem .7rem;text-align:center}
-    .badge.lock{opacity:.55}.badge h3{font:700 .95rem var(--display);margin:.4rem 0 .2rem}.badge p{font-size:.78rem;color:var(--ink-faint);margin:0}.badge .t{font:700 .68rem var(--display);letter-spacing:.08em;text-transform:uppercase}
+    .badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));gap:.8rem}
+    .tierhead{display:flex;align-items:baseline;gap:.6rem;margin:1.4rem 0 .7rem;padding-bottom:.4rem;border-bottom:1px solid var(--line-soft)}
+    .tierhead:first-child{margin-top:.2rem}.tname{font:800 1.1rem var(--display)}.tsub{color:var(--ink-faint);font:600 .8rem var(--display);text-transform:uppercase;letter-spacing:.08em}.tcount{margin-left:auto;color:var(--ink-soft);font:600 .85rem var(--display)}
+    .tierhead.t0 .tname{color:#E3A06F}.tierhead.t1 .tname{color:#D5DCEA}.tierhead.t2 .tname{color:#FFC53D}
+    .tierhead.t3 .tname{background:linear-gradient(90deg,#4FD8E8,#FF6B8B,#FFC53D);-webkit-background-clip:text;background-clip:text;color:transparent}
+    .badge{position:relative;background:var(--bg-deep);border:1px solid var(--line-soft);border-radius:var(--r-md);padding:1rem .8rem .9rem;text-align:center;transition:transform .15s ease,border-color .15s ease}
+    .badge h3{font:700 .98rem var(--display);margin:.45rem 0 .2rem}.badge p{font-size:.78rem;color:var(--ink-faint);margin:0;line-height:1.45}
+    .badge.lock h3{color:var(--ink-soft)}.badge.lock svg{opacity:.75}
+    .badge.got:hover{transform:translateY(-2px)}
+    .badge.got.t0{background:radial-gradient(120% 80% at 50% 0%,rgba(227,160,111,.18),transparent 62%),var(--bg-deep);border-color:rgba(227,160,111,.5)}
+    .badge.got.t1{background:radial-gradient(120% 80% at 50% 0%,rgba(213,220,234,.16),transparent 62%),var(--bg-deep);border-color:rgba(213,220,234,.5)}
+    .badge.got.t2{background:radial-gradient(120% 80% at 50% 0%,rgba(255,197,61,.2),transparent 62%),var(--bg-deep);border-color:rgba(255,197,61,.6)}
+    .badge.got.t3{border:1.5px solid transparent;background:radial-gradient(120% 80% at 50% 0%,rgba(255,107,139,.16),transparent 62%) padding-box,linear-gradient(var(--bg-deep),var(--bg-deep)) padding-box,linear-gradient(120deg,#4FD8E8,#FF6B8B,#FFC53D) border-box}
+    .badge .ok{display:inline-block;margin-top:.5rem;font:700 .7rem var(--display);letter-spacing:.08em;text-transform:uppercase}
+    .badge.t0 .ok{color:#E3A06F}.badge.t1 .ok{color:#D5DCEA}.badge.t2 .ok{color:#FFC53D}.badge.t3 .ok{color:#FF8FB8}
+    .bp{height:5px;border-radius:99px;background:var(--surface-2);overflow:hidden;margin:.6rem .3rem .25rem}.bp i{display:block;height:100%;background:var(--ink-faint);border-radius:99px}
+    .bpt{font-size:.72rem;color:var(--ink-faint)}
     .themes{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.7rem}
     .theme{border:1px solid var(--line);border-radius:var(--r-md);padding:.7rem;background:var(--bg-deep);color:var(--ink);font:inherit;text-align:left;cursor:pointer}
     .theme[aria-pressed="true"]{outline:2px solid var(--saffron)}.theme:disabled{cursor:not-allowed;opacity:.5}
@@ -89,8 +103,8 @@
 
   <section class="panel" aria-labelledby="bh">
     <h2 id="bh">Badges <span id="bcount" style="color:var(--ink-faint);font-weight:600"></span></h2>
-    <p class="sub">Bronze, silver and gold. Locked badges show what they take.</p>
-    <div class="badges" id="badges"></div>
+    <p class="sub">Four tiers, from bronze to the legendary Invariant tier. Locked badges show how close you are.</p>
+    <div id="badges"></div>
   </section>
 
   <section class="panel" aria-labelledby="th">
@@ -110,8 +124,8 @@
     <p class="sub" style="margin-top:.8rem">Practising on any day keeps your streak alive. Every 7 days of streak earns a freeze (you can hold two), which covers a missed day automatically. Experience is banked day by day, so it never goes down.</p>
   </section>
 </main>
-<script src="questions.js?v=20260926"></script>
-<script src="site.js?v=20260926"></script>
+<script src="questions.js?v=20260927"></script>
+<script src="site.js?v=20260927"></script>
 <script>
 (function(){
   function ready(f){ if(window.HU_REWARDS) f(); else setTimeout(function(){ ready(f); },80); }
@@ -149,9 +163,15 @@
         var a=v===0?0:v<60?.3:v<200?.55:v<400?.8:1; html+='<i title="'+d+': '+v+' XP" style="'+(v?'background:color-mix(in srgb,var(--aqua) '+Math.round(a*100)+'%,var(--bg-deep));border-color:transparent':'')+'"></i>'; }
       el.innerHTML=html; $('hsum').textContent=act+' active days and '+total.toLocaleString()+' XP in the last 18 weeks. Longest streak: '+s.best+(s.best===1?' day.':' days.'); }
 
-    /* badges */
-    function paintBadges(s){ var got=H.earnedBadges(s); $('bcount').textContent=got.length+' / '+H.BADGES.length;
-      $('badges').innerHTML=H.BADGES.map(function(b){ var g=got.indexOf(b.id)>=0; return '<div class="badge'+(g?'':' lock')+'">'+H.medal(b,g,58)+'<div class="t" style="color:'+(g?H.TIERCOL[b.tier]:'var(--ink-faint)')+'">'+H.TIER[b.tier]+'</div><h3>'+esc(b.name)+'</h3><p>'+esc(b.d)+'</p></div>'; }).join(''); }
+    /* badges: grouped by tier, with progress towards locked ones */
+    function paintBadges(s){ var got=H.earnedBadges(s), html=''; $('bcount').textContent=got.length+' / '+H.BADGES.length;
+      [0,1,2,3].forEach(function(t){ var list=H.BADGES.filter(function(b){return b.tier===t;}), n=list.filter(function(b){return got.indexOf(b.id)>=0;}).length;
+        html+='<div class="tierhead t'+t+'"><span class="tname">'+H.TIER[t]+'</span><span class="tsub">'+['Easy','Medium','Hard','Legendary'][t]+'</span><span class="tcount">'+n+' / '+list.length+'</span></div><div class="badges">'
+          +list.map(function(b){ var g=got.indexOf(b.id)>=0, pr=null; if(!g&&b.p){ try{ pr=b.p(s); }catch(e){} }
+            return '<div class="badge t'+t+(g?' got':' lock')+'">'+H.medal(b,g,72)+'<h3>'+esc(b.name)+'</h3><p>'+esc(b.d)+'</p>'
+              +(pr?'<div class="bp"><i style="width:'+Math.max(2,Math.round(100*pr[0]/pr[1]))+'%"></i></div><span class="bpt">'+Math.round(pr[0]).toLocaleString()+' / '+pr[1].toLocaleString()+'</span>':'')
+              +(g?'<span class="ok">Earned</span>':'')+'</div>'; }).join('')+'</div>'; });
+      $('badges').innerHTML=html; }
 
     /* themes */
     function paintThemes(s){ var cur=s.R.theme||'indigo';

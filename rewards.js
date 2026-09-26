@@ -32,15 +32,14 @@
   /* ---------------- themes unlocked by level */
   var THEMES=[
     {id:'indigo',name:'Indigo',lvl:1,v:{}},
-    {id:'ember',name:'Ember',lvl:4,v:{'--aqua':'#FFB86B','--rose':'#FF5F6D','--saffron':'#FFD166'}},
-    {id:'aurora',name:'Aurora',lvl:7,v:{'--aqua':'#7CF5D8','--rose':'#B38CFF','--saffron':'#9BE8FF'}},
-    {id:'sakura',name:'Sakura',lvl:10,v:{'--aqua':'#9AD8FF','--rose':'#FF8FB8','--saffron':'#FFE3A3'}},
-    {id:'royal',name:'Royal',lvl:14,v:{'--aqua':'#A3B8FF','--rose':'#C38BFF','--saffron':'#FFD36E','--bg':'#120F33','--surface':'#1B1648'}},
-    {id:'invariant',name:'Invariant Gold',lvl:20,v:{'--aqua':'#FFE08A','--rose':'#FFB347','--saffron':'#FFF3C4','--bg':'#17130A','--surface':'#221B0E','--surface-2':'#2C2312','--line':'#4A3C1E'}}];
+    {id:'ember',name:'Ember',lvl:4,v:{'--aqua':'#FFB86B','--rose':'#FF5F6D','--saffron':'#FFD166','--bg':'#1C1014','--bg-deep':'#140A0D','--surface':'#2A161B','--surface-2':'#351C22','--line':'#57303A','--line-soft':'#44262E','--ink-soft':'#E8C9C4','--ink-faint':'#A98580','--grid':'255,140,110'}},
+    {id:'aurora',name:'Aurora',lvl:7,v:{'--aqua':'#7CF5D8','--rose':'#B38CFF','--saffron':'#9BE8FF','--bg':'#0C1A22','--bg-deep':'#07121A','--surface':'#11262F','--surface-2':'#16303B','--line':'#23505D','--line-soft':'#1B3F4A','--ink-soft':'#BFE3E4','--ink-faint':'#7FA7AC','--grid':'124,245,216'}},
+    {id:'sakura',name:'Sakura',lvl:10,v:{'--aqua':'#9AD8FF','--rose':'#FF8FB8','--saffron':'#FFE3A3','--bg':'#1D1424','--bg-deep':'#150E1B','--surface':'#2A1D33','--surface-2':'#35243F','--line':'#553B63','--line-soft':'#443050','--ink-soft':'#EAD0E4','--ink-faint':'#A98BA5','--grid':'255,143,184'}},
+    {id:'royal',name:'Royal',lvl:14,v:{'--aqua':'#A3B8FF','--rose':'#C38BFF','--saffron':'#FFD36E','--bg':'#100B2E','--bg-deep':'#0A0720','--surface':'#1A1344','--surface-2':'#231A57','--line':'#3D2F85','--line-soft':'#30256B','--ink-soft':'#D3C8F5','--ink-faint':'#9185C2','--grid':'195,139,255'}},
+    {id:'invariant',name:'Invariant Gold',lvl:20,v:{'--aqua':'#FFD166','--rose':'#FFA62B','--saffron':'#FFF0B3','--mint':'#7BE0AD','--bg':'#0B0905','--bg-deep':'#060503','--surface':'#17120A','--surface-2':'#221A0D','--line':'#5C4518','--line-soft':'#3E2F12','--ink':'#FFF8E6','--ink-soft':'#E9D6A6','--ink-faint':'#A89468','--grid':'255,196,80'}}];
   function applyTheme(id){ var t=THEMES.filter(function(x){return x.id===id;})[0]||THEMES[0], root=document.documentElement;
     THEMES.forEach(function(x){ Object.keys(x.v).forEach(function(k){ root.style.removeProperty(k); }); });
-    Object.keys(t.v).forEach(function(k){ root.style.setProperty(k,t.v[k]); }); }
-
+    Object.keys(t.v).forEach(function(k){ root.style.setProperty(k,t.v[k]); }); root.setAttribute('data-theme',t.id); }
   /* ---------------- stored state (synced by account.js) */
   function state(){ var R=load('hu_rewards',{}); R.bank=R.bank||{}; R.daily=R.daily||{}; R.claimed=R.claimed||{}; R.frozen=R.frozen||[]; R.milestones=R.milestones||[]; R.theme=R.theme||'indigo'; return R; }
 
@@ -55,6 +54,10 @@
     var QW=load('hu_qotw',{}); Object.keys(QW).forEach(function(w){ var e=QW[w]; if(e&&e.t&&!e.gaveUp){ var k=dkey(e.t); days[k]=(days[k]||0)+(e.ok?100:25); } });
     Object.keys(days).forEach(function(k){ R.bank[k]=Math.max(R.bank[k]||0,days[k]); });
     R.maxAnswers=Math.max(R.maxAnswers||0,L.length);
+    // peak Arena rating: current rating, plus earlier ratings reconstructed from the history's deltas
+    var hist=(AR.history||[]).slice().sort(function(x,y){return y.t-x.t;}), rr=AR.rating||1200, peak=rr;
+    hist.forEach(function(h){ rr-=(h.delta||0); peak=Math.max(peak,rr); });
+    R.peakElo=Math.max(R.peakElo||0,peak,AR.rating||0);
     var bonus={};
     Object.keys(R.daily).forEach(function(k){ bonus[k]=(bonus[k]||0)+(R.daily[k].xp||0); });
     Object.keys(R.claimed).forEach(function(q){ var c=R.claimed[q]; bonus[c.day]=(bonus[c.day]||0)+(c.xp||0); });
@@ -84,43 +87,95 @@
     return {R:R,L:L,A:A,AR:AR,IV:IV,LB:LB,xp:xp,level:lvl,title:titleOf(lvl),next:need(lvl+1),cur:need(lvl),perDay:perDay,streak:streak,best:best,freezes:freezes,weekXP:weekXP,week:ws,today:t};
   }
 
-  /* ---------------- badges */
+  /* ---------------- badges: four tiers, each with its own metal and medal shape */
   function streakRun(L,filter){ var b=0,r=0; L.forEach(function(e){ if(filter&&!filter(e)) return; r=e.correct?r+1:0; b=Math.max(b,r); }); return b; }
   var PAPERS=[]; Object.keys(RATING).forEach(function(id){ var p=id.split('-')[0]; if(PAPERS.indexOf(p)<0) PAPERS.push(p); });
+  var TOPQ=Object.keys(RATING).reduce(function(a,b){ return RATING[a]>=RATING[b]?a:b; });
+  function metrics(s){ if(s._m) return s._m; var L=s.L, m={};
+    var ok={}, perDay={}; L.forEach(function(e){ if(e.correct) ok[e.id]=1; var k=dkey(e.t); perDay[k]=(perDay[k]||0)+1; });
+    m.correctIds=Object.keys(ok).length; m.maxDay=Object.keys(perDay).reduce(function(a,k){return Math.max(a,perDay[k]);},0);
+    m.hard=L.filter(function(e){return e.correct&&rating(e.id)>=8;}).length;
+    m.fastHard=L.filter(function(e){return e.correct&&rating(e.id)>=8&&e.secs<90;}).length;
+    m.hardRun=streakRun(L,function(e){return rating(e.id)>=8;}); m.run=streakRun(L);
+    var D=load('hu_duels',[]); m.duelWins=D.filter(function(h){return h.opp&&h.res==='win';}).length; m.duelsMade=D.filter(function(h){return !h.opp;}).length;
+    var QW=load('hu_qotw',{}); m.qotw=Object.keys(QW).filter(function(w){return QW[w]&&QW[w].ok;}).length;
+    m.daily=Object.keys(s.R.daily).filter(function(k){return s.R.daily[k].ok;}).length;
+    var RV=load('hu_review',{}).items||{}; m.mastered=Object.keys(RV).filter(function(k){return RV[k].mastered;}).length; m.reviews=L.filter(function(e){return e.mode==='review';}).length;
+    m.peakElo=s.R.peakElo||s.AR.rating||1200; m.winRun=s.AR.best||0;
+    var tech={}; L.forEach(function(e){ if(e.correct)(e.tags||[]).forEach(function(x){tech[x]=1;}); }); m.tech=Object.keys(tech).length;
+    var seen={}; L.forEach(function(e){ seen[e.paper]=1; }); m.papers=PAPERS.filter(function(p){return seen[p];}).length;
+    m.perfectPaper=PAPERS.reduce(function(best,p){ var n=0; for(var i=1;i<=20;i++) if(ok[p+'-'+i]) n++; return Math.max(best,n); },0);
+    s._m=m; return m; }
+  function B(id,name,tier,d,test,prog){ return {id:id,name:name,tier:tier,d:d,f:test,p:prog}; }
+  function cnt(key,goal){ return [function(s){return metrics(s)[key]>=goal;},function(s){return [Math.min(goal,metrics(s)[key]),goal];}]; }
+  function mk(id,name,tier,d,key,goal){ var c=cnt(key,goal); return B(id,name,tier,d,c[0],c[1]); }
   var BADGES=[
-    {id:'first',name:'First Point',tier:0,d:'Answer your first question.',f:function(s){return s.L.length>0||s.R.maxAnswers>0;}},
-    {id:'century',name:'Century',tier:1,d:'Answer 100 questions.',f:function(s){return s.R.maxAnswers>=100;}},
-    {id:'thousand',name:'A Thousand Cuts',tier:2,d:'Answer 1000 questions.',f:function(s){return s.R.maxAnswers>=1000;}},
-    {id:'chain',name:'Unbroken Chain',tier:1,d:'Get 10 answers right in a row.',f:function(s){return streakRun(s.L)>=10;}},
-    {id:'deep',name:'Deep End',tier:1,d:'Get 10 questions rated 8 or above right.',f:function(s){return s.L.filter(function(e){return e.correct&&rating(e.id)>=8;}).length>=10;}},
-    {id:'lightning',name:'Lightning Proof',tier:2,d:'Get a question rated 8 or above right in under 90 seconds.',f:function(s){return s.L.some(function(e){return e.correct&&rating(e.id)>=8&&e.secs<90;});}},
-    {id:'ninepoint',name:'Nine Point Oh',tier:2,d:'Solve the single hardest question on the site.',f:function(s){var top=Object.keys(RATING).reduce(function(a,b){return RATING[a]>=RATING[b]?a:b;}); return s.L.some(function(e){return e.correct&&e.id===top;});}},
-    {id:'clean',name:'Clean Sheet',tier:2,d:'Score 20 out of 20 on a timed paper.',f:function(s){return s.A.some(function(a){return a.score>=20;});}},
-    {id:'spare',name:'Time to Spare',tier:1,d:'Score 15 or more on a standard-time paper in under an hour.',f:function(s){return s.A.some(function(a){return a.score>=15&&a.secs<=3600&&(a.timing||4500)===4500;});}},
-    {id:'perfect',name:'Paper Perfect',tier:2,d:'Over any number of sittings, answer every question of one paper correctly.',f:function(s){var ok={}; s.L.forEach(function(e){ if(e.correct) ok[e.id]=1; }); return PAPERS.some(function(p){ for(var i=1;i<=20;i++) if(!ok[p+'-'+i]) return false; return true; });}},
-    {id:'collector',name:'Set Collector',tier:1,d:'Answer a question from every paper on the site.',f:function(s){var seen={}; s.L.forEach(function(e){ seen[e.paper]=1; }); return PAPERS.every(function(p){return seen[p];});}},
-    {id:'polymath',name:'Polymath',tier:1,d:'Get questions right in 15 different techniques.',f:function(s){var t={}; s.L.forEach(function(e){ if(e.correct)(e.tags||[]).forEach(function(x){t[x]=1;}); }); return Object.keys(t).length>=15;}},
-    {id:'slayer',name:'Giant Slayer',tier:2,d:'Beat the Olympian bot in an Arena duel.',f:function(s){return (s.AR.history||[]).some(function(h){return /olympian/i.test(h.bot)&&h.you>h.them;});}},
-    {id:'contender',name:'Contender',tier:0,d:'Reach an Arena rating of 1400.',f:function(s){return (s.AR.best||s.AR.rating||0)>=1400;}},
-    {id:'challenger',name:'Challenger',tier:1,d:'Reach an Arena rating of 1600.',f:function(s){return (s.AR.best||s.AR.rating||0)>=1600;}},
-    {id:'grandmaster',name:'Grandmaster',tier:2,d:'Reach an Arena rating of 1800.',f:function(s){return (s.AR.best||s.AR.rating||0)>=1800;}},
-    {id:'rung',name:'Rung Runner',tier:0,d:'Score 1000 in a ten-minute ladder.',f:function(s){return s.LB>=1000;}},
-    {id:'summit',name:'Summit',tier:2,d:'Score 2500 in a ten-minute ladder.',f:function(s){return s.LB>=2500;}},
-    {id:'three',name:'Three in a Row',tier:0,d:'Practise on 3 days running.',f:function(s){return s.best>=3;}},
-    {id:'week',name:'Week of Wonders',tier:1,d:'Practise on 7 days running.',f:function(s){return s.best>=7;}},
-    {id:'month',name:'Month of Maths',tier:2,d:'Practise on 30 days running.',f:function(s){return s.best>=30;}},
-    {id:'devotee',name:'Daily Devotee',tier:1,d:'Solve 7 daily challenges.',f:function(s){return Object.keys(s.R.daily).filter(function(k){return s.R.daily[k].ok;}).length>=7;}},
-    {id:'owl',name:'Night Owl',tier:0,d:'Get a question right between midnight and 5am.',f:function(s){return s.L.some(function(e){return e.correct&&new Date(e.t).getHours()<5;});}},
-    {id:'viva',name:'Viva Survivor',tier:1,d:'Finish a mock interview.',f:function(s){return s.IV.length>0;}},
-    {id:'rival',name:'Friendly Rival',tier:1,d:'Win a duel against a friend.',f:function(){return load('hu_duels',[]).some(function(h){return h.opp&&h.res==='win';});}},
-    {id:'weekly',name:'Problem Solver',tier:2,d:'Solve four problems of the week.',f:function(){var QW=load('hu_qotw',{}); return Object.keys(QW).filter(function(w){return QW[w]&&QW[w].ok;}).length>=4;}},
-    {id:'second',name:'Second Chance',tier:1,d:'Master 10 questions from your mistake review queue.',f:function(){var S=load('hu_review',{}),I=S.items||{}; return Object.keys(I).filter(function(k){return I[k].mastered;}).length>=10;}}];
-  var TIER=['Bronze','Silver','Gold'], TIERCOL=['var(--aqua)','var(--rose)','var(--saffron)'];
+    /* bronze: your first steps */
+    B('first','First Point',0,'Answer your first question.',function(s){return s.L.length>0||s.R.maxAnswers>0;}),
+    B('three','Three in a Row',0,'Practise on 3 days running.',function(s){return s.best>=3;},function(s){return [Math.min(3,s.best),3];}),
+    B('dailyone','Daily Habit',0,'Solve a daily challenge.',function(s){return metrics(s).daily>=1;}),
+    B('throwdown','Throw Down',0,'Send a friend a duel challenge.',function(s){return metrics(s).duelsMade>=1||metrics(s).duelWins>=1;}),
+    B('lookagain','Look Again',0,'Finish your first mistake review.',function(s){return metrics(s).reviews>=1;}),
+    B('newlook','New Look',0,'Switch the site to a theme other than Indigo.',function(s){return s.R.theme&&s.R.theme!=='indigo';}),
+    B('contender','Contender',0,'Reach an Arena rating of 1400.',function(s){return metrics(s).peakElo>=1400;},function(s){return [Math.min(1400,metrics(s).peakElo),1400];}),
+    B('rung','Rung Runner',0,'Score 1000 in a ten-minute ladder.',function(s){return s.LB>=1000;},function(s){return [Math.min(1000,s.LB),1000];}),
+    B('owl','Night Owl',0,'Get a question right between midnight and 5am.',function(s){return s.L.some(function(e){return e.correct&&new Date(e.t).getHours()<5;});}),
+    /* silver: real habits */
+    B('century','Century',1,'Answer 100 questions.',function(s){return s.R.maxAnswers>=100;},function(s){return [Math.min(100,s.R.maxAnswers),100];}),
+    mk('chain','Unbroken Chain',1,'Get 10 answers right in a row.','run',10),
+    mk('deep','Deep End',1,'Get 10 questions rated 8 or above right.','hard',10),
+    B('spare','Time to Spare',1,'Score 15 or more on a standard-time paper in under an hour.',function(s){return s.A.some(function(a){return a.score>=15&&a.secs<=3600&&(a.timing||4500)===4500;});}),
+    mk('collector','Set Collector',1,'Answer a question from every paper on the site.','papers',PAPERS.length),
+    mk('polymath','Polymath',1,'Get questions right in 15 different techniques.','tech',15),
+    B('challenger','Challenger',1,'Reach an Arena rating of 1600.',function(s){return metrics(s).peakElo>=1600;},function(s){return [Math.min(1600,metrics(s).peakElo),1600];}),
+    B('week','Week of Wonders',1,'Practise on 7 days running.',function(s){return s.best>=7;},function(s){return [Math.min(7,s.best),7];}),
+    mk('devotee','Daily Devotee',1,'Solve 7 daily challenges.','daily',7),
+    mk('rival','Friendly Rival',1,'Win a duel against a friend.','duelWins',1),
+    mk('second','Second Chance',1,'Master 10 questions from your mistake review queue.','mastered',10),
+    mk('marathon','Marathon',1,'Answer 60 questions in a single day.','maxDay',60),
+    B('viva','Viva Survivor',1,'Finish a mock interview.',function(s){return s.IV.length>0;}),
+    /* gold: hard */
+    B('thousand','A Thousand Cuts',2,'Answer 1000 questions.',function(s){return s.R.maxAnswers>=1000;},function(s){return [Math.min(1000,s.R.maxAnswers),1000];}),
+    B('lightning','Lightning Proof',2,'Get a question rated 8 or above right in under 90 seconds.',function(s){return metrics(s).fastHard>=1;}),
+    B('ninepoint','Nine Point Oh',2,'Solve the single hardest question on the site.',function(s){return s.L.some(function(e){return e.correct&&e.id===TOPQ;});}),
+    B('clean','Clean Sheet',2,'Score 20 out of 20 on any timed paper.',function(s){return s.A.some(function(a){return a.score>=20;});}),
+    mk('perfect','Paper Perfect',2,'Over any number of sittings, answer every question of one paper correctly.','perfectPaper',20),
+    B('slayer','Giant Slayer',2,'Beat the Olympian bot in an Arena duel.',function(s){return (s.AR.history||[]).some(function(h){return /olympian/i.test(h.bot)&&h.you>h.them;});}),
+    B('grandmaster','Grandmaster',2,'Reach an Arena rating of 1800.',function(s){return metrics(s).peakElo>=1800;},function(s){return [Math.min(1800,metrics(s).peakElo),1800];}),
+    B('summit','Summit',2,'Score 2500 in a ten-minute ladder.',function(s){return s.LB>=2500;},function(s){return [Math.min(2500,s.LB),2500];}),
+    B('month','Month of Maths',2,'Practise on 30 days running.',function(s){return s.best>=30;},function(s){return [Math.min(30,s.best),30];}),
+    mk('weekly','Problem Solver',2,'Solve four problems of the week.','qotw',4),
+    mk('ironnerve','Iron Nerve',2,'Get 5 questions rated 8 or above right in a row.','hardRun',5),
+    mk('quicksilver','Quicksilver',2,'Get 10 questions rated 8 or above right, each in under 90 seconds.','fastHard',10),
+    mk('champion','Club Champion',2,'Win 5 duels against friends.','duelWins',5),
+    mk('almanac','Almanac',2,'Solve 30 daily challenges.','daily',30),
+    mk('cleanslate','Clean Slate',2,'Master 50 questions from your mistake review queue.','mastered',50),
+    /* invariant: legendary */
+    B('flawless','Flawless',3,'Score 20 out of 20 on a Set G or Set H paper at standard time.',function(s){return s.A.some(function(a){return a.score>=20&&/^[GH]/.test(a.paper||'')&&(a.timing||4500)===4500;});}),
+    B('centurion','Centurion',3,'Practise on 100 days running.',function(s){return s.best>=100;},function(s){return [Math.min(100,s.best),100];}),
+    B('unstoppable','Unstoppable',3,'Win 10 Arena duels in a row.',function(s){return metrics(s).winRun>=10;},function(s){return [Math.min(10,metrics(s).winRun),10];}),
+    B('mind','Invariant Mind',3,'Reach an Arena rating of 2000.',function(s){return metrics(s).peakElo>=2000;},function(s){return [Math.min(2000,metrics(s).peakElo),2000];}),
+    B('beyond','Beyond the Summit',3,'Score 4000 in a ten-minute ladder.',function(s){return s.LB>=4000;},function(s){return [Math.min(4000,s.LB),4000];}),
+    mk('omniscient','Omniscient',3,'Answer every question on the site correctly at least once.','correctIds',Object.keys(RATING).length),
+    B('apex','Invariant',3,'Reach level 25.',function(s){return s.level>=25;},function(s){return [Math.min(25,s.level),25];})];
+  var TIER=['Bronze','Silver','Gold','Invariant'], TIERCOL=['#E3A06F','#C9D3E6','#FFC53D','#FF8FB8'];
+  var METAL=[['#F6C9A0','#C98049','#7A431E'],['#FFFFFF','#BFC9DB','#6C7690'],['#FFF3B8','#FFC53D','#9A6300'],['#4FD8E8','#FF6B8B','#FFC53D']];
+  var RIBBON=['#FF6B8B','#4FD8E8','#FFC53D','url(#rwIri)'];
   function earnedBadges(s){ return BADGES.filter(function(b){ try{ return b.f(s); }catch(e){ return false; } }).map(function(b){return b.id;}); }
-  function medal(b,got,size){ size=size||64; var c=got?TIERCOL[b.tier]:'#4A4E8C', f=got?'#F3F1FF':'#4A4E8C';
-    return '<svg viewBox="0 0 64 64" width="'+size+'" height="'+size+'" aria-hidden="true"><circle cx="32" cy="32" r="29" fill="'+(got?'rgba(255,255,255,.04)':'none')+'" stroke="'+c+'" stroke-width="2" stroke-dasharray="'+(got?'0':'3 4')+'"/>'
-      +'<path d="M14 45 L50 45 L36 13 Z" fill="none" stroke="'+c+'" stroke-width="3.2" stroke-linejoin="round"/><circle cx="34" cy="35.5" r="8.4" fill="none" stroke="'+f+'" stroke-width="1.8" opacity="'+(got?.95:.5)+'"/>'
-      +(got?'<circle cx="34" cy="45" r="2" fill="#F3F1FF"/><circle cx="41.9" cy="31.6" r="2" fill="#F3F1FF"/><circle cx="26.2" cy="30.3" r="2" fill="#F3F1FF"/>':'')+'</svg>'; }
+  function starPts(n,ro,ri,cx,cy){ var p=[]; for(var i=0;i<2*n;i++){ var r=i%2?ri:ro, a=Math.PI*i/n-Math.PI/2; p.push((cx+r*Math.cos(a)).toFixed(2)+','+(cy+r*Math.sin(a)).toFixed(2)); } return p.join(' '); }
+  var MID=0;
+  function medal(b,got,size){ size=size||64; var t=b.tier||0, id='rwm'+(++MID), m=METAL[t];
+    var shape=t===0?'<circle cx="32" cy="28" r="21"':t===1?'<polygon points="'+starPts(3,23,23,32,28).split(' ').filter(function(_,i){return i%2===0;}).join(' ')+'"':t===2?'<polygon points="'+starPts(8,24,19.5,32,28)+'"':'<polygon points="'+starPts(12,25,20.5,32,28)+'"';
+    if(t===1){ var h=[]; for(var i=0;i<6;i++){ var a=Math.PI/3*i-Math.PI/2; h.push((32+23*Math.cos(a)).toFixed(2)+','+(28+23*Math.sin(a)).toFixed(2)); } shape='<polygon points="'+h.join(' ')+'"'; }
+    if(!got) return '<svg viewBox="0 0 64 64" width="'+size+'" height="'+size+'" aria-hidden="true"><path d="M24 44 L20 60 L27 56 L32 61 L32 46Z M40 44 L44 60 L37 56 L32 61 L32 46Z" fill="none" stroke="var(--line,#343A82)" stroke-width="1.2"/>'+shape+' fill="none" stroke="var(--line,#343A82)" stroke-width="1.6" stroke-dasharray="3 3"/><path d="M22 37 L42 37 L34 19 Z" fill="none" stroke="var(--line,#343A82)" stroke-width="2" stroke-linejoin="round"/></svg>';
+    var grad=t===3
+      ?'<linearGradient id="'+id+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4FD8E8"/><stop offset=".5" stop-color="#FF6B8B"/><stop offset="1" stop-color="#FFC53D"/><animateTransform attributeName="gradientTransform" type="rotate" from="0 .5 .5" to="360 .5 .5" dur="7s" repeatCount="indefinite"/></linearGradient><linearGradient id="rwIri" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#4FD8E8"/><stop offset=".5" stop-color="#FF6B8B"/><stop offset="1" stop-color="#FFC53D"/></linearGradient>'
+      :'<linearGradient id="'+id+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="'+m[0]+'"/><stop offset=".55" stop-color="'+m[1]+'"/><stop offset="1" stop-color="'+m[2]+'"/></linearGradient>';
+    var ink=t===3?'#FFFFFF':'#1A1438';
+    return '<svg viewBox="0 0 64 64" width="'+size+'" height="'+size+'" aria-hidden="true"><defs>'+grad+'<radialGradient id="'+id+'s" cx=".35" cy=".25" r=".6"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient></defs>'
+      +'<path d="M24 44 L20 60 L27 56 L32 61 L32 46Z" fill="'+(t===3?'#4FD8E8':RIBBON[t])+'"/><path d="M40 44 L44 60 L37 56 L32 61 L32 46Z" fill="'+(t===3?'#FF6B8B':RIBBON[t])+'" opacity=".85"/>'
+      +shape+' fill="url(#'+id+')" stroke="'+(t===3?'#fff':m[2])+'" stroke-opacity="'+(t===3?.6:1)+'" stroke-width="1.4"/>'+shape+' fill="url(#'+id+'s)"/>'
+      +'<path d="M22 37 L42 37 L34 19 Z" fill="none" stroke="'+ink+'" stroke-opacity=".82" stroke-width="2.2" stroke-linejoin="round"/><circle cx="33" cy="31.3" r="5.3" fill="none" stroke="'+ink+'" stroke-opacity=".82" stroke-width="1.6"/></svg>'; }
 
   /* ---------------- weekly quests: three per week, the same for everyone */
   var QUESTS=[
@@ -176,7 +231,20 @@
    +'.rw-modal .card{background:var(--surface,#1D2052);border:1px solid var(--line,#343A82);border-radius:22px;padding:2rem 2.2rem;text-align:center;max-width:24rem;color:var(--ink,#F3F1FF)}'
    +'.rw-modal h2{font:800 1.9rem var(--display,system-ui);margin:.4rem 0 .2rem}.rw-modal p{color:var(--ink-soft,#BDBBE6);margin:.3rem 0 1rem}'
    +'.rw-modal button{font:700 1rem var(--display,system-ui);background:var(--rose,#FF6B8B);color:#15173B;border:0;border-radius:999px;padding:.65rem 1.4rem;cursor:pointer}'
-   +'.rw-conf{position:fixed;inset:0;pointer-events:none;z-index:10001}';
+   +'.rw-conf{position:fixed;inset:0;pointer-events:none;z-index:10001}'
+   +'html[data-theme]:not([data-theme="indigo"]){--aqua-wash:color-mix(in srgb,var(--aqua) 13%,transparent);--rose-wash:color-mix(in srgb,var(--rose) 14%,transparent);--saffron-wash:color-mix(in srgb,var(--saffron) 14%,transparent);--mint-wash:color-mix(in srgb,var(--mint) 14%,transparent)}'
+   +'html[data-theme]:not([data-theme="indigo"]) body{background-image:radial-gradient(1100px 520px at 78% -8%,color-mix(in srgb,var(--aqua) 13%,transparent),transparent 60%),radial-gradient(900px 480px at -10% 8%,color-mix(in srgb,var(--rose) 10%,transparent),transparent 60%),linear-gradient(rgba(var(--grid),.055) 1px,transparent 1px),linear-gradient(90deg,rgba(var(--grid),.055) 1px,transparent 1px)}'
+   +'html[data-theme]:not([data-theme="indigo"]) a:not(.btn):hover{color:color-mix(in srgb,var(--aqua) 72%,#fff)}'
+   +'html[data-theme]:not([data-theme="indigo"]) .btn:hover{background:color-mix(in srgb,var(--rose) 78%,#fff);border-color:color-mix(in srgb,var(--rose) 78%,#fff)}'
+   +'html[data-theme]:not([data-theme="indigo"]) .btn.secondary{border-color:color-mix(in srgb,var(--aqua) 55%,transparent)}html[data-theme]:not([data-theme="indigo"]) .btn.secondary:hover{background:var(--aqua-wash);color:var(--aqua)}'
+   +'html[data-theme="royal"] .panel,html[data-theme="royal"] .card{box-shadow:0 0 0 1px rgba(195,139,255,.07),0 18px 50px -28px rgba(195,139,255,.55)}'
+   +'html[data-theme="invariant"] h1,html[data-theme="invariant"] .title,html[data-theme="invariant"] .panel h2{background:linear-gradient(100deg,#FFF3C4 0%,#FFD166 30%,#FFA62B 55%,#FFE9A0 80%,#FFD166 100%);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:rwGold 9s ease-in-out infinite}'
+   +'html[data-theme="invariant"] .btn:not(.secondary):not(:disabled){background:linear-gradient(110deg,#E8921C 0%,#FFD166 40%,#FFF6CF 50%,#FFD166 60%,#E8921C 100%);background-size:260% 100%;border-color:#FFB547;color:#1A1204;animation:rwSheen 5s linear infinite}'
+   +'html[data-theme="invariant"] .panel,html[data-theme="invariant"] .card{box-shadow:inset 0 1px 0 rgba(255,225,150,.09),0 20px 60px -34px rgba(255,166,43,.45)}'
+   +'html[data-theme="invariant"] .site-nav .links a.rw-pill:not(.rv){border-color:#C98A1E;box-shadow:0 0 14px -2px rgba(255,176,60,.55)}'
+   +'html[data-theme="invariant"] #ringArc{filter:drop-shadow(0 0 7px rgba(255,190,80,.65))}'
+   +'@keyframes rwSheen{from{background-position:120% 0}to{background-position:-160% 0}}@keyframes rwGold{0%,100%{background-position:0% 0}50%{background-position:100% 0}}'
+   +'@media (prefers-reduced-motion:reduce){html[data-theme="invariant"] h1,html[data-theme="invariant"] .title,html[data-theme="invariant"] .panel h2,html[data-theme="invariant"] .btn{animation:none}}';
   function inject(){ if(document.getElementById('rw-css')) return; var st=document.createElement('style'); st.id='rw-css'; st.textContent=css; document.head.appendChild(st);
     var box=document.createElement('div'); box.className='rw-toasts'; box.id='rw-toasts'; box.setAttribute('aria-live','polite'); document.body.appendChild(box); }
   function toast(html,cls,ms){ var box=document.getElementById('rw-toasts'); if(!box) return; var el=document.createElement('div'); el.className='rw-toast '+(cls||''); el.innerHTML=html; box.appendChild(el);
@@ -187,7 +255,7 @@
     var f=0; (function step(){ g.clearRect(0,0,c.width,c.height); P.forEach(function(p){ p.vy+=.35; p.x+=p.vx; p.y+=p.vy; p.r+=.2; g.save(); g.translate(p.x,p.y); g.rotate(p.r); g.fillStyle=p.c; g.beginPath(); g.moveTo(0,-p.s); g.lineTo(p.s*.9,p.s*.6); g.lineTo(-p.s*.9,p.s*.6); g.closePath(); g.fill(); g.restore(); });
       if(++f<150) requestAnimationFrame(step); else c.remove(); })(); }
   function levelUp(s){ var unlocked=THEMES.filter(function(t){return t.lvl===s.level;})[0];
-    var m=document.createElement('div'); m.className='rw-modal'; m.innerHTML='<div class="card" role="dialog" aria-label="Level up">'+medal({tier:2},true,72)+'<h2>Level '+s.level+'</h2><p>You are now a <strong>'+esc(s.title)+'</strong>.'+(unlocked?' The <strong>'+unlocked.name+'</strong> theme is unlocked.':'')+'</p><button type="button">Keep going</button></div>';
+    var m=document.createElement('div'); m.className='rw-modal'; m.innerHTML='<div class="card" role="dialog" aria-label="Level up">'+medal({tier:s.level>=20?3:s.level>=10?2:s.level>=5?1:0},true,84)+'<h2>Level '+s.level+'</h2><p>You are now a <strong>'+esc(s.title)+'</strong>.'+(unlocked?' The <strong>'+unlocked.name+'</strong> theme is unlocked.':'')+'</p><button type="button">Keep going</button></div>';
     document.body.appendChild(m); confetti(); m.querySelector('button').focus(); m.addEventListener('click',function(e){ if(e.target===m||e.target.tagName==='BUTTON') m.remove(); }); }
   var FLAME='<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1c1 3 4 4.5 4 8a4 4 0 0 1-8 0c0-2 1-3 2-4 0 1.5.5 2.5 1.5 3C7.5 6 7 3.5 8 1z" fill="var(--rose,#FF6B8B)"/></svg>';
   function paintPill(s){ var li=document.querySelector('.site-nav .rw'); if(!li){ var ul=document.querySelector('.site-nav .links'); if(!ul) return; li=document.createElement('li'); li.className='rw'; var acct=ul.querySelector('.acct'); ul.insertBefore(li,acct||null); }
@@ -217,7 +285,7 @@
     return q.limit(25).then(function(r){ return r.error?{error:r.error.message}:{rows:r.data}; }); }
   function setTheme(id){ var R=state(); R.theme=id; save('hu_rewards',R); applyTheme(id); }
 
-  window.HU_REWARDS={snapshot:snapshot,tick:tick,BADGES:BADGES,TIER:TIER,TIERCOL:TIERCOL,medal:medal,THEMES:THEMES,setTheme:setTheme,weekQuests:weekQuests,claim:claim,
+  window.HU_REWARDS={snapshot:snapshot,tick:tick,BADGES:BADGES,TIER:TIER,TIERCOL:TIERCOL,METAL:METAL,medal:medal,metrics:metrics,THEMES:THEMES,setTheme:setTheme,weekQuests:weekQuests,claim:claim,
     dailyId:dailyId,dailyNumber:dailyNumber,recordDaily:recordDaily,earnedBadges:earnedBadges,titleOf:titleOf,need:need,XP_RULES:XP_RULES,rating:rating,
     setLeaderboard:setLeaderboard,fetchLeaderboard:fetchLeaderboard,displayName:displayName,dkey:dkey,shift:shift,today:today,esc:esc,FLAME:FLAME,
     review:{sync:reviewSync,due:reviewDue,record:reviewRecord,state:reviewState,GAPS:GAPS}};
