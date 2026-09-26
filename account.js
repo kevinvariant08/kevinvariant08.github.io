@@ -68,7 +68,7 @@
       [lr.bank||{},cr.bank||{}].forEach(function(b){ Object.keys(b).forEach(function(k){ rw.bank[k]=Math.max(rw.bank[k]||0,b[k]); }); });
       rw.daily=Object.assign({},cr.daily||{},lr.daily||{}); rw.claimed=Object.assign({},cr.claimed||{},lr.claimed||{});
       rw.frozen=unionBy(lr.frozen,cr.frozen,function(x){return x;}); rw.milestones=unionBy(lr.milestones,cr.milestones,function(x){return x;});
-      rw.maxAnswers=Math.max(lr.maxAnswers||0,cr.maxAnswers||0); rw.theme=lr.theme||cr.theme||'indigo';
+      rw.maxAnswers=Math.max(lr.maxAnswers||0,cr.maxAnswers||0); rw.peakElo=Math.max(lr.peakElo||0,cr.peakElo||0); rw.theme=lr.theme||cr.theme||'indigo';
       rw.lb=(lr.lb!=null?lr.lb:cr.lb)||false; rw.lbName=lr.lbName||cr.lbName||'';
       o.hu_rewards=rw; }
     o.hu_duels=unionBy(L.hu_duels,C.hu_duels,function(h){return h.t;},30,function(x,y){return y.t-x.t;});
