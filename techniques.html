@@ -76,6 +76,8 @@ var PAPERS={
   G2:{name:'Set G Paper 2',url:'HU_Collection_TMUA_SetG_Paper2.pdf'},
   H1:{name:'Set H Paper 1',url:'HU_Collection_TMUA_SetH_Paper1.pdf'},
   H2:{name:'Set H Paper 2',url:'HU_Collection_TMUA_SetH_Paper2.pdf'},
+  I1:{name:'Set I Paper 1',url:'HU_Collection_TMUA_SetI_Paper1.pdf'},
+  I2:{name:'Set I Paper 2',url:'HU_Collection_TMUA_SetI_Paper2.pdf'},
   IV:{name:'Mock interviews',url:'interviews.html'}
 };
 var TECH={
@@ -429,6 +431,46 @@ var Q=[
  ['H2',18,'Which of the following statements are true for every real number $x$? (Angles are in radians.)...',['trg','ineq']],
  ['H2',19,'Positive real numbers $x$, $y$ and $z$ satisfy $xyz=1$. Which of the following must be true?...',['ineq','sym']],
  ['H2',20,'A quartic polynomial $f$ has positive leading coefficient and satisfies Which of the following...',['poly','diff','root']],
+ ['I1',1,'The curve $C$ has equation $x^2+xy+y^2=3$. It is a closed curve, tilted relative to the axes....',['diff','coord']],
+ ['I1',2,'An arithmetic progression has first term $a$ and common difference $d$, where $a$ and $d$ are...',['ser','quad']],
+ ['I1',3,'For which real values of $a$ does the equation have exactly two real solutions for $x$?',['ineq','quad']],
+ ['I1',4,'For how many integers $a$ does the curve $y=x^4-8x^2+ax$ have exactly three stationary points?',['diff','root']],
+ ['I1',5,'For which real values of $k$ does the equation have exactly three real solutions?',['diff','exp','root']],
+ ['I1',6,'The cubic $f(x)=x^3+ax^2+bx+c$ satisfies $f(0)=0$ and $f(1)=1$, and it is increasing:...',['diff','poly']],
+ ['I1',7,'For which values of $a$ does the equation $x^3-3ax+2=0$ have three distinct real roots, all...',['root','diff']],
+ ['I1',8,'In triangle $ABC$, $AB=x$, $AC=y$ and angle $BAC=120^\\circ$. The bisector of angle $A$ meets...',['trg']],
+ ['I1',9,'For $a>0$ let Find the minimum value of $I(a)$ over all $a>0$.',['arint','diff']],
+ ['I1',10,'Let $k>0$ be a constant. For each real number $t$, the tangent to the curve $y=x^2$ at the...',['diff','arint']],
+ ['I1',11,'For which real values of $k$ does the equation have exactly one solution with $0\\le x\\le\\pi$?',['trg','root']],
+ ['I1',12,'Let $m\\ge2$ be an integer. Four different numbers are chosen at random from the integers...',['cnt','mod','sym']],
+ ['I1',13,'The curve with parametric equations crosses itself at exactly one point, forming a closed...',['arint','diff']],
+ ['I1',14,'A square of side $1$ is rotated about its centre through an acute angle $\\theta$. The region...',['trg','coord']],
+ ['I1',15,'Numbers $a$ and $b$ are chosen independently and uniformly at random from the interval $-1\\le...',['cnt','quad','arint']],
+ ['I1',16,'The curve $y=x^3+ax^2+bx$, where $a$ and $b$ are real constants, has two distinct stationary...',['diff','poly']],
+ ['I1',17,'Evaluate',['fint','trg','sym']],
+ ['I1',18,'Let $n\\ge2$ be an integer, and let $N(n)$ be the number of solutions of Which of the following...',['trg','cnt']],
+ ['I1',19,'As $a$ and $b$ range over all real numbers, find the minimum value of',['fint','quad']],
+ ['I1',20,'A point is chosen uniformly at random inside a square of side $1$. What is the probability...',['cnt','arint','coord']],
+ ['I2',1,'Two fair six-sided dice are rolled. Consider the events $A$: the first die shows an even...',['cnt','log']],
+ ['I2',2,'A function $f$, defined for all $x>0$, is said to tend to infinity if for every number $M$...',['log','exp']],
+ ['I2',3,'A polynomial $f$ satisfies $f(x)=f(2-x)$ for every real $x$, and...',['fint','sym']],
+ ['I2',4,'A student proves that $|a+b|\\le|a|+|b|$ for all real $a$ and $b$, using cases. (I) If $a\\ge0$...',['prf','ineq']],
+ ['I2',5,'The sequence $u_1,u_2,\\dots$ is defined by $u_1=1$ and Which of the following are true?...',['ser','ineq']],
+ ['I2',6,'For the cubic $p(x)=x^3+ax^2+bx+c$ with real coefficients, which of the following conditions...',['root','ns']],
+ ['I2',7,'For which of the following equations is it true that there is exactly one real solution?...',['root','exp','diff']],
+ ['I2',8,'A bag contains $r$ red balls and $b$ blue balls, where $r,b\\ge1$. Two balls are drawn at...',['cnt','quad']],
+ ['I2',9,'Which of the following counts are correct? There are $4$ strictly increasing functions from...',['cnt']],
+ ['I2',10,'A triangle has sides $a\\le b\\le c$ that form an arithmetic progression, so $a+c=2b$. Let $B$...',['trg','ineq']],
+ ['I2',11,'A bag contains $n$ balls numbered $1,2,\\dots,n$, where $n\\ge2$. Two balls are drawn at random...',['cnt','mod']],
+ ['I2',12,'Without evaluating them exactly, decide which of the following integrals are strictly...',['fint','trg']],
+ ['I2',13,'A function $f$ is differentiable on $[0,1]$, with $f(0)=0$, $f(1)=1$ and $f\'(x)\\le1$ for every...',['diff','ineq']],
+ ['I2',14,'A continuous function $f$ on $[0,2]$ has $F(t)=\\displaystyle\\int_0^tf(x)\\,dx$. It is known...',['fint','diff']],
+ ['I2',15,'Integers $x<y<z$ satisfy $x+y+z=xyz$. Which of the following must be true? There are...',['mod','log']],
+ ['I2',16,'Let $f(x)=x^4+ax^3+bx^2$, where $a$ and $b$ are real. Which of the following conditions...',['diff','ns','poly']],
+ ['I2',17,'A function $f$ is twice differentiable, with $f"(x)>0$ for every real $x$ and $f(0)=0$. Which...',['diff','ineq']],
+ ['I2',18,'For real constants $p$ and $q$, consider the equation Which of the following statements are...',['root','ineq','quad']],
+ ['I2',19,'Here increasing means that $u<v$ implies $f(u)<f(v)$. Which of the following statements are...',['diff','prf','log']],
+ ['I2',20,'For real constants $a$ and $b$, consider the equation Which condition on $a$ and $b$ is...',['ns','quad','root']],
  ['IV','1','An unfamiliar operation on functions: reflection about a midpoint and a bound that is never attained.',['sym','fint','ineq']],
  ['IV','2','Pairs with a small product: lattice points counted two ways, then a square-root shortcut.',['two','cnt','mod']],
  ['IV','3','Tossing until something happens: geometric structure, first-step analysis, self-overlap.',['ser','cnt']]
@@ -463,6 +505,6 @@ function render(){
 document.getElementById('q').addEventListener('input',function(e){q=e.target.value;render();});
 render();
 </script>
-<script src="site.js?v=20260927"></script>
+<script src="site.js?v=20260928"></script>
 </body>
 </html>
