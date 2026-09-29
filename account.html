@@ -8,13 +8,13 @@
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <meta name="theme-color" content="#15173B">
   <meta name="robots" content="noindex">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=20260929">
   <style>
     .acc{max-width:52rem}
-    .who{display:flex;align-items:center;gap:1.1rem;margin:0 0 2rem}
-    .who .av{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:1.6rem;color:#15173B;background:conic-gradient(var(--aqua),var(--rose),var(--saffron),var(--aqua));flex:none}
-    .who h1{margin:0;font-size:clamp(1.8rem,4vw,2.6rem)}
-    .who p{margin:.1rem 0 0;color:var(--ink-soft)}
+    .acc-head{display:flex;align-items:center;gap:1.1rem;margin:0 0 2rem}
+    .acc-head .acc-av{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:1.6rem;color:#15173B;background:conic-gradient(var(--aqua),var(--rose),var(--saffron),var(--aqua));flex:none}
+    .acc-head h1{margin:0;font-size:clamp(1.8rem,4vw,2.6rem)}
+    .acc-head p{margin:.1rem 0 0;color:var(--ink-soft)}
     .blk{border-top:1px solid var(--line-soft);padding:1.6rem 0;display:grid;grid-template-columns:minmax(0,15rem) minmax(0,1fr);gap:1rem 2.4rem}
     @media (max-width:760px){.blk{grid-template-columns:1fr}}
     .blk h2{margin:0;font-size:1.2rem}
@@ -40,7 +40,7 @@
 <body data-theme-v2>
   <nav id="sitenav"><div class="nav-links"><a href="index.html">Home</a></div></nav>
   <main class="container acc" id="main" hidden>
-    <div class="who"><span class="av" id="av">?</span><div><h1 id="hello">Your account</h1><p id="email"></p></div></div>
+    <div class="acc-head"><span class="acc-av" id="av">?</span><div><h1 id="hello">Your account</h1><p id="email"></p></div></div>
 
     <section class="blk">
       <div><h2>Synced progress</h2><p class="lead2">Saved to your account and merged across every device you sign in on.</p></div>
@@ -89,7 +89,7 @@
     </section>
   </main>
 
-<script src="site.js?v=20260927"></script>
+<script src="site.js?v=20260929"></script>
 <script>
 (function(){
   function $(id){ return document.getElementById(id); }

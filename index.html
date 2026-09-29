@@ -10,7 +10,7 @@
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
   <meta name="theme-color" content="#15173B">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=20260929">
   <style>
     .home{max-width:74rem;margin:0 auto;padding:0 1.4rem 4rem}
     .hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:2.6rem;align-items:center;padding:3.2rem 0 2.4rem}
@@ -40,6 +40,8 @@
     @media (max-width:1000px){.papers.three{grid-template-columns:1fr}}
     @media (max-width:760px){.papers{grid-template-columns:1fr}.setc{padding:1.5rem 1.2rem}}
     .paper{background:rgba(15,17,48,.55);border:1px solid var(--line-soft);border-radius:var(--r-lg);padding:1.3rem 1.3rem 1rem}
+    .setc .paper{display:flex;flex-direction:column}
+    .setc .paper>.btn{align-self:flex-start;margin-top:auto}
     .paper h3{margin:0 0 .3rem;display:flex;align-items:center;gap:.6rem}
     .paper h3 .dot{width:12px;height:12px;border-radius:50%;flex:none}
     .paper p{font-size:.96rem;color:var(--ink-soft);margin-bottom:.8rem}
@@ -67,6 +69,15 @@
     .section-intro{color:var(--ink-soft);max-width:60ch}
     .diff{display:flex;flex-wrap:wrap;gap:.3rem .9rem;margin:.1rem 0 .7rem!important;font-size:.88rem!important;color:var(--ink-faint)!important}
     .diff b{color:var(--saffron);font-weight:700}
+    .setc h3.sub{margin:1.7rem 0 0;font-family:inherit;font-size:.8rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint)}
+    .sets{margin-top:.5rem;border-top:1px solid rgba(243,241,255,.14)}
+    .srow{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:.5rem 2rem;padding:1rem .1rem;border-bottom:1px solid rgba(243,241,255,.10)}
+    .srow h3{margin:0 0 .15rem;font-size:1.05rem}
+    .srow p{margin:0;color:var(--ink-soft);font-size:.93rem}
+    .srow .pl{display:grid;grid-template-columns:auto 1fr;gap:.35rem 1rem;align-content:start;font-size:.95rem}
+    .srow .pl .lab{color:var(--ink-faint);font-size:.85rem;line-height:1.7}
+    .srow .pl .ln{display:flex;flex-wrap:wrap;gap:.2rem 1.1rem}
+    @media (max-width:760px){.srow{grid-template-columns:1fr}.srow .pl{gap:.35rem .7rem}.srow .pl .ln{gap:.2rem .75rem;font-size:.93rem}}
   </style>
 </head>
 <body data-theme-v2>
@@ -78,7 +89,7 @@
         <h1>Kevin Hu</h1>
         <p class="lede">Sixth-form mathematician at Dubai College, BMO1 silver medallist, and author of <em>Beyond the Incenter</em>. Here you'll find original olympiad problems, TMUA papers that are harder than the real thing, and tools for practising them properly.</p>
         <div class="cta">
-          <a class="btn" href="drill.html?paper=I1">Sit the newest mock</a>
+          <a class="btn" href="drill.html?paper=J1">Sit the newest mock</a>
           <a class="btn secondary" href="arena.html">Race the bot</a>
         </div>
       </div>
@@ -89,40 +100,65 @@
       </figure>
     </section>
 
-    <section class="setc" aria-labelledby="setc-h">
-      <h2 id="setc-h">The hardest mocks: Sets G, H and I</h2>
-      <p>One hundred and twenty long, demanding questions. Set I, the newest, trades competition tricks for variables and casework: parameters that change the answer, probability by integration, and function analysis where every case matters. Difficulty is out of 9, on the same scale as the question bank.</p>
+    <section class="setc" id="tmua" aria-labelledby="tmua-h">
+      <h2 id="tmua-h">TMUA mock papers</h2>
+      <p>Ten original sets, twenty papers, all harder than the real thing. Every paper can be sat timed in the drill, and worked solutions are separate downloads so each paper can be sat cold. Difficulty is out of 9, on the same scale as the question bank.</p>
+      <h3 class="sub">Newest: Set J</h3>
       <div class="papers">
         <div class="paper">
-          <h3><span class="dot" style="background:var(--saffron)"></span>Set I Paper 1</h3>
-          <p class="diff"><span>Difficulty <b>7.8</b></span><span>hardest question 8.4</span></p>
-          <p>Tangent chords of constant width, the line through a cubic's turning points, a probability that is exactly one third for every m, a parametric loop, and a geometric probability computed by calculus.</p>
-          <a class="btn" href="drill.html?paper=I1">Sit it timed</a>
-          <div class="links"><a href="HU_Collection_TMUA_SetI_Paper1.pdf" target="_blank">Question paper</a><a href="HU_Collection_TMUA_SetI_Paper1_Solutions.pdf" target="_blank">Worked solutions</a></div>
-        </div>
-        <div class="paper">
-          <h3><span class="dot" style="background:var(--mint)"></span>Set I Paper 2</h3>
-          <p class="diff"><span>Difficulty <b>7.8</b></span><span>hardest question 8.4</span></p>
-          <p>Convexity without formulas, integral signs decided without integrating, differentiability traps, parity probabilities with two answers, and the family x|x| + px + q case by case.</p>
-          <a class="btn" href="drill.html?paper=I2">Sit it timed</a>
-          <div class="links"><a href="HU_Collection_TMUA_SetI_Paper2.pdf" target="_blank">Question paper</a><a href="HU_Collection_TMUA_SetI_Paper2_Solutions.pdf" target="_blank">Worked solutions</a></div>
-        </div>
-        <div class="paper">
-          <h3><span class="dot" style="background:var(--rose)"></span>Set H Paper 1</h3>
+          <h3><span class="dot" style="background:var(--saffron)"></span>Set J Paper 1</h3>
           <p class="diff"><span>Difficulty <b>7.9</b></span><span>hardest question 8.4</span></p>
-          <p>A circle that turns out to be tangent, a hexagon hiding in three moduli, a staircase of square roots read as a path, and a line sliding across a modulus graph.</p>
-          <a class="btn" href="drill.html?paper=H1">Sit it timed</a>
-          <div class="links"><a href="HU_Collection_TMUA_SetH_Paper1.pdf" target="_blank">Question paper</a><a href="HU_Collection_TMUA_SetH_Paper1_Solutions.pdf" target="_blank">Worked solutions</a></div>
+          <p>Roots rebuilt from their pairwise sums, a segment pinned down by its perimeter, a dice game where a 1 means rolling again, two cones from one disc, and a line sliding across a modulus graph.</p>
+          <a class="btn" href="drill.html?paper=J1">Sit it timed</a>
+          <div class="links"><a href="HU_Collection_TMUA_SetJ_Paper1.pdf" target="_blank">Question paper</a><a href="HU_Collection_TMUA_SetJ_Paper1_Solutions.pdf" target="_blank">Worked solutions</a></div>
         </div>
         <div class="paper">
-          <h3><span class="dot" style="background:var(--aqua)"></span>Set H Paper 2</h3>
-          <p class="diff"><span>Difficulty <b>7.7</b></span><span>hardest question 8.2</span></p>
-          <p>Liars round a table, a polynomial that cannot have integer coefficients, a quartic pinned down yet still free, and a bathtub bound on an integral.</p>
-          <a class="btn" href="drill.html?paper=H2">Sit it timed</a>
-          <div class="links"><a href="HU_Collection_TMUA_SetH_Paper2.pdf" target="_blank">Question paper</a><a href="HU_Collection_TMUA_SetH_Paper2_Solutions.pdf" target="_blank">Worked solutions</a></div>
+          <h3><span class="dot" style="background:var(--mint)"></span>Set J Paper 2</h3>
+          <p class="diff"><span>Difficulty <b>7.9</b></span><span>hardest question 8.2</span></p>
+          <p>Valid and invalid arguments, a negation hidden in unless, a symmetry proof that breaks one line from the end, a series that converges for every ratio, and quantifiers on a square.</p>
+          <a class="btn" href="drill.html?paper=J2">Sit it timed</a>
+          <div class="links"><a href="HU_Collection_TMUA_SetJ_Paper2.pdf" target="_blank">Question paper</a><a href="HU_Collection_TMUA_SetJ_Paper2_Solutions.pdf" target="_blank">Worked solutions</a></div>
         </div>
       </div>
-      <p style="margin-top:1rem"><a href="#archive">Set G and earlier sets are in the archive below.</a></p>
+      <h3 class="sub">Earlier sets, newest first</h3>
+      <div class="sets">
+        <div class="srow">
+          <div><h3>Set I</h3><p class="diff"><span>Paper 1 <b>7.8</b></span><span>Paper 2 <b>7.8</b></span></p><p>Tangent chords of constant width, a probability that is exactly one third for every m, integral signs decided without integrating, and the family x|x| + px + q case by case.</p></div>
+          <div class="pl"><span class="lab">Paper 1</span><span class="ln"><a href="drill.html?paper=I1">Sit timed</a><a href="HU_Collection_TMUA_SetI_Paper1.pdf" target="_blank">Questions</a><a href="HU_Collection_TMUA_SetI_Paper1_Solutions.pdf" target="_blank">Solutions</a></span><span class="lab">Paper 2</span><span class="ln"><a href="drill.html?paper=I2">Sit timed</a><a href="HU_Collection_TMUA_SetI_Paper2.pdf" target="_blank">Questions</a><a href="HU_Collection_TMUA_SetI_Paper2_Solutions.pdf" target="_blank">Solutions</a></span></div>
+        </div>
+        <div class="srow">
+          <div><h3>Set H</h3><p class="diff"><span>Paper 1 <b>7.9</b></span><span>Paper 2 <b>7.7</b></span></p><p>A hexagon hiding in three moduli, a staircase of square roots read as a path, liars round a table, and a bathtub bound on an integral.</p></div>
+          <div class="pl"><span class="lab">Paper 1</span><span class="ln"><a href="drill.html?paper=H1">Sit timed</a><a href="HU_Collection_TMUA_SetH_Paper1.pdf" target="_blank">Questions</a><a href="HU_Collection_TMUA_SetH_Paper1_Solutions.pdf" target="_blank">Solutions</a></span><span class="lab">Paper 2</span><span class="ln"><a href="drill.html?paper=H2">Sit timed</a><a href="HU_Collection_TMUA_SetH_Paper2.pdf" target="_blank">Questions</a><a href="HU_Collection_TMUA_SetH_Paper2_Solutions.pdf" target="_blank">Solutions</a></span></div>
+        </div>
+        <div class="srow">
+          <div><h3>Set G</h3><p class="diff"><span>Paper 1 <b>8.0</b></span><span>Paper 2 <b>7.9</b></span></p><p>Nested absolute-value graphs, four common tangents summed exactly, an induction with a broken step, and involutions with no fixed point.</p></div>
+          <div class="pl"><span class="lab">Paper 1</span><span class="ln"><a href="drill.html?paper=G1">Sit timed</a><a href="HU_Collection_TMUA_SetG_Paper1.pdf" target="_blank">Questions</a><a href="HU_Collection_TMUA_SetG_Paper1_Solutions.pdf" target="_blank">Solutions</a></span><span class="lab">Paper 2</span><span class="ln"><a href="drill.html?paper=G2">Sit timed</a><a href="HU_Collection_TMUA_SetG_Paper2.pdf" target="_blank">Questions</a><a href="HU_Collection_TMUA_SetG_Paper2_Solutions.pdf" target="_blank">Solutions</a></span></div>
+        </div>
+        <div class="srow">
+          <div><h3>Set F</h3><p class="diff"><span>Paper 1 <b>6.1</b></span><span>Paper 2 <b>6.2</b></span></p><p>Remainders without division, the bound AM-GM cannot reach, and a cycle of implications.</p></div>
+          <div class="pl"><span class="lab">Paper 1</span><span class="ln"><a href="drill.html?paper=F1">Sit timed</a><a href="HU_Collection_TMUA_SetF_Paper1.pdf" target="_blank">Questions</a><a href="HU_Collection_TMUA_SetF_Paper1_Solutions.pdf" target="_blank">Solutions</a></span><span class="lab">Paper 2</span><span class="ln"><a href="drill.html?paper=F2">Sit timed</a><a href="HU_Collection_TMUA_SetF_Paper2.pdf" target="_blank">Questions</a><a href="HU_Collection_TMUA_SetF_Paper2_Solutions.pdf" target="_blank">Solutions</a></span></div>
+        </div>
+        <div class="srow">
+          <div><h3>Set E</h3><p class="diff"><span>Paper 1 <b>6.1</b></span><span>Paper 2 <b>6.1</b></span></p><p>Telescoping with a gap of two, recurrences you complete the square on, and a chain of powers between 0 and 1.</p></div>
+          <div class="pl"><span class="lab">Paper 1</span><span class="ln"><a href="drill.html?paper=E1">Sit timed</a><a href="HU_Collection_TMUA_SetE_Paper1.pdf" target="_blank">Questions</a><a href="HU_Collection_TMUA_SetE_Paper1_Solutions.pdf" target="_blank">Solutions</a></span><span class="lab">Paper 2</span><span class="ln"><a href="drill.html?paper=E2">Sit timed</a><a href="HU_Collection_TMUA_SetE_Paper2.pdf" target="_blank">Questions</a><a href="HU_Collection_TMUA_SetE_Paper2_Solutions.pdf" target="_blank">Solutions</a></span></div>
+        </div>
+        <div class="srow">
+          <div><h3>Set D</h3><p class="diff"><span>Paper 1 <b>6.3</b></span><span>Paper 2 <b>6.2</b></span></p><p>Logarithm chains, roots confined to an interval, and a sequence bounded by keeping the error terms.</p></div>
+          <div class="pl"><span class="lab">Paper 1</span><span class="ln"><a href="drill.html?paper=D1">Sit timed</a><a href="HU_Collection_TMUA_SetD_Paper1.pdf" target="_blank">Questions</a><a href="HU_Collection_TMUA_SetD_Paper1_Solutions.pdf" target="_blank">Solutions</a></span><span class="lab">Paper 2</span><span class="ln"><a href="drill.html?paper=D2">Sit timed</a><a href="HU_Collection_TMUA_SetD_Paper2.pdf" target="_blank">Questions</a><a href="HU_Collection_TMUA_SetD_Paper2_Solutions.pdf" target="_blank">Solutions</a></span></div>
+        </div>
+        <div class="srow">
+          <div><h3>Set C</h3><p class="diff"><span>Paper 1 <b>7.1</b></span><span>Paper 2 <b>6.9</b></span></p><p>Pitched above the 2025 TMUA and weighted towards integration tricks, trigonometric inequalities and negating implications.</p></div>
+          <div class="pl"><span class="lab">Paper 1</span><span class="ln"><a href="drill.html?paper=C1">Sit timed</a><a href="HU_Collection_TMUA_SetC_Paper1.pdf" target="_blank">Questions</a><a href="HU_Collection_TMUA_SetC_Paper1_Solutions.pdf" target="_blank">Solutions</a></span><span class="lab">Paper 2</span><span class="ln"><a href="drill.html?paper=C2">Sit timed</a><a href="HU_Collection_TMUA_SetC_Paper2.pdf" target="_blank">Questions</a><a href="HU_Collection_TMUA_SetC_Paper2_Solutions.pdf" target="_blank">Solutions</a></span></div>
+        </div>
+        <div class="srow">
+          <div><h3>Set B</h3><p class="diff"><span>Paper 1 <b>7.3</b></span><span>Paper 2 <b>7.5</b></span></p><p>No routine questions: invariants, Ptolemy on a heptagon, interpolating an exponential, a sign-change argument for integrals.</p></div>
+          <div class="pl"><span class="lab">Paper 1</span><span class="ln"><a href="drill.html?paper=B1">Sit timed</a><a href="HU_Collection_TMUA_SetB_Paper1.pdf" target="_blank">Questions</a><a href="HU_Collection_TMUA_SetB_Paper1_Solutions.pdf" target="_blank">Solutions</a></span><span class="lab">Paper 2</span><span class="ln"><a href="drill.html?paper=B2">Sit timed</a><a href="HU_Collection_TMUA_SetB_Paper2%20(1).pdf" target="_blank">Questions</a><a href="HU_Collection_TMUA_SetB_Paper2_Solutions%20(1).pdf" target="_blank">Solutions</a></span></div>
+        </div>
+        <div class="srow">
+          <div><h3>Set A</h3><p>A gentler entry point, with questions and worked solutions in one document for each paper.</p></div>
+          <div class="pl"><span class="lab">Paper 1</span><span class="ln"><a href="hu_mock_a_p1_with_solutions.pdf" target="_blank">Questions with solutions</a></span><span class="lab">Paper 2</span><span class="ln"><a href="hu_mock_a_p2_with_solutions.pdf" target="_blank">Questions with solutions</a></span></div>
+        </div>
+      </div>
     </section>
 
     <h2>Practise</h2>
@@ -206,37 +242,9 @@
       </a>
     </div>
 
-    <h2>Papers and solutions</h2>
-    <p class="section-intro">Every paper is original. Solutions are separate downloads, so each paper can be sat cold.</p>
+    <h2>Other papers and solutions</h2>
+    <p class="section-intro">Olympiad mocks, challenge papers and write-ups, all original. The TMUA mocks are <a href="#tmua">together at the top of the page</a>.</p>
     <div class="archive" id="archive">
-      <div class="arow">
-        <div><h3>TMUA mock Set G</h3><p class="diff"><span>Paper 1 difficulty <b>8.0</b></span><span>Paper 2 difficulty <b>7.9</b></span></p><p>Nested absolute-value graphs, four common tangents summed exactly, an induction with a broken step, and involutions with no fixed point.</p></div>
-        <div class="files"><a href="drill.html?paper=G1">Sit Paper 1 timed</a><a href="HU_Collection_TMUA_SetG_Paper1.pdf" target="_blank">Paper 1</a><a href="HU_Collection_TMUA_SetG_Paper1_Solutions.pdf" target="_blank">Paper 1 solutions</a><a href="drill.html?paper=G2">Sit Paper 2 timed</a><a href="HU_Collection_TMUA_SetG_Paper2.pdf" target="_blank">Paper 2</a><a href="HU_Collection_TMUA_SetG_Paper2_Solutions.pdf" target="_blank">Paper 2 solutions</a></div>
-      </div>
-      <div class="arow">
-        <div><h3>TMUA mock Set D</h3><p class="diff"><span>Paper 1 difficulty <b>6.3</b></span><span>Paper 2 difficulty <b>6.2</b></span></p><p>Logarithm chains, roots confined to an interval, and a sequence bounded by keeping the error terms.</p></div>
-        <div class="files"><a href="drill.html?paper=D1">Sit Paper 1 timed</a><a href="HU_Collection_TMUA_SetD_Paper1.pdf" target="_blank">Paper 1</a><a href="HU_Collection_TMUA_SetD_Paper1_Solutions.pdf" target="_blank">Paper 1 solutions</a><a href="drill.html?paper=D2">Sit Paper 2 timed</a><a href="HU_Collection_TMUA_SetD_Paper2.pdf" target="_blank">Paper 2</a><a href="HU_Collection_TMUA_SetD_Paper2_Solutions.pdf" target="_blank">Paper 2 solutions</a></div>
-      </div>
-      <div class="arow">
-        <div><h3>TMUA mock Set E</h3><p class="diff"><span>Paper 1 difficulty <b>6.1</b></span><span>Paper 2 difficulty <b>6.1</b></span></p><p>Telescoping with a gap of two, recurrences you complete the square on, and a chain of powers between 0 and 1.</p></div>
-        <div class="files"><a href="drill.html?paper=E1">Sit Paper 1 timed</a><a href="HU_Collection_TMUA_SetE_Paper1.pdf" target="_blank">Paper 1</a><a href="HU_Collection_TMUA_SetE_Paper1_Solutions.pdf" target="_blank">Paper 1 solutions</a><a href="drill.html?paper=E2">Sit Paper 2 timed</a><a href="HU_Collection_TMUA_SetE_Paper2.pdf" target="_blank">Paper 2</a><a href="HU_Collection_TMUA_SetE_Paper2_Solutions.pdf" target="_blank">Paper 2 solutions</a></div>
-      </div>
-      <div class="arow">
-        <div><h3>TMUA mock Set F</h3><p class="diff"><span>Paper 1 difficulty <b>6.1</b></span><span>Paper 2 difficulty <b>6.2</b></span></p><p>Remainders without division, the bound AM-GM cannot reach, and a cycle of implications.</p></div>
-        <div class="files"><a href="drill.html?paper=F1">Sit Paper 1 timed</a><a href="HU_Collection_TMUA_SetF_Paper1.pdf" target="_blank">Paper 1</a><a href="HU_Collection_TMUA_SetF_Paper1_Solutions.pdf" target="_blank">Paper 1 solutions</a><a href="drill.html?paper=F2">Sit Paper 2 timed</a><a href="HU_Collection_TMUA_SetF_Paper2.pdf" target="_blank">Paper 2</a><a href="HU_Collection_TMUA_SetF_Paper2_Solutions.pdf" target="_blank">Paper 2 solutions</a></div>
-      </div>
-      <div class="arow">
-        <div><h3>TMUA mock Set C</h3><p class="diff"><span>Paper 1 difficulty <b>7.1</b></span><span>Paper 2 difficulty <b>6.9</b></span></p><p>Pitched above the 2025 TMUA and weighted towards integration tricks, trigonometric inequalities and negating implications.</p></div>
-        <div class="files"><a href="drill.html?paper=C1">Sit Paper 1 timed</a><a href="HU_Collection_TMUA_SetC_Paper1.pdf" target="_blank">Paper 1</a><a href="HU_Collection_TMUA_SetC_Paper1_Solutions.pdf" target="_blank">Paper 1 solutions</a><a href="drill.html?paper=C2">Sit Paper 2 timed</a><a href="HU_Collection_TMUA_SetC_Paper2.pdf" target="_blank">Paper 2</a><a href="HU_Collection_TMUA_SetC_Paper2_Solutions.pdf" target="_blank">Paper 2 solutions</a></div>
-      </div>
-      <div class="arow">
-        <div><h3>TMUA mock Set B</h3><p class="diff"><span>Paper 1 difficulty <b>7.3</b></span><span>Paper 2 difficulty <b>7.5</b></span></p><p>No routine questions: invariants, Ptolemy on a heptagon, interpolating an exponential, a sign-change argument for integrals.</p></div>
-        <div class="files"><a href="drill.html?paper=B1">Sit Paper 1 timed</a><a href="HU_Collection_TMUA_SetB_Paper1.pdf" target="_blank">Paper 1</a><a href="HU_Collection_TMUA_SetB_Paper1_Solutions.pdf" target="_blank">Paper 1 solutions</a><a href="drill.html?paper=B2">Sit Paper 2 timed</a><a href="HU_Collection_TMUA_SetB_Paper2.pdf" target="_blank">Paper 2</a><a href="HU_Collection_TMUA_SetB_Paper2_Solutions.pdf" target="_blank">Paper 2 solutions</a></div>
-      </div>
-      <div class="arow">
-        <div><h3>TMUA mock Set A</h3><p>A gentler entry point, with questions and worked solutions in one document.</p></div>
-        <div class="files"><a href="hu_mock_a_p1_with_solutions.pdf" target="_blank">Paper 1 with solutions</a><a href="hu_mock_a_p2_with_solutions.pdf" target="_blank">Paper 2 with solutions</a></div>
-      </div>
       <div class="arow">
         <div><h3>The HU Collection</h3><p>Short elite-level mock examinations for TMUA, MAT and interview preparation, on topics the standard curriculum skips.</p></div>
         <div class="files"><a href="Hu_Collection_Part_1.pdf" target="_blank">Part 1</a><a href="Hu_Collection_Part_2.pdf" target="_blank">Part 2</a></div>
@@ -257,7 +265,7 @@
   </main>
   <footer class="site-foot">Kevin Hu, Dubai College. Everything on this site is original work; scores and progress stay in your browser unless you choose to log them.</footer>
 
-<script src="site.js?v=20260928"></script>
+<script src="site.js?v=20260929"></script>
 <script>
 (function(){
   var svg=document.getElementById('tri'), NS='http://www.w3.org/2000/svg', U=100;

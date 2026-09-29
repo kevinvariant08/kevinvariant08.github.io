@@ -90,7 +90,7 @@ code{font-size:.92em;background:var(--bg-deep);padding:.1em .35em;border-radius:
 .site-nav .brand svg{width:34px;height:34px;flex:none}
 .site-nav .links{display:flex;align-items:center;gap:.2rem;list-style:none;margin:0;padding:0}
 .site-nav .links>li{position:relative}
-.site-nav .links a,.site-nav .links button{font-family:var(--display);font-size:.95rem;font-weight:500;color:var(--ink-soft);text-decoration:none;background:none;border:0;padding:.5rem .75rem;border-radius:999px;cursor:pointer;display:flex;align-items:center;gap:.3rem;min-height:40px}
+.site-nav .links a,.site-nav .links button{margin:0;font-family:var(--display);font-size:.95rem;font-weight:500;color:var(--ink-soft);text-decoration:none;background:none;border:0;padding:.5rem .75rem;border-radius:999px;cursor:pointer;display:flex;align-items:center;gap:.3rem;min-height:40px}
 .site-nav .links a:hover,.site-nav .links button:hover{color:var(--ink);background:var(--surface)}
 .site-nav .links a[aria-current="page"],.site-nav .links button.current{color:var(--ink);background:var(--surface-2)}
 .site-nav .caret{width:9px;height:9px;transition:transform .15s}
@@ -104,7 +104,7 @@ code{font-size:.92em;background:var(--bg-deep);padding:.1em .35em;border-radius:
 .site-nav .toggle{display:none}
 @media (max-width:860px){
   .site-nav .toggle{display:flex;background:none;border:1px solid var(--line);color:var(--ink);border-radius:999px;padding:.4rem .8rem;font-family:var(--display);font-weight:600;min-height:40px;cursor:pointer}
-  .site-nav .links{display:none;position:absolute;left:0;right:0;top:100%;flex-direction:column;align-items:stretch;background:var(--surface);border-bottom:1px solid var(--line);padding:.6rem 1rem 1rem}
+  .site-nav .links{display:none;position:absolute;left:0;right:0;top:100%;flex-direction:column;align-items:stretch;background:var(--surface);border-bottom:1px solid var(--line);padding:.6rem 1rem 1rem;max-height:calc(100vh - 60px);max-height:calc(100dvh - 60px);overflow-y:auto;overscroll-behavior:contain}
   .site-nav.open .links{display:flex}
   .site-nav .menu{position:static;display:block;box-shadow:none;border:0;background:transparent;padding:0 0 .4rem .6rem;min-width:0}
   .site-nav .links button .caret{display:none}
@@ -114,14 +114,14 @@ code{font-size:.92em;background:var(--bg-deep);padding:.1em .35em;border-radius:
 .site-nav .acct{margin-left:.4rem}
 .site-nav .acct .signin{border:1px solid rgba(79,216,232,.5);color:var(--aqua);gap:.3rem}
 .site-nav .acct .signin:hover{background:var(--aqua-wash);color:var(--aqua)}
-.site-nav .acct .who{gap:.5rem;padding:.3rem .7rem .3rem .3rem;border:1px solid var(--line)}
-.site-nav .acct .av{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:.85rem;color:#15173B;background:conic-gradient(var(--aqua),var(--rose),var(--saffron),var(--aqua))}
-.site-nav .acct .nm{max-width:9rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.site-nav .acct .acct-btn{gap:.5rem;padding:.3rem .7rem .3rem .3rem;border:1px solid var(--line)}
+.site-nav .acct .acct-av{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:.85rem;color:#15173B;background:conic-gradient(var(--aqua),var(--rose),var(--saffron),var(--aqua))}
+.site-nav .acct .acct-nm{max-width:9rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .site-nav .menu.right{left:auto;right:0}
 .site-nav .menu .me{padding:.5rem .75rem;font-size:.82rem;color:var(--ink-faint);border-bottom:1px solid var(--line-soft);margin-bottom:.3rem;overflow:hidden;text-overflow:ellipsis}
 .site-nav .menu .out{width:100%;justify-content:flex-start;color:var(--rose);padding:.55rem .75rem;border-radius:10px}
 .site-nav .menu .out:hover{background:var(--rose-wash);color:var(--rose)}
-@media (max-width:860px){.site-nav .acct{margin:.4rem 0 0}.site-nav .acct .who .caret{display:none}.site-nav .acct .who{color:var(--ink);font-size:.95rem;cursor:pointer}}
+@media (max-width:860px){.site-nav .acct{order:-1;margin:0 0 .6rem;padding-bottom:.6rem;border-bottom:1px solid var(--line-soft)}.site-nav .acct .acct-btn .caret{display:none}.site-nav .acct .acct-btn{color:var(--ink);font-size:.95rem;cursor:pointer}}
 
 /* the old flat nav, for pages not yet converted */
 body>nav:not(.site-nav){background:rgba(21,23,59,.85);border-bottom:1px solid var(--line-soft);padding:.8rem 1.4rem}
