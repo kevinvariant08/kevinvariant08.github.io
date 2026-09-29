@@ -64,9 +64,9 @@
         return;
       }
       var name=(u.user_metadata&&u.user_metadata.display_name)||u.email||'Account', init=name.trim().charAt(0).toUpperCase();
-      li.innerHTML='<button type="button" class="who" aria-expanded="false" aria-controls="macct"><span class="av">'+esc(init)+'</span><span class="nm">'+esc(name.split('@')[0])+'</span>'+caret()+'</button>'
+      li.innerHTML='<button type="button" class="acct-btn" aria-expanded="false" aria-controls="macct"><span class="acct-av">'+esc(init)+'</span><span class="acct-nm">'+esc(name.split('@')[0])+'</span>'+caret()+'</button>'
         +'<ul class="menu right" id="macct"><li class="me">'+esc(u.email||'')+'</li><li><a href="account.html"'+(here==='account.html'?' aria-current="page"':'')+'>Your account<small>Profile, password and synced progress</small></a></li><li><a href="progress.html">My progress<small>Synced across your devices</small></a></li><li><button type="button" class="out">Sign out</button></li></ul>';
-      var b=li.querySelector('.who'), m=li.querySelector('.menu');
+      var b=li.querySelector('.acct-btn'), m=li.querySelector('.menu');
       b.addEventListener('click',function(e){ e.stopPropagation(); var o=b.getAttribute('aria-expanded')!=='true'; nav.querySelectorAll('.menu.open').forEach(function(x){ if(x!==m){ x.classList.remove('open'); } }); b.setAttribute('aria-expanded',String(o)); m.classList.toggle('open',o); });
       li.querySelector('.out').addEventListener('click',async function(){ this.disabled=true; this.textContent='Signing out'; await window.HU_AUTH.signOut(); location.href='auth.html?signedout=1'; });
     }
