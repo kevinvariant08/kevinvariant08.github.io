@@ -9,7 +9,7 @@
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
   <meta name="theme-color" content="#F3F1FF">
-  <link rel="stylesheet" href="style.css?v=20260929">
+  <link rel="stylesheet" href="style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono&display=swap" rel="stylesheet">
   <style>
@@ -33,6 +33,10 @@
         background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:30px 30px;position:relative}
     .sb svg{display:block;width:100%;height:auto;touch-action:none;cursor:crosshair}
     .sb .status{position:absolute;left:.8rem;bottom:.6rem;font-size:.85rem;color:var(--soft);pointer-events:none;background:rgba(21,23,59,.86);padding:.15rem .5rem;max-width:80%}
+    .figinfo{margin-top:.8rem;padding:.9rem 1.1rem;border:1px solid var(--line-soft);border-left:3px solid var(--saffron);border-radius:12px;background:var(--surface)}
+    .figinfo .fi-head{display:flex;gap:.8rem;flex-wrap:wrap;font:600 .78rem var(--display);color:var(--ink-faint);text-transform:uppercase;letter-spacing:.06em}
+    .figinfo .fi-book em{color:var(--saffron);font-style:italic;text-transform:none;letter-spacing:0}
+    .figinfo h3{font:800 1.1rem var(--display);margin:.35rem 0 .3rem}.figinfo p{margin:0;color:var(--ink-soft);line-height:1.55;font-size:.95rem}
     .sb .panel{border:1px solid var(--rule);padding:.9rem 1rem;font-size:.93rem}
     .sb .panel h3{font-family:var(--serif);font-weight:600;font-size:1rem;margin:0 0 .4rem}
     .sb .panel h4{font-size:.78rem;font-weight:500;letter-spacing:.02em;color:var(--faint);margin:.9rem 0 .3rem}
@@ -71,11 +75,12 @@
           <div class="status" id="status">Choose a tool, then click on the canvas.</div>
         </div>
         <div class="legend"><span class="f">free point (drag)</span><span class="o">point on object (drag along it)</span><span class="d">constructed point</span><span class="l">constructed line</span><span class="s">holds under perturbation</span><span class="m">true right now only</span></div>
+        <div class="figinfo" id="figinfo" hidden><div class="fi-head"><span class="fi-book">From <em>Beyond the Incenter</em></span><span class="fi-ch" id="fiCh"></span></div><h3 id="fiTitle"></h3><p id="fiText"></p></div>
         <div class="row">
           <button class="btn2 quiet" id="undo">Undo</button>
           <button class="btn2 quiet" id="clear">Clear</button>
           <button class="btn2" id="test">Run perturbation test</button>
-          <select id="demo"><option value="">Load an example</option><option value="ortho">Orthocentre and nine-point circle</option><option value="euler">Euler line</option><option value="incircle">Incircle and angle bisectors</option><option value="tangents">Tangents and the chord of contact</option></select>
+          <select id="demo"><option value="">Load an example</option><option value="ortho">Orthocentre and nine-point circle</option><option value="euler">Euler line</option><option value="incircle">Incircle and angle bisectors</option><option value="tangents">Tangents and the chord of contact</option><optgroup label="From Beyond the Incenter"><option value="isogonal">Isogonal conjugates</option><option value="sawayama">Sawayama’s lemma</option><option value="miquel">Miquel point of a complete quadrilateral</option><option value="steiner">The Steiner line</option></optgroup></select>
         </div>
         <div class="export">
           <h2 style="font-size:1.1rem;margin:0 0 .4rem">Export to tkz-euclide</h2>
@@ -335,6 +340,9 @@ function relations(){
     if(tanByConstruction(L[i],C[j])) continue;
     if(Math.abs(distPL({x:C[j].g.cx,y:C[j].g.cy},L[i].g)-C[j].g.r)<tol) out['tan:'+L[i].id+','+C[j].id]=ln(L[i])+' is tangent to '+cn(C[j]);
   }
+    /* circle-circle tangency, internal or external (a circle touching another) */
+  for(var ci=0;ci<C.length;ci++) for(var cj=ci+1;cj<C.length;cj++){ var g1=C[ci].g,g2=C[cj].g,dd=Math.hypot(g1.cx-g2.cx,g1.cy-g2.cy);
+    if(dd>1e-6&&(Math.abs(dd-(g1.r+g2.r))<tol||Math.abs(dd-Math.abs(g1.r-g2.r))<tol)) out['tcc:'+C[ci].id+','+C[cj].id]=cn(C[ci])+' is tangent to '+cn(C[cj]); }
   return out;
 }
 function perturbTest(){
@@ -368,10 +376,12 @@ function clipLine(l,mode){
 function draw(){
   compute(); var s='';
   objs.forEach(function(o){ if(o.type!=='circle'||!isFinite(o.g.r)) return;
-    s+='<circle cx="'+o.g.cx+'" cy="'+o.g.cy+'" r="'+o.g.r+'" fill="none" stroke="#FF6B8B" stroke-width="1.3" opacity=".9"/>';
+    s+='<circle cx="'+o.g.cx+'" cy="'+o.g.cy+'" r="'+o.g.r+'" fill="none" stroke="'+(o.accent?'#FFC53D':o.col||'#FF6B8B')+'" stroke-width="'+(o.accent?2.4:o.faint?0.9:1.3)+'"'+(o.faint?' stroke-dasharray="4 4" opacity=".5"':' opacity=".9"')+'/>';
     if(o.kind!=='cp') s+='<circle cx="'+o.g.cx+'" cy="'+o.g.cy+'" r="2" fill="#FF6B8B" opacity=".6"/>';
   });
   objs.forEach(function(o){ if(o.type!=='line'||!isFinite(o.g.x1)||!isFinite(o.g.x2)) return;
+    if(o.faint||o.accent){ var cf=clipLine(o.g,o.style==='segment'?'segment':'line')||[{x:o.g.x1,y:o.g.y1},{x:o.g.x2,y:o.g.y2}]; if(o.style==='segment') cf=[{x:o.g.x1,y:o.g.y1},{x:o.g.x2,y:o.g.y2}];
+      s+='<line x1="'+cf[0].x+'" y1="'+cf[0].y+'" x2="'+cf[1].x+'" y2="'+cf[1].y+'" stroke="'+(o.accent?'#FFC53D':'#8A89BD')+'" stroke-width="'+(o.accent?2.4:0.8)+'"'+(o.faint?' stroke-dasharray="3 4" opacity=".55"':'')+'/>'; return; }
     var sel=picks.indexOf(o.id)>=0, col=o.kind==='two'?'#F3F1FF':'#FFC53D';
     if(o.kind==='two'){
       if(o.style!=='segment'){ var c=clipLine(o.g,o.style); if(c) s+='<line x1="'+c[0].x+'" y1="'+c[0].y+'" x2="'+c[1].x+'" y2="'+c[1].y+'" stroke="'+col+'" stroke-width="'+(sel?1.6:0.7)+'" opacity=".45"/>'; }
@@ -558,7 +568,7 @@ function smartPoint(pt){
 }
 svg.addEventListener('pointerup',function(){ if(drag){ drag=null; perturbTest(); renderRelations(); } });
 document.getElementById('undo').addEventListener('click',function(){ if(!groups.length) return; var n=groups.pop(); for(var i=0;i<n;i++){ var o=objs.pop(); if(o.type==='point'&&!o.hidden) labels--; } picks=[]; stableSet=null; draw(); perturbTest(); renderRelations(); });
-document.getElementById('clear').addEventListener('click',function(){ objs=[]; labels=0; picks=[]; groups=[]; stableSet=null; nextId=1; draw(); });
+document.getElementById('clear').addEventListener('click',function(){ hideFigInfo(); objs=[]; labels=0; picks=[]; groups=[]; stableSet=null; nextId=1; draw(); });
 document.getElementById('test').addEventListener('click',function(){ perturbTest(); renderRelations(); setStatus('Tested against 20 perturbations.'); });
 document.getElementById('copy').addEventListener('click',function(){ var t=document.getElementById('tex'); t.select(); try{ navigator.clipboard.writeText(t.value); document.getElementById('copied').textContent='Copied.'; }catch(e){ document.execCommand('copy'); } setTimeout(function(){document.getElementById('copied').textContent='';},1500); });
 
@@ -566,7 +576,56 @@ function reset(){ objs=[]; labels=0; picks=[]; groups=[]; stableSet=null; nextId
 function tri(){ reset();
   add({type:'point',kind:'free',x:150,y:400,label:nextLabel()}); add({type:'point',kind:'free',x:560,y:420,label:nextLabel()}); add({type:'point',kind:'free',x:330,y:110,label:nextLabel()}); groups.push(1,1,1);
   construct('seg',[1,2]); construct('seg',[2,3]); construct('seg',[3,1]); }
+/* helpers for the book figures: each returns the id of what it creates, and names it */
+function bpt(x,y,lab){ var o=add({type:'point',kind:'free',x:x,y:y,label:nextLabel()}); if(lab) o.label=lab; groups.push(1); return o.id; }
+function bk(kind,p,lab,opt){ construct(kind,p); var o=objs[objs.length-1]; if(lab) o.label=lab; if(opt) for(var k in opt) o[k]=opt[k]; return o.id; }
+function bonl(line,t,lab){ var o=add({type:'point',kind:'onl',of:[line],t:t,label:nextLabel()}); if(lab) o.label=lab; groups.push(1); return o.id; }
+function bonc(circ,deg,lab){ var o=add({type:'point',kind:'onc',of:[circ],ang:deg*Math.PI/180,label:nextLabel()}); if(lab) o.label=lab; groups.push(1); return o.id; }
+function bopt(id,opt){ var o=byId(id); for(var k in opt) o[k]=opt[k]; }
+function bookCredit(ch,title,txt){ var fi=document.getElementById('figinfo'); document.getElementById('fiCh').textContent=ch; document.getElementById('fiTitle').textContent=title; document.getElementById('fiText').textContent=txt; fi.hidden=false;
+  setStatus('Drag the white or blue points.'); draw(); perturbTest(); renderRelations(); }
+function hideFigInfo(){ var fi=document.getElementById('figinfo'); if(fi) fi.hidden=true; }
 var DEMOS={
+
+  isogonal:function(){ tri(); var A=1,B=2,C=3; byId(1).label='A'; byId(2).label='B'; byId(3).label='C';
+    var P=bpt(300,300,'P');
+    var la=bk('abis',[B,A,C],null,{faint:true}), lb=bk('abis',[A,B,C],null,{faint:true}), lc=bk('abis',[A,C,B],null,{faint:true});
+    bk('seg',[A,P],null,{faint:true}); bk('seg',[B,P],null,{faint:true}); bk('seg',[C,P],null,{faint:true});
+    var Pa=bk('refl',[P,la],'Pa',{hidden:true}), Pb=bk('refl',[P,lb],'Pb',{hidden:true}), Pc=bk('refl',[P,lc],'Pc',{hidden:true});
+    var ma=bk('line',[A,Pa],null,{accent:true}), mb=bk('line',[B,Pb],null,{accent:true}), mc=bk('line',[C,Pc]);
+    bopt(mc,{accent:true}); bk('inter',[ma,mb],'Q');
+    bookCredit('Chapter 2, The Five Centres','Isogonal conjugates','Reflect each cevian through P in its angle bisector. However you drag P, the three reflected lines (gold) meet at one point Q, the isogonal conjugate of P. Put P at the incentre and Q lands on top of it; put P at the circumcentre and Q becomes the orthocentre.'); },
+  sawayama:function(){ reset();
+    var O=bpt(380,240,'O'), R=bpt(266,386,'R'); var G=bk('circle',[O,R],null,{col:'#4FD8E8'});
+    var A=bonc(G,236,'A'), D=bonc(G,296,'D'), C=bonc(G,14,'C'), B=bonc(G,163,'B');
+    bk('seg',[A,B]); bk('seg',[B,C]); bk('seg',[C,D]); bk('seg',[D,A]);
+    var bd=bk('seg',[B,D]), ac=bk('seg',[A,C]);
+    var I1=bk('inc',[A,B,C],'I1'), I2=bk('inc',[D,B,C],'I2');
+    var ln=bk('line',[I1,I2],null,{faint:true});
+    var Pp=bk('inter',[ln,bd],'P'), Qq=bk('inter',[ln,ac],'Q');
+    var p1=bk('perp',[Pp,bd],null,{faint:true}), p2=bk('perp',[Qq,ac],null,{faint:true});
+    var O1=bk('inter',[p1,p2],'O1'); bk('circle',[O1,Pp],null,{accent:true});
+    bookCredit('Chapter 4, Cross Ratios','Sawayama\u2019s lemma','ABCD is cyclic. The line through the incentres I1 and I2 of ABC and DBC meets the diagonals at P and Q, and the circle touching both diagonals there (gold) turns out to be tangent to the circumcircle too. Slide A, B, C or D round the circle, or drag R to resize it.'); },
+  miquel:function(){ reset();
+    var A=bpt(330,60,'A'), C=bpt(120,440,'C'), E=bpt(650,350,'E');
+    var ac=bk('line',[A,C]), ae=bk('line',[A,E]);
+    var B=bonl(ac,0.5,'B'), F=bonl(ae,0.58,'F');
+    var eb=bk('line',[E,B]), fc=bk('line',[F,C]); var D=bk('inter',[eb,fc],'D');
+    var c1=bk('circum',[A,B,E],null,{col:'#4FD8E8'}), c2=bk('circum',[A,C,F],null,{col:'#FF6B8B'}), c3=bk('circum',[B,C,D],null,{col:'#FFC53D'}), c4=bk('circum',[E,F,D],null,{col:'#5BE3A6'});
+    var o1=bk('ccen',[A,B,E],'O1',{hidden:true}), o2=bk('ccen',[A,C,F],'O2',{hidden:true});
+    var oo=bk('line',[o1,o2],null,{faint:true}); bopt(oo,{faint:true,hidden:false});
+    bk('refl',[A,oo],'M');
+    bookCredit('Chapter 5, Complete Quadrilaterals','The Miquel point','Four lines make four triangles: ABE, ACF, BCD and EFD. Their circumcircles all pass through one point, the Miquel point M. M is built only from the first two circles, so the panel reporting it on the other two is the theorem. Drag A, C, E, or slide B and F.'); },
+  steiner:function(){ reset();
+    var A=bpt(330,60,'A'), C=bpt(120,440,'C'), E=bpt(650,350,'E');
+    var ac=bk('line',[A,C]), ae=bk('line',[A,E]);
+    var B=bonl(ac,0.5,'B'), F=bonl(ae,0.6,'F');
+    var eb=bk('line',[E,B]), fc=bk('line',[F,C]); var D=bk('inter',[eb,fc],'D');
+    var H1=bk('orth',[A,B,E],'H1'), H2=bk('orth',[A,C,F],'H2'), H3=bk('orth',[B,C,D],'H3'), H4=bk('orth',[E,F,D],'H4');
+    bk('line',[H1,H4],null,{accent:true});
+    var M1=bk('mid',[A,D],'M1',{hidden:true}), M2=bk('mid',[B,F],'M2',{hidden:true}), M3=bk('mid',[C,E],'M3',{hidden:true});
+    bk('circle',[M1,A],null,{faint:true}); bk('circle',[M2,B],null,{faint:true}); bk('circle',[M3,C],null,{faint:true});
+    bookCredit('Chapter 5, Complete Quadrilaterals','The Steiner line','The orthocentres H1 to H4 of the four triangles of a complete quadrilateral are collinear: the Steiner line (gold). It is also the radical axis of the three circles on the diagonals AD, BF and CE (dashed), which are coaxal. Drag A, C or E, or slide B and F.'); },
   ortho:function(){ tri(); construct('foot',[3,4]); construct('foot',[1,5]); construct('foot',[2,6]); construct('seg',[3,7]); construct('seg',[1,8]); construct('seg',[2,9]); construct('inter',[10,11]); construct('circum',[7,8,9]); construct('mid',[1,2]);
     setStatus('Three altitudes, their common point, the circle through the feet, and a midpoint. Drag A, B or C.'); },
   euler:function(){ tri(); construct('ccen',[1,2,3]); construct('cent',[1,2,3]); construct('orth',[1,2,3]); construct('seg',[7,8]); construct('seg',[8,9]);
@@ -578,9 +637,9 @@ var DEMOS={
     construct('circle',[1,2]); construct('tan',[3,4]); construct('seg',[5,7]); construct('seg',[1,3]);
     setStatus('Tangents from C, with the chord of contact DE and the segment to the centre. Drag C.'); }
 };
-document.getElementById('demo').addEventListener('change',function(e){ var k=e.target.value; if(k&&DEMOS[k]) DEMOS[k](); e.target.value=''; });
+document.getElementById('demo').addEventListener('change',function(e){ var k=e.target.value; hideFigInfo(); if(k&&DEMOS[k]) DEMOS[k](); e.target.value=''; });
 renderTools(); draw();
 </script>
-<script src="site.js?v=20260929"></script>
+<script src="site.js?v=20260928"></script>
 </body>
 </html>
