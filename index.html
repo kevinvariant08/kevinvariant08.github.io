@@ -98,8 +98,8 @@
 
     <section class="setc smcdrop" aria-labelledby="smc-h">
       <h2 id="smc-h">UKMT Senior Mathematical Challenge 2026: full solutions</h2>
-      <p>My solutions to all 25 problems, with every diagram redrawn in tkz-euclide. They unlock for everyone at <b>9:00 on Friday 9 October, UAE time</b>. No code or account needed.</p>
-      <div class="smcrow"><div class="smcclock" id="smc-clock" aria-live="polite">Locked</div><a class="btn" id="smc-btn" href="#" aria-disabled="true">Locked until 9:00</a></div>
+      <p>My solutions to all 25 problems, with every diagram redrawn in tkz-euclide. They unlock for everyone at <b>19:15 today, Thursday 8 October, UAE time</b>. No code or account needed.</p>
+      <div class="smcrow"><div class="smcclock" id="smc-clock" aria-live="polite">Locked</div><a class="btn" id="smc-btn" href="#" aria-disabled="true">Locked until 19:15</a></div>
       <p class="lockline" id="smc-msg"></p>
     </section>
 
@@ -345,9 +345,9 @@
     var l=document.querySelector('[data-lockline="'+p+'"]'); if(l) l.innerHTML='<a href="unlock.html?paper='+p+'">Question paper and solutions</a>'; }); })();
 </script>
 <script>
-/* SMC 2026 solutions: time-locked in the private bucket until 9:00 UAE on 9 October 2026 (the database enforces this). */
+/* SMC 2026 solutions: time-locked in the private bucket until 19:15 UAE on 8 October 2026 (the database enforces this). */
 (function(){
-  var RELEASE=Date.UTC(2026,9,9,5,0,0), clock=document.getElementById('smc-clock'), btn=document.getElementById('smc-btn'), msg=document.getElementById('smc-msg');
+  var RELEASE=Date.UTC(2026,9,8,15,15,0), clock=document.getElementById('smc-clock'), btn=document.getElementById('smc-btn'), msg=document.getElementById('smc-msg');
   function pad(n){ return (n<10?'0':'')+n; }
   function open(){
     clock.textContent='Unlocked'; btn.textContent='Read the solutions'; btn.removeAttribute('aria-disabled');
@@ -355,7 +355,7 @@
       try{ if(window.HU_LOCKS) await HU_LOCKS.ready(); var c=window.HU_AUTH&&window.HU_AUTH.client; if(!c) throw 0;
         var r=await c.storage.from('locked').createSignedUrl('SMC26/solutions.pdf',3600); if(r.error) throw r.error;
         msg.textContent=''; window.open(r.data.signedUrl,'_blank'); }
-      catch(err){ msg.textContent='Not available yet. If it is past 9:00, refresh the page in a minute.'; } };
+      catch(err){ msg.textContent='Not available yet. If it is past 19:15, refresh the page in a minute.'; } };
   }
   function tick(){ var d=RELEASE-Date.now(); if(d<=0){ clearInterval(t); open(); return; }
     var s=Math.floor(d/1000), h=Math.floor(s/3600), m=Math.floor(s%3600/60); clock.textContent=h+':'+pad(m)+':'+pad(s%60); }
