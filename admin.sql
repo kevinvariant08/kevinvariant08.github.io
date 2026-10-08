@@ -15,9 +15,12 @@ $$;
 revoke all on function public.hu_is_admin() from public, anon;
 grant execute on function public.hu_is_admin() to authenticated;
 
+-- Only this account is an admin: remove anyone else first (safe if the table is empty).
+delete from public.admins where user_id not in (select id from auth.users where lower(email) = lower('kevin9649@dubaicollege.org'));
+
 -- Add yourself. Use the email you sign in to the website with (sign up on the site first if you have not).
 insert into public.admins (user_id)
-  select id from auth.users where lower(email) = lower('kevin96496@gmail.com')
+  select id from auth.users where lower(email) = lower('kevin9649@dubaicollege.org')
   on conflict do nothing;
 
 -- Admins can read every file in the private bucket, whatever its lock or release time.
