@@ -66,6 +66,8 @@
     input.nm{background:var(--bg-deep);border:1px solid var(--line);color:var(--ink);border-radius:var(--r-sm);padding:.45rem .6rem;font:inherit}
     table.rules td{padding:.3rem .6rem .3rem 0;color:var(--ink-soft);font-size:.9rem}table.rules td:first-child{color:var(--ink);font-weight:600}
     @media (max-width:860px){.hero{grid-template-columns:1fr;justify-items:center;text-align:center}.stats{grid-template-columns:repeat(3,1fr);width:100%}.grid2{grid-template-columns:1fr}}
+    .worn{margin:.15rem 0 .2rem;color:var(--ink-soft);font-size:.92rem}.worn b{color:var(--saffron)}
+    .lbt{display:inline-block;margin-left:.35rem;padding:.05rem .45rem;border-radius:99px;background:rgba(255,197,61,.14);color:var(--saffron);font:700 .72rem var(--display)}
   </style>
 </head>
 <body>
@@ -74,7 +76,7 @@
   <section class="panel hero" aria-label="Your level">
     <div class="ring"><svg viewBox="0 0 150 150"><circle cx="75" cy="75" r="64" fill="none" stroke="var(--bg-deep)" stroke-width="12"/><circle id="ringArc" cx="75" cy="75" r="64" fill="none" stroke="url(#rg)" stroke-width="12" stroke-linecap="round" stroke-dasharray="402" stroke-dashoffset="402"/><defs><linearGradient id="rg"><stop offset="0" stop-color="var(--aqua)"/><stop offset=".5" stop-color="var(--rose)"/><stop offset="1" stop-color="var(--saffron)"/></linearGradient></defs></svg>
       <div class="in"><div><span>Level</span><b id="lvl">1</b></div></div></div>
-    <div><p class="title" id="ttl">Point</p><p class="xpline" id="xpl">0 XP</p><div class="bar"><i id="xpbar" style="width:0"></i></div><p class="sub" id="nextTitle" style="margin-top:.6rem"></p></div>
+    <div><p class="title" id="ttl">Point</p><p class="worn" id="worn" hidden></p><p class="xpline" id="xpl">0 XP</p><div class="bar"><i id="xpbar" style="width:0"></i></div><p class="sub" id="nextTitle" style="margin-top:.6rem"></p></div>
     <div class="stats">
       <div class="stat"><b id="stk">0</b><span>day streak</span></div>
       <div class="stat"><b id="frz">0</b><span>streak freezes held</span></div>
@@ -139,7 +141,7 @@
     H.XP_RULES.forEach(function(r){ $('rules').insertAdjacentHTML('beforeend','<tr><td>'+r[0]+'</td><td>'+r[1]+'</td></tr>'); });
 
     function paint(s){
-      $('lvl').textContent=s.level; $('ttl').textContent=s.title;
+      $('lvl').textContent=s.level; $('ttl').textContent=s.title; var wt=H.coins.worn(); $('worn').hidden=!wt; $('worn').innerHTML=wt?'Wearing the title <b>'+H.esc(wt)+'</b> &middot; <a href="shop.html#titles">change</a>':'';
       var into=s.xp-s.cur, span=s.next-s.cur, frac=Math.max(0,Math.min(1,into/span));
       $('xpl').textContent=s.xp.toLocaleString()+' XP, '+(s.next-s.xp).toLocaleString()+' to level '+(s.level+1);
       $('xpbar').style.width=(frac*100)+'%'; $('ringArc').setAttribute('stroke-dashoffset',String(402*(1-frac)));
@@ -175,8 +177,8 @@
 
     /* themes */
     function paintThemes(s){ var cur=s.R.theme||'indigo';
-      $('themes').innerHTML=H.THEMES.map(function(t){ var ok=s.level>=t.lvl, v=t.v, a=v['--aqua']||'#4FD8E8', r=v['--rose']||'#FF6B8B', y=v['--saffron']||'#FFC53D';
-        return '<button class="theme" type="button" data-id="'+t.id+'" aria-pressed="'+(cur===t.id)+'"'+(ok?'':' disabled')+'><div class="sw"><i style="background:'+a+'"></i><i style="background:'+r+'"></i><i style="background:'+y+'"></i></div><b>'+t.name+'</b><small>'+(ok?(cur===t.id?'In use':'Unlocked'):'Unlocks at level '+t.lvl)+'</small></button>'; }).join('');
+      $('themes').innerHTML=H.THEMES.map(function(t){ var ok=H.themeOK(t,s), v=t.v, a=v['--aqua']||'#4FD8E8', r=v['--rose']||'#FF6B8B', y=v['--saffron']||'#FFC53D';
+        return '<button class="theme" type="button" data-id="'+t.id+'" aria-pressed="'+(cur===t.id)+'"'+(ok?'':' disabled')+'><div class="sw"><i style="background:'+a+'"></i><i style="background:'+r+'"></i><i style="background:'+y+'"></i></div><b>'+t.name+'</b><small>'+(ok?(cur===t.id?'In use':'Unlocked'):(t.shop?'Buy it in the shop':'Unlocks at level '+t.lvl))+'</small></button>'; }).join('');
       $('themes').querySelectorAll('.theme').forEach(function(b){ b.addEventListener('click',function(){ H.setTheme(b.dataset.id); H.tick(); }); }); }
 
     /* daily challenge */
@@ -217,10 +219,11 @@
         if(r.error){ t.innerHTML='<p class="sub">The leaderboard table has not been created yet. (Site owner: run <code>supabase/leaderboard.sql</code>.)</p>'; return; }
         if(!r.rows.length){ t.innerHTML='<p class="sub">Nobody on the board yet'+(weekly?' this week':'')+'. Be the first.</p>'; return; }
         t.innerHTML='<table class="lb"><thead><tr><th>#</th><th>Name</th><th>Level</th><th class="n">Streak</th><th class="n">'+(weekly?'XP this week':'XP')+'</th></tr></thead><tbody>'
-          +r.rows.map(function(x,i){ return '<tr'+(x.user_id===u.id?' class="me"':'')+'><td>'+(i+1)+'</td><td>'+esc(x.name)+'</td><td>'+x.level+' <span style="color:var(--ink-faint)">'+esc(H.titleOf(x.level))+'</span></td><td class="n">'+x.streak+'</td><td class="n">'+(weekly?x.week_xp:x.xp).toLocaleString()+'</td></tr>'; }).join('')+'</tbody></table>'; }); }
+          +r.rows.map(function(x,i){ return '<tr'+(x.user_id===u.id?' class="me"':'')+'><td>'+(i+1)+'</td><td>'+esc(x.name)+(x.title?' <span class="lbt">'+esc(x.title)+'</span>':'')+'</td><td>'+x.level+' <span style="color:var(--ink-faint)">'+esc(H.titleOf(x.level))+'</span></td><td class="n">'+x.streak+'</td><td class="n">'+(weekly?x.week_xp:x.xp).toLocaleString()+'</td></tr>'; }).join('')+'</tbody></table>'; }); }
 
     paint(H.snapshot());
     window.addEventListener('hu-rewards',function(e){ paint(e.detail); });
+    window.addEventListener('hu-wallet',function(){ paint(H.snapshot()); });
     if(window.HU_AUTH) paintLB(); else { window.addEventListener('hu-auth-ready',paintLB,{once:true}); setTimeout(function(){ if(!window.HU_AUTH) paintLB(); },9000); }
     window.addEventListener('hu-auth-event',function(){ setTimeout(paintLB,800); });
   });

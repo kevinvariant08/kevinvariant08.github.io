@@ -20,6 +20,8 @@
       {href:'techniques.html', name:'Technique index', note:'Questions filed by method'}]},
     {label:'Progress', items:[
       {href:'rewards.html', name:'Rewards', note:'Levels, badges, quests and the daily challenge'},
+      {href:'shop.html', name:'Shop', note:'Spend coins on titles, themes, minigames and more'},
+      {href:'games.html', name:'Labs', note:'Maths minigames from the shop'},
       {href:'progress.html', name:'My progress', note:'Accuracy, timing and streaks'},
       {href:'results.html', name:'Results', note:'Your scores against everyone else'}]},
     {label:'Music', href:'music.html'}

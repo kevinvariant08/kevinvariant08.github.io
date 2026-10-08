@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Labs | Kevinvariant</title>
+  <meta name="description" content="Maths minigames from the Kevinvariant shop: Target and Nim Duel.">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <meta name="theme-color" content="#15173B">
+  <link rel="stylesheet" href="style.css?v=20260929">
+  <style>
+    .wrap{max-width:1000px;margin:0 auto;padding:1.5rem 1.2rem 4rem}
+    .panel{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:1.4rem 1.5rem;margin-top:1.3rem;overflow:hidden}
+    .panel h2{font:800 1.5rem var(--display);margin:0 0 .3rem}
+    .sub{color:var(--ink-soft);margin:0 0 1rem;max-width:64ch}
+    .row{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center}
+    .lock{position:absolute;inset:0;z-index:5;display:grid;place-items:center;text-align:center;padding:1.5rem;background:rgba(10,11,32,.82);backdrop-filter:blur(5px)}
+    .lock[hidden]{display:none}
+    .lock h3{font:800 1.3rem var(--display);margin:0 0 .4rem}.lock p{color:var(--ink-soft);margin:0 0 1rem}
+    /* Target */
+    .target{font:800 clamp(3rem,10vw,4.6rem)/1 var(--display);color:var(--saffron);font-variant-numeric:tabular-nums;margin:.2rem 0}
+    .clock{font:700 1.2rem var(--display);font-variant-numeric:tabular-nums;color:var(--ink-soft)}
+    .clock.low{color:var(--rose)}
+    .tiles{display:flex;flex-wrap:wrap;gap:.6rem;margin:1rem 0}
+    .tile{min-width:4.2rem;height:4.2rem;padding:0 .7rem;border-radius:14px;border:2px solid var(--line);background:var(--surface-2);color:var(--ink);font:800 1.5rem var(--display);cursor:pointer;transition:transform .1s,border-color .1s}
+    .tile:hover{border-color:var(--aqua)}.tile.sel{border-color:var(--saffron);transform:translateY(-3px);box-shadow:0 8px 20px -8px rgba(255,197,61,.6)}
+    .tile.made{border-style:dashed}
+    .ops{display:flex;gap:.5rem}
+    .op{width:3.2rem;height:3.2rem;border-radius:12px;border:2px solid var(--line);background:var(--bg-deep);color:var(--ink);font:800 1.4rem var(--display);cursor:pointer}
+    .op.sel{border-color:var(--rose);color:var(--rose)}
+    .work{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--ink-soft);font-size:.92rem;min-height:1.4em;margin:.4rem 0}
+    .verdict{margin-top:1rem;padding:.9rem 1rem;border-radius:12px;background:var(--bg-deep);border:1px solid var(--line-soft)}
+    .verdict b{color:var(--saffron)}
+    /* Nim */
+    .heaps{display:flex;gap:1.6rem;align-items:flex-end;justify-content:center;min-height:15rem;margin:1rem 0;flex-wrap:wrap}
+    .heap{display:flex;flex-direction:column-reverse;align-items:center;gap:6px;padding:.6rem .7rem;border-radius:14px;border:1px solid var(--line-soft);background:var(--bg-deep);min-width:4rem}
+    .heap .lbl{font:700 .8rem var(--display);color:var(--ink-faint);margin-top:.3rem}
+    .stone{width:30px;height:30px;border-radius:50%;border:0;cursor:pointer;background:radial-gradient(circle at 35% 30%,#bff6ff,var(--aqua) 60%,#1d8fa0);transition:transform .1s,opacity .2s}
+    .stone.hot{background:radial-gradient(circle at 35% 30%,#ffd1dc,var(--rose) 60%,#a3324c);transform:scale(1.08)}
+    .stone:disabled{cursor:default}
+    .status{font:700 1.05rem var(--display);text-align:center;min-height:1.6em}
+    .bin{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.9rem;color:var(--ink-soft);text-align:center}
+    .theory{margin-top:1rem;padding:1rem 1.1rem;border-left:3px solid var(--mint);background:var(--bg-deep);border-radius:0 12px 12px 0;color:var(--ink-soft)}
+    .theory b{color:var(--ink)}
+    .score{font:600 .9rem var(--display);color:var(--ink-faint)}
+  </style>
+</head>
+<body>
+<nav id="site-nav"></nav>
+<main class="wrap">
+  <h1>Labs</h1>
+  <p class="sub">Two minigames from the shop. No coins or XP here, just practice for the part of your brain that does arithmetic and strategy under pressure.</p>
+
+  <section class="panel" id="target" aria-labelledby="tg-h">
+    <h2 id="tg-h">Target</h2>
+    <p class="sub">Combine the six numbers with + &minus; &times; &divide; to hit the target. Pick a number, an operation, then another number. Each number is used at most once, and every result must be a positive whole number.</p>
+    <div class="row" style="justify-content:space-between"><div><div class="target" id="tgt">&ndash;</div></div><div style="text-align:right"><div class="clock" id="clk">1:30</div><div class="score" id="tbest"></div></div></div>
+    <div class="tiles" id="tiles"></div>
+    <div class="row"><div class="ops" id="ops"></div><button class="btn secondary" id="undo" type="button">Undo</button><button class="btn secondary" id="done" type="button">I'm done</button><button class="btn" id="newround" type="button">New round</button></div>
+    <div class="work" id="work"></div>
+    <div class="verdict" id="verdict" hidden></div>
+    <div class="lock" data-need="game-countdown" hidden></div>
+  </section>
+
+  <section class="panel" id="nim" aria-labelledby="nim-h">
+    <h2 id="nim-h">Nim Duel</h2>
+    <p class="sub">You move first. On your turn, take any number of stones from one heap: tap a stone and it goes, together with every stone above it. Whoever takes the last stone wins. The bot never makes a mistake, but every position you start in can be won.</p>
+    <div class="row" style="justify-content:space-between"><span class="score" id="nlevel"></span><span class="score" id="nwins"></span></div>
+    <div class="heaps" id="heaps"></div>
+    <div class="status" id="nstatus"></div>
+    <div class="bin" id="nbin" hidden></div>
+    <div class="row" style="justify-content:center;margin-top:.8rem"><button class="btn" id="nnew" type="button">New game</button><button class="btn secondary" id="nhint" type="button" hidden>Show the binary</button></div>
+    <div class="theory" id="ntheory" hidden>
+      <b>Why the bot wins (until you know this).</b> Write each heap size in binary and add the columns <i>without carrying</i>: this is the nim-sum, written a &oplus; b &oplus; c. A position with nim-sum 0 is lost for the player about to move. Any move from such a position changes exactly one heap, so it changes some binary column and makes the nim-sum non-zero. And from a position with non-zero nim-sum there is always a move back to 0: take the highest column where the nim-sum has a 1, choose a heap with a 1 in that column, and shrink it to (that heap &oplus; nim-sum), which is smaller. So the winning strategy is to hand your opponent nim-sum 0 every time. This is Bouton's theorem (1901), and it is the seed of the Sprague&ndash;Grundy theory that solves every game of this kind.
+    </div>
+    <div class="lock" data-need="game-nim" hidden></div>
+  </section>
+</main>
+<script src="site.js?v=20260929"></script>
+<script>
+(function(){
+  function $(id){ return document.getElementById(id); }
+  function load(k,d){ try{ var v=localStorage.getItem(k); return v==null?d:JSON.parse(v); }catch(e){ return d; } }
+  function save(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} }
+  function rnd(n){ return Math.floor(Math.random()*n); }
+
+  /* ---------------- gate: owned in the shop (the shop page is where they are bought) */
+  function gate(){
+    var H=window.HU_REWARDS, A=window.HU_AUTH, signed=!!(A&&A.configured&&A.user&&A.user());
+    document.querySelectorAll('.lock').forEach(function(l){
+      var id=l.dataset.need, own=H&&H.coins.owns(id);
+      l.hidden=!!own;
+      if(!own) l.innerHTML='<div><h3>'+(id==='game-nim'?'Nim Duel':'Target')+' is in the shop</h3><p>'+(signed?'Earn coins by solving problems, then unlock it for good.':'Sign in, earn coins by solving problems, then unlock it for good.')+'</p><a class="btn" href="shop.html#labs">Go to the shop</a></div>';
+    });
+  }
+  function ready(f){ if(window.HU_REWARDS) f(); else setTimeout(function(){ ready(f); },80); }
+  ready(function(){ gate(); var H=window.HU_REWARDS;
+    var tries=0;
+    function s(){ H.coins.sync(H.snapshot(),true).then(function(){ gate(); var anyLocked=[].some.call(document.querySelectorAll('.lock'),function(l){ return !l.hidden; }); if(anyLocked&&tries++<5) setTimeout(s,1500); }); }
+    if(window.HU_AUTH) s(); else window.addEventListener('hu-auth-ready',s,{once:true});
+    window.addEventListener('hu-wallet',gate); window.addEventListener('hu-auth-event',function(){ setTimeout(s,900); }); });
+
+  /* ================================================================ Target */
+  var T={nums:[],tiles:[],target:0,sel:null,op:null,hist:[],timer:null,end:0,over:true};
+  var OPS=['+','−','×','÷'];
+  function apply(a,b,op){ if(op===0) return a+b; if(op===1) return a>b?a-b:null; if(op===2) return (a===1||b===1)?null:a*b; return (b>1&&a%b===0)?a/b:null; }
+  /* Best reachable value and how: depth-first over pairs, remembering visited multisets. */
+  function solve(nums,target){
+    var best={d:Infinity,v:null,how:''}, seen=new Set(), start=Date.now();
+    nums.forEach(function(n){ var d=Math.abs(n-target); if(d<best.d) best={d:d,v:n,how:String(n)}; });
+    function rec(items){
+      if(best.d===0||Date.now()-start>2500) return;
+      var key=items.map(function(x){return x.v;}).sort(function(a,b){return a-b;}).join(','); if(seen.has(key)) return; seen.add(key);
+      for(var i=0;i<items.length;i++) for(var j=0;j<items.length;j++){ if(i===j) continue;
+        for(var op=0;op<4;op++){ if((op===0||op===2)&&j<i) continue;
+          var a=items[i], b=items[j], v=apply(a.v,b.v,op); if(v==null) continue;
+          var e='('+a.e+' '+OPS[op]+' '+b.e+')', d=Math.abs(v-target);
+          if(d<best.d){ best={d:d,v:v,how:e}; if(d===0) return; }
+          var rest=items.filter(function(_,k){return k!==i&&k!==j;}); rest.push({v:v,e:e}); rec(rest); if(best.d===0) return; } }
+    }
+    rec(nums.map(function(n){return {v:n,e:String(n)};}));
+    best.how=best.how.replace(/^\((.*)\)$/,'$1'); return best;
+  }
+  function newRound(){
+    var big=[25,50,75,100].sort(function(){return Math.random()-.5;}).slice(0,1+rnd(2)), small=[];
+    while(big.length+small.length<6) small.push(1+rnd(10));
+    T.nums=big.concat(small); T.target=101+rnd(899); T.tiles=T.nums.map(function(n,i){return {v:n,id:'n'+i,made:false};});
+    T.sel=null; T.op=null; T.hist=[]; T.over=false; $('verdict').hidden=true; $('work').textContent='';
+    $('tgt').textContent=T.target; T.end=Date.now()+90000; clearInterval(T.timer); T.timer=setInterval(tickT,250); tickT(); drawT();
+  }
+  function tickT(){ var left=Math.max(0,T.end-Date.now()), s=Math.ceil(left/1000); $('clk').textContent=Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); $('clk').className='clock'+(s<=15?' low':''); if(left<=0) finishT(); }
+  function closest(){ var b=null; T.tiles.forEach(function(t){ if(b==null||Math.abs(t.v-T.target)<Math.abs(b-T.target)) b=t.v; }); return b; }
+  function drawT(){
+    $('tiles').innerHTML=T.tiles.map(function(t,i){ return '<button class="tile'+(T.sel===i?' sel':'')+(t.made?' made':'')+'" data-i="'+i+'"'+(T.over?' disabled':'')+'>'+t.v+'</button>'; }).join('');
+    $('ops').innerHTML=OPS.map(function(o,k){ return '<button class="op'+(T.op===k?' sel':'')+'" data-op="'+k+'"'+(T.over?' disabled':'')+'>'+o+'</button>'; }).join('');
+    $('tiles').querySelectorAll('.tile').forEach(function(b){ b.addEventListener('click',function(){ pickTile(+b.dataset.i); }); });
+    $('ops').querySelectorAll('.op').forEach(function(b){ b.addEventListener('click',function(){ if(T.sel!=null){ T.op=+b.dataset.op; drawT(); } }); });
+    var best=load('hu_lab_target',{rounds:0,exact:0,best:0}); $('tbest').textContent=best.rounds?best.exact+' exact in '+best.rounds+' rounds':'';
+  }
+  function pickTile(i){
+    if(T.over) return;
+    if(T.sel==null||T.op==null){ T.sel=(T.sel===i?null:i); T.op=null; drawT(); return; }
+    if(i===T.sel) return;
+    var a=T.tiles[T.sel], b=T.tiles[i], v=apply(a.v,b.v,T.op);
+    if(v==null&&T.op===2) v=a.v*b.v;   /* multiplying by 1 is allowed, just pointless */
+    if(v==null){ $('work').textContent=a.v+' '+OPS[T.op]+' '+b.v+' is not a positive whole number.'; T.op=null; drawT(); return; }
+    T.hist.push(T.tiles.slice()); $('work').textContent=a.v+' '+OPS[T.op]+' '+b.v+' = '+v;
+    var keep=T.tiles.filter(function(_,k){ return k!==T.sel&&k!==i; }); keep.push({v:v,made:true}); T.tiles=keep; T.sel=keep.length-1; T.op=null; drawT();
+    if(v===T.target) finishT();
+  }
+  function finishT(){
+    if(T.over) return; T.over=true; clearInterval(T.timer); drawT();
+    var mine=closest(), d=Math.abs(mine-T.target), st=load('hu_lab_target',{rounds:0,exact:0,best:0}); st.rounds++; if(d===0) st.exact++; save('hu_lab_target',st);
+    var v=$('verdict'); v.hidden=false; v.innerHTML='Working out the best possible answer&hellip;';
+    setTimeout(function(){ var b=solve(T.nums,T.target);
+      v.innerHTML=(d===0?'<b>Exact.</b> ':'You reached <b>'+mine+'</b>, '+d+' away. ')+(b.d===0?'It can be hit exactly: <b>'+b.how+' = '+T.target+'</b>.':'The closest anyone can get is <b>'+b.v+'</b>: '+b.how+'.');
+      drawT(); },30);
+  }
+  $('undo').addEventListener('click',function(){ if(T.over||!T.hist.length) return; T.tiles=T.hist.pop(); T.sel=null; T.op=null; $('work').textContent=''; drawT(); });
+  $('done').addEventListener('click',finishT);
+  $('newround').addEventListener('click',newRound);
+  $('tgt').textContent='–'; T.over=true; T.nums=[]; drawT(); $('tiles').innerHTML='<p class="sub" style="margin:0">Press <b>New round</b> to start the clock.</p>';
+
+  /* ================================================================ Nim */
+  var N={h:[],turn:'you',over:true,level:1};
+  function xor(h){ return h.reduce(function(a,b){return a^b;},0); }
+  function newNim(){
+    var st=load('hu_lab_nim',{wins:0,games:0}), lv=Math.min(4,1+Math.floor(st.wins/2)), k=2+lv, max=3+lv*2;
+    do{ N.h=[]; for(var i=0;i<k;i++) N.h.push(1+rnd(max)); } while(xor(N.h)===0);
+    N.turn='you'; N.over=false; N.level=lv; drawN(); setStatus('Your move.');
+  }
+  function setStatus(t){ $('nstatus').textContent=t; }
+  function drawN(){
+    var st=load('hu_lab_nim',{wins:0,games:0});
+    $('nlevel').textContent=N.h.length?'Level '+N.level+' of 4 · '+N.h.length+' heaps':''; $('nwins').textContent=st.games?st.wins+' won of '+st.games:'';
+    $('heaps').innerHTML=N.h.map(function(n,i){ var s=''; for(var j=0;j<n;j++) s+='<button class="stone" data-h="'+i+'" data-j="'+j+'" aria-label="Heap '+(i+1)+', leave '+j+'"'+(N.over||N.turn!=='you'?' disabled':'')+'></button>';
+      return '<div class="heap">'+'<span class="lbl">'+n+'</span>'+s+'</div>'; }).join('');
+    $('heaps').querySelectorAll('.stone').forEach(function(b){
+      b.addEventListener('mouseenter',function(){ var h=b.dataset.h, j=+b.dataset.j; $('heaps').querySelectorAll('.stone[data-h="'+h+'"]').forEach(function(x){ x.classList.toggle('hot',+x.dataset.j>=j); }); });
+      b.addEventListener('mouseleave',function(){ $('heaps').querySelectorAll('.stone').forEach(function(x){ x.classList.remove('hot'); }); });
+      b.addEventListener('click',function(){ move(+b.dataset.h,+b.dataset.j,'you'); }); });
+    var showBin=load('hu_lab_nim_bin',false)&&st.wins>0;
+    $('nhint').hidden=!(st.wins>0); $('nhint').textContent=showBin?'Hide the binary':'Show the binary';
+    $('ntheory').hidden=!(st.wins>0);
+    var w=Math.max(1,Math.max.apply(null,N.h.concat([1])).toString(2).length);
+    $('nbin').hidden=!showBin||!N.h.length;
+    $('nbin').innerHTML=N.h.map(function(n){ return n.toString(2).padStart(w,'0'); }).join('<br>')+'<br><span style="color:var(--saffron)">'+xor(N.h).toString(2).padStart(w,'0')+' nim-sum</span>';
+  }
+  function move(i,leave,who){
+    if(N.over||N.turn!==who) return; N.h[i]=leave; if(!N.h[i]) N.h.splice(i,1);
+    if(!N.h.length){ endNim(who); return; }
+    N.turn=who==='you'?'bot':'you'; drawN();
+    if(N.turn==='bot'){ setStatus('The bot is thinking…'); setTimeout(botMove,700); } else setStatus('Your move.');
+  }
+  function botMove(){
+    var x=xor(N.h), i, t;
+    if(x){ for(i=0;i<N.h.length;i++){ t=N.h[i]^x; if(t<N.h[i]){ move(i,t,'bot'); return; } } }
+    i=0; for(var k=1;k<N.h.length;k++) if(N.h[k]>N.h[i]) i=k;          /* lost position: take one and hope */
+    move(i,N.h[i]-1,'bot');
+  }
+  function endNim(who){
+    N.over=true; var st=load('hu_lab_nim',{wins:0,games:0}); st.games++; if(who==='you') st.wins++; save('hu_lab_nim',st);
+    drawN(); setStatus(who==='you'?(st.wins===1?'You beat it. The theory below is now open.':'You took the last stone. You win.'):'The bot took the last stone. Every start was winnable: find the pattern.');
+  }
+  $('nnew').addEventListener('click',newNim);
+  $('nhint').addEventListener('click',function(){ save('hu_lab_nim_bin',!load('hu_lab_nim_bin',false)); drawN(); });
+  drawN(); setStatus('Press New game to start.');
+})();
+</script>
+</body>
+</html>
