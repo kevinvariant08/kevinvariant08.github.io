@@ -360,6 +360,7 @@
   function tick(){ var d=RELEASE-Date.now(); if(d<=0){ clearInterval(t); open(); return; }
     var s=Math.floor(d/1000), h=Math.floor(s/3600), m=Math.floor(s%3600/60); clock.textContent=h+':'+pad(m)+':'+pad(s%60); }
   var t=setInterval(tick,1000); tick();
+  (async function(){ try{ if(window.HU_LOCKS&&await HU_LOCKS.isAdmin()&&RELEASE>Date.now()){ clearInterval(t); open(); clock.textContent='Admin preview'; } }catch(e){} })();
 })();
 </script>
 </body>

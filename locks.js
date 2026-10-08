@@ -8,11 +8,21 @@
   function ready(){ return new Promise(function(res){ if(window.HU_AUTH) res(); else window.addEventListener('hu-auth-ready',function(){ res(); },{once:true}); }); }
   function client(){ return window.HU_AUTH&&window.HU_AUTH.client; }
   async function session(){ await ready(); var c=client(); if(!c) return null; var r=await c.auth.getSession(); return r.data&&r.data.session; }
+  var adminCache=null;
+  /* Admin status comes from the server (public.admins); the database, not this flag, is what releases files. */
+  async function isAdmin(force){
+    var s=await session(); if(!s){ adminCache=null; return false; }
+    if(adminCache&&adminCache.uid===s.user.id&&!force) return adminCache.on;
+    var r=await client().rpc('hu_is_admin'); var on=!r.error&&r.data===true;
+    adminCache={uid:s.user.id,on:on}; return on;
+  }
   async function scopes(force){
     var s=await session(); if(!s) return [];
     if(cache&&!force) return cache;
     var r=await client().from('unlocks').select('scope'); if(r.error) throw r.error;
-    cache=r.data.map(function(x){ return x.scope; }); return cache;
+    cache=r.data.map(function(x){ return x.scope; });
+    if(await isAdmin(force)) cache.unshift('*');
+    return cache;
   }
   async function has(paper){ var sc=await scopes(); return sc.indexOf('*')>=0||sc.indexOf(paper)>=0; }
   async function redeem(code){
@@ -31,6 +41,6 @@
     if(r.error) throw new Error('This paper is locked for your account.');
     return r.data.signedUrl;
   }
-  window.HU_LOCKS={meta:META,isLocked:function(p){ return !!META[p]; },ready:ready,session:session,scopes:scopes,has:has,redeem:redeem,questions:questions,pdf:pdf,
+  window.HU_LOCKS={meta:META,isAdmin:isAdmin,isLocked:function(p){ return !!META[p]; },ready:ready,session:session,scopes:scopes,has:has,redeem:redeem,questions:questions,pdf:pdf,
     configured:function(){ return !!(window.HU_AUTH&&window.HU_AUTH.configured); }};
 })();
