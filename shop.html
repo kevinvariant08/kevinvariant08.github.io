@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Shop | Kevinvariant</title>
+  <meta name="description" content="Spend the coins you earn by solving hard problems: titles, themes, streak freezes, maths minigames and a chapter of Beyond the Incenter.">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <meta name="theme-color" content="#15173B">
+  <link rel="stylesheet" href="style.css?v=20260929">
+  <style>
+    .wrap{max-width:1100px;margin:0 auto;padding:1.5rem 1.2rem 4rem}
+    .panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:1.4rem 1.5rem;margin-top:1.3rem}
+    .panel h2{font:800 1.35rem var(--display);margin:0 0 .3rem}
+    .sub{color:var(--ink-soft);margin:0 0 1rem;font-size:.95rem;max-width:66ch}
+    .purse{display:grid;grid-template-columns:auto 1fr auto;gap:1.6rem;align-items:center}
+    .bigcoin{width:92px;height:92px;filter:drop-shadow(0 10px 24px rgba(255,197,61,.35))}
+    .bal{font:800 clamp(2.2rem,6vw,3.2rem)/1 var(--display);margin:0;font-variant-numeric:tabular-nums}
+    .bal small{font:600 1rem var(--display);color:var(--ink-faint);margin-left:.4rem}
+    .todayline{color:var(--ink-soft);margin:.5rem 0 .45rem;font-size:.92rem}
+    .bar{height:9px;border-radius:99px;background:var(--bg-deep);overflow:hidden;max-width:28rem}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--saffron),var(--rose));border-radius:99px;transition:width .6s}
+    .note{margin-top:.9rem;padding:.75rem 1rem;border:1px dashed var(--line);border-radius:10px;color:var(--ink-soft)}
+    .cats{display:flex;flex-wrap:wrap;gap:.45rem;margin:1.6rem 0 0}
+    .cats a{font:600 .9rem var(--display);padding:.35rem .85rem;border:1px solid var(--line);border-radius:99px;color:var(--ink-soft);text-decoration:none}
+    .cats a:hover{border-color:var(--saffron);color:var(--ink)}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:.9rem;margin-top:.4rem}
+    .item{position:relative;display:flex;flex-direction:column;background:var(--bg-deep);border:1px solid var(--line-soft);border-radius:var(--r-md);padding:1rem 1rem .9rem;transition:border-color .15s,transform .15s}
+    .item:hover{border-color:var(--line);transform:translateY(-2px)}
+    .item.own{border-color:rgba(91,227,166,.45)}
+    .item.star{background:radial-gradient(130% 90% at 50% 0%,rgba(255,197,61,.16),transparent 60%),var(--bg-deep);border-color:rgba(255,197,61,.55)}
+    .item h3{font:800 1.05rem var(--display);margin:.55rem 0 .25rem}
+    .item p{font-size:.86rem;color:var(--ink-soft);margin:0 0 .8rem;flex:1}
+    .item .art{height:64px;display:flex;align-items:center}
+    .item .art svg{height:64px;width:auto}
+    .tag{position:absolute;top:.8rem;right:.8rem;font:700 .68rem var(--display);letter-spacing:.08em;text-transform:uppercase;padding:.18rem .5rem;border-radius:99px;background:var(--mint-wash);color:var(--mint)}
+    .foot{display:flex;align-items:center;justify-content:space-between;gap:.5rem}
+    .price{display:inline-flex;align-items:center;gap:.3rem;font:800 1rem var(--display);color:var(--saffron)}
+    .price svg{width:17px;height:17px}
+    .price.short{color:var(--ink-faint)}
+    .item .btn{padding:.42rem .85rem;font-size:.88rem}
+    .item .btn.confirm{background:var(--saffron);color:#15173B}
+    .msg{min-height:1.2em;font-size:.82rem;margin-top:.45rem;color:var(--rose)}
+    .msg.ok{color:var(--mint)}
+    .chip{display:inline-block;padding:.35rem .8rem;border-radius:99px;border:1px solid var(--saffron);color:var(--saffron);font:700 .95rem var(--display)}
+    .sw{display:flex;gap:4px;height:64px;align-items:center}.sw i{width:26px;height:44px;border-radius:7px;border:1px solid rgba(255,255,255,.12)}
+    .vault{background:radial-gradient(120% 140% at 0% 0%,rgba(255,197,61,.16),transparent 55%),radial-gradient(120% 140% at 100% 100%,rgba(255,107,139,.12),transparent 55%),var(--surface);border-color:rgba(255,197,61,.55)}
+    .grid.big{grid-template-columns:repeat(auto-fill,minmax(320px,1fr))}
+    .grid.big .item{padding:1.3rem 1.3rem 1.1rem}.grid.big .item h3{font-size:1.25rem}.grid.big .art,.grid.big .art svg{height:96px}
+    .goal{margin:0 0 .9rem}.goal .bar{max-width:none;height:8px;background:var(--surface-2)}.goal small{display:block;margin-top:.35rem;color:var(--ink-faint);font-size:.8rem}
+    table.rules{border-collapse:collapse;width:100%}
+    table.rules td{padding:.45rem .6rem .45rem 0;color:var(--ink-soft);font-size:.92rem;border-top:1px solid var(--line-soft);vertical-align:top}
+    table.rules td:first-child{color:var(--ink);font-weight:600;white-space:nowrap;padding-right:1.2rem}
+    @media (max-width:760px){.purse{grid-template-columns:1fr;justify-items:start}.bigcoin{width:64px;height:64px}}
+  </style>
+</head>
+<body>
+<nav id="site-nav"></nav>
+<main class="wrap">
+  <section class="panel purse" aria-label="Your coins">
+    <svg class="bigcoin" viewBox="0 0 64 64" aria-hidden="true"><defs><radialGradient id="cg" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#FFF0B3"/><stop offset=".55" stop-color="#FFC53D"/><stop offset="1" stop-color="#B7791F"/></radialGradient></defs><circle cx="32" cy="32" r="29" fill="url(#cg)" stroke="#8A5A12" stroke-width="2"/><circle cx="32" cy="32" r="20" fill="none" stroke="#8A5A12" stroke-width="2" opacity=".7"/><path d="M22 42 L32 18 L42 42 Z" fill="none" stroke="#8A5A12" stroke-width="2.6" stroke-linejoin="round"/><circle cx="32" cy="35" r="4.2" fill="none" stroke="#8A5A12" stroke-width="2"/></svg>
+    <div>
+      <p class="bal" id="bal">0<small>coins</small></p>
+      <p class="todayline" id="todayline">Coins come from solving problems, keeping a streak, and finishing daily and weekly tasks.</p>
+      <div class="bar" id="todaybar" hidden><i id="todayfill" style="width:0"></i></div>
+      <div class="note" id="note" hidden></div>
+    </div>
+    <div id="wearing"></div>
+  </section>
+
+  <nav class="cats" aria-label="Shop sections">
+    <a href="#vault">The vault</a><a href="#titles">Titles</a><a href="#themes">Themes</a><a href="#streak">Streak</a><a href="#labs">Labs</a><a href="#library">Library</a><a href="#earn">How to earn</a>
+  </nav>
+
+  <section class="panel vault" id="vault" aria-labelledby="v-h">
+    <h2 id="v-h">The vault: Beyond the Incenter</h2>
+    <p class="sub">The highest awards on this site. My olympiad geometry book, earned the slow way: Chapter 1 first, then the whole book. No code, challenge or shortcut opens these, only coins.</p>
+    <div class="grid big" data-kind="content"></div>
+  </section>
+
+  <section class="panel" id="titles" aria-labelledby="t-h">
+    <h2 id="t-h">Titles</h2>
+    <p class="sub">Wear one next to your name on the leaderboard and in your rewards. Each is named after an idea worth owning.</p>
+    <div class="grid" data-kind="title"></div>
+  </section>
+
+  <section class="panel" id="themes" aria-labelledby="th-h">
+    <h2 id="th-h">Themes</h2>
+    <p class="sub">They re-colour the whole site and sit alongside the ones you unlock by levelling up.</p>
+    <div class="grid" data-kind="theme"></div>
+  </section>
+
+  <section class="panel" id="streak" aria-labelledby="s-h">
+    <h2 id="s-h">Streak</h2>
+    <div class="grid" data-kind="freeze"></div>
+  </section>
+
+  <section class="panel" id="labs" aria-labelledby="l-h">
+    <h2 id="l-h">Labs</h2>
+    <p class="sub">Minigames that are not on the menu yet. They are still maths, just faster and with less paper.</p>
+    <div class="grid" data-kind="game"></div>
+  </section>
+
+  <section class="panel" id="library" aria-labelledby="lib-h">
+    <h2 id="lib-h">Library</h2>
+    <p class="sub">Papers you can unlock with coins instead of a challenge code. Yours for good once bought, on every device you sign in on.</p>
+    <div class="grid" data-kind="unlock"></div>
+  </section>
+
+  <section class="panel" id="earn" aria-labelledby="e-h">
+    <h2 id="e-h">How to earn coins</h2>
+    <p class="sub">Coins are worked out from what you actually do, then banked to your account. Only the last seven days can be banked, so sign in at least once a week.</p>
+    <table class="rules" id="rules"></table>
+  </section>
+</main>
+<script src="site.js?v=20260929"></script>
+<script>
+(function(){
+  /* Descriptions and pictures. Prices and availability come from the database (public.shop_items). */
+  var CAT={
+    'title-lemma':{d:'For collecting the small results that big proofs stand on.',p:300},
+    'title-telescoper':{d:'Everything cancels except what matters.',p:600},
+    'title-angle':{d:'Thirty degrees here, a cyclic quadrilateral there.',p:900},
+    'title-vieta':{d:'Knows the sum and product of roots nobody bothered to find.',p:1300},
+    'title-contra':{d:'Proves it the other way round, and is right to.',p:1800},
+    'title-invariant':{d:'Looks first for what never changes.',p:2600},
+    'title-incenter':{d:'Ready for Beyond the Incenter.',p:4000},
+    'title-olympian':{d:'The rarest title on the site. Months of real work.',p:8000,star:1},
+    'theme-blackboard':{d:'Chalk on green slate.',p:1200,theme:'blackboard'},
+    'theme-nebula':{d:'Violet dark with cyan and magenta.',p:1600,theme:'nebula'},
+    'theme-parchment':{d:'Warm ink on old paper, after dark.',p:2000,theme:'parchment'},
+    'freeze':{d:'Covers one missed day so your streak survives. Hold up to three; at most two bought a week.',p:250},
+    'game-countdown':{d:'Six numbers, one target, ninety seconds. Combine them with + − × ÷ to hit it exactly, then see the best answer that was possible.',p:700,href:'games.html#target'},
+    'game-nim':{d:'Take stones from heaps; whoever takes the last stone wins. The bot plays perfectly. Beat it and the theory behind it unlocks.',p:900,href:'games.html#nim'},
+    'bti-chapter':{d:'Chapter 1 of Beyond the Incenter: angle chasing as the language of geometry, from the basic configurations to hunting invariants in olympiad diagrams. 34 pages, yours to keep.',p:6000,star:1,file:'chapter.pdf',scope:'bti-chapter'},
+    'bti-book':{d:'The complete Beyond the Incenter, all 225 pages: triangle centres, projective geometry, radical axes, spiral similarity and the rest. Owning it also gives you the one title nobody can buy: Beyond the Incenter.',p:24000,star:1,file:'book.pdf',scope:'bti-book',requires:'bti-chapter'},
+    'unlock-I1':{d:'Skip the challenge: Set I Paper 1 with full solutions, unlocked for good and playable in Drill.',p:3000,href:'drill.html?paper=I1'},
+    'unlock-I2':{d:'Skip the challenge: Set I Paper 2 with full solutions, unlocked for good and playable in Drill.',p:3000,href:'drill.html?paper=I2'}
+  };
+  var ORDER=Object.keys(CAT), ITEMS={}, armed=null;
+  ORDER.forEach(function(id,i){ ITEMS[id]={id:id,name:id,kind:kindOf(id),price:CAT[id].p,active:true,sort:i}; });
+  function kindOf(id){ return id.indexOf('title-')===0?'title':id.indexOf('theme-')===0?'theme':id==='freeze'?'freeze':id.indexOf('game-')===0?'game':id.indexOf('unlock-')===0?'unlock':'content'; }
+  var NAMES={'title-lemma':'Lemma Hunter','title-telescoper':'Telescoper','title-angle':'Angle Chaser','title-vieta':'Vieta’s Apprentice','title-contra':'Contrapositive Knight','title-invariant':'Invariant Seeker','title-incenter':'Incenter Initiate','title-olympian':'Olympian','theme-blackboard':'Blackboard','theme-nebula':'Nebula','theme-parchment':'Parchment Night','freeze':'Streak freeze','game-countdown':'Target','game-nim':'Nim Duel','bti-chapter':'Chapter 1: Angle Chasing','bti-book':'Beyond the Incenter: the complete book','unlock-I1':'Set I Paper 1','unlock-I2':'Set I Paper 2'};
+  function $(id){ return document.getElementById(id); }
+  function ready(f){ if(window.HU_REWARDS) f(); else setTimeout(function(){ ready(f); },80); }
+
+  /* small pictures for each kind */
+  function art(id,H){
+    var k=kindOf(id);
+    if(k==='theme'){ var t=H.THEMES.filter(function(x){return x.shop===id;})[0]; if(!t) return ''; var v=t.v; return '<div class="sw"><i style="background:'+v['--bg']+'"></i><i style="background:'+v['--aqua']+'"></i><i style="background:'+v['--rose']+'"></i><i style="background:'+v['--saffron']+'"></i></div>'; }
+    if(k==='title') return '<svg viewBox="0 0 120 64"><rect x="4" y="16" width="112" height="32" rx="16" fill="rgba(255,197,61,.12)" stroke="#FFC53D" stroke-width="1.6"/><text x="60" y="37" text-anchor="middle" font-family="Bricolage Grotesque,system-ui" font-weight="800" font-size="11.5" fill="#FFC53D">'+H.esc(NAMES[id].length>18?NAMES[id].slice(0,17)+'…':NAMES[id])+'</text></svg>';
+    if(k==='freeze') return '<svg viewBox="0 0 64 64"><g stroke="#7EE7FF" stroke-width="3.2" stroke-linecap="round"><path d="M32 8v48M11 20l42 24M11 44l42-24"/><path d="M26 12l6 5 6-5M26 52l6-5 6 5M10 28l8-1 -3-7M54 36l-8 1 3 7M10 36l8 1-3 7M54 28l-8-1 3-7"/></g></svg>';
+    if(id==='game-countdown') return '<svg viewBox="0 0 120 64"><g font-family="Bricolage Grotesque,system-ui" font-weight="800" font-size="15" text-anchor="middle">'+[[16,'75'],[44,'4'],[72,'9'],[100,'25']].map(function(p){ return '<rect x="'+(p[0]-12)+'" y="6" width="24" height="24" rx="6" fill="#252964" stroke="#4FD8E8"/><text x="'+p[0]+'" y="23" fill="#F3F1FF">'+p[1]+'</text>'; }).join('')+'<rect x="34" y="36" width="52" height="24" rx="7" fill="#FFC53D"/><text x="60" y="53" fill="#15173B">812</text></g></svg>';
+    if(id==='game-nim') return '<svg viewBox="0 0 120 64">'+[[3,20],[5,60],[4,100]].map(function(h){ var s=''; for(var i=0;i<h[0];i++) s+='<circle cx="'+h[1]+'" cy="'+(56-i*11)+'" r="5" fill="'+(i%2?'#FF6B8B':'#4FD8E8')+'"/>'; return s; }).join('')+'</svg>';
+    if(id==='bti-book') return '<svg viewBox="0 0 96 96"><rect x="18" y="10" width="54" height="76" rx="5" fill="#2A1D08" stroke="#FFC53D" stroke-width="2.4"/><rect x="24" y="6" width="54" height="76" rx="5" fill="#1A1344" stroke="#FFC53D" stroke-width="2.4"/><circle cx="51" cy="46" r="15" fill="none" stroke="#F3F1FF" stroke-width="2"/><path d="M32 66 L51 24 L70 66 Z" fill="none" stroke="#4FD8E8" stroke-width="2.6" stroke-linejoin="round"/><circle cx="51" cy="52" r="3" fill="#FFC53D"/></svg>';
+    if(id==='bti-chapter') return '<svg viewBox="0 0 64 64"><rect x="12" y="6" width="40" height="52" rx="4" fill="#1A1344" stroke="#FFC53D" stroke-width="2"/><circle cx="32" cy="32" r="11" fill="none" stroke="#F3F1FF" stroke-width="1.6"/><path d="M18 46 L32 16 L46 46 Z" fill="none" stroke="#4FD8E8" stroke-width="2" stroke-linejoin="round"/></svg>';
+    return '<svg viewBox="0 0 64 64"><rect x="14" y="8" width="36" height="48" rx="4" fill="#1A1344" stroke="#4FD8E8" stroke-width="2"/><path d="M22 22h20M22 30h20M22 38h12" stroke="#BDBBE6" stroke-width="2" stroke-linecap="round"/></svg>';
+  }
+
+  ready(function(){
+    var H=window.HU_REWARDS, C=H.coins, esc=H.esc;
+    C.rules.forEach(function(r){ $('rules').insertAdjacentHTML('beforeend','<tr><td>'+r[0]+'</td><td>'+r[1]+'</td></tr>'); });
+
+    function signedIn(){ var A=window.HU_AUTH; return !!(A&&A.configured&&A.user&&A.user()); }
+    function paintPurse(){
+      var w=C.wallet(), note=$('note');
+      if(!signedIn()){ $('bal').innerHTML='0<small>coins</small>'; $('todaybar').hidden=true; note.hidden=false;
+        note.innerHTML='Coins are kept on your account so they follow you between devices. <a href="auth.html#signin">Sign in or create a free account</a> and everything you have done in the last seven days is banked straight away, plus 250 coins to start.'; $('wearing').innerHTML=''; return; }
+      if(!w){ $('bal').innerHTML='&hellip;<small>coins</small>'; note.hidden=true; return; }
+      note.hidden=true;
+      $('bal').innerHTML=(w.admin?'∞':w.balance.toLocaleString())+'<small>coins</small>';
+      var t=Math.min(w.cap,w.today||0); $('todaybar').hidden=false; $('todayfill').style.width=(100*t/w.cap)+'%';
+      $('todayline').textContent=w.admin?'Admin: everything in the shop is free for you.':t+' of '+w.cap+' coins banked today. '+(t>=w.cap?'That is the daily limit; come back tomorrow.':'Solve something hard to fill the bar.');
+      var wt=C.worn(); $('wearing').innerHTML=wt?'<span class="chip" title="Your title">'+esc(wt)+'</span>':'';
+    }
+
+    function button(id,it,w){
+      var own=C.owns(id), k=it.kind, R=H.snapshot().R;
+      if(k==='freeze'){ var held=H.snapshot().freezes; return '<span class="price">'+C.icon+it.price+'</span><button class="btn secondary" data-buy="'+id+'">Buy one</button>'+'<span style="font-size:.8rem;color:var(--ink-faint)">'+held+' held</span>'; }
+      if(own){
+        if(k==='title'){ var on=R.wear===id; return '<span class="price" style="color:var(--mint)">Owned</span><button class="btn '+(on?'':'secondary')+'" data-wear="'+(on?'':id)+'">'+(on?'Wearing':'Wear')+'</button>'; }
+        if(k==='theme'){ var tid=CAT[id].theme, on2=R.theme===tid; return '<span class="price" style="color:var(--mint)">Owned</span><button class="btn '+(on2?'':'secondary')+'" data-theme="'+tid+'">'+(on2?'In use':'Use')+'</button>'; }
+        if(k==='content') return '<span class="price" style="color:var(--mint)">Owned</span><span>'+(id==='bti-book'?'<button class="btn secondary" data-wear="'+(R.wear==='bti-book'?'':'bti-book')+'">'+(R.wear==='bti-book'?'Wearing title':'Wear title')+'</button> ':'')+'<button class="btn" data-read="'+esc((it.scope||CAT[id].scope)+'/'+CAT[id].file)+'">Read</button></span>';
+        return '<span class="price" style="color:var(--mint)">Owned</span><a class="btn" href="'+CAT[id].href+'">'+(k==='game'?'Play':'Sit it')+'</a>';
+      }
+      var need=CAT[id].requires||it.requires; if(need&&!C.owns(need)) return '<span class="price short">'+C.icon+it.price.toLocaleString()+'</span><button class="btn secondary" disabled>Unlock '+esc(NAMES[need])+' first</button>';
+      var short=w&&!w.admin&&w.balance<it.price;
+      return '<span class="price'+(short?' short':'')+'">'+C.icon+it.price.toLocaleString()+'</span><button class="btn'+(short?' secondary':'')+'" data-buy="'+id+'"'+(signedIn()&&w?'':' disabled')+'>'+(short?'Need '+(it.price-w.balance).toLocaleString()+' more':'Buy')+'</button>';
+    }
+    function goal(id,it,w,own){
+      if(it.kind!=='content'||own||!w||w.admin) return '';
+      var pc=Math.min(100,Math.floor(100*Math.max(0,w.balance)/it.price)), left=Math.max(0,it.price-w.balance), days=Math.ceil(left/w.cap);
+      return '<div class="goal"><div class="bar"><i style="width:'+pc+'%"></i></div><small>'+pc+'% of the way'+(left?', at least '+days+' more day'+(days===1?'':'s')+' of hard work':'')+'</small></div>'; }
+    function paintItems(){
+      var w=C.wallet();
+      document.querySelectorAll('.grid[data-kind]').forEach(function(g){
+        var kinds=g.dataset.kind.split(' ');
+        var ids=ORDER.filter(function(id){ var it=ITEMS[id]; return it.active!==false&&kinds.indexOf(it.kind)>=0; }).sort(function(a,b){ return ITEMS[a].sort-ITEMS[b].sort; });
+        g.innerHTML=ids.map(function(id){ var it=ITEMS[id], own=it.kind!=='freeze'&&C.owns(id);
+          return '<article class="item'+(own?' own':'')+(CAT[id].star?' star':'')+'">'+(own?'<span class="tag">Yours</span>':'')+'<div class="art">'+art(id,H)+'</div><h3>'+esc(it.label||NAMES[id])+'</h3><p>'+CAT[id].d+'</p>'+goal(id,it,w,own)+'<div class="foot">'+button(id,it,w)+'</div><div class="msg" data-msg="'+id+'"></div></article>'; }).join('');
+      });
+      wire();
+    }
+    function wire(){
+      document.querySelectorAll('[data-buy]').forEach(function(b){ b.addEventListener('click',function(){
+        var id=b.dataset.buy, it=ITEMS[id], m=document.querySelector('[data-msg="'+id+'"]'), w=C.wallet();
+        if(w&&!w.admin&&w.balance<it.price){ m.className='msg'; m.textContent='Keep going: coins come from the activities listed below.'; return; }
+        if(armed!==id){ armed=id; document.querySelectorAll('.btn.confirm').forEach(function(x){ x.classList.remove('confirm'); }); b.classList.add('confirm'); b.textContent=w&&w.admin?'Take it free?':'Spend '+it.price.toLocaleString()+'?'; return; }
+        armed=null; b.disabled=true; b.textContent='Buying…';
+        C.buy(id).then(function(r){ if(r.ok){ if(it.kind==='title'&&!H.snapshot().R.wear) C.setWear(id); paintAll(); var m2=document.querySelector('[data-msg="'+id+'"]'); if(m2){ m2.className='msg ok'; m2.textContent=it.kind==='freeze'?'Freeze added.':'It’s yours.'; } }
+          else { b.disabled=false; b.textContent='Buy'; m.className='msg'; m.textContent=r.error||'That did not work.'; } }); }); });
+      document.querySelectorAll('[data-wear]').forEach(function(b){ b.addEventListener('click',function(){ C.setWear(b.dataset.wear||null); paintAll(); }); });
+      document.querySelectorAll('[data-theme]').forEach(function(b){ b.addEventListener('click',function(){ H.setTheme(b.dataset.theme); H.tick(); paintAll(); }); });
+      document.querySelectorAll('[data-read]').forEach(function(b){ b.addEventListener('click',async function(){
+        var m=b.closest('.item').querySelector('.msg'); b.disabled=true; m.className='msg ok'; m.textContent='Opening…';
+        try{ var r=await window.HU_AUTH.client.storage.from('locked').createSignedUrl(b.dataset.read,3600); if(r.error) throw r.error; m.textContent=''; window.open(r.data.signedUrl,'_blank'); }
+        catch(e){ m.className='msg'; m.textContent='This is not uploaded yet. Try again soon.'; }
+        b.disabled=false; }); });
+    }
+    function paintAll(){ paintPurse(); paintItems(); }
+
+    function loadCatalogue(){ var A=window.HU_AUTH; if(!A||!A.configured) return;
+      A.client.from('shop_items').select('id,name,kind,price,scope,active,sort,requires').then(function(r){ if(r.error||!r.data) return;
+        r.data.forEach(function(x){ if(!CAT[x.id]) return; ITEMS[x.id]={id:x.id,label:NAMES[x.id]||x.name,kind:x.kind,price:x.price,scope:x.scope,requires:x.requires,active:x.active,sort:x.sort}; });
+        Object.keys(ITEMS).forEach(function(id){ if(!r.data.some(function(x){return x.id===id;})) ITEMS[id].active=false; });
+        paintAll(); }); }
+
+    paintAll();
+    function start(){ loadCatalogue(); C.sync(H.snapshot(),true).then(paintAll); }
+    if(window.HU_AUTH) start(); else window.addEventListener('hu-auth-ready',start,{once:true});
+    window.addEventListener('hu-wallet',paintAll);
+    window.addEventListener('hu-auth-event',function(){ setTimeout(function(){ C.sync(H.snapshot(),true).then(paintAll); },900); });
+    if(location.hash){ var el=document.querySelector(location.hash); if(el) setTimeout(function(){ el.scrollIntoView(); },300); }
+  });
+})();
+</script>
+</body>
+</html>

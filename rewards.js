@@ -39,7 +39,10 @@
     {id:'aurora',name:'Aurora',lvl:7,v:{'--aqua':'#7CF5D8','--rose':'#B38CFF','--saffron':'#9BE8FF','--bg':'#0C1A22','--bg-deep':'#07121A','--surface':'#11262F','--surface-2':'#16303B','--line':'#23505D','--line-soft':'#1B3F4A','--ink-soft':'#BFE3E4','--ink-faint':'#7FA7AC','--grid':'124,245,216'}},
     {id:'sakura',name:'Sakura',lvl:10,v:{'--aqua':'#9AD8FF','--rose':'#FF8FB8','--saffron':'#FFE3A3','--bg':'#1D1424','--bg-deep':'#150E1B','--surface':'#2A1D33','--surface-2':'#35243F','--line':'#553B63','--line-soft':'#443050','--ink-soft':'#EAD0E4','--ink-faint':'#A98BA5','--grid':'255,143,184'}},
     {id:'royal',name:'Royal',lvl:14,v:{'--aqua':'#A3B8FF','--rose':'#C38BFF','--saffron':'#FFD36E','--bg':'#100B2E','--bg-deep':'#0A0720','--surface':'#1A1344','--surface-2':'#231A57','--line':'#3D2F85','--line-soft':'#30256B','--ink-soft':'#D3C8F5','--ink-faint':'#9185C2','--grid':'195,139,255'}},
-    {id:'invariant',name:'Invariant Gold',lvl:20,v:{'--aqua':'#FFD166','--rose':'#FFA62B','--saffron':'#FFF0B3','--mint':'#7BE0AD','--bg':'#0B0905','--bg-deep':'#060503','--surface':'#17120A','--surface-2':'#221A0D','--line':'#5C4518','--line-soft':'#3E2F12','--ink':'#FFF8E6','--ink-soft':'#E9D6A6','--ink-faint':'#A89468','--grid':'255,196,80'}}];
+    {id:'invariant',name:'Invariant Gold',lvl:20,v:{'--aqua':'#FFD166','--rose':'#FFA62B','--saffron':'#FFF0B3','--mint':'#7BE0AD','--bg':'#0B0905','--bg-deep':'#060503','--surface':'#17120A','--surface-2':'#221A0D','--line':'#5C4518','--line-soft':'#3E2F12','--ink':'#FFF8E6','--ink-soft':'#E9D6A6','--ink-faint':'#A89468','--grid':'255,196,80'}},
+    {id:'blackboard',name:'Blackboard',lvl:1e9,shop:'theme-blackboard',v:{'--aqua':'#9FE3C0','--rose':'#F2A7A0','--saffron':'#F5E6A8','--mint':'#B8F0C8','--bg':'#13221B','--bg-deep':'#0D1813','--surface':'#1A2D24','--surface-2':'#21382D','--line':'#355A48','--line-soft':'#2A4639','--ink':'#F1F5EC','--ink-soft':'#C9D8C8','--ink-faint':'#8DA595','--grid':'159,227,192'}},
+    {id:'nebula',name:'Nebula',lvl:1e9,shop:'theme-nebula',v:{'--aqua':'#7EE7FF','--rose':'#FF7AD9','--saffron':'#C9A7FF','--bg':'#0B0820','--bg-deep':'#060415','--surface':'#160F35','--surface-2':'#1F1545','--line':'#3A2A78','--line-soft':'#2B2060','--ink-soft':'#D6CCF7','--ink-faint':'#9688C8','--grid':'255,122,217'}},
+    {id:'parchment',name:'Parchment Night',lvl:1e9,shop:'theme-parchment',v:{'--aqua':'#E8C38A','--rose':'#D9826A','--saffron':'#F3DDA6','--mint':'#A9C98B','--bg':'#1B150E','--bg-deep':'#120E09','--surface':'#261D13','--surface-2':'#302418','--line':'#55412A','--line-soft':'#42331F','--ink':'#F6ECD9','--ink-soft':'#DCCBAE','--ink-faint':'#A5927A','--grid':'232,195,138'}}];
   function applyTheme(id){ var t=THEMES.filter(function(x){return x.id===id;})[0]||THEMES[0], root=document.documentElement;
     THEMES.forEach(function(x){ Object.keys(x.v).forEach(function(k){ root.style.removeProperty(k); }); });
     Object.keys(t.v).forEach(function(k){ root.style.setProperty(k,t.v[k]); }); root.setAttribute('data-theme',t.id); }
@@ -70,26 +73,64 @@
     Object.keys(perDay).forEach(function(k){ xp+=perDay[k]; });
     // streaks with freezes: one freeze earned per 7 days of streak, at most 2 held
     var active={}; Object.keys(perDay).forEach(function(k){ if(perDay[k]>0) active[k]=1; }); R.frozen.forEach(function(k){ active[k]=1; });
-    var t=today(), start=active[t]?t:shift(t,-1), streak=0, d=start, used=R.frozen.length, earned=R.milestones.length;
+    var t=today(), start=active[t]?t:shift(t,-1), streak=0, d=start, used=R.frozen.length, earned=R.milestones.length+boughtCount('freeze');
     var firstDay=Object.keys(active).sort()[0]||t;
     while(true){
       if(active[d]){ streak++; d=shift(d,-1); continue; }
       if(d<firstDay) break;
       var gap=[], g=d; while(!active[g]&&g>=firstDay&&gap.length<3){ gap.push(g); g=shift(g,-1); }
-      var left=Math.min(2,earned-used);
+      var left=Math.min(3,earned-used);
       if(active[g]&&gap.length<=left){ gap.forEach(function(x){ R.frozen.push(x); active[x]=1; }); used+=gap.length; continue; }
       break;
     }
     for(var m=7;m<=streak;m+=7){ if(R.milestones.indexOf(m)<0) R.milestones.push(m); }
     var best=0, run=0, keys=Object.keys(active).sort(), prev=null;
     keys.forEach(function(k){ run=(prev&&shift(prev,1)===k)?run+1:1; best=Math.max(best,run); prev=k; });
-    var freezes=Math.max(0,Math.min(2,R.milestones.length-R.frozen.length));
+    var freezes=Math.max(0,Math.min(3,R.milestones.length+boughtCount('freeze')-R.frozen.length));
     var ws=weekStart(t), weekXP=0; Object.keys(perDay).forEach(function(k){ if(k>=ws) weekXP+=perDay[k]; });
     save('hu_rewards',R);
     var admin=isAdmin(); if(admin) xp=Math.max(xp,need(ADMIN_LEVEL));
     var lvl=levelOf(xp);
     return {admin:admin,R:R,L:L,A:A,AR:AR,IV:IV,LB:LB,xp:xp,level:lvl,title:titleOf(lvl),next:need(lvl+1),cur:need(lvl),perDay:perDay,streak:streak,best:best,freezes:freezes,weekXP:weekXP,week:ws,today:t};
   }
+
+  /* ---------------- coins: worked out per day from activity, banked on the server (at most 400 a day, last 7 days only) */
+  var COIN_CAP=400, COIN='<svg class="coin" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="7" fill="#FFC53D" stroke="#B7791F" stroke-width="1.2"/><circle cx="8" cy="8" r="4.1" fill="none" stroke="#B7791F" stroke-width="1.1"/></svg>';
+  var COIN_RULES=[['Correct answer','12 for a question rated 8 or more, 7 for 7 or more, 4 for 6 or more, otherwise 2; once per question per day'],['Timed paper','10, plus 2 per mark'],['Daily challenge','30 if right, 5 for trying'],['Weekly quest','80 each'],['Problem of the week','120 when you solve it'],['Arena duel','8 for a win'],['Friend duel','15 for a win'],['Mock interview','25'],['Streak','15 a day from day 3 of a streak, 30 a day from day 7'],['Daily limit','400 coins a day']];
+  function coinQ(id){ var r=rating(id); return r>=8?12:r>=7?7:r>=6?4:2; }
+  function coinDays(s){ var c={}, seen={}; function add(k,v){ if(k) c[k]=(c[k]||0)+v; }
+    s.L.forEach(function(e){ if(!e.correct||!e.id) return; var k=dkey(e.t), key=k+'|'+e.id; if(seen[key]) return; seen[key]=1; add(k,coinQ(e.id)); });
+    s.A.forEach(function(a){ if(a.date) add(a.date,10+2*(a.score||0)); });
+    Object.keys(s.R.daily).forEach(function(k){ add(k,s.R.daily[k].ok?30:5); });
+    Object.keys(s.R.claimed).forEach(function(q){ add(s.R.claimed[q].day,80); });
+    (s.AR.history||[]).forEach(function(h){ if(h.you>h.them) add(dkey(h.t),8); });
+    load('hu_duels',[]).forEach(function(h){ if(h.res==='win') add(dkey(h.t),15); });
+    var QW=load('hu_qotw',{}); Object.keys(QW).forEach(function(w){ var e=QW[w]; if(e&&e.t&&e.ok&&!e.gaveUp) add(dkey(e.t),120); });
+    (s.IV||[]).forEach(function(v){ if(v&&v.date) add(v.date,25); });
+    var act={}; Object.keys(s.perDay).forEach(function(k){ if(s.perDay[k]>0) act[k]=1; });
+    Object.keys(act).forEach(function(k){ var run=1, d=shift(k,-1); while(act[d]&&run<7){ run++; d=shift(d,-1); } if(run>=7) add(k,30); else if(run>=3) add(k,15); });
+    Object.keys(c).forEach(function(k){ c[k]=Math.min(COIN_CAP,c[k]); }); return c; }
+  function wallet(){ var w=load('hu_wallet',null), A=window.HU_AUTH, u=A&&A.user&&A.user(); return (w&&u&&w.uid===u.id)?w:null; }
+  function boughtCount(id){ var w=wallet(); return w&&w.counts?(w.counts[id]||0):0; }
+  function owns(id){ var w=wallet(); return !!(w&&(w.admin||boughtCount(id)>0)); }
+  function themeOK(t,s){ return (s&&s.level>=t.lvl)||(!!t.shop&&owns(t.shop)); }
+  var SHOP_TITLES={'title-lemma':'Lemma Hunter','title-telescoper':'Telescoper','title-angle':'Angle Chaser','title-vieta':'Vieta\u2019s Apprentice','title-contra':'Contrapositive Knight','title-invariant':'Invariant Seeker','title-incenter':'Incenter Initiate','title-olympian':'Olympian','bti-book':'Beyond the Incenter'};
+  function worn(){ var R=state(); return R.wear&&SHOP_TITLES[R.wear]&&owns(R.wear)?SHOP_TITLES[R.wear]:''; }
+  function setWear(id){ var R=state(); R.wear=id||null; save('hu_rewards',R); lbPushed=0; tick(); }
+  var coinSynced=0, coinBusy=false;
+  function syncCoins(s,force){ var A=window.HU_AUTH, u=A&&A.user&&A.user();
+    if(!A||!A.configured||!u){ if(load('hu_wallet',null)) save('hu_wallet',null); return Promise.resolve(null); }
+    if(coinBusy||(!force&&Date.now()-coinSynced<60000)) return Promise.resolve(wallet());
+    coinBusy=true; coinSynced=Date.now(); var c=coinDays(s), t=today(), days=[];
+    for(var i=0;i<8;i++){ var k=shift(t,-i); if(c[k]) days.push({day:k,amount:c[k]}); }
+    return A.client.rpc('hu_sync_coins',{p_days:days}).then(function(res){ coinBusy=false; if(res.error||!res.data||!res.data.signed_in) return null;
+      var old=wallet(), w=res.data; w.uid=u.id; w.t=Date.now(); save('hu_wallet',w);
+      if(old&&!w.admin&&w.balance>old.balance&&w.earned>old.earned) toast('<span>'+COIN+'<b>+'+(w.earned-old.earned)+' coins</b></span>','xp',2200);
+      if(last) paintPill(last); window.dispatchEvent(new CustomEvent('hu-wallet',{detail:w})); return w; },function(){ coinBusy=false; return null; }); }
+  function buy(id){ var A=window.HU_AUTH; if(!A||!A.configured||!A.user||!A.user()) return Promise.resolve({ok:false,error:'Sign in to spend coins.'});
+    return A.client.rpc('hu_buy',{p_item:id}).then(function(res){ if(res.error) return {ok:false,error:'Could not reach the shop. Try again in a moment.'};
+      var out=res.data||{ok:false,error:'Something went wrong.'}; return syncCoins(last||snapshot(),true).then(function(){ tick(); return out; }); },
+      function(){ return {ok:false,error:'Could not reach the shop. Try again in a moment.'}; }); }
 
   /* ---------------- badges: four tiers, each with its own metal and medal shape */
   function streakRun(L,filter){ var b=0,r=0; L.forEach(function(e){ if(filter&&!filter(e)) return; r=e.correct?r+1:0; b=Math.max(b,r); }); return b; }
@@ -230,7 +271,7 @@
    +'.rw-toast small{display:block;font-weight:500;color:var(--ink-soft,#BDBBE6);font-size:.8rem}.rw-toast.xp{padding:.4rem .75rem;font-size:.85rem}.rw-toast.xp b{color:var(--saffron,#FFC53D)}'
    +'@keyframes rwIn{from{transform:translateY(12px);opacity:0}to{transform:none;opacity:1}}'
    +'.site-nav .links a.rw-pill{display:inline-flex;align-items:center;gap:.4rem;padding:.3rem .65rem;min-height:0;border-radius:999px;border:1px solid var(--line,#343A82);color:var(--ink,#F3F1FF);text-decoration:none;font:600 .85rem var(--display,system-ui);white-space:nowrap}'
-   +'.site-nav .links a.rw-pill:hover{background:var(--surface-2,#252964)}.site-nav .links a.rw-pill.rv{border-color:var(--rose,#FF6B8B);color:var(--rose,#FF6B8B)}.site-nav .rw{display:flex;gap:.35rem;align-items:center}.site-nav .links a.rw-pill .lv{color:var(--saffron,#FFC53D)}.site-nav .links a.rw-pill svg{width:14px;height:14px}'
+   +'.site-nav .links a.rw-pill:hover{background:var(--surface-2,#252964)}.site-nav .links a.rw-pill.rv{border-color:var(--rose,#FF6B8B);color:var(--rose,#FF6B8B)}.site-nav .rw{display:flex;gap:.35rem;align-items:center}.site-nav .links a.rw-pill .lv{color:var(--saffron,#FFC53D)}.site-nav .links a.rw-pill svg{width:14px;height:14px}.site-nav .links a.rw-pill.cn{color:var(--saffron,#FFC53D)}.rw-toast svg.coin{width:18px;height:18px;vertical-align:-3px;margin-right:.35rem}'
    +'.rw-modal{position:fixed;inset:0;z-index:10000;display:grid;place-items:center;background:rgba(10,11,35,.72);animation:rwIn .3s}'
    +'.rw-modal .card{background:var(--surface,#1D2052);border:1px solid var(--line,#343A82);border-radius:22px;padding:2rem 2.2rem;text-align:center;max-width:24rem;color:var(--ink,#F3F1FF)}'
    +'.rw-modal h2{font:800 1.9rem var(--display,system-ui);margin:.4rem 0 .2rem}.rw-modal p{color:var(--ink-soft,#BDBBE6);margin:.3rem 0 1rem}'
@@ -264,7 +305,7 @@
   var FLAME='<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1c1 3 4 4.5 4 8a4 4 0 0 1-8 0c0-2 1-3 2-4 0 1.5.5 2.5 1.5 3C7.5 6 7 3.5 8 1z" fill="var(--rose,#FF6B8B)"/></svg>';
   function paintPill(s){ var li=document.querySelector('.site-nav .rw'); if(!li){ var ul=document.querySelector('.site-nav .links'); if(!ul) return; li=document.createElement('li'); li.className='rw'; var acct=ul.querySelector('.acct'); ul.insertBefore(li,acct||null); }
     var due=reviewDue().length;
-    li.innerHTML=(due?'<a class="rw-pill rv" href="review.html" title="Mistakes due for review">'+due+' to review</a> ':'')+'<a class="rw-pill" href="rewards.html" title="'+esc(s.title)+', '+s.xp+' XP"><span class="lv">'+(s.admin?'Admin \u00b7 ':'')+'Lv '+s.level+'</span>'+(s.streak?FLAME+s.streak:'')+'</a>'; }
+    li.innerHTML=(due?'<a class="rw-pill rv" href="review.html" title="Mistakes due for review">'+due+' to review</a> ':'')+(wallet()?'<a class="rw-pill cn" href="shop.html" title="Coins: spend them in the shop">'+COIN+(wallet().admin?'\u221e':wallet().balance.toLocaleString())+'</a> ':'')+'<a class="rw-pill" href="rewards.html" title="'+esc((worn()?worn()+' \u00b7 ':'')+s.title)+', '+s.xp+' XP"><span class="lv">'+(s.admin?'Admin \u00b7 ':'')+'Lv '+s.level+'</span>'+(s.streak?FLAME+s.streak:'')+'</a>'; }
 
   /* ---------------- tick: recompute, notify, sync the leaderboard */
   var last=null, lbPushed=0;
@@ -277,21 +318,22 @@
       if(s.level>seen.level) levelUp(s);
       save('hu_rewards_seen',{xp:s.xp,level:s.level,badges:got,admin:s.admin});
     }
-    paintPill(s); last=s; pushLeaderboard(s);
+    paintPill(s); last=s; pushLeaderboard(s); syncCoins(s);
     window.dispatchEvent(new CustomEvent('hu-rewards',{detail:s})); return s; }
   function displayName(u){ var R=state(); if(R.lbName) return R.lbName; var m=u&&u.user_metadata||{}; return (m.display_name||m.name||(u&&u.email?u.email.split('@')[0]:'Player')).slice(0,24); }
   function pushLeaderboard(s){ var A=window.HU_AUTH, R=state(); if(s.admin) return; if(!A||!A.configured||!A.user()||!R.lb) return; if(Date.now()-lbPushed<60000) return; lbPushed=Date.now();
-    var u=A.user(); A.client.from('leaderboard').upsert({user_id:u.id,name:displayName(u),xp:s.xp,week_xp:s.weekXP,week:s.week,level:s.level,streak:s.streak,updated_at:new Date().toISOString()}).then(function(){}); }
+    var u=A.user(); var row={user_id:u.id,name:displayName(u),xp:s.xp,week_xp:s.weekXP,week:s.week,level:s.level,streak:s.streak,title:worn()||null,updated_at:new Date().toISOString()}; A.client.from('leaderboard').upsert(row).then(function(){}); }
   function setLeaderboard(on,name){ var R=state(); R.lb=!!on; if(name!=null) R.lbName=String(name).trim().slice(0,24); save('hu_rewards',R); lbPushed=0;
     var A=window.HU_AUTH; if(!on&&A&&A.configured&&A.user()) A.client.from('leaderboard').delete().eq('user_id',A.user().id).then(function(){}); tick(); }
   function fetchLeaderboard(weekly){ var A=window.HU_AUTH; if(!A||!A.configured) return Promise.resolve({error:'off'});
-    var q=A.client.from('leaderboard').select('name,xp,week_xp,week,level,streak,user_id'); q=weekly?q.eq('week',weekStart(today())).order('week_xp',{ascending:false}):q.order('xp',{ascending:false});
+    var q=A.client.from('leaderboard').select('name,title,xp,week_xp,week,level,streak,user_id'); q=weekly?q.eq('week',weekStart(today())).order('week_xp',{ascending:false}):q.order('xp',{ascending:false});
     return q.limit(25).then(function(r){ return r.error?{error:r.error.message}:{rows:r.data}; }); }
   function setTheme(id){ var R=state(); R.theme=id; save('hu_rewards',R); applyTheme(id); }
 
   window.HU_REWARDS={snapshot:snapshot,tick:tick,BADGES:BADGES,TIER:TIER,TIERCOL:TIERCOL,METAL:METAL,medal:medal,metrics:metrics,THEMES:THEMES,setTheme:setTheme,weekQuests:weekQuests,claim:claim,
     dailyId:dailyId,dailyNumber:dailyNumber,recordDaily:recordDaily,earnedBadges:earnedBadges,titleOf:titleOf,need:need,XP_RULES:XP_RULES,rating:rating,
     setLeaderboard:setLeaderboard,fetchLeaderboard:fetchLeaderboard,displayName:displayName,dkey:dkey,shift:shift,today:today,esc:esc,FLAME:FLAME,
+    coins:{rules:COIN_RULES,cap:COIN_CAP,icon:COIN,byDay:coinDays,sync:syncCoins,wallet:wallet,owns:owns,count:boughtCount,buy:buy,titles:SHOP_TITLES,worn:worn,setWear:setWear},themeOK:themeOK,
     review:{sync:reviewSync,due:reviewDue,record:reviewRecord,state:reviewState,GAPS:GAPS}};
   applyTheme(state().theme);
   function checkAdmin(){ var A=window.HU_AUTH, u=A&&A.user&&A.user();
