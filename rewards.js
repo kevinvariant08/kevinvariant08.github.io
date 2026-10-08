@@ -26,6 +26,9 @@
   /* ---------------- levels: need(n) = 50 n (n-1) */
   var TITLES=['Point','Segment','Ray','Angle','Triangle','Median','Centroid','Incircle','Circumcircle','Orthocentre','Euler Line','Nine-Point Circle','Feuerbach Point','Symmedian','Brocard Point','Excircle','Mixtilinear Circle','Isogonal Conjugate','Simson Line','Morley Triangle','Poncelet Porism','Radical Axis','Pole and Polar','Inversion','Invariant'];
   function need(n){ return 50*n*(n-1); }
+  /* Admin mode: set from the server's hu_is_admin() for the signed-in account (see checkAdmin below). */
+  var ADMIN_LEVEL=30;
+  function isAdmin(){ var a=load('hu_admin',null), A=window.HU_AUTH, u=A&&A.user&&A.user(); return !!(a&&a.on&&u&&a.uid===u.id); }
   function levelOf(xp){ var n=1; while(need(n+1)<=xp) n++; return n; }
   function titleOf(n){ return n<=25?TITLES[n-1]:'Invariant '+(n-24); }
 
@@ -83,8 +86,9 @@
     var freezes=Math.max(0,Math.min(2,R.milestones.length-R.frozen.length));
     var ws=weekStart(t), weekXP=0; Object.keys(perDay).forEach(function(k){ if(k>=ws) weekXP+=perDay[k]; });
     save('hu_rewards',R);
+    var admin=isAdmin(); if(admin) xp=Math.max(xp,need(ADMIN_LEVEL));
     var lvl=levelOf(xp);
-    return {R:R,L:L,A:A,AR:AR,IV:IV,LB:LB,xp:xp,level:lvl,title:titleOf(lvl),next:need(lvl+1),cur:need(lvl),perDay:perDay,streak:streak,best:best,freezes:freezes,weekXP:weekXP,week:ws,today:t};
+    return {admin:admin,R:R,L:L,A:A,AR:AR,IV:IV,LB:LB,xp:xp,level:lvl,title:titleOf(lvl),next:need(lvl+1),cur:need(lvl),perDay:perDay,streak:streak,best:best,freezes:freezes,weekXP:weekXP,week:ws,today:t};
   }
 
   /* ---------------- badges: four tiers, each with its own metal and medal shape */
@@ -161,7 +165,7 @@
   var TIER=['Bronze','Silver','Gold','Invariant'], TIERCOL=['#E3A06F','#C9D3E6','#FFC53D','#FF8FB8'];
   var METAL=[['#F6C9A0','#C98049','#7A431E'],['#FFFFFF','#BFC9DB','#6C7690'],['#FFF3B8','#FFC53D','#9A6300'],['#4FD8E8','#FF6B8B','#FFC53D']];
   var RIBBON=['#FF6B8B','#4FD8E8','#FFC53D','url(#rwIri)'];
-  function earnedBadges(s){ return BADGES.filter(function(b){ try{ return b.f(s); }catch(e){ return false; } }).map(function(b){return b.id;}); }
+  function earnedBadges(s){ if(s&&s.admin) return BADGES.map(function(b){return b.id;}); return BADGES.filter(function(b){ try{ return b.f(s); }catch(e){ return false; } }).map(function(b){return b.id;}); }
   function starPts(n,ro,ri,cx,cy){ var p=[]; for(var i=0;i<2*n;i++){ var r=i%2?ri:ro, a=Math.PI*i/n-Math.PI/2; p.push((cx+r*Math.cos(a)).toFixed(2)+','+(cy+r*Math.sin(a)).toFixed(2)); } return p.join(' '); }
   var MID=0;
   function medal(b,got,size){ size=size||64; var t=b.tier||0, id='rwm'+(++MID), m=METAL[t];
@@ -260,23 +264,23 @@
   var FLAME='<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1c1 3 4 4.5 4 8a4 4 0 0 1-8 0c0-2 1-3 2-4 0 1.5.5 2.5 1.5 3C7.5 6 7 3.5 8 1z" fill="var(--rose,#FF6B8B)"/></svg>';
   function paintPill(s){ var li=document.querySelector('.site-nav .rw'); if(!li){ var ul=document.querySelector('.site-nav .links'); if(!ul) return; li=document.createElement('li'); li.className='rw'; var acct=ul.querySelector('.acct'); ul.insertBefore(li,acct||null); }
     var due=reviewDue().length;
-    li.innerHTML=(due?'<a class="rw-pill rv" href="review.html" title="Mistakes due for review">'+due+' to review</a> ':'')+'<a class="rw-pill" href="rewards.html" title="'+esc(s.title)+', '+s.xp+' XP"><span class="lv">Lv '+s.level+'</span>'+(s.streak?FLAME+s.streak:'')+'</a>'; }
+    li.innerHTML=(due?'<a class="rw-pill rv" href="review.html" title="Mistakes due for review">'+due+' to review</a> ':'')+'<a class="rw-pill" href="rewards.html" title="'+esc(s.title)+', '+s.xp+' XP"><span class="lv">'+(s.admin?'Admin \u00b7 ':'')+'Lv '+s.level+'</span>'+(s.streak?FLAME+s.streak:'')+'</a>'; }
 
   /* ---------------- tick: recompute, notify, sync the leaderboard */
   var last=null, lbPushed=0;
   function tick(){ var s=snapshot(), got=earnedBadges(s), seen=load('hu_rewards_seen',null);
-    if(!seen){ save('hu_rewards_seen',{xp:s.xp,level:s.level,badges:got}); seen=null; }
+    if(!seen||(s.admin&&!seen.admin)){ save('hu_rewards_seen',{xp:s.xp,level:s.level,badges:got,admin:s.admin}); seen=null; }
     else{
       if(s.xp>seen.xp&&s.xp-seen.xp<5000) toast('<span><b>+'+(s.xp-seen.xp)+' XP</b></span>','xp',1800);
       got.filter(function(b){return seen.badges.indexOf(b)<0;}).forEach(function(id){ var b=BADGES.filter(function(x){return x.id===id;})[0];
         toast(medal(b,true,38)+'<span>Badge unlocked: '+esc(b.name)+'<small>'+esc(b.d)+'</small></span>','',5200); });
       if(s.level>seen.level) levelUp(s);
-      save('hu_rewards_seen',{xp:s.xp,level:s.level,badges:got});
+      save('hu_rewards_seen',{xp:s.xp,level:s.level,badges:got,admin:s.admin});
     }
     paintPill(s); last=s; pushLeaderboard(s);
     window.dispatchEvent(new CustomEvent('hu-rewards',{detail:s})); return s; }
   function displayName(u){ var R=state(); if(R.lbName) return R.lbName; var m=u&&u.user_metadata||{}; return (m.display_name||m.name||(u&&u.email?u.email.split('@')[0]:'Player')).slice(0,24); }
-  function pushLeaderboard(s){ var A=window.HU_AUTH, R=state(); if(!A||!A.configured||!A.user()||!R.lb) return; if(Date.now()-lbPushed<60000) return; lbPushed=Date.now();
+  function pushLeaderboard(s){ var A=window.HU_AUTH, R=state(); if(s.admin) return; if(!A||!A.configured||!A.user()||!R.lb) return; if(Date.now()-lbPushed<60000) return; lbPushed=Date.now();
     var u=A.user(); A.client.from('leaderboard').upsert({user_id:u.id,name:displayName(u),xp:s.xp,week_xp:s.weekXP,week:s.week,level:s.level,streak:s.streak,updated_at:new Date().toISOString()}).then(function(){}); }
   function setLeaderboard(on,name){ var R=state(); R.lb=!!on; if(name!=null) R.lbName=String(name).trim().slice(0,24); save('hu_rewards',R); lbPushed=0;
     var A=window.HU_AUTH; if(!on&&A&&A.configured&&A.user()) A.client.from('leaderboard').delete().eq('user_id',A.user().id).then(function(){}); tick(); }
@@ -290,6 +294,10 @@
     setLeaderboard:setLeaderboard,fetchLeaderboard:fetchLeaderboard,displayName:displayName,dkey:dkey,shift:shift,today:today,esc:esc,FLAME:FLAME,
     review:{sync:reviewSync,due:reviewDue,record:reviewRecord,state:reviewState,GAPS:GAPS}};
   applyTheme(state().theme);
-  function boot(){ inject(); tick(); setInterval(tick,4000); window.addEventListener('storage',function(e){ if(!e.key||e.key.indexOf('hu_')===0) tick(); }); window.addEventListener('hu-auth-event',function(){ setTimeout(tick,1500); }); }
+  function checkAdmin(){ var A=window.HU_AUTH, u=A&&A.user&&A.user();
+    if(!A||!A.configured||!u){ if(load('hu_admin',null)){ save('hu_admin',null); tick(); } return; }
+    A.client.rpc('hu_is_admin').then(function(res){ var on=!res.error&&res.data===true, was=isAdmin();
+      save('hu_admin',on?{uid:u.id,on:true}:null); if(on!==was) tick(); }); }
+  function boot(){ inject(); tick(); setTimeout(checkAdmin,1200); window.addEventListener('hu-auth-ready',function(){ setTimeout(checkAdmin,800); }); setInterval(tick,4000); window.addEventListener('storage',function(e){ if(!e.key||e.key.indexOf('hu_')===0) tick(); }); window.addEventListener('hu-auth-event',function(){ setTimeout(checkAdmin,800); setTimeout(tick,1500); }); }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot); else boot();
 })();
