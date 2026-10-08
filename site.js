@@ -6,6 +6,7 @@
     {label:'Home', href:'index.html'},
     {label:'Practise', items:[
       {href:'drill.html', name:'Drill', note:'Full papers, timed, with extra-time options'},
+      {href:'unlock.html', name:'Unlock papers', note:'Redeem a code for a new locked paper'},
       {href:'arena.html', name:'Arena', note:'Race a bot to the right answer'},
       {href:'review.html', name:'Review mistakes', note:'Wrong answers return after 1, 3 and 7 days'},
       {href:'duel.html', name:'Friend duel', note:'Five questions; your friend races your ghost'},
