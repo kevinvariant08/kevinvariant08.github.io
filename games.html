@@ -4,208 +4,374 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Labs | Kevinvariant</title>
-  <meta name="description" content="Maths minigames from the Kevinvariant shop: Target and Nim Duel.">
+  <meta name="description" content="Maths games from the Kevinvariant shop: Factor Fall, Untangle and Billiards Lab, each with a global high-score table.">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <meta name="theme-color" content="#15173B">
   <link rel="stylesheet" href="style.css?v=20260929">
   <style>
-    .wrap{max-width:1000px;margin:0 auto;padding:1.5rem 1.2rem 4rem}
-    .panel{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:1.4rem 1.5rem;margin-top:1.3rem;overflow:hidden}
-    .panel h2{font:800 1.5rem var(--display);margin:0 0 .3rem}
-    .sub{color:var(--ink-soft);margin:0 0 1rem;max-width:64ch}
-    .row{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center}
-    .lock{position:absolute;inset:0;z-index:5;display:grid;place-items:center;text-align:center;padding:1.5rem;background:rgba(10,11,32,.82);backdrop-filter:blur(5px)}
-    .lock[hidden]{display:none}
-    .lock h3{font:800 1.3rem var(--display);margin:0 0 .4rem}.lock p{color:var(--ink-soft);margin:0 0 1rem}
-    /* Target */
-    .target{font:800 clamp(3rem,10vw,4.6rem)/1 var(--display);color:var(--saffron);font-variant-numeric:tabular-nums;margin:.2rem 0}
-    .clock{font:700 1.2rem var(--display);font-variant-numeric:tabular-nums;color:var(--ink-soft)}
-    .clock.low{color:var(--rose)}
-    .tiles{display:flex;flex-wrap:wrap;gap:.6rem;margin:1rem 0}
-    .tile{min-width:4.2rem;height:4.2rem;padding:0 .7rem;border-radius:14px;border:2px solid var(--line);background:var(--surface-2);color:var(--ink);font:800 1.5rem var(--display);cursor:pointer;transition:transform .1s,border-color .1s}
-    .tile:hover{border-color:var(--aqua)}.tile.sel{border-color:var(--saffron);transform:translateY(-3px);box-shadow:0 8px 20px -8px rgba(255,197,61,.6)}
-    .tile.made{border-style:dashed}
-    .ops{display:flex;gap:.5rem}
-    .op{width:3.2rem;height:3.2rem;border-radius:12px;border:2px solid var(--line);background:var(--bg-deep);color:var(--ink);font:800 1.4rem var(--display);cursor:pointer}
-    .op.sel{border-color:var(--rose);color:var(--rose)}
-    .work{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--ink-soft);font-size:.92rem;min-height:1.4em;margin:.4rem 0}
-    .verdict{margin-top:1rem;padding:.9rem 1rem;border-radius:12px;background:var(--bg-deep);border:1px solid var(--line-soft)}
-    .verdict b{color:var(--saffron)}
-    /* Nim */
-    .heaps{display:flex;gap:1.6rem;align-items:flex-end;justify-content:center;min-height:15rem;margin:1rem 0;flex-wrap:wrap}
-    .heap{display:flex;flex-direction:column-reverse;align-items:center;gap:6px;padding:.6rem .7rem;border-radius:14px;border:1px solid var(--line-soft);background:var(--bg-deep);min-width:4rem}
-    .heap .lbl{font:700 .8rem var(--display);color:var(--ink-faint);margin-top:.3rem}
-    .stone{width:30px;height:30px;border-radius:50%;border:0;cursor:pointer;background:radial-gradient(circle at 35% 30%,#bff6ff,var(--aqua) 60%,#1d8fa0);transition:transform .1s,opacity .2s}
-    .stone.hot{background:radial-gradient(circle at 35% 30%,#ffd1dc,var(--rose) 60%,#a3324c);transform:scale(1.08)}
-    .stone:disabled{cursor:default}
-    .status{font:700 1.05rem var(--display);text-align:center;min-height:1.6em}
-    .bin{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.9rem;color:var(--ink-soft);text-align:center}
-    .theory{margin-top:1rem;padding:1rem 1.1rem;border-left:3px solid var(--mint);background:var(--bg-deep);border-radius:0 12px 12px 0;color:var(--ink-soft)}
-    .theory b{color:var(--ink)}
-    .score{font:600 .9rem var(--display);color:var(--ink-faint)}
+    .wrap{max-width:1120px;margin:0 auto;padding:1.5rem 1.2rem 4rem}
+    .sub{color:var(--ink-soft);margin:0 0 1rem;max-width:66ch}
+    .picker{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.9rem;margin:1.2rem 0}
+    @media (max-width:820px){.picker{grid-template-columns:1fr}}
+    .pick{position:relative;text-align:left;border:1px solid var(--line);border-radius:var(--r-lg);padding:1rem 1.1rem;background:var(--surface);color:var(--ink);cursor:pointer;font:inherit;transition:transform .15s,border-color .15s}
+    .pick:hover{transform:translateY(-2px);border-color:var(--aqua)}
+    .pick[aria-pressed="true"]{border-color:var(--saffron);box-shadow:0 0 0 2px rgba(255,197,61,.25)}
+    .pick h3{font:800 1.15rem var(--display);margin:.2rem 0 .2rem}.pick p{margin:0;color:var(--ink-soft);font-size:.88rem}
+    .pick .best{display:block;margin-top:.5rem;font:700 .8rem var(--display);color:var(--saffron)}
+    .pick .lk{position:absolute;top:.8rem;right:.9rem;font:700 .68rem var(--display);letter-spacing:.08em;text-transform:uppercase;padding:.15rem .5rem;border-radius:99px;background:var(--rose-wash);color:var(--rose)}
+    .stage{position:relative;display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:1rem;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:1rem;overflow:hidden}
+    @media (max-width:900px){.stage{grid-template-columns:1fr}}
+    .screen{position:relative;margin:0 auto;border-radius:14px;overflow:hidden;background:#0B0C26;border:1px solid var(--line-soft);touch-action:none}
+    .screen canvas,.screen svg{display:block;width:100%;height:auto;touch-action:none}
+    .hud{display:flex;flex-wrap:wrap;gap:.4rem 1rem;align-items:center;margin-bottom:.6rem;font:700 .95rem var(--display)}
+    .hud span b{color:var(--saffron);font-variant-numeric:tabular-nums}
+    .side h3{font:800 1rem var(--display);margin:.2rem 0 .5rem}
+    .side .box{background:var(--bg-deep);border:1px solid var(--line-soft);border-radius:12px;padding:.8rem .9rem;margin-bottom:.8rem;font-size:.88rem;color:var(--ink-soft)}
+    .side ol{margin:0;padding-left:1.3rem}.side li{margin:.15rem 0}.side li.me{color:var(--saffron);font-weight:700}
+    .row{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center}
+    .overlay{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:1.2rem;background:rgba(8,9,30,.78);backdrop-filter:blur(3px);z-index:3}
+    .overlay[hidden]{display:none}
+    .overlay h2{font:800 1.8rem var(--display);margin:0 0 .4rem}.overlay p{color:var(--ink-soft);max-width:44ch;margin:0 auto .9rem}
+    .keys{display:grid;grid-template-columns:repeat(6,1fr);gap:.4rem;margin-top:.6rem}
+    .key{height:3.2rem;border-radius:12px;border:2px solid var(--line);background:var(--surface-2);color:var(--ink);font:800 1.3rem var(--display);cursor:pointer;position:relative}
+    .key small{position:absolute;right:.35rem;bottom:.15rem;font:600 .6rem var(--display);color:var(--ink-faint)}
+    .key:active,.key.flash{border-color:var(--saffron);transform:translateY(1px)}
+    .key.off{opacity:.3}
+    .lockwall{position:absolute;inset:0;z-index:6;display:grid;place-items:center;text-align:center;padding:1.5rem;background:rgba(10,11,32,.86);backdrop-filter:blur(5px)}
+    .lockwall[hidden]{display:none}
+    .lockwall h2{font:800 1.4rem var(--display);margin:0 0 .4rem}.lockwall p{color:var(--ink-soft);margin:0 0 1rem}
+    .lesson{margin-top:.6rem;padding:.8rem 1rem;border-left:3px solid var(--mint);background:var(--bg-deep);border-radius:0 12px 12px 0;color:var(--ink-soft);font-size:.92rem}
+    .lesson b{color:var(--ink)}
+    .lvls{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.5rem}
+    .lvls button{min-width:2.1rem;height:2.1rem;border-radius:9px;border:1px solid var(--line);background:var(--surface-2);color:var(--ink);font:700 .85rem var(--display);cursor:pointer}
+    .lvls button.done{border-color:var(--mint);color:var(--mint)}.lvls button.cur{border-color:var(--saffron);color:var(--saffron)}
+    .lvls button:disabled{opacity:.35;cursor:default}
   </style>
 </head>
 <body>
 <nav id="site-nav"></nav>
 <main class="wrap">
   <h1>Labs</h1>
-  <p class="sub">Two minigames from the shop. No coins or XP here, just practice for the part of your brain that does arithmetic and strategy under pressure.</p>
-
-  <section class="panel" id="target" aria-labelledby="tg-h">
-    <h2 id="tg-h">Target</h2>
-    <p class="sub">Combine the six numbers with + &minus; &times; &divide; to hit the target. Pick a number, an operation, then another number. Each number is used at most once, and every result must be a positive whole number.</p>
-    <div class="row" style="justify-content:space-between"><div><div class="target" id="tgt">&ndash;</div></div><div style="text-align:right"><div class="clock" id="clk">1:30</div><div class="score" id="tbest"></div></div></div>
-    <div class="tiles" id="tiles"></div>
-    <div class="row"><div class="ops" id="ops"></div><button class="btn secondary" id="undo" type="button">Undo</button><button class="btn secondary" id="done" type="button">I'm done</button><button class="btn" id="newround" type="button">New round</button></div>
-    <div class="work" id="work"></div>
-    <div class="verdict" id="verdict" hidden></div>
-    <div class="lock" data-need="game-countdown" hidden></div>
-  </section>
-
-  <section class="panel" id="nim" aria-labelledby="nim-h">
-    <h2 id="nim-h">Nim Duel</h2>
-    <p class="sub">You move first. On your turn, take any number of stones from one heap: tap a stone and it goes, together with every stone above it. Whoever takes the last stone wins. The bot never makes a mistake, but every position you start in can be won.</p>
-    <div class="row" style="justify-content:space-between"><span class="score" id="nlevel"></span><span class="score" id="nwins"></span></div>
-    <div class="heaps" id="heaps"></div>
-    <div class="status" id="nstatus"></div>
-    <div class="bin" id="nbin" hidden></div>
-    <div class="row" style="justify-content:center;margin-top:.8rem"><button class="btn" id="nnew" type="button">New game</button><button class="btn secondary" id="nhint" type="button" hidden>Show the binary</button></div>
-    <div class="theory" id="ntheory" hidden>
-      <b>Why the bot wins (until you know this).</b> Write each heap size in binary and add the columns <i>without carrying</i>: this is the nim-sum, written a &oplus; b &oplus; c. A position with nim-sum 0 is lost for the player about to move. Any move from such a position changes exactly one heap, so it changes some binary column and makes the nim-sum non-zero. And from a position with non-zero nim-sum there is always a move back to 0: take the highest column where the nim-sum has a 1, choose a heap with a 1 in that column, and shrink it to (that heap &oplus; nim-sum), which is smaller. So the winning strategy is to hand your opponent nim-sum 0 every time. This is Bouton's theorem (1901), and it is the seed of the Sprague&ndash;Grundy theory that solves every game of this kind.
+  <p class="sub">Three games from the shop, each with a global high-score table. They earn no coins: the only reward is your name above everyone else's, and the maths you notice along the way.</p>
+  <div class="picker" id="picker"></div>
+  <div class="stage" id="stage">
+    <div>
+      <div class="hud" id="hud"></div>
+      <div class="screen" id="screen"></div>
+      <div id="below" style="margin:0 auto"></div>
     </div>
-    <div class="lock" data-need="game-nim" hidden></div>
-  </section>
+    <aside class="side">
+      <h3 id="sideTitle">High scores</h3>
+      <div class="box"><ol id="board"><li>Loading&hellip;</li></ol></div>
+      <div class="box" id="howto"></div>
+    </aside>
+    <div class="lockwall" id="lockwall" hidden></div>
+  </div>
 </main>
 <script src="site.js?v=20260929"></script>
 <script>
 (function(){
+  'use strict';
   function $(id){ return document.getElementById(id); }
   function load(k,d){ try{ var v=localStorage.getItem(k); return v==null?d:JSON.parse(v); }catch(e){ return d; } }
   function save(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} }
+  function esc(s){ return String(s).replace(/[&<>"]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
   function rnd(n){ return Math.floor(Math.random()*n); }
+  var reduceMotion=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  /* ---------------- gate: owned in the shop (the shop page is where they are bought) */
+  var GAMES=[
+    {id:'factor',item:'game-factor',name:'Factor Fall',blurb:'Numbers fall. Split them into primes before they land. Combos, rising speed, and a lot of quick arithmetic.'},
+    {id:'untangle',item:'game-untangle',name:'Untangle',blurb:'Drag the points until no two edges cross. The graphs grow every level, and every one of them can be untangled.'},
+    {id:'billiards',item:'game-billiards',name:'Billiards Lab',blurb:'Aim shots on strange tables: rectangles, a hexagon, a circle and an ellipse that hides a secret.'}
+  ];
+  var current=null, running=null;
+
+  /* ------------------------------------------------ accounts, ownership and scores */
+  function H(){ return window.HU_REWARDS; }
+  function A(){ return window.HU_AUTH; }
+  function user(){ var a=A(); return a&&a.configured&&a.user&&a.user(); }
+  function owns(item){ return !!(H()&&H().coins.owns(item)); }
+  function best(id){ return load('hu_lab_best',{})[id]||0; }
+  function submit(id,score){
+    var b=load('hu_lab_best',{}); if(score>(b[id]||0)){ b[id]=score; save('hu_lab_best',b); }
+    var u=user(); if(!u||!score) return Promise.resolve();
+    var name=H()&&H().displayName?H().displayName(u):'Player';
+    return A().client.rpc('hu_submit_score',{p_game:id,p_score:Math.round(score),p_name:name}).then(function(){ board(id); },function(){});
+  }
+  function board(id){
+    var ol=$('board'), a=A();
+    if(!a||!a.configured){ ol.innerHTML='<li>High scores need accounts.</li>'; return; }
+    a.client.from('game_scores').select('user_id,name,score').eq('game',id).order('score',{ascending:false}).limit(10).then(function(r){
+      if(r.error){ ol.innerHTML='<li>High scores are not set up yet.</li>'; return; }
+      if(!r.data.length){ ol.innerHTML='<li>No scores yet. Be the first.</li>'; return; }
+      var u=user(); ol.innerHTML=r.data.map(function(x){ return '<li'+(u&&x.user_id===u.id?' class="me"':'')+'>'+esc(x.name)+' <b style="float:right">'+x.score.toLocaleString()+'</b></li>'; }).join(''); });
+  }
+
+  /* ------------------------------------------------ picker and lock wall */
+  function paintPicker(){
+    $('picker').innerHTML=GAMES.map(function(g){ var own=owns(g.item);
+      return '<button class="pick" type="button" data-g="'+g.id+'" aria-pressed="'+(current===g.id)+'">'+(own?'':'<span class="lk">Shop</span>')+'<h3>'+g.name+'</h3><p>'+g.blurb+'</p><span class="best">'+(best(g.id)?'Your best: '+best(g.id).toLocaleString():'&nbsp;')+'</span></button>'; }).join('');
+    $('picker').querySelectorAll('.pick').forEach(function(b){ b.addEventListener('click',function(){ open(b.dataset.g); }); });
+  }
   function gate(){
-    var H=window.HU_REWARDS, A=window.HU_AUTH, signed=!!(A&&A.configured&&A.user&&A.user());
-    document.querySelectorAll('.lock').forEach(function(l){
-      var id=l.dataset.need, own=H&&H.coins.owns(id);
-      l.hidden=!!own;
-      if(!own) l.innerHTML='<div><h3>'+(id==='game-nim'?'Nim Duel':'Target')+' is in the shop</h3><p>'+(signed?'Earn coins by solving problems, then unlock it for good.':'Sign in, earn coins by solving problems, then unlock it for good.')+'</p><a class="btn" href="shop.html#labs">Go to the shop</a></div>';
-    });
+    var g=GAMES.filter(function(x){ return x.id===current; })[0]; if(!g) return;
+    var w=$('lockwall'), own=owns(g.item); w.hidden=own;
+    if(!own) w.innerHTML='<div><h2>'+g.name+' is in the shop</h2><p>'+(user()?'Earn coins by solving problems, then unlock it for good.':'Sign in, earn coins by solving problems, then unlock it for good.')+'</p><a class="btn" href="shop.html#labs">Go to the shop</a></div>';
+    paintPicker();
   }
-  function ready(f){ if(window.HU_REWARDS) f(); else setTimeout(function(){ ready(f); },80); }
-  ready(function(){ gate(); var H=window.HU_REWARDS;
-    var tries=0;
-    function s(){ H.coins.sync(H.snapshot(),true).then(function(){ gate(); var anyLocked=[].some.call(document.querySelectorAll('.lock'),function(l){ return !l.hidden; }); if(anyLocked&&tries++<5) setTimeout(s,1500); }); }
-    if(window.HU_AUTH) s(); else window.addEventListener('hu-auth-ready',s,{once:true});
-    window.addEventListener('hu-wallet',gate); window.addEventListener('hu-auth-event',function(){ setTimeout(s,900); }); });
+  function open(id){
+    if(running&&running.stop) running.stop(); running=null;
+    current=id; save('hu_lab_last',id); location.hash=id;
+    $('screen').innerHTML=''; $('below').innerHTML=''; $('hud').innerHTML=''; $('screen').style.maxWidth=$('below').style.maxWidth='';
+    running=({factor:FactorFall,untangle:Untangle,billiards:Billiards})[id]();
+    board(id); gate();
+  }
 
-  /* ================================================================ Target */
-  var T={nums:[],tiles:[],target:0,sel:null,op:null,hist:[],timer:null,end:0,over:true};
-  var OPS=['+','−','×','÷'];
-  function apply(a,b,op){ if(op===0) return a+b; if(op===1) return a>b?a-b:null; if(op===2) return (a===1||b===1)?null:a*b; return (b>1&&a%b===0)?a/b:null; }
-  /* Best reachable value and how: depth-first over pairs, remembering visited multisets. */
-  function solve(nums,target){
-    var best={d:Infinity,v:null,how:''}, seen=new Set(), start=Date.now();
-    nums.forEach(function(n){ var d=Math.abs(n-target); if(d<best.d) best={d:d,v:n,how:String(n)}; });
-    function rec(items){
-      if(best.d===0||Date.now()-start>2500) return;
-      var key=items.map(function(x){return x.v;}).sort(function(a,b){return a-b;}).join(','); if(seen.has(key)) return; seen.add(key);
-      for(var i=0;i<items.length;i++) for(var j=0;j<items.length;j++){ if(i===j) continue;
-        for(var op=0;op<4;op++){ if((op===0||op===2)&&j<i) continue;
-          var a=items[i], b=items[j], v=apply(a.v,b.v,op); if(v==null) continue;
-          var e='('+a.e+' '+OPS[op]+' '+b.e+')', d=Math.abs(v-target);
-          if(d<best.d){ best={d:d,v:v,how:e}; if(d===0) return; }
-          var rest=items.filter(function(_,k){return k!==i&&k!==j;}); rest.push({v:v,e:e}); rec(rest); if(best.d===0) return; } }
+  /* ================================================================== FACTOR FALL */
+  function FactorFall(){
+    var W=480,H0=600, cv=document.createElement('canvas'), ctx=cv.getContext('2d'), dpr=Math.min(2,window.devicePixelRatio||1);
+    cv.width=W*dpr; cv.height=H0*dpr; ctx.scale(dpr,dpr); $('screen').appendChild(cv);
+    $('screen').style.maxWidth=$('below').style.maxWidth='min(440px,100%)';
+    var ov=document.createElement('div'); ov.className='overlay'; $('screen').appendChild(ov);
+    var PR=[2,3,5,7,11,13], KEYS={'2':2,'3':3,'5':5,'7':7,'e':11,'r':13,'E':11,'R':13};
+    $('below').innerHTML='<div class="keys" id="ffkeys">'+PR.map(function(p){ return '<button class="key" type="button" data-p="'+p+'">'+p+'<small>'+(p===11?'E':p===13?'R':p)+'</small></button>'; }).join('')+'</div>';
+    $('howto').innerHTML='<b>How to play.</b> The glowing block is your target (tap another to switch). Press a prime that divides it to split it; reach 1 and it bursts. A wrong prime breaks your combo and drops the block. You have four lives, and each block that lands costs one.<br><br>Keys: 2 3 5 7, E for 11, R for 13.';
+    var S, raf=0, last=0;
+    function reset(){ S={blocks:[],parts:[],floats:[],score:0,combo:1,lives:4,cleared:0,level:1,spawnT:0,over:false,shake:0,slow:0,primesOn:4}; }
+    function lanes(){ return 5; }
+    function makeNumber(){
+      var k=2+Math.min(4,Math.floor(S.level/2)+rnd(2)), pool=PR.slice(0,S.primesOn), n=1;
+      for(var i=0;i<k;i++){ var p=pool[rnd(pool.length)]; if(n*p>99999) break; n*=p; }
+      if(n<4) n*=pool[rnd(pool.length)];
+      if(S.level>=4&&Math.random()<.12) n=pool[rnd(pool.length)];          /* a lone prime: one keystroke, but you must recognise it */
+      return n;
     }
-    rec(nums.map(function(n){return {v:n,e:String(n)};}));
-    best.how=best.how.replace(/^\((.*)\)$/,'$1'); return best;
+    function spawn(){
+      var lane=rnd(lanes()), lw=W/lanes(), used=S.blocks.some(function(b){ return b.lane===lane&&b.y<70; }); if(used) return;
+      S.blocks.push({lane:lane,x:lane*lw+lw/2,y:-30,n:makeNumber(),v:(28+S.level*7)*(0.85+Math.random()*.3),hit:0,orig:0});
+      S.blocks[S.blocks.length-1].orig=S.blocks[S.blocks.length-1].n;
+    }
+    function target(){ var t=null; S.blocks.forEach(function(b){ if(b.sel) t=b; }); if(t) return t; S.blocks.forEach(function(b){ if(!t||b.y>t.y) t=b; }); return t; }
+    function burst(x,y,col,n){ if(reduceMotion) n=Math.min(n,6); for(var i=0;i<n;i++){ var a=Math.random()*6.283, s=60+Math.random()*220; S.parts.push({x:x,y:y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-80,t:0,life:.6+Math.random()*.5,col:col}); } }
+    function floatText(x,y,t,col){ S.floats.push({x:x,y:y,t:0,txt:t,col:col}); }
+    function press(p){
+      if(S.over) return; var b=target(); var k=$('ffkeys').querySelector('[data-p="'+p+'"]'); if(k){ k.classList.add('flash'); setTimeout(function(){ k.classList.remove('flash'); },90); }
+      if(!b) return;
+      if(b.n%p===0){ b.n/=p; b.hit=0.18; var pts=p*S.combo; S.score+=pts; floatText(b.x,b.y-26,'+'+pts,'#FFC53D'); burst(b.x,b.y,'#4FD8E8',6);
+        if(b.n===1){ var bonus=Math.round(10*Math.sqrt(b.orig))*S.combo; S.score+=bonus; S.cleared++; S.combo=Math.min(12,S.combo+1);
+          floatText(b.x,b.y-50,'×'+S.combo+'  +'+bonus,'#5BE3A6'); burst(b.x,b.y,'#FFC53D',28); S.blocks.splice(S.blocks.indexOf(b),1);
+          if(S.cleared%8===0){ S.level++; if(S.level===3) S.primesOn=5; if(S.level===5) S.primesOn=6; floatText(W/2,H0/2,'Level '+S.level,'#FF6B8B'); }
+          if(S.cleared%15===0){ S.slow=5; floatText(W/2,H0/2+34,'Time slows','#7EE7FF'); } }
+      } else { S.combo=1; b.y+=36; S.shake=.25; floatText(b.x,b.y-26,p+' ∤ '+b.n,'#FF6B8B'); }
+    }
+    function lose(b){ S.lives--; S.shake=.45; burst(b.x,H0-20,'#FF6B8B',30); S.combo=1; if(S.lives<=0) end(); }
+    function end(){ S.over=true; submit('factor',S.score); paintPicker();
+      ov.hidden=false; ov.innerHTML='<div><h2>'+S.score.toLocaleString()+'</h2><p>Level '+S.level+', '+S.cleared+' numbers factorised. '+(S.score>=best('factor')?'A new personal best.':'Your best is '+best('factor').toLocaleString()+'.')+'</p><button class="btn" type="button" id="ffgo">Play again</button></div>';
+      $('ffgo').addEventListener('click',start); }
+    function start(){ reset(); ov.hidden=true; last=performance.now(); cancelAnimationFrame(raf); raf=requestAnimationFrame(loop); }
+    function hud(){ $('hud').innerHTML='<span>Score <b>'+S.score.toLocaleString()+'</b></span><span>Combo <b>×'+S.combo+'</b></span><span>Level <b>'+S.level+'</b></span><span>Lives <b>'+'●'.repeat(Math.max(0,S.lives))+'</b></span>';
+      $('ffkeys').querySelectorAll('.key').forEach(function(k){ k.classList.toggle('off',PR.indexOf(+k.dataset.p)>=S.primesOn); }); }
+    function loop(now){
+      var dt=Math.min(.05,(now-last)/1000); last=now; if(S.slow>0){ S.slow-=dt; dt*=.45; }
+      if(!S.over){
+        S.spawnT-=dt; if(S.spawnT<=0){ spawn(); S.spawnT=Math.max(.75,2.4-S.level*.17)*(.8+Math.random()*.4); }
+        for(var i=S.blocks.length-1;i>=0;i--){ var b=S.blocks[i]; b.y+=b.v*dt; if(b.hit>0) b.hit-=dt; if(b.y>H0-24){ S.blocks.splice(i,1); lose(b); } }
+      }
+      S.parts.forEach(function(p){ p.t+=dt; p.x+=p.vx*dt; p.y+=p.vy*dt; p.vy+=420*dt; }); S.parts=S.parts.filter(function(p){ return p.t<p.life; });
+      S.floats.forEach(function(f){ f.t+=dt; f.y-=40*dt; }); S.floats=S.floats.filter(function(f){ return f.t<1; });
+      if(S.shake>0) S.shake-=dt;
+      draw(); hud(); if(!S.over||S.parts.length) raf=requestAnimationFrame(loop);
+    }
+    function draw(){
+      ctx.save(); ctx.clearRect(0,0,W,H0);
+      if(S.shake>0&&!reduceMotion) ctx.translate((Math.random()-.5)*10*S.shake,(Math.random()-.5)*10*S.shake);
+      var g=ctx.createLinearGradient(0,0,0,H0); g.addColorStop(0,'#0B0C26'); g.addColorStop(1,'#1A1240'); ctx.fillStyle=g; ctx.fillRect(-10,-10,W+20,H0+20);
+      ctx.strokeStyle='rgba(79,216,232,.06)'; ctx.lineWidth=1; for(var x=0;x<=W;x+=W/5){ ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H0); ctx.stroke(); }
+      ctx.fillStyle='rgba(255,107,139,.18)'; ctx.fillRect(0,H0-14,W,14);
+      if(S.slow>0){ ctx.fillStyle='rgba(126,231,255,.07)'; ctx.fillRect(0,0,W,H0); }
+      var t=target();
+      S.blocks.forEach(function(b){ var digits=String(b.n).length, w=Math.max(64,22+digits*17), h=46, isT=b===t;
+        ctx.save(); ctx.translate(b.x,b.y); if(b.hit>0) ctx.scale(1+b.hit,1+b.hit);
+        ctx.shadowColor=isT?'rgba(255,197,61,.7)':'rgba(79,216,232,.25)'; ctx.shadowBlur=isT?22:8;
+        ctx.fillStyle=isT?'#2B2160':'#1E2257'; ctx.strokeStyle=isT?'#FFC53D':'#4FD8E8'; ctx.lineWidth=isT?3:1.5;
+        roundRect(-w/2,-h/2,w,h,12); ctx.fill(); ctx.stroke(); ctx.shadowBlur=0;
+        ctx.fillStyle='#F3F1FF'; ctx.font='800 24px "Bricolage Grotesque",system-ui'; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText(b.n,0,1); ctx.restore(); });
+      S.parts.forEach(function(p){ ctx.globalAlpha=Math.max(0,1-p.t/p.life); ctx.fillStyle=p.col; ctx.fillRect(p.x-2,p.y-2,4,4); }); ctx.globalAlpha=1;
+      S.floats.forEach(function(f){ ctx.globalAlpha=1-f.t; ctx.fillStyle=f.col; ctx.font='800 18px "Bricolage Grotesque",system-ui'; ctx.textAlign='center'; ctx.fillText(f.txt,f.x,f.y); }); ctx.globalAlpha=1;
+      ctx.restore();
+    }
+    function roundRect(x,y,w,h,r){ ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r); ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
+    function pt(e){ var r=cv.getBoundingClientRect(); return {x:(e.clientX-r.left)*W/r.width,y:(e.clientY-r.top)*H0/r.height}; }
+    cv.addEventListener('pointerdown',function(e){ var p=pt(e), hitB=null; S.blocks.forEach(function(b){ if(Math.abs(p.x-b.x)<50&&Math.abs(p.y-b.y)<30) hitB=b; }); if(hitB){ S.blocks.forEach(function(b){ b.sel=false; }); hitB.sel=true; } });
+    $('ffkeys').querySelectorAll('.key').forEach(function(k){ k.addEventListener('click',function(){ press(+k.dataset.p); }); });
+    function onKey(e){ if(current!=='factor'||!$('lockwall').hidden||e.target.tagName==='INPUT') return; var p=KEYS[e.key]; if(p){ e.preventDefault(); press(p); } }
+    document.addEventListener('keydown',onKey);
+    reset(); draw(); hud();
+    ov.innerHTML='<div><h2>Factor Fall</h2><p>Split every falling number into primes before it lands. Big numbers are worth more, and every clean break grows your combo.</p><button class="btn" type="button" id="ffgo">Start</button></div>';
+    $('ffgo').addEventListener('click',start);
+    return {stop:function(){ cancelAnimationFrame(raf); document.removeEventListener('keydown',onKey); }};
   }
-  function newRound(){
-    var big=[25,50,75,100].sort(function(){return Math.random()-.5;}).slice(0,1+rnd(2)), small=[];
-    while(big.length+small.length<6) small.push(1+rnd(10));
-    T.nums=big.concat(small); T.target=101+rnd(899); T.tiles=T.nums.map(function(n,i){return {v:n,id:'n'+i,made:false};});
-    T.sel=null; T.op=null; T.hist=[]; T.over=false; $('verdict').hidden=true; $('work').textContent='';
-    $('tgt').textContent=T.target; T.end=Date.now()+90000; clearInterval(T.timer); T.timer=setInterval(tickT,250); tickT(); drawT();
-  }
-  function tickT(){ var left=Math.max(0,T.end-Date.now()), s=Math.ceil(left/1000); $('clk').textContent=Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); $('clk').className='clock'+(s<=15?' low':''); if(left<=0) finishT(); }
-  function closest(){ var b=null; T.tiles.forEach(function(t){ if(b==null||Math.abs(t.v-T.target)<Math.abs(b-T.target)) b=t.v; }); return b; }
-  function drawT(){
-    $('tiles').innerHTML=T.tiles.map(function(t,i){ return '<button class="tile'+(T.sel===i?' sel':'')+(t.made?' made':'')+'" data-i="'+i+'"'+(T.over?' disabled':'')+'>'+t.v+'</button>'; }).join('');
-    $('ops').innerHTML=OPS.map(function(o,k){ return '<button class="op'+(T.op===k?' sel':'')+'" data-op="'+k+'"'+(T.over?' disabled':'')+'>'+o+'</button>'; }).join('');
-    $('tiles').querySelectorAll('.tile').forEach(function(b){ b.addEventListener('click',function(){ pickTile(+b.dataset.i); }); });
-    $('ops').querySelectorAll('.op').forEach(function(b){ b.addEventListener('click',function(){ if(T.sel!=null){ T.op=+b.dataset.op; drawT(); } }); });
-    var best=load('hu_lab_target',{rounds:0,exact:0,best:0}); $('tbest').textContent=best.rounds?best.exact+' exact in '+best.rounds+' rounds':'';
-  }
-  function pickTile(i){
-    if(T.over) return;
-    if(T.sel==null||T.op==null){ T.sel=(T.sel===i?null:i); T.op=null; drawT(); return; }
-    if(i===T.sel) return;
-    var a=T.tiles[T.sel], b=T.tiles[i], v=apply(a.v,b.v,T.op);
-    if(v==null&&T.op===2) v=a.v*b.v;   /* multiplying by 1 is allowed, just pointless */
-    if(v==null){ $('work').textContent=a.v+' '+OPS[T.op]+' '+b.v+' is not a positive whole number.'; T.op=null; drawT(); return; }
-    T.hist.push(T.tiles.slice()); $('work').textContent=a.v+' '+OPS[T.op]+' '+b.v+' = '+v;
-    var keep=T.tiles.filter(function(_,k){ return k!==T.sel&&k!==i; }); keep.push({v:v,made:true}); T.tiles=keep; T.sel=keep.length-1; T.op=null; drawT();
-    if(v===T.target) finishT();
-  }
-  function finishT(){
-    if(T.over) return; T.over=true; clearInterval(T.timer); drawT();
-    var mine=closest(), d=Math.abs(mine-T.target), st=load('hu_lab_target',{rounds:0,exact:0,best:0}); st.rounds++; if(d===0) st.exact++; save('hu_lab_target',st);
-    var v=$('verdict'); v.hidden=false; v.innerHTML='Working out the best possible answer&hellip;';
-    setTimeout(function(){ var b=solve(T.nums,T.target);
-      v.innerHTML=(d===0?'<b>Exact.</b> ':'You reached <b>'+mine+'</b>, '+d+' away. ')+(b.d===0?'It can be hit exactly: <b>'+b.how+' = '+T.target+'</b>.':'The closest anyone can get is <b>'+b.v+'</b>: '+b.how+'.');
-      drawT(); },30);
-  }
-  $('undo').addEventListener('click',function(){ if(T.over||!T.hist.length) return; T.tiles=T.hist.pop(); T.sel=null; T.op=null; $('work').textContent=''; drawT(); });
-  $('done').addEventListener('click',finishT);
-  $('newround').addEventListener('click',newRound);
-  $('tgt').textContent='–'; T.over=true; T.nums=[]; drawT(); $('tiles').innerHTML='<p class="sub" style="margin:0">Press <b>New round</b> to start the clock.</p>';
 
-  /* ================================================================ Nim */
-  var N={h:[],turn:'you',over:true,level:1};
-  function xor(h){ return h.reduce(function(a,b){return a^b;},0); }
-  function newNim(){
-    var st=load('hu_lab_nim',{wins:0,games:0}), lv=Math.min(4,1+Math.floor(st.wins/2)), k=2+lv, max=3+lv*2;
-    do{ N.h=[]; for(var i=0;i<k;i++) N.h.push(1+rnd(max)); } while(xor(N.h)===0);
-    N.turn='you'; N.over=false; N.level=lv; drawN(); setStatus('Your move.');
+  /* ================================================================== UNTANGLE */
+  function Untangle(){
+    var W=720,H0=520, NS='http://www.w3.org/2000/svg', svg=document.createElementNS(NS,'svg');
+    svg.setAttribute('viewBox','0 0 '+W+' '+H0); $('screen').appendChild(svg);
+    var ov=document.createElement('div'); ov.className='overlay'; $('screen').appendChild(ov);
+    var gE=document.createElementNS(NS,'g'), gV=document.createElementNS(NS,'g'); svg.appendChild(gE); svg.appendChild(gV);
+    $('howto').innerHTML='<b>How to play.</b> Drag the points. Red edges cross something; untangle the whole graph to clear the level. Every graph here is planar, because it is built from straight lines in the plane, so a solution always exists.<br><br>Your run score adds up across levels: bigger graphs and faster solves score more.';
+    var st=load('hu_lab_untangle',{level:1,total:0}), G=null, drag=null, t0=0, moves=0, timer=0, done=false;
+    function gen(nLines){
+      var L=[]; for(var i=0;i<nLines;i++){ var a=Math.random()*Math.PI, c=Math.cos(a), s=Math.sin(a), r=(Math.random()-.5)*.6; L.push({c:c,s:s,r:r}); }
+      var V=[], onLine=L.map(function(){ return []; });
+      for(var i2=0;i2<nLines;i2++) for(var j=i2+1;j<nLines;j++){ var a1=L[i2],a2=L[j], det=a1.c*a2.s-a1.s*a2.c; if(Math.abs(det)<1e-6) continue;
+        var x=(a1.r*a2.s-a1.s*a2.r)/det, y=(a1.c*a2.r-a1.r*a2.c)/det, id=V.length; V.push({x:x,y:y});
+        onLine[i2].push({id:id,t:-a1.s*x+a1.c*y}); onLine[j].push({id:id,t:-a2.s*x+a2.c*y}); }
+      var E=[]; onLine.forEach(function(arr){ arr.sort(function(p,q){ return p.t-q.t; }); for(var k=0;k+1<arr.length;k++) E.push([arr[k].id,arr[k+1].id]); });
+      var order=V.map(function(_,k){ return k; }).sort(function(){ return Math.random()-.5; }), R=Math.min(W,H0)/2-40;
+      order.forEach(function(v,k){ var ang=2*Math.PI*k/V.length; V[v].x=W/2+R*Math.cos(ang); V[v].y=H0/2+R*Math.sin(ang); });
+      return {V:V,E:E};
+    }
+    function cross(p1,p2,p3,p4){ function o(a,b,c){ return (b.x-a.x)*(c.y-a.y)-(b.y-a.y)*(c.x-a.x); }
+      var d1=o(p3,p4,p1), d2=o(p3,p4,p2), d3=o(p1,p2,p3), d4=o(p1,p2,p4); return ((d1>0)!==(d2>0))&&((d3>0)!==(d4>0))&&d1*d2!==0&&d3*d4!==0; }
+    function crossings(){ var bad={}, n=0; for(var i=0;i<G.E.length;i++) for(var j=i+1;j<G.E.length;j++){ var e=G.E[i], f=G.E[j];
+        if(e[0]===f[0]||e[0]===f[1]||e[1]===f[0]||e[1]===f[1]) continue;
+        if(cross(G.V[e[0]],G.V[e[1]],G.V[f[0]],G.V[f[1]])){ bad[i]=bad[j]=1; n++; } } return {n:n,bad:bad}; }
+    function build(){
+      gE.innerHTML=''; gV.innerHTML='';
+      G.lines=G.E.map(function(){ var l=document.createElementNS(NS,'line'); l.setAttribute('stroke-width','3'); l.setAttribute('stroke-linecap','round'); gE.appendChild(l); return l; });
+      G.dots=G.V.map(function(v,k){ var c=document.createElementNS(NS,'circle'); c.setAttribute('r','11'); c.setAttribute('fill','#F3F1FF'); c.setAttribute('stroke','#15173B'); c.setAttribute('stroke-width','3'); c.style.cursor='grab'; c.dataset.k=k; gV.appendChild(c); return c; });
+      draw();
+    }
+    function draw(){
+      var c=crossings(); G.E.forEach(function(e,i){ var l=G.lines[i]; l.setAttribute('x1',G.V[e[0]].x); l.setAttribute('y1',G.V[e[0]].y); l.setAttribute('x2',G.V[e[1]].x); l.setAttribute('y2',G.V[e[1]].y); l.setAttribute('stroke',c.bad[i]?'#FF6B8B':(done?'#5BE3A6':'#4FD8E8')); l.setAttribute('opacity',c.bad[i]?'1':'.85'); });
+      G.V.forEach(function(v,k){ G.dots[k].setAttribute('cx',v.x); G.dots[k].setAttribute('cy',v.y); });
+      return c.n;
+    }
+    function hud(n){ var s=done?G.secs:Math.floor((Date.now()-t0)/1000); $('hud').innerHTML='<span>Level <b>'+st.level+'</b></span><span>Crossings <b>'+n+'</b></span><span>Time <b>'+Math.floor(s/60)+':'+String(s%60).padStart(2,'0')+'</b></span><span>Run score <b>'+st.total.toLocaleString()+'</b></span>'; }
+    function lines(){ return Math.min(12,3+st.level); }
+    function startLevel(){
+      done=false; ov.hidden=true; G=gen(lines());
+      build(); var n=draw(); if(n===0){ startLevel(); return; } t0=Date.now(); moves=0; clearInterval(timer); timer=setInterval(function(){ if(!done) hud(draw()); },500); hud(n);
+    }
+    function solved(){
+      done=true; G.secs=Math.floor((Date.now()-t0)/1000); draw();
+      var V=G.V.length, E=G.E.length, F=E-V+2, pts=Math.round(V*12+Math.max(0,240-G.secs)*2);
+      st.total+=pts; st.level++; save('hu_lab_untangle',st); submit('untangle',st.total); paintPicker();
+      ov.hidden=false; ov.innerHTML='<div><h2>Untangled</h2><p>'+V+' points, '+E+' edges, '+F+' regions (counting the outside), in '+G.secs+' s and '+moves+' moves: <b>+'+pts+'</b>.<br><br>Check Euler’s formula on your picture: V − E + F = '+V+' − '+E+' + '+F+' = 2. It holds for every connected planar drawing, which is why some graphs can never be untangled.</p><div class="row" style="justify-content:center"><button class="btn" id="unext">Level '+st.level+'</button><button class="btn secondary" id="ureset">New run</button></div></div>';
+      $('unext').addEventListener('click',startLevel); $('ureset').addEventListener('click',function(){ st={level:1,total:0}; save('hu_lab_untangle',st); startLevel(); });
+    }
+    function pt(e){ var r=svg.getBoundingClientRect(); return {x:(e.clientX-r.left)*W/r.width,y:(e.clientY-r.top)*H0/r.height}; }
+    svg.addEventListener('pointerdown',function(e){ if(done) return; var k=e.target.dataset&&e.target.dataset.k; if(k==null) return; drag=+k; svg.setPointerCapture(e.pointerId); G.dots[drag].setAttribute('fill','#FFC53D'); });
+    svg.addEventListener('pointermove',function(e){ if(drag==null) return; var p=pt(e); G.V[drag].x=Math.max(14,Math.min(W-14,p.x)); G.V[drag].y=Math.max(14,Math.min(H0-14,p.y)); hud(draw()); });
+    function up(){ if(drag==null) return; G.dots[drag].setAttribute('fill','#F3F1FF'); drag=null; moves++; var n=draw(); hud(n); if(n===0&&!done) solved(); }
+    svg.addEventListener('pointerup',up); svg.addEventListener('pointercancel',up);
+    G=gen(lines()); build(); hud(draw());
+    ov.innerHTML='<div><h2>Untangle</h2><p>Level '+st.level+(st.total?', run score '+st.total.toLocaleString():'')+'. Drag the points until no edges cross.</p><div class="row" style="justify-content:center"><button class="btn" id="ugo">'+(st.level>1?'Continue':'Start')+'</button>'+(st.level>1?'<button class="btn secondary" id="unew">New run</button>':'')+'</div></div>';
+    $('ugo').addEventListener('click',startLevel); if($('unew')) $('unew').addEventListener('click',function(){ st={level:1,total:0}; save('hu_lab_untangle',st); startLevel(); });
+    return {stop:function(){ clearInterval(timer); }};
   }
-  function setStatus(t){ $('nstatus').textContent=t; }
-  function drawN(){
-    var st=load('hu_lab_nim',{wins:0,games:0});
-    $('nlevel').textContent=N.h.length?'Level '+N.level+' of 4 · '+N.h.length+' heaps':''; $('nwins').textContent=st.games?st.wins+' won of '+st.games:'';
-    $('heaps').innerHTML=N.h.map(function(n,i){ var s=''; for(var j=0;j<n;j++) s+='<button class="stone" data-h="'+i+'" data-j="'+j+'" aria-label="Heap '+(i+1)+', leave '+j+'"'+(N.over||N.turn!=='you'?' disabled':'')+'></button>';
-      return '<div class="heap">'+'<span class="lbl">'+n+'</span>'+s+'</div>'; }).join('');
-    $('heaps').querySelectorAll('.stone').forEach(function(b){
-      b.addEventListener('mouseenter',function(){ var h=b.dataset.h, j=+b.dataset.j; $('heaps').querySelectorAll('.stone[data-h="'+h+'"]').forEach(function(x){ x.classList.toggle('hot',+x.dataset.j>=j); }); });
-      b.addEventListener('mouseleave',function(){ $('heaps').querySelectorAll('.stone').forEach(function(x){ x.classList.remove('hot'); }); });
-      b.addEventListener('click',function(){ move(+b.dataset.h,+b.dataset.j,'you'); }); });
-    var showBin=load('hu_lab_nim_bin',false)&&st.wins>0;
-    $('nhint').hidden=!(st.wins>0); $('nhint').textContent=showBin?'Hide the binary':'Show the binary';
-    $('ntheory').hidden=!(st.wins>0);
-    var w=Math.max(1,Math.max.apply(null,N.h.concat([1])).toString(2).length);
-    $('nbin').hidden=!showBin||!N.h.length;
-    $('nbin').innerHTML=N.h.map(function(n){ return n.toString(2).padStart(w,'0'); }).join('<br>')+'<br><span style="color:var(--saffron)">'+xor(N.h).toString(2).padStart(w,'0')+' nim-sum</span>';
+
+  /* ================================================================== BILLIARDS LAB */
+  function Billiards(){
+    var W=760,H0=470, cv=document.createElement('canvas'), ctx=cv.getContext('2d'), dpr=Math.min(2,window.devicePixelRatio||1);
+    cv.width=W*dpr; cv.height=H0*dpr; ctx.scale(dpr,dpr); $('screen').appendChild(cv);
+    function rect(x0,y0,x1,y1){ return [[x0,y0],[x1,y0],[x1,y1],[x0,y1]]; }
+    function regular(n,cx,cy,r,rot){ var p=[]; for(var i=0;i<n;i++){ var a=rot+2*Math.PI*i/n; p.push([cx+r*Math.cos(a),cy+r*Math.sin(a)]); } return p; }
+    function circlePts(cx,cy,r){ return {cx:cx,cy:cy,a:r,b:r}; }
+    var LEVELS=[
+      {name:'One cushion',goal:'Pot the ball after exactly 1 cushion.',k:1,poly:rect(40,40,720,430),walls:[[[380,150],[380,430]]],S:[150,350],T:[610,350],
+       lesson:'<b>The mirror trick.</b> Reflect the pocket in the cushion you want to use, and aim straight at the reflection. The reflected path is a straight line, so the angle in equals the angle out for free.'},
+      {name:'Two cushions',goal:'Pot the ball after exactly 2 cushions.',k:2,poly:rect(40,40,720,430),walls:[[[380,40],[380,330]]],S:[140,120],T:[620,130],
+       lesson:'<b>Reflect twice.</b> For two cushions, reflect the pocket in one cushion, then reflect that image in the other. Billiard paths in a rectangle become straight lines in a tiling of reflected rectangles: this “unfolding” is how mathematicians study them.'},
+      {name:'Three cushions',goal:'Pot the ball after exactly 3 cushions.',k:3,poly:rect(40,40,720,430),walls:[],S:[200,235],T:[560,235],
+       lesson:'<b>Unfolding again.</b> Any path with k cushions is a straight line to one of the reflected copies of the pocket. Count the copies at distance k in the tiling and you have counted the possible shots.'},
+      {name:'Hexagon',goal:'Pot the ball after exactly 4 cushions.',k:4,poly:regular(6,380,235,215,0),walls:[[[380,140],[380,330]]],S:[250,235],T:[510,235],
+       lesson:'<b>Hexagonal tilings.</b> The regular hexagon unfolds into a tiling of the plane too, which is why its billiard paths are as tame as the rectangle’s. Most polygons do not tile like this, and their billiards are still being researched.'},
+      {name:'Pentagram',goal:'Return to the cue mark after exactly 5 cushions, on a circular table.',k:5,circle:circlePts(380,235,205),walls:[],S:[380,120],T:[380,120],ret:true,
+       lesson:'<b>Rotation numbers.</b> In a circle every bounce turns the path by the same angle, so the ball returns after n cushions exactly when that angle is a rational multiple of a full turn. From this cue mark only 2/5 of a turn works, which is why your path drew a pentagram. Irrational angles never return, and their paths fill a ring densely.'},
+      {name:'Whispering gallery',goal:'Pot the ball after at least 1 cushion. The table is an ellipse.',k:-1,ellipse:{cx:380,cy:235,a:330,b:195},walls:[[[380,195],[380,275]]],S:[380-Math.sqrt(330*330-195*195),235],T:[380+Math.sqrt(330*330-195*195),235],
+       lesson:'<b>The focus property.</b> Did every shot go in? The ball and the pocket sit on the two foci of the ellipse, and any line through one focus reflects through the other. It is the same geometry that lets a whisper cross a whispering gallery, and it follows from the fact that the distances to the two foci always add up to the same total.'}
+    ];
+    var prog=load('hu_lab_billiards',{done:{},shots:{}}), li=Math.min(LEVELS.length-1,Object.keys(prog.done).length), L, ang=-0.4, aiming=false, anim=null, raf=0, shots=0, msg='';
+    $('howto').innerHTML='<b>How to play.</b> Drag on the table to aim (dragging further from the ball gives finer control), fine-tune with ◀ ▶ or the arrow keys (hold Shift for big steps), then press Shoot or Space. The dashed line only shows the first leg. Every bounce counts as a cushion, including the wooden walls in the middle.<br><br>Score: up to 100 per table, minus 10 for each extra shot.';
+    $('below').innerHTML='<div class="row" style="margin-top:.6rem;justify-content:space-between"><div class="lvls" id="blv"></div><div class="row"><button class="btn secondary" id="bl" type="button" aria-label="Turn left">◀</button><button class="btn secondary" id="br" type="button" aria-label="Turn right">▶</button><button class="btn" id="bshoot" type="button">Shoot</button></div></div><div class="lesson" id="blesson" hidden></div>';
+    function score(){ var s=0; Object.keys(prog.done).forEach(function(k){ s+=Math.max(10,100-10*((prog.shots[k]||1)-1)); }); return s; }
+    function segs(){ var out=[]; if(L.poly){ for(var i=0;i<L.poly.length;i++){ var a=L.poly[i], b=L.poly[(i+1)%L.poly.length]; out.push({a:a,b:b,cushion:true}); } }
+      (L.walls||[]).forEach(function(w){ out.push({a:w[0],b:w[1],cushion:false}); }); return out; }
+    function trace(sx,sy,dx,dy){
+      var path=[[sx,sy]], x=sx,y=sy, cushions=0, total=0, MAX=4200, R=13, result='stop', S=segs();
+      for(var step=0;step<40&&total<MAX;step++){
+        var best=Infinity, nx=0, ny=0;
+        S.forEach(function(s){ var ex=s.b[0]-s.a[0], ey=s.b[1]-s.a[1], den=dx*ey-dy*ex; if(Math.abs(den)<1e-12) return;
+          var t=((s.a[0]-x)*ey-(s.a[1]-y)*ex)/den, u=((s.a[0]-x)*dy-(s.a[1]-y)*dx)/den; if(t>1e-6&&u>=0&&u<=1&&t<best){ best=t; var l=Math.hypot(ex,ey); nx=-ey/l; ny=ex/l; } });
+        var E=L.ellipse||L.circle; if(E){ var px=x-E.cx, py=y-E.cy, A2=dx*dx/(E.a*E.a)+dy*dy/(E.b*E.b), B2=2*(px*dx/(E.a*E.a)+py*dy/(E.b*E.b)), C2=px*px/(E.a*E.a)+py*py/(E.b*E.b)-1, D=B2*B2-4*A2*C2;
+          if(D>=0){ var t2=(-B2+Math.sqrt(D))/(2*A2); if(t2>1e-6&&t2<best){ best=t2; var hx=x+dx*t2-E.cx, hy=y+dy*t2-E.cy; nx=hx/(E.a*E.a); ny=hy/(E.b*E.b); var ln=Math.hypot(nx,ny); nx/=ln; ny/=ln; } } }
+        if(!isFinite(best)) break;
+        best=Math.min(best,MAX-total);
+        /* does this leg pass the pocket? (for return levels, ignore the first leg's start) */
+        var tx=L.T[0]-x, ty=L.T[1]-y, proj=tx*dx+ty*dy;
+        if(proj>0&&proj<best&&!(L.ret&&cushions===0)){ var cx2=x+dx*proj, cy2=y+dy*proj; if(Math.hypot(L.T[0]-cx2,L.T[1]-cy2)<R){ path.push([cx2,cy2]); total+=proj;
+            result=(L.k<0?cushions>=1:cushions===L.k)?'win':'early'; return {path:path,cushions:cushions,result:result}; } }
+        x+=dx*best; y+=dy*best; total+=best; path.push([x,y]); if(total>=MAX) break;
+        var dot=dx*nx+dy*ny; dx-=2*dot*nx; dy-=2*dot*ny; cushions++;
+      }
+      return {path:path,cushions:cushions,result:result};
+    }
+    function setLevel(i){ li=i; L=LEVELS[i]; shots=0; msg=''; anim=null; ang=L.ret?Math.PI/2+0.3:-0.35; $('blesson').hidden=!prog.done[i]; $('blesson').innerHTML=L.lesson; paintLv(); draw(); hud(); }
+    function paintLv(){ $('blv').innerHTML=LEVELS.map(function(l,i){ var open=i===0||prog.done[i-1]; return '<button type="button" class="'+(prog.done[i]?'done ':'')+(i===li?'cur':'')+'" data-i="'+i+'"'+(open?'':' disabled')+' title="'+esc(l.name)+'">'+(i+1)+'</button>'; }).join('');
+      $('blv').querySelectorAll('button').forEach(function(b){ b.addEventListener('click',function(){ setLevel(+b.dataset.i); }); }); }
+    function hud(){ $('hud').innerHTML='<span>'+esc(L.name)+'</span><span style="font-weight:500;color:var(--ink-soft)">'+esc(L.goal)+'</span><span>Shots <b>'+shots+'</b></span><span>Score <b>'+score()+'</b></span>'+(msg?'<span style="color:'+(msg.indexOf('In')===0?'var(--mint)':'var(--rose)')+'">'+msg+'</span>':''); }
+    function shoot(){ if(anim||!$('lockwall').hidden) return; shots++; var r=trace(L.S[0],L.S[1],Math.cos(ang),Math.sin(ang)); anim={r:r,t:0,len:pathLen(r.path)}; last=performance.now(); cancelAnimationFrame(raf); raf=requestAnimationFrame(loop); }
+    function pathLen(p){ var s=0; for(var i=1;i<p.length;i++) s+=Math.hypot(p[i][0]-p[i-1][0],p[i][1]-p[i-1][1]); return s; }
+    var last=0;
+    function loop(now){ var dt=(now-last)/1000; last=now; anim.t+=dt*(reduceMotion?4000:900); draw(); if(anim.t<anim.len) raf=requestAnimationFrame(loop); else finish(); }
+    function finish(){ var r=anim.r; anim.done=true;
+      if(r.result==='win'){ msg='In, after '+r.cushions+' cushion'+(r.cushions===1?'':'s')+'!'; if(!prog.done[li]){ prog.done[li]=1; prog.shots[li]=shots; } else prog.shots[li]=Math.min(prog.shots[li]||99,shots);
+        save('hu_lab_billiards',prog); submit('billiards',score()); paintPicker(); $('blesson').hidden=false; paintLv(); }
+      else if(r.result==='early') msg='Pocketed after '+r.cushions+' cushion'+(r.cushions===1?'':'s')+': not the count asked for.';
+      else msg='Missed. '+r.cushions+' cushions before it stopped.';
+      hud(); draw(); setTimeout(function(){ if(anim&&anim.done){ anim=null; draw(); } },1400); }
+    function draw(){
+      ctx.clearRect(0,0,W,H0); ctx.fillStyle='#08140F'; ctx.fillRect(0,0,W,H0);
+      ctx.save(); ctx.beginPath(); if(L.poly){ L.poly.forEach(function(p,i){ if(i) ctx.lineTo(p[0],p[1]); else ctx.moveTo(p[0],p[1]); }); ctx.closePath(); } else { var E=L.ellipse||L.circle; ctx.ellipse(E.cx,E.cy,E.a,E.b,0,0,2*Math.PI); }
+      var g=ctx.createRadialGradient(W/2,H0/2,40,W/2,H0/2,420); g.addColorStop(0,'#17694A'); g.addColorStop(1,'#0E3F2D'); ctx.fillStyle=g; ctx.fill(); ctx.lineWidth=10; ctx.strokeStyle='#6B4423'; ctx.stroke(); ctx.lineWidth=2; ctx.strokeStyle='#C9A36B'; ctx.stroke(); ctx.restore();
+      (L.walls||[]).forEach(function(w){ ctx.strokeStyle='#C9A36B'; ctx.lineWidth=8; ctx.lineCap='round'; ctx.beginPath(); ctx.moveTo(w[0][0],w[0][1]); ctx.lineTo(w[1][0],w[1][1]); ctx.stroke(); });
+      if(!L.ret){ ctx.fillStyle='#050807'; ctx.beginPath(); ctx.arc(L.T[0],L.T[1],15,0,2*Math.PI); ctx.fill(); ctx.strokeStyle='#FFC53D'; ctx.lineWidth=2; ctx.stroke(); }
+      else { ctx.strokeStyle='#FFC53D'; ctx.setLineDash([4,4]); ctx.beginPath(); ctx.arc(L.T[0],L.T[1],15,0,2*Math.PI); ctx.stroke(); ctx.setLineDash([]); }
+      if(anim){ var p=anim.r.path, left=anim.t, bx=p[0][0], by=p[0][1];
+        ctx.strokeStyle='rgba(255,255,255,.55)'; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(p[0][0],p[0][1]);
+        for(var i=1;i<p.length;i++){ var sl=Math.hypot(p[i][0]-p[i-1][0],p[i][1]-p[i-1][1]); if(left>=sl){ ctx.lineTo(p[i][0],p[i][1]); left-=sl; bx=p[i][0]; by=p[i][1]; } else { var f=left/sl; bx=p[i-1][0]+(p[i][0]-p[i-1][0])*f; by=p[i-1][1]+(p[i][1]-p[i-1][1])*f; ctx.lineTo(bx,by); left=-1; break; } }
+        ctx.stroke(); ball(bx,by); }
+      else { var r=trace(L.S[0],L.S[1],Math.cos(ang),Math.sin(ang)), q=r.path[1]||r.path[0]; ctx.setLineDash([6,7]); ctx.strokeStyle='rgba(255,255,255,.7)'; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(L.S[0],L.S[1]); ctx.lineTo(q[0],q[1]); ctx.stroke(); ctx.setLineDash([]);
+        ctx.fillStyle='rgba(255,255,255,.12)'; ctx.font='600 12px "IBM Plex Sans",system-ui'; ctx.fillText((((ang*180/Math.PI)%360+360)%360).toFixed(1)+'°',L.S[0]+14,L.S[1]-14); ball(L.S[0],L.S[1]); }
+    }
+    function ball(x,y){ var g=ctx.createRadialGradient(x-3,y-3,1,x,y,8); g.addColorStop(0,'#fff'); g.addColorStop(1,'#cfd3e8'); ctx.fillStyle=g; ctx.beginPath(); ctx.arc(x,y,8,0,2*Math.PI); ctx.fill(); }
+    function pt(e){ var r=cv.getBoundingClientRect(); return {x:(e.clientX-r.left)*W/r.width,y:(e.clientY-r.top)*H0/r.height}; }
+    cv.addEventListener('pointerdown',function(e){ if(anim) return; aiming=true; cv.setPointerCapture(e.pointerId); var p=pt(e); ang=Math.atan2(p.y-L.S[1],p.x-L.S[0]); draw(); });
+    cv.addEventListener('pointermove',function(e){ if(!aiming) return; var p=pt(e); ang=Math.atan2(p.y-L.S[1],p.x-L.S[0]); draw(); });
+    function stopAim(){ aiming=false; }
+    cv.addEventListener('pointerup',stopAim); cv.addEventListener('pointercancel',stopAim);
+    function nudge(d){ if(anim) return; ang+=d; draw(); }
+    $('bl').addEventListener('click',function(e){ nudge(e.shiftKey?-0.0175:-0.0035); }); $('br').addEventListener('click',function(e){ nudge(e.shiftKey?0.0175:0.0035); });
+    $('bshoot').addEventListener('click',shoot);
+    function onKey(e){ if(current!=='billiards'||!$('lockwall').hidden||e.target.tagName==='INPUT'||e.target.tagName==='BUTTON'&&e.key===' ') return; if(e.key==='ArrowLeft'||e.key==='ArrowDown'){ ang-=e.shiftKey?0.0175:0.0035; draw(); e.preventDefault(); } else if(e.key==='ArrowRight'||e.key==='ArrowUp'){ ang+=e.shiftKey?0.0175:0.0035; draw(); e.preventDefault(); } else if(e.key===' '){ e.preventDefault(); shoot(); } }
+    document.addEventListener('keydown',onKey);
+    setLevel(li);
+    return {stop:function(){ cancelAnimationFrame(raf); document.removeEventListener('keydown',onKey); }};
   }
-  function move(i,leave,who){
-    if(N.over||N.turn!==who) return; N.h[i]=leave; if(!N.h[i]) N.h.splice(i,1);
-    if(!N.h.length){ endNim(who); return; }
-    N.turn=who==='you'?'bot':'you'; drawN();
-    if(N.turn==='bot'){ setStatus('The bot is thinking…'); setTimeout(botMove,700); } else setStatus('Your move.');
+
+  /* ------------------------------------------------ start */
+  function boot(){
+    paintPicker();
+    var want=(location.hash||'').slice(1); if(!GAMES.some(function(g){ return g.id===want; })) want=load('hu_lab_last','factor');
+    open(want);
+    function s(){ if(H()) H().coins.sync(H().snapshot(),true).then(function(){ gate(); }); }
+    if(A()) s(); else window.addEventListener('hu-auth-ready',s,{once:true});
+    window.addEventListener('hu-wallet',gate); window.addEventListener('hu-auth-event',function(){ setTimeout(s,900); });
+    var tries=0; (function again(){ if(tries++<6){ setTimeout(function(){ gate(); if(!$('lockwall').hidden) again(); },1500); } })();
   }
-  function botMove(){
-    var x=xor(N.h), i, t;
-    if(x){ for(i=0;i<N.h.length;i++){ t=N.h[i]^x; if(t<N.h[i]){ move(i,t,'bot'); return; } } }
-    i=0; for(var k=1;k<N.h.length;k++) if(N.h[k]>N.h[i]) i=k;          /* lost position: take one and hope */
-    move(i,N.h[i]-1,'bot');
-  }
-  function endNim(who){
-    N.over=true; var st=load('hu_lab_nim',{wins:0,games:0}); st.games++; if(who==='you') st.wins++; save('hu_lab_nim',st);
-    drawN(); setStatus(who==='you'?(st.wins===1?'You beat it. The theory below is now open.':'You took the last stone. You win.'):'The bot took the last stone. Every start was winnable: find the pattern.');
-  }
-  $('nnew').addEventListener('click',newNim);
-  $('nhint').addEventListener('click',function(){ save('hu_lab_nim_bin',!load('hu_lab_nim_bin',false)); drawN(); });
-  drawN(); setStatus('Press New game to start.');
+  (function ready(){ if(window.HU_REWARDS) boot(); else setTimeout(ready,80); })();
 })();
 </script>
 </body>
