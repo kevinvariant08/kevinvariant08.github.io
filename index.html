@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Kevin Hu - Mathematics</title>
+  <title>Kevinvariant | TMUA and olympiad practice</title>
   <meta name="description" content="Original olympiad geometry, TMUA mock papers harder than the real thing, and tools to practise them: timed drills, a question bank, a race against a bot, and mock interviews.">
   <link rel="icon" href="/favicon.ico" sizes="32x32">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
@@ -82,8 +82,8 @@
   <main class="home">
     <section class="hero">
       <div>
-        <h1>Kevin Hu</h1>
-        <p class="lede">Sixth-form mathematician at Dubai College, BMO1 silver medallist, and author of <em>Beyond the Incenter</em>. Here you'll find original olympiad problems, TMUA papers that are harder than the real thing, and tools for practising them properly.</p>
+        <h1>Kevinvariant</h1>
+        <p class="lede">Original olympiad problems, TMUA papers that are harder than the real thing, and tools for practising them properly. A little every day adds up.</p>
         <div class="cta">
           <a class="btn" href="drill.html?paper=J1">Sit the newest mock</a>
           <a class="btn secondary" href="arena.html">Race the bot</a>
@@ -98,8 +98,8 @@
 
     <section class="setc smcdrop" aria-labelledby="smc-h">
       <h2 id="smc-h">UKMT Senior Mathematical Challenge 2026: full solutions</h2>
-      <p>My solutions to all 25 problems, with every diagram redrawn in tkz-euclide. They unlock for everyone at <b>19:15 today, Thursday 8 October, UAE time</b>. No code or account needed.</p>
-      <div class="smcrow"><div class="smcclock" id="smc-clock" aria-live="polite">Locked</div><a class="btn" id="smc-btn" href="#" aria-disabled="true">Locked until 19:15</a></div>
+      <p>My solutions to all 25 problems, with every diagram redrawn in tkz-euclide. Released on 8 October and free for everyone. No code or account needed.</p>
+      <div class="smcrow"><div class="smcclock" id="smc-clock" aria-live="polite">Unlocked</div><a class="btn" id="smc-btn" href="#">Read the solutions</a></div>
       <p class="lockline" id="smc-msg"></p>
     </section>
 
@@ -273,7 +273,7 @@
       </div>
     </div>
   </main>
-  <footer class="site-foot">Kevin Hu, Dubai College. Everything on this site is original work; scores and progress stay in your browser unless you choose to log them.</footer>
+  <footer class="site-foot">Kevinvariant. Everything on this site is original work; scores and progress stay in your browser unless you choose to log them.</footer>
 
 <script src="site.js?v=20260929"></script>
 <script>
@@ -355,7 +355,7 @@
       try{ if(window.HU_LOCKS) await HU_LOCKS.ready(); var c=window.HU_AUTH&&window.HU_AUTH.client; if(!c) throw 0;
         var r=await c.storage.from('locked').createSignedUrl('SMC26/solutions.pdf',3600); if(r.error) throw r.error;
         msg.textContent=''; window.open(r.data.signedUrl,'_blank'); }
-      catch(err){ msg.textContent='Not available yet. If it is past 19:15, refresh the page in a minute.'; } };
+      catch(err){ msg.textContent='Could not open the solutions just now. Refresh the page and try again.'; } };
   }
   function tick(){ var d=RELEASE-Date.now(); if(d<=0){ clearInterval(t); open(); return; }
     var s=Math.floor(d/1000), h=Math.floor(s/3600), m=Math.floor(s%3600/60); clock.textContent=h+':'+pad(m)+':'+pad(s%60); }
