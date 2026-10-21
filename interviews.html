@@ -9,9 +9,7 @@
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
   <meta name="theme-color" content="#F3F1FF">
-  <link rel="stylesheet" href="style.css?v=20260929">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=20261021">
   <style>
     .iv{--ink:#F3F1FF;--soft:#BDBBE6;--faint:#8A89BD;--rule:#343A82;--warn:#FFC53D;--urgent:#FF6B8B;--mark:#5BE3A6;--paper:#15173B;
         --serif:"IBM Plex Serif",Georgia,serif;--sans:"Bricolage Grotesque","IBM Plex Sans",system-ui,sans-serif;
@@ -30,6 +28,7 @@
     .iv textarea{width:100%;min-height:5.5rem;resize:vertical;line-height:1.5}
     .iv .row{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;margin-top:.9rem}
     .iv .settings{border:1px solid var(--rule);padding:1rem 1.2rem;margin:1.4rem 0}
+    .iv .settings select{max-width:100%}
     .iv .settings label{display:block;font-size:.9rem;color:var(--soft);margin-top:.7rem}
     .iv .settings small{color:var(--faint)}
     .iv .plist{margin:1.6rem 0}
@@ -84,7 +83,7 @@
 </head>
 <body data-theme-v2>
 
-  <nav id="sitenav"><div class="nav-links"><a href="https://kevinvariant08.github.io/index.html">Home</a> <a href="https://kevinvariant08.github.io/drill.html">Drill</a> <a href="https://kevinvariant08.github.io/arena.html">Arena</a> <a href="https://kevinvariant08.github.io/bank.html">Question bank</a></div></nav>
+  <nav id="sitenav"><div class="nav-links"><a href="index.html">Home</a> <a href="drill.html">Drill</a> <a href="arena.html">Arena</a> <a href="bank.html">Question bank</a></div></nav>
 
   <main class="container iv">
 
@@ -583,6 +582,6 @@ async function endInterview(){
 
 loadCfg(); renderHub();
 </script>
-<script src="site.js?v=20260929"></script>
+<script src="site.js?v=20261021"></script>
 </body>
 </html>

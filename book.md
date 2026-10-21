@@ -3,7 +3,7 @@
 
 ![Beyond the Incenter Cover](cover-mockup.png)
 
-**[Buy the Paperback on Amazon ➔](your-amazon-link)**
+**[Buy on Amazon ➔](https://www.amazon.co.uk/dp/B0HCDN9VFL)**
 
 ---
 

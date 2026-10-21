@@ -8,7 +8,7 @@
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <meta name="theme-color" content="#15173B">
-  <link rel="stylesheet" href="style.css?v=20260929">
+  <link rel="stylesheet" href="style.css?v=20261021">
   <script>window.MathJax={tex:{inlineMath:[['$','$']],displayMath:[['\\[','\\]']],processEscapes:true},options:{skipHtmlTags:['script','noscript','style','textarea','pre']}};</script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js" async></script>
   <style>
@@ -38,8 +38,8 @@
 <main class="wrap">
   <section class="panel hero lk-hero">
     <h1>Locked papers</h1>
-    <p>New HU Collection papers start locked. I post challenges from time to time, and the winners get a code that unlocks the newest paper. Once you unlock a paper it stays unlocked on your account, on every device.</p>
-    <p id="social" hidden>Challenges are posted on <a id="socialLink" target="_blank" rel="noopener"></a>.</p>
+    <p>The newest TMUA mock sets start locked. Challenges are posted from time to time, and winners get a code that unlocks a paper. Set I can also be unlocked with coins in the <a href="shop.html">Shop</a>. Once you unlock a paper it stays unlocked on your account, on every device. <a href="how-it-works.html#access">How access works</a>.</p>
+    <p id="social">Challenges are posted on Instagram: <a id="socialLink" href="https://www.instagram.com/kevinvariant/" target="_blank" rel="noopener">@kevinvariant</a>.</p>
   </section>
 
   <section class="panel" aria-labelledby="code-h">
@@ -69,11 +69,11 @@
   </section>
 </main>
 <script src="questions.js?v=20260929"></script>
-<script src="site.js?v=20260929"></script>
+<script src="site.js?v=20261021"></script>
 <script src="locks.js?v=20260929"></script>
 <script>
 /* Your challenge account, shown on this page once filled in. */
-var SOCIAL={label:'',url:''};   /* e.g. {label:'Instagram @kevinvariant', url:'https://instagram.com/kevinvariant'} */
+var SOCIAL={label:'@kevinvariant',url:'https://www.instagram.com/kevinvariant/'};
 if(SOCIAL.url){ var a=document.getElementById('socialLink'); a.href=SOCIAL.url; a.textContent=SOCIAL.label||SOCIAL.url; document.getElementById('social').hidden=false; }
 
 var focusPaper=new URLSearchParams(location.search).get('paper');

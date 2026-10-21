@@ -9,9 +9,9 @@
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
   <meta name="theme-color" content="#F3F1FF">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=20261021">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&display=swap" rel="stylesheet">
   <style>
     .sb{--ink:#F3F1FF;--soft:#BDBBE6;--faint:#8A89BD;--rule:#343A82;--paper:#15173B;--grid:rgba(143,150,255,.08);
         --stable:#5BE3A6;--maybe:#FFC53D;--derived:#4FD8E8;--circ:#FF6B8B;--dline:#FFC53D;
@@ -63,11 +63,11 @@
     .sb select{font-family:var(--sans);font-size:.85rem;padding:.3rem .5rem;border:1px solid var(--rule);border-radius:2px;background:#0F1130;color:var(--ink)}
   </style>
   <script>window.MathJax={tex:{inlineMath:[["$","$"]],displayMath:[["\\[","\\]"]],processEscapes:true},options:{skipHtmlTags:["script","noscript","style","textarea","pre","svg"]}};</script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js" async></script>
 </head>
 <body data-theme-v2>
 
-  <nav id="sitenav"><div class="nav-links"><a href="https://kevinvariant08.github.io/index.html">Home</a> <a href="https://kevinvariant08.github.io/drill.html">Drill</a> <a href="https://kevinvariant08.github.io/arena.html">Arena</a> <a href="https://kevinvariant08.github.io/bank.html">Question bank</a></div></nav>
+  <nav id="sitenav"><div class="nav-links"><a href="index.html">Home</a> <a href="drill.html">Drill</a> <a href="arena.html">Arena</a> <a href="bank.html">Question bank</a></div></nav>
 
   <main class="container sb">
     <h1>Conjecture sandbox</h1>
@@ -718,6 +718,6 @@ svg.addEventListener('pointermove',function(e){ if(!pan) return; var r=svg.getBo
 svg.addEventListener('pointerup',function(e){ if(!pan) return; pan=null; svg.style.cursor=''; e.stopImmediatePropagation(); },true);
 renderTools(); draw();
 </script>
-<script src="site.js?v=20260928"></script>
+<script src="site.js?v=20261021"></script>
 </body>
 </html>

@@ -8,7 +8,7 @@
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <meta name="theme-color" content="#15173B">
-  <link rel="stylesheet" href="style.css?v=20260929">
+  <link rel="stylesheet" href="style.css?v=20261021">
   <script>window.MathJax={tex:{inlineMath:[['$','$']],displayMath:[['\\[','\\]']],processEscapes:true},options:{skipHtmlTags:['script','noscript','style','textarea','pre']}};</script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js" async></script>
   <style>
@@ -23,6 +23,8 @@
     .legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:.45rem;vertical-align:-1px}
     .filters{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr auto;gap:.7rem;margin:1.6rem 0 .8rem;align-items:end}
     @media (max-width:860px){.filters{grid-template-columns:1fr 1fr}}
+    .filters>*{min-width:0}
+    .filters input,.filters select{width:100%;max-width:100%}
     .filters label{font-size:.82rem;color:var(--ink-faint);display:flex;flex-direction:column;gap:.25rem}
     .filters input,.filters select{font-family:var(--display);font-size:.95rem;background:var(--bg-deep);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:.55rem .7rem;min-height:42px}
     .count{color:var(--ink-faint);font-size:.9rem;margin:.2rem 0 .6rem}
@@ -82,7 +84,7 @@
     <ul class="list" id="list"></ul>
   </main>
 
-<script src="site.js?v=20260929"></script>
+<script src="site.js?v=20261021"></script>
 <script src="questions.js?v=20260927"></script>
 <script>
 (function(){

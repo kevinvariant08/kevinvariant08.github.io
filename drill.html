@@ -9,11 +9,9 @@
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
   <meta name="theme-color" content="#F3F1FF">
-  <link rel="stylesheet" href="style.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=20261021">
   <script>window.MathJax={tex:{inlineMath:[['$','$']],displayMath:[['\\[','\\]']],processEscapes:true},options:{skipHtmlTags:['script','noscript','style','textarea','pre']}};</script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js" async></script>
   <style>
     .hu{--ink:#F3F1FF;--soft:#BDBBE6;--faint:#8A89BD;--rule:#343A82;--paper:#15173B;--ok:#5BE3A6;--bad:#FF6B8B;--warn:#FFC53D;--acc:#4FD8E8;--acc2:rgba(79,216,232,.35);
         --serif:"IBM Plex Serif",Georgia,serif;--sans:"Bricolage Grotesque","IBM Plex Sans",system-ui,sans-serif;font-family:var(--sans);color:var(--ink);line-height:1.55}
@@ -83,7 +81,7 @@
   </style>
 </head>
 <body data-theme-v2>
-  <nav id="sitenav"><div class="nav-links"><a href="https://kevinvariant08.github.io/index.html">Home</a> <a href="https://kevinvariant08.github.io/drill.html">Drill</a> <a href="https://kevinvariant08.github.io/arena.html">Arena</a> <a href="https://kevinvariant08.github.io/bank.html">Question bank</a></div></nav>
+  <nav id="sitenav"><div class="nav-links"><a href="index.html">Home</a> <a href="drill.html">Drill</a> <a href="arena.html">Arena</a> <a href="bank.html">Question bank</a></div></nav>
   <main class="container hu">
 
     <section id="hub">
@@ -340,7 +338,7 @@ document.getElementById('startWeak').addEventListener('click',function(){ var id
 window.addEventListener('beforeunload',function(e){ if(S&&S.mode==='paper'){ e.preventDefault(); e.returnValue=''; } });
 renderHub();
 </script>
-<script src="site.js?v=20260929"></script>
+<script src="site.js?v=20261021"></script>
 <script src="locks.js?v=20260929"></script>
 </body>
 </html>
