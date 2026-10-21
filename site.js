@@ -36,10 +36,15 @@
     +'<div><b>About</b><a href="how-it-works.html">How it works</a><a href="how-it-works.html#difficulty">Difficulty scale</a><a href="how-it-works.html#access">Free and locked papers</a><a href="book.html">Beyond the Incenter</a></div>'
     +'</div><p>Kevinvariant: free TMUA and olympiad preparation. Scores and progress stay in your browser unless you sign in to sync them.</p>';
   var here=(location.pathname.split('/').pop()||'index.html').toLowerCase();
+  var MOON='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>',
+      SUN='<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>';
+  /* Light is the default. Dark is remembered per browser; the labs pages lock themselves to dark. */
+  function isDark(){ return document.documentElement.getAttribute('data-mode')==='dark'; }
+  function paintMode(b){ var d=isDark(); b.innerHTML=d?SUN:MOON; b.setAttribute('aria-label',d?'Switch to light mode':'Switch to dark mode'); b.title=b.getAttribute('aria-label'); }
   function caret(){return '<svg class="caret" viewBox="0 0 10 10" aria-hidden="true"><path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>';}
   function build(nav){
     var h='<div class="bar"><a class="brand" href="index.html">'+LOGO+'<span>Kevinvariant</span></a>'
-      +'<button class="toggle" type="button" aria-expanded="false" aria-controls="navlinks">Menu</button><ul class="links" id="navlinks">';
+      +'<button class="mode" type="button"></button><button class="toggle" type="button" aria-expanded="false" aria-controls="navlinks">Menu</button><ul class="links" id="navlinks">';
     GROUPS.forEach(function(g,i){
       if(g.href){ h+='<li class="sec-'+g.sec+'"><a href="'+g.href+'"'+(g.href===here?' aria-current="page"':'')+'>'+g.label+'</a></li>'; return; }
       var cur=g.items.some(function(it){return it.href===here;});
@@ -53,6 +58,11 @@
     menus.forEach(function(b){ b.addEventListener('click',function(e){ e.stopPropagation(); var open=b.getAttribute('aria-expanded')!=='true'; closeAll(b); b.setAttribute('aria-expanded',String(open)); document.getElementById(b.getAttribute('aria-controls')).classList.toggle('open',open); }); });
     document.addEventListener('click',function(){ closeAll(null); nav.querySelectorAll('.acct .menu.open').forEach(function(m){ m.classList.remove('open'); var b=m.previousElementSibling; if(b) b.setAttribute('aria-expanded','false'); }); });
     document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeAll(null); });
+    var mb=nav.querySelector('.mode'); paintMode(mb);
+    mb.addEventListener('click',function(e){ e.stopPropagation(); var root=document.documentElement, d=!isDark();
+      if(d) root.setAttribute('data-mode','dark'); else root.removeAttribute('data-mode');
+      try{ localStorage.setItem('kv_mode',d?'dark':'light'); }catch(err){}
+      paintMode(mb); window.dispatchEvent(new Event('hu-mode')); });
     var t=nav.querySelector('.toggle'); t.addEventListener('click',function(e){ e.stopPropagation(); var o=!nav.classList.contains('open'); nav.classList.toggle('open',o); t.setAttribute('aria-expanded',String(o)); });
   }
   /* ---------------------------------------------------------- accounts */
@@ -85,7 +95,7 @@
     window.addEventListener('hu-auth-ready',function(){ window.HU_AUTH.onChange(paint); });
     if(window.HU_AUTH) window.HU_AUTH.onChange(paint);
   }
-  function loadRewards(){ if(window.HU_REWARDS) return; var sc=document.createElement('script'); sc.src='rewards.js?v=20260927'; sc.defer=true; document.head.appendChild(sc); }
+  function loadRewards(){ if(window.HU_REWARDS) return; var sc=document.createElement('script'); sc.src='rewards.js?v=20261022'; sc.defer=true; document.head.appendChild(sc); }
   function loadAccounts(){
     if(window.HU_AUTH) return;
     loadScript('auth-config.js?v=20260927').catch(function(){}).then(function(){

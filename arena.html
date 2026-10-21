@@ -7,8 +7,9 @@
   <link rel="icon" href="/favicon.ico" sizes="32x32">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-  <meta name="theme-color" content="#15173B">
-  <link rel="stylesheet" href="style.css?v=20261021">
+  <meta name="theme-color" content="#F6F4EF">
+  <link rel="stylesheet" href="style.css?v=20261022">
+  <script>try{if(localStorage.getItem('kv_mode')==='dark')document.documentElement.setAttribute('data-mode','dark')}catch(e){}</script>
   <script>window.MathJax={tex:{inlineMath:[['$','$']],displayMath:[['\\[','\\]']],processEscapes:true},options:{skipHtmlTags:['script','noscript','style','textarea','pre']}};</script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js" async></script>
   <style>
@@ -31,7 +32,7 @@
     .bot{display:grid;grid-template-columns:2.6rem 1fr auto;gap:.9rem;align-items:center;text-align:left;width:100%;background:var(--bg-deep);border:1.5px solid var(--line-soft);border-radius:14px;padding:.7rem .85rem;color:var(--ink);cursor:pointer;font-family:var(--display)}
     .bot:hover{border-color:var(--ink-soft)}
     .bot[aria-pressed="true"]{border-color:var(--rose);background:var(--rose-wash)}
-    .bot .av{width:2.6rem;height:2.6rem;border-radius:12px;display:grid;place-items:center;font-weight:800;color:#15173B}
+    .bot .av{width:2.6rem;height:2.6rem;border-radius:12px;display:grid;place-items:center;font-weight:800;color:var(--on-accent)}
     .bot b{display:block;font-size:1.02rem}
     .bot small{color:var(--ink-soft);font-size:.86rem}
     .bot .elo{font-size:.82rem;color:var(--ink-faint);font-variant-numeric:tabular-nums}
@@ -60,7 +61,7 @@
     .lane .flag{color:var(--aqua);font-weight:600}
     .qcard{background:var(--surface);border:1px solid var(--line-soft);border-radius:var(--r-lg);padding:1.3rem 1.4rem}
     .qhead{display:flex;justify-content:space-between;gap:1rem;font-size:.86rem;color:var(--ink-faint);margin-bottom:.6rem}
-    .qhead .rt{font-weight:700;color:#15173B;border-radius:8px;padding:.05rem .5rem}
+    .qhead .rt{font-weight:700;color:var(--on-accent);border-radius:8px;padding:.05rem .5rem}
     .qtext{font-family:var(--serif);font-size:1.08rem;line-height:1.7}
     .qtext .c{text-align:center;margin:.6rem 0}
     .qtext ol.stmts{margin:.4rem 0 .4rem 1.6rem;list-style-type:upper-roman;padding-left:1.2rem}
@@ -75,15 +76,15 @@
     .lockrow{display:flex;align-items:center;gap:1rem;margin-top:1rem;flex-wrap:wrap}
     .lockrow .tally{color:var(--ink-faint);font-size:.88rem}
     .result{margin-top:1rem;border-radius:var(--r-lg);padding:1.2rem 1.3rem;border:1px solid var(--line)}
-    .result.you{background:linear-gradient(120deg,rgba(255,107,139,.18),rgba(255,197,61,.10));border-color:rgba(255,107,139,.5)}
-    .result.bot{background:linear-gradient(120deg,rgba(79,216,232,.16),rgba(58,125,232,.10));border-color:rgba(79,216,232,.5)}
+    .result.you{background:linear-gradient(120deg,color-mix(in srgb,var(--rose) 18%,transparent),color-mix(in srgb,var(--saffron) 10%,transparent));border-color:color-mix(in srgb,var(--rose) 50%,transparent)}
+    .result.bot{background:linear-gradient(120deg,color-mix(in srgb,var(--aqua) 16%,transparent),rgba(58,125,232,.10));border-color:color-mix(in srgb,var(--aqua) 50%,transparent)}
     .result h3{margin:0 0 .3rem;font-size:1.35rem}
     .result p{margin:.2rem 0;color:var(--ink-soft)}
-    .sol{font-family:var(--serif);line-height:1.75;color:var(--ink-soft);margin-top:.8rem;padding:1rem 1.1rem;border-left:3px solid var(--aqua);background:rgba(15,17,48,.5);border-radius:0 12px 12px 0}
-    .count{position:fixed;inset:0;display:grid;place-items:center;background:rgba(15,17,48,.72);z-index:60;font-size:clamp(5rem,18vw,11rem);font-weight:800;color:var(--ink);pointer-events:none}
+    .sol{font-family:var(--serif);line-height:1.75;color:var(--ink-soft);margin-top:.8rem;padding:1rem 1.1rem;border-left:3px solid var(--aqua);background:color-mix(in srgb,var(--bg-deep) 50%,transparent);border-radius:0 12px 12px 0}
+    .count{position:fixed;inset:0;display:grid;place-items:center;background:color-mix(in srgb,var(--bg-deep) 72%,transparent);z-index:60;font-size:clamp(5rem,18vw,11rem);font-weight:800;color:var(--ink);pointer-events:none}
     .count span{animation:pop .9s ease both}
     @keyframes pop{0%{transform:scale(.4);opacity:0}30%{transform:scale(1.08);opacity:1}100%{transform:scale(1);opacity:.0}}
-    .toast{position:fixed;left:50%;bottom:1.6rem;transform:translateX(-50%);background:var(--surface-2);border:1px solid var(--aqua);color:var(--ink);padding:.6rem 1.1rem;border-radius:999px;z-index:55;font-weight:600;box-shadow:0 12px 30px rgba(5,6,24,.5)}
+    .toast{position:fixed;left:50%;bottom:1.6rem;transform:translateX(-50%);background:var(--surface-2);border:1px solid var(--aqua);color:var(--ink);padding:.6rem 1.1rem;border-radius:999px;z-index:55;font-weight:600;box-shadow:0 8px 24px rgba(20,22,40,.12)}
     .end{text-align:center;padding:2rem 1rem}
     .end h2{font-size:clamp(2rem,5vw,3rem);margin:0 0 .4rem}
     .end .delta{font-size:1.3rem;font-weight:800}
@@ -97,7 +98,7 @@
     .rungs i{flex:1;border-radius:3px 3px 0 0;background:var(--line-soft)}
     .rungs i.done{background:var(--mint)} .rungs i.miss{background:var(--rose)}
     .flash-ok{animation:fok .5s ease} .flash-bad{animation:fbad .5s ease}
-    @keyframes fok{0%{box-shadow:0 0 0 0 rgba(91,227,166,.7)}100%{box-shadow:0 0 0 18px rgba(91,227,166,0)}}
+    @keyframes fok{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--mint) 70%,transparent)}100%{box-shadow:0 0 0 18px color-mix(in srgb,var(--mint) 0%,transparent)}}
     @keyframes fbad{0%,100%{transform:none}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
     @media (prefers-reduced-motion:reduce){.count span,.flash-ok,.flash-bad{animation:none}}
     #confetti{position:fixed;inset:0;pointer-events:none;z-index:70}
@@ -184,7 +185,7 @@
     <section id="finish" class="hidden"></section>
   </main>
 
-<script src="site.js?v=20261021"></script>
+<script src="site.js?v=20261022"></script>
 <script src="questions.js?v=20260927"></script>
 <script>
 (function(){

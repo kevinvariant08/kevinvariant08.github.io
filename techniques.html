@@ -8,18 +8,19 @@
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
-  <meta name="theme-color" content="#F3F1FF">
-  <link rel="stylesheet" href="style.css?v=20261021">
+  <meta name="theme-color" content="#F6F4EF">
+  <link rel="stylesheet" href="style.css?v=20261022">
+  <script>try{if(localStorage.getItem('kv_mode')==='dark')document.documentElement.setAttribute('data-mode','dark')}catch(e){}</script>
   <style>
-    .tx{--ink:#F3F1FF;--soft:#BDBBE6;--faint:#8A89BD;--rule:#343A82;--paper:#15173B;
-        --serif:"IBM Plex Serif",Georgia,serif;--sans:"Bricolage Grotesque","IBM Plex Sans",system-ui,sans-serif;font-family:var(--sans);color:var(--ink);line-height:1.55}
+    .tx{--soft:var(--ink-soft);--faint:var(--ink-faint);--rule:var(--line);--paper:var(--bg);
+        --serif:"IBM Plex Serif",Georgia,serif;--sans:var(--display);font-family:var(--sans);color:var(--ink);line-height:1.55}
     .tx h2{font-family:var(--serif);font-weight:600}
     .tx p{max-width:68ch}
     .tx .lead{font-size:1.05rem;color:var(--soft)}
     .tx .layout{display:grid;grid-template-columns:230px 1fr;gap:1.6rem;align-items:start;margin-top:1.4rem}
     @media (max-width:800px){.tx .layout{grid-template-columns:1fr}}
     .tx .layout>*{min-width:0}
-    .tx input[type=search]{width:100%;font-family:var(--sans);font-size:.95rem;padding:.5rem .7rem;border:1px solid var(--rule);border-radius:2px;background:#0F1130;color:var(--ink);margin-bottom:.8rem}
+    .tx input[type=search]{width:100%;font-family:var(--sans);font-size:.95rem;padding:.5rem .7rem;border:1px solid var(--rule);border-radius:2px;background:var(--bg-deep);color:var(--ink);margin-bottom:.8rem}
     .tx .chips{display:flex;flex-direction:column;gap:.15rem}
     .tx .chip{display:flex;justify-content:space-between;align-items:baseline;font-size:.92rem;text-align:left;background:transparent;border:0;border-left:2px solid transparent;padding:.3rem .6rem;cursor:pointer;color:var(--ink);font-family:var(--sans)}
     .tx .chip:hover{border-left-color:var(--rule)}
@@ -303,6 +304,6 @@ function render(){
 document.getElementById('q').addEventListener('input',function(e){q=e.target.value;render();});
 render();
 </script>
-<script src="site.js?v=20261021"></script>
+<script src="site.js?v=20261022"></script>
 </body>
 </html>

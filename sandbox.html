@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-mode="dark" data-mode-lock>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -9,7 +9,8 @@
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
   <meta name="theme-color" content="#F3F1FF">
-  <link rel="stylesheet" href="style.css?v=20261021">
+  <link rel="stylesheet" href="style.css?v=20261022">
+  <script>try{if(localStorage.getItem('kv_mode')==='dark')document.documentElement.setAttribute('data-mode','dark')}catch(e){}</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&display=swap" rel="stylesheet">
   <style>
@@ -718,6 +719,6 @@ svg.addEventListener('pointermove',function(e){ if(!pan) return; var r=svg.getBo
 svg.addEventListener('pointerup',function(e){ if(!pan) return; pan=null; svg.style.cursor=''; e.stopImmediatePropagation(); },true);
 renderTools(); draw();
 </script>
-<script src="site.js?v=20261021"></script>
+<script src="site.js?v=20261022"></script>
 </body>
 </html>

@@ -45,7 +45,10 @@
     {id:'parchment',name:'Parchment Night',lvl:1e9,shop:'theme-parchment',v:{'--aqua':'#E8C38A','--rose':'#D9826A','--saffron':'#F3DDA6','--mint':'#A9C98B','--bg':'#1B150E','--bg-deep':'#120E09','--surface':'#261D13','--surface-2':'#302418','--line':'#55412A','--line-soft':'#42331F','--ink':'#F6ECD9','--ink-soft':'#DCCBAE','--ink-faint':'#A5927A','--grid':'232,195,138'}}];
   function applyTheme(id){ var t=THEMES.filter(function(x){return x.id===id;})[0]||THEMES[0], root=document.documentElement;
     THEMES.forEach(function(x){ Object.keys(x.v).forEach(function(k){ root.style.removeProperty(k); }); });
-    Object.keys(t.v).forEach(function(k){ root.style.setProperty(k,t.v[k]); }); root.setAttribute('data-theme',t.id); }
+    /* reward themes are dark palettes, so they only apply in dark mode */
+    if(root.getAttribute('data-mode')==='dark') Object.keys(t.v).forEach(function(k){ root.style.setProperty(k,t.v[k]); });
+    root.setAttribute('data-theme',t.id); }
+  window.addEventListener('hu-mode',function(){ applyTheme(state().theme); });
   /* ---------------- stored state (synced by account.js) */
   function state(){ var R=load('hu_rewards',{}); R.bank=R.bank||{}; R.daily=R.daily||{}; R.claimed=R.claimed||{}; R.frozen=R.frozen||[]; R.milestones=R.milestones||[]; R.theme=R.theme||'indigo'; return R; }
 

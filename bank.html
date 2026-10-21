@@ -7,15 +7,16 @@
   <link rel="icon" href="/favicon.ico" sizes="32x32">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-  <meta name="theme-color" content="#15173B">
-  <link rel="stylesheet" href="style.css?v=20261021">
+  <meta name="theme-color" content="#F6F4EF">
+  <link rel="stylesheet" href="style.css?v=20261022">
+  <script>try{if(localStorage.getItem('kv_mode')==='dark')document.documentElement.setAttribute('data-mode','dark')}catch(e){}</script>
   <script>window.MathJax={tex:{inlineMath:[['$','$']],displayMath:[['\\[','\\]']],processEscapes:true},options:{skipHtmlTags:['script','noscript','style','textarea','pre']}};</script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js" async></script>
   <style>
     .qb{max-width:66rem}
     .qb .lede{max-width:44rem}
     .hist{display:flex;align-items:flex-end;gap:4px;height:110px;margin:1.6rem 0 .3rem;padding:0 .2rem;border-bottom:1px solid var(--line)}
-    .hist button{flex:1;border:0;padding:0;border-radius:6px 6px 0 0;cursor:pointer;min-width:0;position:relative;opacity:.9}
+    .hist button{flex:1;border:0;padding:0;border-radius:4px 4px 0 0;cursor:pointer;min-width:0;position:relative;opacity:.55}
     .hist button:hover,.hist button.on{opacity:1;outline:2px solid var(--ink);outline-offset:1px}
     .hist button span{position:absolute;bottom:calc(100% + 3px);left:50%;transform:translateX(-50%);font-size:.72rem;color:var(--ink-faint)}
     .histax{display:flex;justify-content:space-between;font-size:.8rem;color:var(--ink-faint);padding:0 .2rem}
@@ -32,8 +33,8 @@
     .item{border-top:1px solid var(--line-soft)}
     .item:last-child{border-bottom:1px solid var(--line-soft)}
     .row{display:grid;grid-template-columns:4.2rem 1fr auto;gap:1rem;align-items:center;width:100%;text-align:left;background:none;border:0;color:var(--ink);padding:.95rem .4rem;cursor:pointer;font-family:var(--display)}
-    .row:hover{background:rgba(29,32,82,.6)}
-    .rate{font-weight:800;font-size:1.25rem;font-variant-numeric:tabular-nums;text-align:center;border-radius:12px;padding:.35rem 0;color:#15173B}
+    .row:hover{background:color-mix(in srgb,var(--surface) 60%,transparent)}
+    .rate{font-weight:800;font-size:1.25rem;font-variant-numeric:tabular-nums;text-align:center;border-radius:12px;padding:.35rem 0;color:var(--on-accent)}
     .meta{min-width:0}
     .meta .t{display:block;font-weight:600;font-size:1rem}
     .meta .p{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-family:var(--serif);color:var(--ink-soft);font-size:.95rem;line-height:1.5;margin-top:.1rem;max-height:3em}
@@ -57,7 +58,7 @@
     .opt.right{border-color:var(--mint);background:var(--mint-wash)} .opt.wrong{border-color:var(--rose);background:var(--rose-wash)}
     .opt[disabled]{cursor:default}
     .actions{display:flex;flex-wrap:wrap;gap:.2rem .6rem;align-items:center;margin-top:1rem}
-    .sol{font-family:var(--serif);line-height:1.75;color:var(--ink-soft);margin-top:1rem;padding:1rem 1.1rem;border-left:3px solid var(--aqua);background:rgba(15,17,48,.5);border-radius:0 12px 12px 0}
+    .sol{font-family:var(--serif);line-height:1.75;color:var(--ink-soft);margin-top:1rem;padding:1rem 1.1rem;border-left:3px solid var(--aqua);background:color-mix(in srgb,var(--bg-deep) 50%,transparent);border-radius:0 12px 12px 0}
     .verdict{font-weight:600}
     .verdict.ok{color:var(--mint)} .verdict.bad{color:var(--rose)}
     .empty{padding:2rem 0;color:var(--ink-faint)}
@@ -84,7 +85,7 @@
     <ul class="list" id="list"></ul>
   </main>
 
-<script src="site.js?v=20261021"></script>
+<script src="site.js?v=20261022"></script>
 <script src="questions.js?v=20260927"></script>
 <script>
 (function(){

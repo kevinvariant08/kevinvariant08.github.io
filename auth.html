@@ -7,9 +7,10 @@
   <link rel="icon" href="/favicon.ico" sizes="32x32">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-  <meta name="theme-color" content="#15173B">
+  <meta name="theme-color" content="#F6F4EF">
   <meta name="robots" content="noindex">
-  <link rel="stylesheet" href="style.css?v=20261021">
+  <link rel="stylesheet" href="style.css?v=20261022">
+  <script>try{if(localStorage.getItem('kv_mode')==='dark')document.documentElement.setAttribute('data-mode','dark')}catch(e){}</script>
   <style>
     .auth{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,27rem);gap:3rem;align-items:center;max-width:66rem;margin:0 auto;padding:3rem 1.4rem 4rem;min-height:calc(100vh - 60px)}
     @media (max-width:880px){.auth{grid-template-columns:1fr;gap:1.4rem;padding-top:1.6rem}.art{order:2}}
@@ -21,7 +22,7 @@
     .tp{transition:fill .35s ease, r .35s ease}
     .ring{transition:stroke-dashoffset .8s cubic-bezier(.6,.1,.2,1), opacity .3s}
     @media (prefers-reduced-motion:reduce){.side,.tp,.ring{transition:none}}
-    .card{background:var(--surface);border:1px solid var(--line);border-radius:26px;padding:2rem 1.8rem 1.6rem;box-shadow:0 30px 70px rgba(6,7,30,.5);margin:0}
+    .card{background:var(--surface);border:1px solid var(--line);border-radius:26px;padding:2rem 1.8rem 1.6rem;box-shadow:0 12px 32px rgba(20,22,40,.10);margin:0}
     .card h1{font-size:2rem;margin:0 0 .35rem}
     .card .sub{color:var(--ink-soft);margin:0 0 1.3rem;font-size:.98rem}
     .fld{display:block;margin:0 0 1rem}
@@ -48,9 +49,9 @@
     .submit{width:100%;justify-content:center;margin:.4rem 0 0;font-size:1.02rem;min-height:50px}
     .switch{margin:1.2rem 0 0;text-align:center;color:var(--ink-soft);font-size:.95rem}
     .note{border-radius:12px;padding:.75rem .9rem;margin:0 0 1rem;font-size:.93rem;line-height:1.5}
-    .note.err{background:var(--rose-wash);border:1px solid rgba(255,107,139,.45);color:#FFD3DC}
-    .note.ok{background:var(--mint-wash);border:1px solid rgba(91,227,166,.45);color:#D4FBE8}
-    .note.info{background:var(--aqua-wash);border:1px solid rgba(79,216,232,.4);color:#D5F7FB}
+    .note.err{background:var(--rose-wash);border:1px solid color-mix(in srgb,var(--rose) 45%,transparent);color:var(--rose)}
+    .note.ok{background:var(--mint-wash);border:1px solid color-mix(in srgb,var(--mint) 45%,transparent);color:var(--mint)}
+    .note.info{background:var(--aqua-wash);border:1px solid color-mix(in srgb,var(--aqua) 40%,transparent);color:var(--aqua)}
     .note button{background:none;border:0;padding:0;color:inherit;font:inherit;font-weight:700;text-decoration:underline;cursor:pointer}
     .note button[disabled]{opacity:.6;cursor:default;text-decoration:none}
     .fine{font-size:.82rem;color:var(--ink-faint);margin:1rem 0 0;line-height:1.5}
@@ -163,7 +164,7 @@
     </div>
   </main>
 
-<script src="site.js?v=20261021"></script>
+<script src="site.js?v=20261022"></script>
 <script>
 (function(){
   var NS='http://www.w3.org/2000/svg', A={x:52,y:318}, B={x:352,y:318}, C={x:228,y:42};
@@ -175,15 +176,16 @@
   var I={x:(a*A.x+b*B.x+c*C.x)/s,y:(a*A.y+b*B.y+c*C.y)/s}, r=2*area/s;
   function foot(p,q){ var dx=q.x-p.x,dy=q.y-p.y,t=((I.x-p.x)*dx+(I.y-p.y)*dy)/(dx*dx+dy*dy); return {x:p.x+t*dx,y:p.y+t*dy}; }
   var circ=2*Math.PI*r;
-  var ring=mk('circle',{cx:I.x,cy:I.y,r:r,fill:'none',stroke:'#F3F1FF','stroke-width':4,class:'ring','stroke-dasharray':circ,'stroke-dashoffset':circ,transform:'rotate(-90 '+I.x+' '+I.y+')'});
-  var COL=['#4FD8E8','#FF6B8B','#FFC53D'], DIM='#343A82';
+  var CS=getComputedStyle(document.documentElement), cv=function(n){ return CS.getPropertyValue(n).trim(); }, INK=cv('--ink'), BG=cv('--surface');
+  var ring=mk('circle',{cx:I.x,cy:I.y,r:r,fill:'none',stroke:INK,'stroke-width':4,class:'ring','stroke-dasharray':circ,'stroke-dashoffset':circ,transform:'rotate(-90 '+I.x+' '+I.y+')'});
+  var COL=[cv('--aqua'),cv('--rose'),cv('--saffron')], DIM=cv('--line');
   var sides=[[A,B],[B,C],[C,A]].map(function(pq){ return mk('line',{x1:pq[0].x,y1:pq[0].y,x2:pq[1].x,y2:pq[1].y,stroke:DIM,'stroke-width':12,'stroke-linecap':'round',class:'side'}); });
-  var tps=[foot(A,B),foot(B,C),foot(C,A)].map(function(p){ return mk('circle',{cx:p.x,cy:p.y,r:8,fill:DIM,stroke:'#15173B','stroke-width':4,class:'tp'}); });
-  var centre=mk('circle',{cx:I.x,cy:I.y,r:5,fill:'#F3F1FF',opacity:0,class:'ring'});
+  var tps=[foot(A,B),foot(B,C),foot(C,A)].map(function(p){ return mk('circle',{cx:p.x,cy:p.y,r:8,fill:DIM,stroke:BG,'stroke-width':4,class:'tp'}); });
+  var centre=mk('circle',{cx:I.x,cy:I.y,r:5,fill:INK,opacity:0,class:'ring'});
   function meter(rules,matched){
     var ok=rules?rules.map(function(x){return x.ok;}):[true,true,true,true,true,true];
     sides.forEach(function(l,i){ l.setAttribute('stroke',ok[i]?COL[i]:DIM); });
-    tps.forEach(function(p,i){ p.setAttribute('fill',ok[i+3]?'#F3F1FF':DIM); p.setAttribute('r',ok[i+3]?9:7); });
+    tps.forEach(function(p,i){ p.setAttribute('fill',ok[i+3]?INK:DIM); p.setAttribute('r',ok[i+3]?9:7); });
     var all=ok.every(Boolean)&&matched!==false;
     ring.setAttribute('stroke-dashoffset',all?0:circ); centre.setAttribute('opacity',all?1:0);
   }

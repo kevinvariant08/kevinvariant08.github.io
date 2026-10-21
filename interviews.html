@@ -8,23 +8,24 @@
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
-  <meta name="theme-color" content="#F3F1FF">
-  <link rel="stylesheet" href="style.css?v=20261021">
+  <meta name="theme-color" content="#F6F4EF">
+  <link rel="stylesheet" href="style.css?v=20261022">
+  <script>try{if(localStorage.getItem('kv_mode')==='dark')document.documentElement.setAttribute('data-mode','dark')}catch(e){}</script>
   <style>
-    .iv{--ink:#F3F1FF;--soft:#BDBBE6;--faint:#8A89BD;--rule:#343A82;--warn:#FFC53D;--urgent:#FF6B8B;--mark:#5BE3A6;--paper:#15173B;
-        --serif:"IBM Plex Serif",Georgia,serif;--sans:"Bricolage Grotesque","IBM Plex Sans",system-ui,sans-serif;
+    .iv{--soft:var(--ink-soft);--faint:var(--ink-faint);--rule:var(--line);--warn:var(--saffron);--urgent:var(--rose);--mark:var(--mint);--paper:var(--bg);
+        --serif:"IBM Plex Serif",Georgia,serif;--sans:var(--display);
         font-family:var(--sans);color:var(--ink);line-height:1.6}
     .iv .hidden{display:none!important}
     .iv h2{font-family:var(--serif);font-weight:600}
     .iv p{max-width:68ch}
     .iv .lead{font-size:1.05rem;color:var(--soft)}
     .iv .btn2{font-family:var(--sans);font-size:.95rem;font-weight:500;color:var(--ink);background:transparent;border:1px solid var(--ink);border-radius:2px;padding:.5rem 1rem;cursor:pointer}
-    .iv .btn2:hover{background:var(--ink);color:#15173B}
+    .iv .btn2:hover{background:var(--ink);color:var(--on-accent)}
     .iv .btn2.quiet{border-color:var(--rule);color:var(--soft);font-weight:400}
     .iv .btn2.quiet:hover{background:transparent;border-color:var(--ink);color:var(--ink)}
     .iv .btn2[disabled]{opacity:.35;cursor:default}
     .iv .btn2:focus-visible{outline:2px solid var(--urgent);outline-offset:2px}
-    .iv input[type=text],.iv input[type=password],.iv select,.iv textarea{font-family:var(--sans);font-size:.95rem;padding:.45rem .6rem;border:1px solid var(--rule);border-radius:2px;background:#0F1130;color:var(--ink)}
+    .iv input[type=text],.iv input[type=password],.iv select,.iv textarea{font-family:var(--sans);font-size:.95rem;padding:.45rem .6rem;border:1px solid var(--rule);border-radius:2px;background:var(--bg-deep);color:var(--ink)}
     .iv textarea{width:100%;min-height:5.5rem;resize:vertical;line-height:1.5}
     .iv .row{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;margin-top:.9rem}
     .iv .settings{border:1px solid var(--rule);padding:1rem 1.2rem;margin:1.4rem 0}
@@ -582,6 +583,6 @@ async function endInterview(){
 
 loadCfg(); renderHub();
 </script>
-<script src="site.js?v=20261021"></script>
+<script src="site.js?v=20261022"></script>
 </body>
 </html>

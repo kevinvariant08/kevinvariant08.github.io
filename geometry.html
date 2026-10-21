@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-mode="dark" data-mode-lock>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -10,8 +10,24 @@
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
   <meta name="theme-color" content="#15173B">
-  <link rel="stylesheet" href="style.css?v=20261021">
+  <link rel="stylesheet" href="style.css?v=20261022">
+  <script>try{if(localStorage.getItem('kv_mode')==='dark')document.documentElement.setAttribute('data-mode','dark')}catch(e){}</script>
   <script src="geometry.js" defer></script>
+  <style>
+    /* the board's caption and readout lost their styles in an earlier refactor */
+    .board-title,.board .readout{max-width:74rem;margin:1.2rem auto 0;padding:0 1.4rem}
+    .board-title h1{margin-bottom:.3rem}
+    .board-title p{color:var(--ink-soft);margin:0 0 .4rem}
+    .board .readout h2{font-size:1.1rem;margin:0 0 .5rem}
+    .board .readout .row{display:flex;justify-content:space-between;gap:1rem;max-width:26rem;padding:.3rem 0;border-bottom:1px solid var(--line-soft);font-variant-numeric:tabular-nums}
+    .board .readout .note{color:var(--ink-faint);font-size:.92rem;margin-top:.6rem}
+    .board .layers,.board .cue{display:flex;flex-wrap:wrap;gap:.4rem;max-width:74rem;margin:1rem auto 0;padding:0 1.4rem}
+    .board .cue{display:block;margin-top:.8rem;margin-bottom:.6rem}
+    .board .layers button{font:500 .88rem var(--display);color:var(--ink-soft);background:transparent;border:1px solid var(--line);border-radius:var(--r-sm);padding:.35rem .7rem;min-height:36px;cursor:pointer}
+    .board .layers button:hover{color:var(--ink);border-color:var(--ink-faint)}
+    .board .layers button[aria-pressed="true"],.board .layers button.on{color:var(--ink);background:var(--surface-2);border-color:var(--ink-faint)}
+    kbd{font:inherit;font-size:.85em;padding:.05em .4em;border:1px solid var(--line);border-radius:4px}
+  </style>
 </head>
 <body>
 
@@ -78,6 +94,6 @@
 
   </main>
 
-<script src="site.js?v=20261021"></script>
+<script src="site.js?v=20261022"></script>
 </body>
 </html>

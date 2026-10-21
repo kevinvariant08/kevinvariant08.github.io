@@ -6,22 +6,23 @@
   <title>Proof marker</title>
   <link rel="icon" href="/favicon.ico" sizes="32x32">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  <meta name="theme-color" content="#F3F1FF">
-  <link rel="stylesheet" href="style.css?v=20261021">
+  <meta name="theme-color" content="#F6F4EF">
+  <link rel="stylesheet" href="style.css?v=20261022">
+  <script>try{if(localStorage.getItem('kv_mode')==='dark')document.documentElement.setAttribute('data-mode','dark')}catch(e){}</script>
   <script>if(window.claude)document.documentElement.classList.add('standalone');window.MathJax={tex:{inlineMath:[['$','$']],displayMath:[['\\[','\\]']],processEscapes:true},options:{skipHtmlTags:['script','noscript','style','textarea','pre']}};</script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js" async></script>
   <style>
-    :root{
-      --ink:#F3F1FF;--soft:#BDBBE6;--faint:#8A89BD;--rule:#343A82;--paper:#15173B;--card:#1D2052;
-      --ok:#5BE3A6;--okbg:rgba(91,227,166,.14);--bad:#FF6B8B;--badbg:rgba(255,107,139,.14);--warn:#FFC53D;--warnbg:rgba(255,197,61,.14);--sel:rgba(255,197,61,.14);
+    :where(:root){
+      --ink:#F3F1FF;--soft:var(--ink-soft,#BDBBE6);--faint:var(--ink-faint,#8A89BD);--rule:var(--line,#343A82);--paper:var(--bg,#15173B);--card:var(--surface,#1D2052);
+      --ok:var(--mint,#5BE3A6);--okbg:rgba(91,227,166,.14);--bad:var(--rose,#FF6B8B);--badbg:rgba(255,107,139,.14);--warn:var(--saffron,#FFC53D);--warnbg:rgba(255,197,61,.14);--sel:rgba(255,197,61,.14);
       --serif:"IBM Plex Serif",Georgia,"Times New Roman",serif;--sans:"Bricolage Grotesque","IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
     }
-    @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-      --ink:#F3F1FF;--soft:#BDBBE6;--faint:#8A89BD;--rule:#343A82;--paper:#15173B;--card:#1D2052;
-      --ok:#5BE3A6;--okbg:rgba(91,227,166,.14);--bad:#FF6B8B;--badbg:rgba(255,107,139,.14);--warn:#FFC53D;--warnbg:rgba(255,197,61,.14);--sel:#252964;}}
-    :root[data-theme="dark"]{
-      --ink:#F3F1FF;--soft:#BDBBE6;--faint:#8A89BD;--rule:#343A82;--paper:#15173B;--card:#1D2052;
-      --ok:#5BE3A6;--okbg:rgba(91,227,166,.14);--bad:#FF6B8B;--badbg:rgba(255,107,139,.14);--warn:#FFC53D;--warnbg:rgba(255,197,61,.14);--sel:#252964;}
+    @media (prefers-color-scheme:dark){:where(:root:not([data-theme="light"])){
+      --ink:#F3F1FF;--soft:var(--ink-soft,#BDBBE6);--faint:var(--ink-faint,#8A89BD);--rule:var(--line,#343A82);--paper:var(--bg,#15173B);--card:var(--surface,#1D2052);
+      --ok:var(--mint,#5BE3A6);--okbg:rgba(91,227,166,.14);--bad:var(--rose,#FF6B8B);--badbg:rgba(255,107,139,.14);--warn:var(--saffron,#FFC53D);--warnbg:rgba(255,197,61,.14);--sel:var(--surface-2,#252964);}}
+    :where(:root[data-theme="dark"]){
+      --ink:#F3F1FF;--soft:var(--ink-soft,#BDBBE6);--faint:var(--ink-faint,#8A89BD);--rule:var(--line,#343A82);--paper:var(--bg,#15173B);--card:var(--surface,#1D2052);
+      --ok:var(--mint,#5BE3A6);--okbg:rgba(91,227,166,.14);--bad:var(--rose,#FF6B8B);--badbg:rgba(255,107,139,.14);--warn:var(--saffron,#FFC53D);--warnbg:rgba(255,197,61,.14);--sel:var(--surface-2,#252964);}
 
     /* Only when opened as the standalone claude.ai copy, where the site stylesheet is absent */
     html.standalone{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);scroll-padding-top:env(safe-area-inset-top,0px)}
@@ -481,6 +482,6 @@ function boot(){
 boot();
 
 </script>
-<script src="site.js?v=20261021"></script>
+<script src="site.js?v=20261022"></script>
 </body>
 </html>
