@@ -2,38 +2,48 @@
    so a change here updates the whole site. */
 (function(){
   var LOGO='<svg viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="nav-bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#262A72"/><stop offset="1" stop-color="#12143A"/></linearGradient></defs><rect width="64" height="64" rx="15" fill="url(#nav-bg)" stroke="#343A82"/><g transform="translate(32,32) scale(0.8) translate(-34.00,-35.83)"><circle cx="34.8573" cy="37.8058" r="14.1942" fill="none" stroke="#F3F1FF" stroke-width="2.4" opacity=".95"/><line x1="8" y1="52" x2="56" y2="52" stroke="#4FD8E8" stroke-width="5.4" stroke-linecap="round"/><line x1="56" y1="52" x2="38" y2="8" stroke="#FF6B8B" stroke-width="5.4" stroke-linecap="round"/><line x1="38" y1="8" x2="8" y2="52" stroke="#FFC53D" stroke-width="5.4" stroke-linecap="round"/><circle cx="34.86" cy="52.00" r="2.6" fill="#F3F1FF" stroke="#15173B" stroke-width="1.2"/><circle cx="47.99" cy="32.43" r="2.6" fill="#F3F1FF" stroke="#15173B" stroke-width="1.2"/><circle cx="23.13" cy="29.81" r="2.6" fill="#F3F1FF" stroke="#15173B" stroke-width="1.2"/></g></svg>';
+  /* Four destinations, organised by what a student is trying to do. Each tool appears once. */
   var GROUPS=[
-    {label:'Home', href:'index.html'},
-    {label:'Practise', items:[
-      {href:'drill.html', name:'Drill', note:'Full papers, timed, with extra-time options'},
-      {href:'unlock.html', name:'Unlock papers', note:'Redeem a code for a new locked paper'},
-      {href:'arena.html', name:'Arena', note:'Race a bot to the right answer'},
+    {label:'TMUA', sec:'tmua', items:[
+      {href:'tmua.html', name:'TMUA home', note:'Every mock set, newest first'},
+      {href:'drill.html', name:'Drill', note:'Sit a paper timed, or drill one technique'},
+      {href:'bank.html', name:'Question bank', note:'Every free question, rated 4.5 to 9.0'},
+      {href:'techniques.html', name:'Technique index', note:'Questions filed by the idea that cracks them'},
       {href:'review.html', name:'Review mistakes', note:'Wrong answers return after 1, 3 and 7 days'},
-      {href:'duel.html', name:'Friend duel', note:'Five questions; your friend races your ghost'},
-      {href:'qotw.html', name:'Problem of the week', note:'One hard problem, discussion unlocks when you answer'},
-      {href:'bank.html', name:'Question bank', note:'Every question, rated 4.5 to 9.0'},
+      {href:'results.html', name:'Results', note:'Your scores against everyone else'},
       {href:'interviews.html', name:'Mock interviews', note:'Twenty-five minutes, one problem'},
-      {href:'marker.html', name:'Proof marker', note:'Get a written solution marked'}]},
-    {label:'Explore', items:[
+      {href:'unlock.html', name:'Unlock a paper', note:'Redeem a code for a locked set'}]},
+    {label:'Olympiad', sec:'oly', items:[
+      {href:'olympiad.html', name:'Olympiad home', note:'Mock papers, solutions and the HU Collection'},
       {href:'geometry.html', name:'Geometry Lab', note:'Triangle centres you can drag'},
       {href:'sandbox.html', name:'Conjecture sandbox', note:'Build a figure, find what stays true'},
-      {href:'techniques.html', name:'Technique index', note:'Questions filed by method'}]},
-    {label:'Progress', items:[
+      {href:'marker.html', name:'Proof marker', note:'Get a written solution marked'}]},
+    {label:'Practise<span class="lg"> &amp; compete</span>', sec:'play', items:[
+      {href:'compete.html', name:'Practise and compete', note:'Everything in this section on one page'},
+      {href:'arena.html', name:'Arena', note:'Race a bot to the right answer'},
+      {href:'duel.html', name:'Friend duel', note:'Five questions; your friend races your ghost'},
+      {href:'qotw.html', name:'Problem of the week', note:'Discussion unlocks when you answer'},
       {href:'rewards.html', name:'Rewards', note:'Levels, badges, quests and the daily challenge'},
-      {href:'shop.html', name:'Shop', note:'Spend coins on titles, themes, minigames and more'},
-      {href:'games.html', name:'Labs', note:'Maths minigames from the shop'},
-      {href:'progress.html', name:'My progress', note:'Accuracy, timing and streaks'},
-      {href:'results.html', name:'Results', note:'Your scores against everyone else'}]}
+      {href:'shop.html', name:'Shop', note:'Spend coins on titles, themes and papers'},
+      {href:'games.html', name:'Labs', note:'Maths minigames from the Shop'},
+      {href:'progress.html', name:'My progress', note:'Accuracy, timing and streaks'}]},
+    {label:'Book', sec:'book', href:'book.html'}
   ];
+  var FOOT='<div class="foot-grid">'
+    +'<div><b>TMUA</b><a href="tmua.html">Mock sets</a><a href="drill.html">Drill</a><a href="bank.html">Question bank</a><a href="techniques.html">Technique index</a></div>'
+    +'<div><b>Olympiad</b><a href="olympiad.html">Papers and solutions</a><a href="geometry.html">Geometry Lab</a><a href="sandbox.html">Conjecture sandbox</a><a href="marker.html">Proof marker</a></div>'
+    +'<div><b>Practise and compete</b><a href="arena.html">Arena</a><a href="qotw.html">Problem of the week</a><a href="rewards.html">Rewards</a><a href="progress.html">My progress</a></div>'
+    +'<div><b>About</b><a href="how-it-works.html">How it works</a><a href="how-it-works.html#difficulty">Difficulty scale</a><a href="how-it-works.html#access">Free and locked papers</a><a href="book.html">Beyond the Incenter</a></div>'
+    +'</div><p>Kevinvariant: free TMUA and olympiad preparation. Scores and progress stay in your browser unless you sign in to sync them.</p>';
   var here=(location.pathname.split('/').pop()||'index.html').toLowerCase();
   function caret(){return '<svg class="caret" viewBox="0 0 10 10" aria-hidden="true"><path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>';}
   function build(nav){
     var h='<div class="bar"><a class="brand" href="index.html">'+LOGO+'<span>Kevinvariant</span></a>'
       +'<button class="toggle" type="button" aria-expanded="false" aria-controls="navlinks">Menu</button><ul class="links" id="navlinks">';
     GROUPS.forEach(function(g,i){
-      if(g.href){ h+='<li><a href="'+g.href+'"'+(g.href===here?' aria-current="page"':'')+'>'+g.label+'</a></li>'; return; }
+      if(g.href){ h+='<li class="sec-'+g.sec+'"><a href="'+g.href+'"'+(g.href===here?' aria-current="page"':'')+'>'+g.label+'</a></li>'; return; }
       var cur=g.items.some(function(it){return it.href===here;});
-      h+='<li><button type="button" class="'+(cur?'current':'')+'" aria-expanded="false" aria-controls="m'+i+'">'+g.label+caret()+'</button><ul class="menu" id="m'+i+'">'
+      h+='<li class="sec-'+g.sec+'"><button type="button" class="'+(cur?'current':'')+'" aria-expanded="false" aria-controls="m'+i+'">'+g.label+caret()+'</button><ul class="menu" id="m'+i+'">'
         +g.items.map(function(it){return '<li><a href="'+it.href+'"'+(it.href===here?' aria-current="page"':'')+'>'+it.name+'<small>'+it.note+'</small></a></li>';}).join('')+'</ul></li>';
     });
     nav.innerHTML=h+'</ul></div>';
@@ -88,6 +98,8 @@
     document.body.setAttribute('data-theme-v2','');
     var nav=document.getElementById('sitenav')||document.querySelector('body>nav');
     if(nav){ build(nav); accountSlot(nav); }
+    /* one footer for every page; a page can opt out with <body data-nofoot> */
+    if(!document.querySelector('.site-foot')&&!document.body.hasAttribute('data-nofoot')){ var f=document.createElement('footer'); f.className='site-foot'; f.innerHTML=FOOT; document.body.appendChild(f); }
     loadAccounts(); loadRewards();
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init); else init();

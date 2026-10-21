@@ -1,6 +1,6 @@
 # Kevinvariant redesign plan
 
-Status: **proposal, nothing implemented yet.** Branch: `redesign`.
+Status: **implemented on branch `redesign`, not pushed or merged.** See "Implementation notes" at the end.
 
 Scope: structure, navigation and UI only. Every existing page URL, PDF URL, tool and
 `drill.html?paper=XX` deep link keeps working. Long-form content (paper blurbs, book text,
@@ -226,3 +226,34 @@ Sign-in may not work on localhost if Supabase only allows the live domain as a r
 6. **Mock interviews.** I've put them under TMUA, since they're university admissions practice. OK?
 7. **Clean-up.** May I delete the four stray zips, the six `(1)` icon duplicates and `mock-interview-2.html` from the branch? They're publicly downloadable, and deleting them doesn't affect any page.
 8. **Git history (1.7).** Do you want to deal with this? It's separate from this branch and would need a force-push. I'd only do it with your explicit go-ahead.
+
+---
+
+## Implementation notes (21 October 2026)
+
+Decisions from the owner:
+
+- **Book.** B0HCDN9VFL is the paperback. No separate Kindle listing was found, so there is a single "Buy on Amazon" button. `book.md` placeholder fixed.
+- **Challenges.** Posted on Instagram, [@kevinvariant](https://www.instagram.com/kevinvariant/). Filled in on `unlock.html`, and every "win a code" line links there.
+- **SMC 2026 solutions.** Now a static file, `UKMT_SMC_2026_Solutions.pdf` (10 pages), fetched from the bucket after release. The time-lock script is removed.
+- **`KGO.pdf`.** Deleted. It is a separate 50-problem collection, not Chapter 1. It remains in Git history, like the Set I/J data in 1.7.
+- **Clean-up.** The four zips and the byte-identical `(1)` icon copies are deleted. The two Set B Paper 2 `(1)` PDFs were the only copies, so they were **renamed** to the names the site links to, not deleted.
+- **Q5 and Q6.** Not answered, so the defaults above are used: "Kevin's Mathematical Olympiad, Round 1"; HU Collection on the Olympiad page; Mock interviews under TMUA. Each is a one-line change if you want it different.
+- **Q8 (Git history).** Not touched.
+
+Deviations from the plan:
+
+- **Nav breakpoint.** The nav switches to the Menu button at 1020px, not 860px. "Practise & compete" plus the signed-in rewards badges overflowed between 860px and 1020px. Between 1021px and 1180px the label shortens to "Practise".
+- **CSS scoping.** All new components are scoped under `.page`. The tool pages already use `.row`, `.chip`, `.tools`, etc. with different meanings, so global rules would have changed them.
+- **Phone fixes on tool pages.** One-line CSS fixes for horizontal scrolling at 360px on bank (filters), techniques (layout and tables), interviews (mode select) and shop (card grids). These overflows predate the redesign.
+- **Fonts.** Seven pages no longer request IBM Plex Sans/Serif twice. Bricolage was already their first choice. Sandbox keeps Plex Mono.
+
+Verified locally (Chrome):
+
+- **Phone width.** Every public page checked at 360px: no horizontal scroll, new nav and footer present, no JS errors.
+- **Nav widths.** Fits on one line at 880, 1040, 1120 and 1200px, signed in.
+- **Links.** All 83 local links on the new and changed pages return 200.
+- **Old links and deep links.** `index.html#archive` redirects to `tmua.html#sets`. `drill.html?paper=B2` still opens with its rating.
+- **Locks.** The unlocked state flips correctly for a signed-in account.
+
+Not changed: `mock-interview-2.html` (orphan, kept), the `.sql` files, and the internals and visual style of every tool page.

@@ -4,21 +4,21 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Kevinvariant | TMUA and olympiad practice</title>
-  <meta name="description" content="Original olympiad geometry, TMUA mock papers harder than the real thing, and tools to practise them: timed drills, a question bank, a race against a bot, and mock interviews.">
+  <meta name="description" content="Free TMUA and olympiad preparation: original TMUA mock papers with full solutions, olympiad papers and solutions, timed drills, a rated question bank and interactive geometry.">
   <link rel="icon" href="/favicon.ico" sizes="32x32">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
   <meta name="theme-color" content="#15173B">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=20261021">
   <style>
-    .home{max-width:74rem;margin:0 auto;padding:0 1.4rem 4rem}
-    .hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:2.6rem;align-items:center;padding:3.2rem 0 2.4rem}
-    @media (max-width:900px){.hero{grid-template-columns:1fr;padding-top:2rem}}
+    .hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:2.6rem;align-items:center;padding:3.2rem 0 1.4rem}
+    @media (max-width:900px){.hero{grid-template-columns:1fr;gap:1.8rem;padding-top:2rem}}
     .hero h1{margin-bottom:.35em}
     .hero .lede{max-width:34rem}
     .hero .cta{margin-top:1.4rem}
-    .board{position:relative;margin:0;background:linear-gradient(160deg,rgba(37,41,100,.9),rgba(20,22,60,.9));border:1px solid var(--line);border-radius:28px;padding:1rem 1rem .8rem;box-shadow:0 30px 80px rgba(6,7,30,.55)}
+    .hero .newhere{margin-top:.6rem;font-size:.95rem;color:var(--ink-faint)}
+    .board{position:relative;margin:0;background:var(--surface);border:1px solid var(--line);border-radius:28px;padding:1rem 1rem .8rem;box-shadow:0 24px 60px rgba(6,7,30,.45)}
     .board svg{width:100%;height:auto;display:block;touch-action:none}
     .board .v{cursor:grab}
     .board .v:active{cursor:grabbing}
@@ -31,63 +31,34 @@
     @keyframes draw{to{stroke-dashoffset:0}}
     @keyframes fade{to{opacity:1}}
     @media (prefers-reduced-motion:reduce){.draw{animation:none;stroke-dashoffset:0}.fadein{animation:none;opacity:1}}
-    .setc{margin:1.6rem 0 0;border-radius:28px;padding:2rem 2rem 1.6rem;background:linear-gradient(120deg,rgba(255,107,139,.16),rgba(255,197,61,.10) 45%,rgba(79,216,232,.14));border:1px solid rgba(255,107,139,.35)}
-    .setc h2{margin:0 0 .4rem}
-    .setc>p{color:var(--ink-soft)}
-    .papers{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-top:1.2rem}
-    .papers.three{grid-template-columns:repeat(3,minmax(0,1fr))}
-    .papers.three .links{display:grid;grid-template-columns:auto auto;justify-content:start;gap:.25rem 1.2rem}
-    @media (max-width:1000px){.papers.three{grid-template-columns:1fr}}
-    @media (max-width:760px){.papers{grid-template-columns:1fr}.setc{padding:1.5rem 1.2rem}}
-    .paper{background:rgba(15,17,48,.55);border:1px solid var(--line-soft);border-radius:var(--r-lg);padding:1.3rem 1.3rem 1rem}
-    .paper h3{margin:0 0 .3rem;display:flex;align-items:center;gap:.6rem}
-    .paper h3 .dot{width:12px;height:12px;border-radius:50%;flex:none}
-    .paper p{font-size:.96rem;color:var(--ink-soft);margin-bottom:.8rem}
-    .paper .links{display:flex;flex-wrap:wrap;gap:.3rem 1.2rem;margin-top:.5rem;font-size:.95rem}
-    .tools{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.2rem 2.4rem;margin-top:1rem}
-    @media (max-width:760px){.tools{grid-template-columns:1fr}}
-    .tool{display:grid;grid-template-columns:2.6rem 1fr;gap:1rem;align-items:start;padding:1.05rem .8rem;border-radius:var(--r-md);text-decoration:none;color:var(--ink);border-bottom:1px solid var(--line-soft)}
-    .tool:hover{background:var(--surface);color:var(--ink)}
-    .tool svg{width:2.4rem;height:2.4rem}
-    .tool h3{margin:.05rem 0 .15rem;font-size:1.12rem}
-    .tool p{margin:0;font-size:.95rem;color:var(--ink-soft)}
-    .tool.star{grid-column:1/-1;background:var(--surface);border:1px solid var(--line);padding:1.3rem 1.2rem}
-    .tool.star h3{font-size:1.3rem}
-    .book{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:2.4rem;align-items:start;margin-top:1rem}
-    @media (max-width:860px){.book{grid-template-columns:1fr}}
-    .book img{border-radius:var(--r-md);box-shadow:0 26px 60px rgba(6,7,30,.6)}
-    .book .text p{font-family:var(--serif);font-size:1.03rem;line-height:1.75;color:var(--ink-soft)}
-    .book .text h3{margin-top:1.4rem}
-    .archive{margin-top:1rem;border-top:1px solid var(--line-soft)}
-    .arow{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1.4fr);gap:.4rem 2rem;padding:1.1rem .2rem;border-bottom:1px solid var(--line-soft)}
-    @media (max-width:760px){.arow{grid-template-columns:1fr}}
-    .arow h3{margin:0 0 .2rem;font-size:1.06rem}
-    .arow p{margin:0;color:var(--ink-soft);font-size:.94rem}
-    .arow .files{display:flex;flex-wrap:wrap;gap:.3rem 1.3rem;align-content:start;font-size:.97rem}
-    .section-intro{color:var(--ink-soft);max-width:60ch}
-    .diff{display:flex;flex-wrap:wrap;gap:.3rem .9rem;margin:.1rem 0 .7rem!important;font-size:.88rem!important;color:var(--ink-faint)!important}
-    .diff b{color:var(--saffron);font-weight:700}
-    .lockbadge{display:inline-block;margin-left:.4rem;padding:.12rem .45rem;border-radius:99px;font:700 .66rem var(--display);letter-spacing:.08em;text-transform:uppercase;background:var(--rose-wash);color:var(--rose);vertical-align:middle}
-  .lockbadge.open{background:var(--mint-wash);color:var(--mint)}
-  .lockline{color:var(--ink-faint);font-size:.9rem}
-  .smcdrop{background:linear-gradient(120deg,rgba(79,216,232,.16),rgba(91,227,166,.10) 50%,rgba(255,197,61,.12));border-color:rgba(79,216,232,.4)}
-  .smcrow{display:flex;flex-wrap:wrap;align-items:center;gap:1rem 1.6rem;margin-top:1rem}
-  .smcclock{font:800 clamp(1.6rem,4vw,2.4rem) var(--display);font-variant-numeric:tabular-nums;color:var(--ink)}
-  #smc-btn[aria-disabled="true"]{opacity:.5;pointer-events:none}
-</style>
+    .brief{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:1rem 2.4rem;align-items:start}
+    @media (max-width:860px){.brief{grid-template-columns:1fr}}
+    .brief h3{margin:0 0 .4rem;font-size:1.1rem}
+    .brief .tiers{grid-template-columns:1fr;margin:.4rem 0 .8rem;gap:.5rem}
+    .brief .tiers li{padding:.7rem .9rem}
+    .bookband{display:grid;grid-template-columns:minmax(0,15rem) minmax(0,1fr);gap:1.6rem 2.2rem;align-items:center;background:var(--surface);border:1px solid var(--line-soft);border-top:3px solid var(--accent);border-radius:var(--r-lg);padding:1.4rem}
+    @media (max-width:700px){.bookband{grid-template-columns:1fr}}
+    .bookband img{border-radius:var(--r-sm);width:100%}
+    .bookband h2{margin:.2rem 0 .4rem}
+    .bookband p{color:var(--ink-soft)}
+    .elsewhere{display:flex;flex-wrap:wrap;align-items:baseline;gap:.3rem 1rem;padding:1rem 0;border-top:1px solid var(--line-soft);color:var(--ink-soft);font-size:.95rem}
+    .elsewhere b{color:var(--ink)}
+    .lockline{color:var(--ink-faint);font-size:.9rem}
+  </style>
 </head>
 <body data-theme-v2>
-  <nav id="sitenav"><div class="nav-links"><a href="index.html">Home</a> <a href="drill.html">Drill</a> <a href="arena.html">Arena</a> <a href="bank.html">Question bank</a></div></nav>
+  <nav id="sitenav"><div class="nav-links"><a href="index.html">Home</a> <a href="tmua.html">TMUA</a> <a href="olympiad.html">Olympiad</a> <a href="compete.html">Practise and compete</a> <a href="book.html">Book</a></div></nav>
 
-  <main class="home">
+  <main class="page">
     <section class="hero">
       <div>
         <h1>Kevinvariant</h1>
-        <p class="lede">Original olympiad problems, TMUA papers that are harder than the real thing, and tools for practising them properly. A little every day adds up.</p>
+        <p class="lede">Free TMUA and olympiad preparation: original papers with full solutions, and tools for practising them properly. A little every day adds up.</p>
         <div class="cta">
-          <a class="btn" href="drill.html?paper=J1">Sit the newest mock</a>
-          <a class="btn secondary" href="arena.html">Race the bot</a>
+          <a class="btn" href="tmua.html">TMUA preparation</a>
+          <a class="btn secondary" href="olympiad.html">Olympiad preparation</a>
         </div>
+        <p class="newhere">New here? <a href="how-it-works.html">How difficulty ratings and locked papers work</a>.</p>
       </div>
       <figure class="board" aria-label="A triangle with its incircle. Drag the vertices.">
         <span class="hint">Drag a vertex</span>
@@ -96,194 +67,121 @@
       </figure>
     </section>
 
-    <section class="setc smcdrop" aria-labelledby="smc-h">
-      <h2 id="smc-h">UKMT Senior Mathematical Challenge 2026: full solutions</h2>
-      <p>My solutions to all 25 problems, with every diagram redrawn in tkz-euclide. Released on 8 October and free for everyone. No code or account needed.</p>
-      <div class="smcrow"><div class="smcclock" id="smc-clock" aria-live="polite">Unlocked</div><a class="btn" id="smc-btn" href="#">Read the solutions</a></div>
-      <p class="lockline" id="smc-msg"></p>
+    <section aria-labelledby="paths-h" id="paths">
+      <h2 id="paths-h">Choose your path</h2>
+      <div class="cards">
+        <article class="door" data-sec="tmua">
+          <h3><a class="go" href="tmua.html">TMUA</a></h3>
+          <p>Ten sets of original mock papers with solutions, timed drills and a question bank rated by difficulty.</p>
+          <ul>
+            <li><a href="tmua.html#sets">All mock sets</a></li>
+            <li><a href="drill.html">Drill</a></li>
+            <li><a href="bank.html">Question bank</a></li>
+            <li><a href="techniques.html">Technique index</a></li>
+          </ul>
+        </article>
+        <article class="door" data-sec="oly">
+          <h3><a class="go" href="olympiad.html">Olympiad</a></h3>
+          <p>Original mock olympiad papers, written solutions to real competitions, and geometry you can drag.</p>
+          <ul>
+            <li><a href="olympiad.html#mocks">Mock papers</a></li>
+            <li><a href="olympiad.html#solutions">Competition solutions</a></li>
+            <li><a href="olympiad.html#hu">The HU Collection</a></li>
+            <li><a href="geometry.html">Geometry Lab</a></li>
+          </ul>
+        </article>
+        <article class="door" data-sec="play">
+          <h3><a class="go" href="compete.html">Practise and compete</a></h3>
+          <p>Race a bot, duel a friend, take on the problem of the week, and earn levels, badges and coins.</p>
+          <ul>
+            <li><a href="arena.html">Arena</a></li>
+            <li><a href="duel.html">Friend duel</a></li>
+            <li><a href="qotw.html">Problem of the week</a></li>
+            <li><a href="rewards.html">Rewards</a></li>
+          </ul>
+        </article>
+        <article class="door">
+          <h3><a class="go" href="how-it-works.html">How it works</a></h3>
+          <p>What the difficulty numbers mean, which papers are free, and how the newest sets are unlocked.</p>
+          <ul>
+            <li><a href="how-it-works.html#difficulty">Difficulty scale</a></li>
+            <li><a href="how-it-works.html#start">Where to start</a></li>
+            <li><a href="how-it-works.html#access">Free and locked papers</a></li>
+          </ul>
+        </article>
+      </div>
     </section>
 
-    <section class="setc" aria-labelledby="setc-h">
-      <h2 id="setc-h">The newest mocks: Sets J and I</h2>
-      <p>Eighty long, demanding questions, and both sets are locked: win a code in one of my challenges. Set J, the newest, keeps to the official TMUA specification and the style of the 2022 and 2023 papers, and gets its difficulty from parameters, casework and structure rather than from content beyond the syllabus. Set I trades competition tricks for variables and casework. Difficulty is out of 9, on the same scale as the question bank.</p>
-      <div class="papers">
-        <div class="paper">
-          <h3><span class="dot" style="background:var(--rose)"></span>Set J Paper 1 <span class="lockbadge" data-badge="J1">Locked</span></h3>
-          <p class="diff"><span>Difficulty <b>7.4</b></span><span>hardest question 8.2</span></p>
-          <p>A sawtooth cut by a line, the one tangent that touches a quartic twice, a circle resting inside a parabola, a telescoping product, and the trapezium rule on 2<sup><i>x</i></sup> with a ratio that ignores <i>n</i>.</p>
-          <a class="btn" href="unlock.html?paper=J1" data-lock="J1">Unlock with a code</a>
-          <div class="links"><span class="lockline" data-lockline="J1">Locked. Win a code in one of my challenges.</span></div>
-        </div>
-        <div class="paper">
-          <h3><span class="dot" style="background:var(--aqua)"></span>Set J Paper 2 <span class="lockbadge" data-badge="J2">Locked</span></h3>
-          <p class="diff"><span>Difficulty <b>7.2</b></span><span>hardest question 7.9</span></p>
-          <p>Necessary and sufficient in the real exam format, a trapezium rule that is exact for every <i>n</i> on a curve that is not a line, polynomials with <i>f</i>(|<i>x</i>|) = |<i>f</i>(<i>x</i>)|, and a region whose every cross-section has the same length.</p>
-          <a class="btn" href="unlock.html?paper=J2" data-lock="J2">Unlock with a code</a>
-          <div class="links"><span class="lockline" data-lockline="J2">Locked. Win a code in one of my challenges.</span></div>
-        </div>
-        <div class="paper">
-          <h3><span class="dot" style="background:var(--saffron)"></span>Set I Paper 1 <span class="lockbadge" data-badge="I1">Locked</span></h3>
-          <p class="diff"><span>Difficulty <b>7.8</b></span><span>hardest question 8.4</span></p>
-          <p>Tangent chords of constant width, the line through a cubic's turning points, a probability that is exactly one third for every m, a parametric loop, and a geometric probability computed by calculus.</p>
-          <a class="btn" href="unlock.html?paper=I1" data-lock="I1">Unlock with a code</a>
-          <div class="links"><span class="lockline" data-lockline="I1">Locked. Win a code in one of my challenges.</span></div>
-        </div>
-        <div class="paper">
-          <h3><span class="dot" style="background:var(--mint)"></span>Set I Paper 2 <span class="lockbadge" data-badge="I2">Locked</span></h3>
-          <p class="diff"><span>Difficulty <b>7.8</b></span><span>hardest question 8.4</span></p>
-          <p>Convexity without formulas, integral signs decided without integrating, differentiability traps, parity probabilities with two answers, and the family x|x| + px + q case by case.</p>
-          <a class="btn" href="unlock.html?paper=I2" data-lock="I2">Unlock with a code</a>
-          <div class="links"><span class="lockline" data-lockline="I2">Locked. Win a code in one of my challenges.</span></div>
-        </div>
+    <section aria-labelledby="new-h" id="new">
+      <h2 id="new-h">New this term</h2>
+      <div class="cards">
+        <article class="pc" data-sec="oly">
+          <h3>UKMT Senior Mathematical Challenge 2026: full solutions</h3>
+          <div class="chips"><a class="chip free" href="how-it-works.html#access">Free</a><span class="chip">Olympiad</span></div>
+          <p class="desc">Solutions to all 25 problems, with every diagram redrawn in tkz-euclide. No code or account needed.</p>
+          <div class="acts"><a class="btn" href="UKMT_SMC_2026_Solutions.pdf" target="_blank" rel="noopener">Read the solutions (PDF)</a></div>
+        </article>
+        <article class="pc" data-sec="tmua">
+          <h3>TMUA mock Set J</h3>
+          <div class="chips"><a class="chip locked" href="how-it-works.html#access" data-badge="J1">Locked</a><a class="chip" href="how-it-works.html#difficulty">Paper 1 <b>7.4</b></a><a class="chip" href="how-it-works.html#difficulty">Paper 2 <b>7.2</b></a></div>
+          <p class="desc">The newest set keeps to the official TMUA specification and the style of the 2022 and 2023 papers. Its difficulty comes from parameters, casework and structure.</p>
+          <div class="acts"><a class="btn" href="tmua.html#newest" data-lock="J1">See Set J</a><span class="lockline" data-lockline="J1">Win a code in an <a href="https://www.instagram.com/kevinvariant/" target="_blank" rel="noopener">Instagram challenge</a>.</span></div>
+        </article>
+        <article class="pc" data-sec="tmua">
+          <h3>TMUA mock Set H</h3>
+          <div class="chips"><a class="chip free" href="how-it-works.html#access">Free</a><a class="chip" href="how-it-works.html#difficulty">Paper 1 <b>7.9</b></a><a class="chip" href="how-it-works.html#difficulty">Paper 2 <b>7.7</b></a></div>
+          <p class="desc">The newest free set: a circle that turns out to be tangent, a hexagon hiding in three moduli, liars round a table, and a bathtub bound on an integral.</p>
+          <div class="acts"><a class="btn" href="drill.html?paper=H1">Sit Paper 1 timed</a><a href="tmua.html#set-h">PDFs and solutions</a></div>
+        </article>
       </div>
-      <p style="margin-top:1rem"><a href="#archive">Set H, Set G and earlier sets are in the archive below.</a></p>
     </section>
 
-    <h2>Practise</h2>
-    <div class="tools">
-      <a class="tool star" href="arena.html">
-        <svg viewBox="0 0 40 40" aria-hidden="true"><path d="M6 34 L20 6 L34 34 Z" fill="none" stroke="#FF6B8B" stroke-width="3" stroke-linejoin="round"/><path d="M13 26 h14" stroke="#FFC53D" stroke-width="3" stroke-linecap="round"/></svg>
-        <div><h3>Arena</h3><p>Race a bot to the right answer. Pick an opponent, from a slow warm-up bot to one that answers like an olympian, or set its speed yourself. Best of five, with a rating that moves as you win. There's also a ten-minute ladder that climbs in difficulty until you run out of lives.</p></div>
-      </a>
-      <a class="tool star" href="rewards.html">
-        <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="16" fill="none" stroke="#FFC53D" stroke-width="3"/><path d="M11 27 L29 27 L22 11 Z" fill="none" stroke="#4FD8E8" stroke-width="2.6" stroke-linejoin="round"/><circle cx="21" cy="22" r="3.6" fill="none" stroke="#FF6B8B" stroke-width="2"/></svg>
-        <div><h3>Rewards</h3><p>Level up from Point to Invariant, keep a daily streak alive, take on the daily challenge everyone gets, clear three weekly quests, collect 44 badges across four tiers and unlock themes that re-colour the whole site. Every hard problem also earns coins for the <b>shop</b>: titles, streak freezes, maths minigames, and a full chapter of <em>Beyond the Incenter</em> for the most dedicated.</p></div>
-      </a>
-      <a class="tool" href="review.html">
-        <svg viewBox="0 0 40 40" aria-hidden="true"><path d="M20 7a13 13 0 1 1-12.3 8.8" fill="none" stroke="#FF6B8B" stroke-width="3" stroke-linecap="round"/><path d="M6 8v8h8" fill="none" stroke="#FF6B8B" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 20.5l3.5 3.5 7-7" fill="none" stroke="#5BE3A6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        <div><h3>Review mistakes</h3><p>Every question you get wrong comes back after 1 day, then 3, then 7. Clear the 7-day review and it is mastered. Ten minutes a day turns mistakes into marks.</p></div>
-      </a>
-      <a class="tool" href="duel.html">
-        <svg viewBox="0 0 40 40" aria-hidden="true"><path d="M8 30 L18 10 M32 30 L22 10" stroke="#4FD8E8" stroke-width="3" stroke-linecap="round"/><path d="M12 24 h6 M22 24 h6" stroke="#FF6B8B" stroke-width="3" stroke-linecap="round"/></svg>
-        <div><h3>Friend duel</h3><p>Play five questions and send the link. Your friend races your ghost on the same five, and each question goes to the faster correct answer.</p></div>
-      </a>
-      <a class="tool" href="qotw.html">
-        <svg viewBox="0 0 40 40" aria-hidden="true"><rect x="7" y="9" width="26" height="24" rx="4" fill="none" stroke="#FFC53D" stroke-width="3"/><path d="M7 16 h26 M14 6 v6 M26 6 v6" stroke="#FFC53D" stroke-width="3" stroke-linecap="round"/><circle cx="20" cy="25" r="3" fill="#FF6B8B"/></svg>
-        <div><h3>Problem of the week</h3><p>One hard problem, the same for everyone. The discussion of methods unlocks only after you have committed an answer.</p></div>
-      </a>
-      <a class="tool" href="drill.html">
-        <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="21" r="13" fill="none" stroke="#4FD8E8" stroke-width="3"/><path d="M20 21 V13 M20 21 l6 4" stroke="#F3F1FF" stroke-width="3" stroke-linecap="round"/></svg>
-        <div><h3>Drill</h3><p>Full papers under exam conditions, technique drills with a solution after every answer, and a weakest-first queue built from your mistakes.</p></div>
-      </a>
-      <a class="tool" href="bank.html">
-        <svg viewBox="0 0 40 40" aria-hidden="true"><rect x="7" y="24" width="6" height="10" rx="2" fill="#4FD8E8"/><rect x="17" y="16" width="6" height="18" rx="2" fill="#FFC53D"/><rect x="27" y="7" width="6" height="27" rx="2" fill="#FF6B8B"/></svg>
-        <div><h3>Question bank</h3><p>All 360 questions ranked from 4.5 to 9.0, filterable by paper and technique, each playable on the spot.</p></div>
-      </a>
-      <a class="tool" href="interviews.html">
-        <svg viewBox="0 0 40 40" aria-hidden="true"><path d="M7 10 h26 v16 h-14 l-7 6 v-6 h-5 Z" fill="none" stroke="#FFC53D" stroke-width="3" stroke-linejoin="round"/></svg>
-        <div><h3>Mock interviews</h3><p>Twenty-five minutes, one original problem in parts you can't see in advance, a nudge button that counts against you, and a locked debrief.</p></div>
-      </a>
-      <a class="tool" href="marker.html">
-        <svg viewBox="0 0 40 40" aria-hidden="true"><path d="M9 21 l7 7 L31 12" fill="none" stroke="#5BE3A6" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        <div><h3>Proof marker</h3><p>Paste a written solution and have it marked against a BMO, STEP, MAT or interview scheme by Claude, ChatGPT or Gemini. The arithmetic is checked exactly.</p></div>
-      </a>
-      <a class="tool" href="techniques.html">
-        <svg viewBox="0 0 40 40" aria-hidden="true"><path d="M8 12 h24 M8 20 h16 M8 28 h20" stroke="#4FD8E8" stroke-width="3" stroke-linecap="round"/></svg>
-        <div><h3>Technique index</h3><p>Every question filed by the idea that cracks it: telescoping, invariants, the inverse-function rectangle, and the rest.</p></div>
-      </a>
-      <a class="tool" href="progress.html">
-        <svg viewBox="0 0 40 40" aria-hidden="true"><path d="M6 30 L15 20 L22 25 L34 10" fill="none" stroke="#FF6B8B" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        <div><h3>Progress</h3><p>Accuracy by technique, how long questions take you, your interview trend and a twelve-week activity map. Stored only in your browser.</p></div>
-      </a>
-    </div>
-
-    <h2 id="friends">Recommended</h2>
-    <div class="tools">
-      <a class="tool star" href="https://arolfmath.com/" target="_blank" rel="noopener">
-        <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="14" fill="none" stroke="#FFC53D" stroke-width="3"/><circle cx="20" cy="20" r="7" fill="none" stroke="#4FD8E8" stroke-width="3"/><circle cx="20" cy="20" r="2.5" fill="#FF6B8B"/></svg>
-        <div><h3>Arolf Math: targeted AMC 10 and 12 practice</h3><p>Built by a friend of the site, and excellent for the AMC. Lessons aligned to AMC 10 and 12 topics, problems from foundational up to AIME-qualifying level, and timed modes that simulate the real exam. A natural partner to the daily problems here.</p></div>
-      </a>
-    </div>
-
-    <h2 id="book">Beyond the Incenter</h2>
-    <div class="book">
-      <div>
-        <img src="cover-mockup.png" alt="Beyond the Incenter book cover">
-        <div style="margin-top:1.2rem">
-          <a class="btn" href="https://www.amazon.co.uk/dp/B0HCDN9VFL" target="_blank" rel="noopener">Buy the paperback</a>
-          <a class="btn secondary" href="https://www.amazon.co.uk/dp/B0HCDN9VFL" target="_blank" rel="noopener">Buy the Kindle edition</a>
+    <section aria-labelledby="brief-h" id="how">
+      <h2 id="brief-h">How it works, in brief</h2>
+      <div class="brief">
+        <div>
+          <h3>One difficulty scale</h3>
+          <p>Every question is rated from 4.5 to 9.0, and every paper on the same scale.</p>
+          <div class="scale" role="img" aria-label="Difficulty scale from 4.5 to 9.0: solid from 4.5 to 5.9, hard from 6.0 to 7.4, severe from 7.5 to 9.0">
+            <div class="bar"><i></i><i></i><i></i></div>
+            <div class="ticks"><span><b>Solid</b>4.5 to 5.9</span><span><b>Hard</b>6.0 to 7.4</span><span><b>Severe</b>7.5 to 9.0</span></div>
+          </div>
+          <p><a href="how-it-works.html#difficulty">How ratings are worked out</a> &middot; <a href="how-it-works.html#start">Where to start</a></p>
+        </div>
+        <div>
+          <h3>Almost everything is free</h3>
+          <ul class="tiers">
+            <li><span class="chip free">Free</span> Sets A to H, every tool and every olympiad paper, with no account needed.</li>
+            <li><span class="chip locked">Locked</span> The newest sets, I and J. Unlock them with a code from an <a href="https://www.instagram.com/kevinvariant/" target="_blank" rel="noopener">Instagram challenge</a>, or unlock Set I with coins.</li>
+          </ul>
+          <p><a href="how-it-works.html#access">Free and locked papers in full</a></p>
         </div>
       </div>
-      <div class="text">
-        <h3 style="margin-top:0">A modern monograph on olympiad geometry</h3>
-        <p>In competitive mathematics, geometry is often perceived by students as a chaotic collection of messy intersections and phantom points, where auxiliary lines and constructions occur purely by luck. <em>Beyond the Incenter</em> dismantles this misconception, presenting synthetic geometry as a rigorous, systematic, and highly structured discipline.</p>
-        <p>Authored for the ambitious student bridging the gap between standard high school curricula and elite-level competitions, this textbook synthesizes classical theorems with modern methods. From the foundational properties of the triangle's five centers to advanced topics like projective geometry and spiral similarity, the text guides readers through the exact techniques required to conquer IMO-caliber configurations.</p>
-        <h3>Why I wrote this book: the geometry gap</h3>
-        <p>Having analysed UKMT markers' reports from the last decade, something alarms me: geometry is consistently the least-attempted and most poorly answered section. The markers explicitly note that geometry questions are "one of the least attempted by candidates," and constantly complain that students rely on "algebraic proof with no reference to the geometrical justifications."</p>
-        <p>The reason for this is simple: modern high school syllabuses have largely stripped out classical geometry. I see this at my own school. Out of over 1,000 students, only three know Menelaus's Theorem, and exactly two know how to use a complete quadrilateral. Because students lack these core geometric tools, they default to Cartesian coordinate or trigonometric bashes in competitions. As the markers point out, this usually leads to pages of algebra, which are highly prone to errors.</p>
-        <p>I wrote <em>Beyond the Incenter</em> to fix this specific gap. There are very few resources that bridge the gap from A-Level math to that elite standard. The goal of this book is to show that Olympiad geometry isn't about guessing "lucky" lines. By breaking down methods like projective geometry, radical axes, and spiral similarity, it provides students with a reliable, systematic approach to problems that otherwise look impossible.</p>
-        <a class="btn secondary" href="cross-ratios.pdf" target="_blank">Read the sample chapter on cross ratios</a>
-      </div>
-    </div>
+    </section>
 
-    <h2>Geometry you can move</h2>
-    <div class="tools">
-      <a class="tool" href="geometry.html">
-        <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="14" fill="none" stroke="#FFC53D" stroke-width="3"/><path d="M9 30 L20 7 L32 29 Z" fill="none" stroke="#4FD8E8" stroke-width="2.6" stroke-linejoin="round"/></svg>
-        <div><h3>Geometry Lab</h3><p>One triangle with its five centres, three circles and the Euler line. Drag a vertex and watch <em>OI</em> stay equal to &radic;(<em>R</em>&sup2;&minus;2<em>Rr</em>), whatever shape you force the triangle into.</p></div>
-      </a>
-      <a class="tool" href="sandbox.html">
-        <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="10" cy="30" r="3.5" fill="#FF6B8B"/><circle cx="30" cy="28" r="3.5" fill="#FF6B8B"/><circle cx="20" cy="9" r="3.5" fill="#FF6B8B"/><path d="M10 30 L20 9 L30 28" fill="none" stroke="#F3F1FF" stroke-width="2" stroke-dasharray="3 3"/></svg>
-        <div><h3>Conjecture sandbox</h3><p>Build a figure from twenty-seven constructions and drag it. The page reports what stays true under perturbation, then exports tkz-euclide code.</p></div>
-      </a>
-    </div>
+    <section aria-labelledby="book-h" id="book">
+      <div class="bookband" data-sec="book">
+        <picture>
+          <source srcset="cover-mockup.webp" type="image/webp">
+          <img src="cover-mockup.png" alt="Beyond the Incenter book cover" width="960" height="673" loading="lazy">
+        </picture>
+        <div>
+          <span class="chip">The book</span>
+          <h2 id="book-h"><em>Beyond the Incenter</em></h2>
+          <p>A modern monograph on olympiad geometry, from the triangle's five centres to projective geometry, radical axes and spiral similarity.</p>
+          <a class="btn" href="book.html">About the book</a>
+          <a class="btn secondary" href="cross-ratios.pdf" target="_blank" rel="noopener">Sample chapter</a>
+        </div>
+      </div>
+    </section>
 
-    <h2>Papers and solutions</h2>
-    <p class="section-intro">Every paper is original. Solutions are separate downloads, so each paper can be sat cold.</p>
-    <div class="archive" id="archive">
-      <div class="arow">
-        <div><h3>TMUA mock Set H</h3><p class="diff"><span>Paper 1 difficulty <b>7.9</b></span><span>Paper 2 difficulty <b>7.7</b></span></p><p>A circle that turns out to be tangent, a hexagon hiding in three moduli, liars round a table, and a bathtub bound on an integral.</p></div>
-        <div class="files"><a href="drill.html?paper=H1">Sit Paper 1 timed</a><a href="HU_Collection_TMUA_SetH_Paper1.pdf" target="_blank">Paper 1</a><a href="HU_Collection_TMUA_SetH_Paper1_Solutions.pdf" target="_blank">Paper 1 solutions</a><a href="drill.html?paper=H2">Sit Paper 2 timed</a><a href="HU_Collection_TMUA_SetH_Paper2.pdf" target="_blank">Paper 2</a><a href="HU_Collection_TMUA_SetH_Paper2_Solutions.pdf" target="_blank">Paper 2 solutions</a></div>
-      </div>
-      <div class="arow">
-        <div><h3>TMUA mock Set G</h3><p class="diff"><span>Paper 1 difficulty <b>8.0</b></span><span>Paper 2 difficulty <b>7.9</b></span></p><p>Nested absolute-value graphs, four common tangents summed exactly, an induction with a broken step, and involutions with no fixed point.</p></div>
-        <div class="files"><a href="drill.html?paper=G1">Sit Paper 1 timed</a><a href="HU_Collection_TMUA_SetG_Paper1.pdf" target="_blank">Paper 1</a><a href="HU_Collection_TMUA_SetG_Paper1_Solutions.pdf" target="_blank">Paper 1 solutions</a><a href="drill.html?paper=G2">Sit Paper 2 timed</a><a href="HU_Collection_TMUA_SetG_Paper2.pdf" target="_blank">Paper 2</a><a href="HU_Collection_TMUA_SetG_Paper2_Solutions.pdf" target="_blank">Paper 2 solutions</a></div>
-      </div>
-      <div class="arow">
-        <div><h3>TMUA mock Set D</h3><p class="diff"><span>Paper 1 difficulty <b>6.3</b></span><span>Paper 2 difficulty <b>6.2</b></span></p><p>Logarithm chains, roots confined to an interval, and a sequence bounded by keeping the error terms.</p></div>
-        <div class="files"><a href="drill.html?paper=D1">Sit Paper 1 timed</a><a href="HU_Collection_TMUA_SetD_Paper1.pdf" target="_blank">Paper 1</a><a href="HU_Collection_TMUA_SetD_Paper1_Solutions.pdf" target="_blank">Paper 1 solutions</a><a href="drill.html?paper=D2">Sit Paper 2 timed</a><a href="HU_Collection_TMUA_SetD_Paper2.pdf" target="_blank">Paper 2</a><a href="HU_Collection_TMUA_SetD_Paper2_Solutions.pdf" target="_blank">Paper 2 solutions</a></div>
-      </div>
-      <div class="arow">
-        <div><h3>TMUA mock Set E</h3><p class="diff"><span>Paper 1 difficulty <b>6.1</b></span><span>Paper 2 difficulty <b>6.1</b></span></p><p>Telescoping with a gap of two, recurrences you complete the square on, and a chain of powers between 0 and 1.</p></div>
-        <div class="files"><a href="drill.html?paper=E1">Sit Paper 1 timed</a><a href="HU_Collection_TMUA_SetE_Paper1.pdf" target="_blank">Paper 1</a><a href="HU_Collection_TMUA_SetE_Paper1_Solutions.pdf" target="_blank">Paper 1 solutions</a><a href="drill.html?paper=E2">Sit Paper 2 timed</a><a href="HU_Collection_TMUA_SetE_Paper2.pdf" target="_blank">Paper 2</a><a href="HU_Collection_TMUA_SetE_Paper2_Solutions.pdf" target="_blank">Paper 2 solutions</a></div>
-      </div>
-      <div class="arow">
-        <div><h3>TMUA mock Set F</h3><p class="diff"><span>Paper 1 difficulty <b>6.1</b></span><span>Paper 2 difficulty <b>6.2</b></span></p><p>Remainders without division, the bound AM-GM cannot reach, and a cycle of implications.</p></div>
-        <div class="files"><a href="drill.html?paper=F1">Sit Paper 1 timed</a><a href="HU_Collection_TMUA_SetF_Paper1.pdf" target="_blank">Paper 1</a><a href="HU_Collection_TMUA_SetF_Paper1_Solutions.pdf" target="_blank">Paper 1 solutions</a><a href="drill.html?paper=F2">Sit Paper 2 timed</a><a href="HU_Collection_TMUA_SetF_Paper2.pdf" target="_blank">Paper 2</a><a href="HU_Collection_TMUA_SetF_Paper2_Solutions.pdf" target="_blank">Paper 2 solutions</a></div>
-      </div>
-      <div class="arow">
-        <div><h3>TMUA mock Set C</h3><p class="diff"><span>Paper 1 difficulty <b>7.1</b></span><span>Paper 2 difficulty <b>6.9</b></span></p><p>Pitched above the 2025 TMUA and weighted towards integration tricks, trigonometric inequalities and negating implications.</p></div>
-        <div class="files"><a href="drill.html?paper=C1">Sit Paper 1 timed</a><a href="HU_Collection_TMUA_SetC_Paper1.pdf" target="_blank">Paper 1</a><a href="HU_Collection_TMUA_SetC_Paper1_Solutions.pdf" target="_blank">Paper 1 solutions</a><a href="drill.html?paper=C2">Sit Paper 2 timed</a><a href="HU_Collection_TMUA_SetC_Paper2.pdf" target="_blank">Paper 2</a><a href="HU_Collection_TMUA_SetC_Paper2_Solutions.pdf" target="_blank">Paper 2 solutions</a></div>
-      </div>
-      <div class="arow">
-        <div><h3>TMUA mock Set B</h3><p class="diff"><span>Paper 1 difficulty <b>7.3</b></span><span>Paper 2 difficulty <b>7.5</b></span></p><p>No routine questions: invariants, Ptolemy on a heptagon, interpolating an exponential, a sign-change argument for integrals.</p></div>
-        <div class="files"><a href="drill.html?paper=B1">Sit Paper 1 timed</a><a href="HU_Collection_TMUA_SetB_Paper1.pdf" target="_blank">Paper 1</a><a href="HU_Collection_TMUA_SetB_Paper1_Solutions.pdf" target="_blank">Paper 1 solutions</a><a href="drill.html?paper=B2">Sit Paper 2 timed</a><a href="HU_Collection_TMUA_SetB_Paper2.pdf" target="_blank">Paper 2</a><a href="HU_Collection_TMUA_SetB_Paper2_Solutions.pdf" target="_blank">Paper 2 solutions</a></div>
-      </div>
-      <div class="arow">
-        <div><h3>TMUA mock Set A</h3><p>A gentler entry point, with questions and worked solutions in one document.</p></div>
-        <div class="files"><a href="hu_mock_a_p1_with_solutions.pdf" target="_blank">Paper 1 with solutions</a><a href="hu_mock_a_p2_with_solutions.pdf" target="_blank">Paper 2 with solutions</a></div>
-      </div>
-      <div class="arow">
-        <div><h3>The HU Collection</h3><p>Short elite-level mock examinations for TMUA, MAT and interview preparation, on topics the standard curriculum skips.</p></div>
-        <div class="files"><a href="Hu_Collection_Part_1.pdf" target="_blank">Part 1</a><a href="Hu_Collection_Part_2.pdf" target="_blank">Part 2</a></div>
-      </div>
-      <div class="arow">
-        <div><h3>Kevin's Mathematical Olympiad</h3><p>Original mock olympiad papers across geometry, number theory, algebra and combinatorics.</p></div>
-        <div class="files"><a href="Mock_BMO.pdf" target="_blank">Problem set</a><a href="KMO_solutions.pdf" target="_blank">Solutions</a></div>
-      </div>
-      <div class="arow">
-        <div><h3>Mock SMC and S(A)MC</h3><p>Practice papers and full solutions for the Senior Maths Challenge, AMC, AIME and more.</p></div>
-        <div class="files"><a href="Mock_UKMT_SMC.pdf" target="_blank">Mock UKMT SMC</a><a href="S(A)MC_Solutions.pdf" target="_blank">S(A)MC solutions</a><a href="PC.pdf" target="_blank">Purple Comet 2026 HS solutions</a></div>
-      </div>
-      <div class="arow">
-        <div><h3>Olympiad solutions</h3><p>Original write-ups for the British Mathematical Olympiad and the IMO Shortlist.</p></div>
-        <div class="files"><a href="BMO2_2011_Sol.pdf" target="_blank">BMO2 2011</a><a href="ISL_2025_sol.pdf" target="_blank">IMO Shortlist 2025, G1 to G3</a></div>
-      </div>
+    <div class="elsewhere" id="recommended">
+      <b>Recommended elsewhere:</b>
+      <span><a href="https://arolfmath.com/" target="_blank" rel="noopener">Arolf Math</a>, built by a friend of the site: targeted AMC 10 and 12 practice, from foundational problems up to AIME-qualifying level, with timed exam modes.</span>
     </div>
   </main>
-  <footer class="site-foot">Kevinvariant. Scores and progress stay in your browser unless you choose to log them.</footer>
 
-<script src="site.js?v=20260929"></script>
+<script src="site.js?v=20261021"></script>
 <script>
 (function(){
   var svg=document.getElementById('tri'), NS='http://www.w3.org/2000/svg', U=100;
@@ -346,30 +244,16 @@
 </script>
 <script src="locks.js?v=20260929"></script>
 <script>
+/* Flip the Set J card to "Unlocked" for accounts that have redeemed it. */
 (async function(){ if(!window.HU_LOCKS) return; var sc=[]; try{ sc=await HU_LOCKS.scopes(); }catch(e){ return; }
   document.querySelectorAll('[data-lock]').forEach(function(a){ var p=a.dataset.lock; if(sc.indexOf('*')<0&&sc.indexOf(p)<0) return;
-    a.textContent='Sit it timed'; a.href='drill.html?paper='+p;
-    var b=document.querySelector('[data-badge="'+p+'"]'); if(b){ b.textContent='Unlocked'; b.classList.add('open'); }
-    var l=document.querySelector('[data-lockline="'+p+'"]'); if(l) l.innerHTML='<a href="unlock.html?paper='+p+'">Question paper and solutions</a>'; }); })();
+    a.textContent='Sit Paper 1 timed'; a.href='drill.html?paper='+p;
+    var b=document.querySelector('[data-badge="'+p+'"]'); if(b){ b.textContent='Unlocked'; b.classList.remove('locked'); b.classList.add('open'); }
+    var l=document.querySelector('[data-lockline="'+p+'"]'); if(l) l.innerHTML='<a href="tmua.html#newest">Both papers and solutions</a>'; }); })();
 </script>
 <script>
-/* SMC 2026 solutions: time-locked in the private bucket until 19:15 UAE on 8 October 2026 (the database enforces this). */
-(function(){
-  var RELEASE=Date.UTC(2026,9,8,15,15,0), clock=document.getElementById('smc-clock'), btn=document.getElementById('smc-btn'), msg=document.getElementById('smc-msg');
-  function pad(n){ return (n<10?'0':'')+n; }
-  function open(){
-    clock.textContent='Unlocked'; btn.textContent='Read the solutions'; btn.removeAttribute('aria-disabled');
-    btn.onclick=async function(e){ e.preventDefault(); msg.textContent='Opening...';
-      try{ if(window.HU_LOCKS) await HU_LOCKS.ready(); var c=window.HU_AUTH&&window.HU_AUTH.client; if(!c) throw 0;
-        var r=await c.storage.from('locked').createSignedUrl('SMC26/solutions.pdf',3600); if(r.error) throw r.error;
-        msg.textContent=''; window.open(r.data.signedUrl,'_blank'); }
-      catch(err){ msg.textContent='Could not open the solutions just now. Refresh the page and try again.'; } };
-  }
-  function tick(){ var d=RELEASE-Date.now(); if(d<=0){ clearInterval(t); open(); return; }
-    var s=Math.floor(d/1000), h=Math.floor(s/3600), m=Math.floor(s%3600/60); clock.textContent=h+':'+pad(m)+':'+pad(s%60); }
-  var t=setInterval(tick,1000); tick();
-  (async function(){ try{ if(window.HU_LOCKS&&await HU_LOCKS.isAdmin()&&RELEASE>Date.now()){ clearInterval(t); open(); clock.textContent='Admin preview'; } }catch(e){} })();
-})();
+/* Old homepage anchors moved to their own pages; keep old links working. */
+(function(){ var m={'#archive':'tmua.html#sets','#friends':'#recommended'}; var t=m[location.hash]; if(t){ if(t.charAt(0)==='#') location.hash=t; else location.replace(t); } })();
 </script>
 </body>
 </html>
