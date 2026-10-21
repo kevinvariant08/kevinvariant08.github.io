@@ -23,8 +23,7 @@
       {href:'shop.html', name:'Shop', note:'Spend coins on titles, themes, minigames and more'},
       {href:'games.html', name:'Labs', note:'Maths minigames from the shop'},
       {href:'progress.html', name:'My progress', note:'Accuracy, timing and streaks'},
-      {href:'results.html', name:'Results', note:'Your scores against everyone else'}]},
-    {label:'Music', href:'music.html'}
+      {href:'results.html', name:'Results', note:'Your scores against everyone else'}]}
   ];
   var here=(location.pathname.split('/').pop()||'index.html').toLowerCase();
   function caret(){return '<svg class="caret" viewBox="0 0 10 10" aria-hidden="true"><path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>';}
