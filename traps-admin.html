@@ -115,9 +115,9 @@ function reviewPage(){
   /* ---------------- cards */
   var shown=[], cur=-1, editing=null;
   function viewTrap(x){ if(!x) return '<p class="e" style="color:var(--rose)">No entry for this option.</p>';
-    var wk='<p class="wk"><b>Working:</b> '+(x.working||'<em>missing</em>')+'</p>';
+    var wk='<p class="wk"><b>Working:</b> '+(x.working?esc(x.working):'<em>missing</em>')+'</p>';
     if(x.trap==='none') return '<p class="none">No trap.</p>'+wk;
-    var T=TYPES[x.trap]; return '<p><strong>'+esc(T?T.name:'Unknown trap '+x.trap)+'.</strong> '+(x.why||'<em>why missing</em>')+'</p>'+wk; }
+    var T=TYPES[x.trap]; return '<p><strong>'+esc(T?T.name:'Unknown trap '+x.trap)+'.</strong> '+(x.why?esc(x.why):'<em>why missing</em>')+'</p>'+wk; }
   function editTrap(id,L){ var o='<option value="none">No trap</option>'+Object.keys(TYPES).map(function(k){ return '<option value="'+k+'">'+esc(TYPES[k].name)+'</option>'; }).join('');
     var p=id+'-'+L; return '<label for="t-'+p+'">Trap for '+L+'</label><select id="t-'+p+'" data-l="'+L+'" data-f="trap">'+o+'</select>'
       +'<label for="w-'+p+'">Why, shown to students (one sentence)</label><textarea id="w-'+p+'" rows="2" data-l="'+L+'" data-f="why"></textarea>'

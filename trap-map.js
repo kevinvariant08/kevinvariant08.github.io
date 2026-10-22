@@ -13,9 +13,10 @@
   function get(id,L,asAdmin){ var e=entry(id,asAdmin), o=e&&e.opts[L], T=types();
     if(!o||o.trap==='none'||!T[o.trap]) return null;
     return {type:o.trap,name:T[o.trap].name,why:o.why||'',draft:!e.reviewed}; }
-  /* "You fell for" note shown above the solution; empty when there is nothing to show */
+  /* "You fell for" note shown above the solution; empty when there is nothing to show.
+     why is plain text with TeX, so it is escaped: "$x<y$" must not be read as a tag. */
   function note(id,L){ var t=get(id,L); if(!t) return '';
-    return '<div class="trapnote"><p><strong>You fell for: '+esc(t.name)+'.</strong> '+t.why+'</p>'
+    return '<div class="trapnote"><p><strong>You fell for: '+esc(t.name)+'.</strong> '+esc(t.why)+'</p>'
       +(t.draft?'<p class="draft">Draft trap, not reviewed yet. Only admins see this.</p>':'')+'</div>'; }
   /* trap types among a question's visible distractors */
   function typesIn(id,asAdmin){ var e=entry(id,asAdmin), out=[]; if(!e) return out;
