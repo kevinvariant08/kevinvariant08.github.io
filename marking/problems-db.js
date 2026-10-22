@@ -15,10 +15,17 @@
     });
   }
   function client() { var A = window.HU_AUTH; return A && A.configured && A.client ? A.client : null; }
+  /* account.js announces itself before the saved session has loaded, so ask Supabase directly */
+  function sessionUser() {
+    var c = client(); if (!c) return Promise.resolve(null);
+    return c.auth.getSession().then(function (r) { return (r && r.data && r.data.session && r.data.session.user) || null; }, function () { return null; });
+  }
   function isAdmin() {
-    var c = client(), A = window.HU_AUTH;
-    if (!c || !A.user || !A.user()) return Promise.resolve(false);
-    return c.rpc('hu_is_admin').then(function (r) { return !r.error && r.data === true; }, function () { return false; });
+    var c = client(); if (!c) return Promise.resolve(false);
+    return sessionUser().then(function (u) {
+      if (!u) return false;
+      return c.rpc('hu_is_admin').then(function (r) { return !r.error && r.data === true; }, function () { return false; });
+    });
   }
   function fetchRows() {
     var c = client(); if (!c) return Promise.resolve({ rows: [], error: 'not-configured' });
@@ -50,5 +57,5 @@
     var c = client(); if (!c) return Promise.reject(new Error('Not connected to the database.'));
     return c.from('marker_problems').delete().eq('id', id).then(function (r) { if (r.error) throw new Error(r.error.message); return true; });
   }
-  window.HU_MARKER_DB = { whenAuth: whenAuth, isAdmin: isAdmin, fetchRows: fetchRows, merge: merge, save: save, remove: remove };
+  window.HU_MARKER_DB = { whenAuth: whenAuth, sessionUser: sessionUser, isAdmin: isAdmin, fetchRows: fetchRows, merge: merge, save: save, remove: remove };
 })();

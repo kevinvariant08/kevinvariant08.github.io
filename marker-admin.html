@@ -160,12 +160,12 @@
 
 <script src="tools/marking-parse.js?v=20261022"></script>
 <script src="marking/library.js?v=20261022"></script>
-<script src="marking/problems-db.js?v=20261022"></script>
+<script src="marking/problems-db.js?v=20261023"></script>
 <script>
 var FREE_PROXY = "https://hu-interviewer.kevinvariant08.workers.dev";
 var DB = window.HU_MARKER_DB, PARSE = window.HU_MARK_PARSE;
 var BUILTIN = (window.HU_MARKING && window.HU_MARKING.problems) || [];
-var ROWS = [], editing = null, idTouched = false;
+var ROWS = [], editing = null, idTouched = false, started = false, startedWatch = false;
 
 function $(id){ return document.getElementById(id); }
 function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
@@ -179,7 +179,14 @@ function draftKey(){ return 'hu_editor_draft'; }
 async function start(){
   var A=await DB.whenAuth(9000);
   if(!A||!A.configured){ $('gate').innerHTML='<p>Accounts are not available on this copy of the site, so the editor cannot save. Use it on kevinvariant08.github.io.</p>'; return; }
-  if(!A.user()){ $('gate').innerHTML='<p>Sign in with the admin account to use the editor. <a href="auth.html#signin">Sign in</a></p>'; A.onChange&&A.onChange(function(){ if(A.user()) location.reload(); }); return; }
+  var u=await DB.sessionUser();
+  if(!u){
+    $('gate').innerHTML='<p>Sign in with the admin account to use the editor. <a href="auth.html#signin">Sign in</a></p>';
+    /* if they sign in from the menu on this page, carry on without reloading */
+    if(!startedWatch){ startedWatch=true; A.onChange(function(user){ if(user&&!started){ start(); } }); }
+    return;
+  }
+  if(started) return; started=true;
   var admin=await DB.isAdmin();
   if(!admin){ $('gate').innerHTML='<p>This page is only for the site\'s admin.</p>'; return; }
   $('gate').classList.add('hidden');
