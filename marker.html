@@ -105,6 +105,49 @@
     .mk .fixfirst .k{font-family:var(--sans);font-size:.78rem;font-weight:500;color:var(--paper);background:var(--ink);padding:.2rem .55rem;border-radius:2px;white-space:nowrap}
     .mk .fixfirst p{margin:0}
     .mk .rfoot{margin-top:1.4rem;font-size:.84rem!important;color:var(--faint);font-family:var(--sans)!important}
+    /* problem library, preview, checkpoints and second check */
+    .mk .seg{display:inline-flex;border:1px solid var(--rule);border-radius:2px;margin:.2rem 0 .4rem;flex-wrap:wrap}
+    .mk .seg button{font-family:var(--sans);font-size:.92rem;background:transparent;color:var(--soft);border:0;padding:.55rem 1rem;cursor:pointer;min-height:44px}
+    .mk .seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+    .mk .seg button:focus-visible{outline:2px solid var(--bad);outline-offset:2px}
+    .mk .filters{display:flex;gap:.6rem;flex-wrap:wrap;align-items:end;margin:.6rem 0 .2rem}
+    .mk .filters label{margin-top:0}
+    .mk .filters select{width:auto;min-width:11rem}
+    .mk .plist{display:grid;grid-template-columns:repeat(auto-fill,minmax(15rem,1fr));gap:.6rem;margin-top:.7rem}
+    .mk .pcard{text-align:left;background:var(--card);border:1px solid var(--rule);border-radius:2px;padding:.8rem .9rem;cursor:pointer;color:var(--ink);font-family:var(--sans);display:flex;flex-direction:column;gap:.3rem;min-height:44px}
+    .mk .pcard:hover{border-color:var(--soft)}
+    .mk .pcard[aria-pressed="true"]{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+    .mk .pcard:focus-visible{outline:2px solid var(--bad);outline-offset:2px}
+    .mk .pcard .t{font-family:var(--serif);font-weight:600;font-size:1rem;line-height:1.35}
+    .mk .pcard .m{font-size:.8rem;color:var(--faint)}
+    .mk .badge{display:inline-block;font-family:var(--sans);font-size:.72rem;font-weight:500;padding:.1rem .45rem;border-radius:2px;background:var(--warnbg);color:var(--warn);margin-left:.3rem;vertical-align:middle}
+    .mk .badge.ok{background:var(--okbg);color:var(--ok)}
+    .mk .pstate{margin-top:1rem;padding:1rem 1.1rem;border:1px solid var(--rule);background:var(--card)}
+    .mk .pstate h3{font-family:var(--serif);font-weight:600;font-size:1.08rem;margin:0 0 .3rem}
+    .mk .pstate .m{font-size:.84rem;color:var(--faint);margin:0 0 .6rem}
+    .mk .pstate .stmt p{font-family:var(--serif);font-size:1.02rem;line-height:1.7;margin:.4rem 0}
+    .mk .draftnote{font-size:.86rem;color:var(--soft);margin:.6rem 0 0}
+    .mk .preview{margin-top:.5rem;padding:.8rem 1rem;border:1px dashed var(--rule);font-family:var(--serif);font-size:1rem;line-height:1.7;overflow-x:auto}
+    .mk .preview p{margin:.3rem 0}
+    .mk .history{font-size:.88rem;color:var(--soft);margin:.5rem 0 0}
+    .mk .cards.four{grid-template-columns:repeat(auto-fit,minmax(12rem,1fr))}
+    .mk .warnbox{margin-top:1.2rem;padding:.8rem 1rem;border:1px solid var(--warn);background:var(--warnbg);color:var(--ink);font-family:var(--sans)!important;font-size:.92rem!important}
+    .mk .improve{margin-top:1.2rem;padding:.8rem 1rem;border:1px solid var(--ok);background:var(--okbg);font-family:var(--sans)!important;font-size:.92rem!important}
+    .mk .cptable{width:100%;border-collapse:collapse;font-size:.92rem}
+    .mk .cptable th,.mk .cptable td{text-align:left;padding:.5rem .4rem;border-bottom:1px solid var(--rule);vertical-align:top}
+    .mk .cptable th{font-family:var(--sans);font-weight:500;font-size:.78rem;color:var(--faint)}
+    .mk .cptable td.n{white-space:nowrap;font-family:var(--sans);font-variant-numeric:tabular-nums}
+    .mk .cptable td p{margin:0;font-family:var(--serif)}
+    .mk .cptable .why{color:var(--soft);font-size:.88rem;margin-top:.2rem}
+    .mk .cptable tr.off td{color:var(--faint)}
+    .mk .cpwrap{overflow-x:auto}
+    .mk .fromcheck{display:inline-block;font-family:var(--sans);font-size:.72rem;color:var(--faint);margin-top:.3rem}
+    .mk details.more{margin-top:1.4rem;border-top:1px solid var(--rule);padding-top:.8rem}
+    .mk details.more summary{cursor:pointer;font-family:var(--sans);font-size:.95rem;min-height:44px;display:flex;align-items:center}
+    .mk details.more .body p{font-family:var(--serif);font-size:1rem;line-height:1.7}
+    .mk details.more h4{font-family:var(--serif);font-weight:600;margin:1rem 0 .2rem}
+    .mk .exmeta{font-family:var(--sans)!important;font-size:.84rem!important;color:var(--soft)}
+    .mk .step2{margin-top:1.4rem;padding-top:1rem;border-top:1px dashed var(--rule)}
   </style>
 </head>
 <body data-theme-v2>
@@ -112,43 +155,78 @@
 
   <main class="container mk">
     <h1>Proof marker</h1>
-    <p class="lead">Paste a problem and your written solution and have it marked against a BMO, STEP, MAT or interview scheme by the strongest model you have access to. Every numerical step is checked exactly by the page itself; the model judges the argument. Treat the result as a demanding second opinion, not an examiner's verdict.</p>
+    <p class="tally hidden" id="agreement"></p>
+    <p class="lead">Write a solution to an olympiad or interview problem and get it marked like an examiner would: checkpoint by checkpoint, with the exact line where the argument breaks. Problems from the library are marked against their own mark scheme and examples, then checked a second time by an independent pass. Treat the result as a demanding second opinion, not an official mark.</p>
 
-    <label>Problem statement <small class="tex2jax_ignore">(LaTeX between dollar signs is fine)</small>
-      <textarea id="prob" placeholder="State the problem exactly as set."></textarea></label>
-    <label>Your solution
+    <h2>1. The problem</h2>
+    <div class="seg" role="group" aria-label="Where the problem comes from">
+      <button type="button" id="src-lib" aria-pressed="true">From the problem library</button>
+      <button type="button" id="src-own" aria-pressed="false">My own problem</button>
+    </div>
+
+    <div id="libwrap">
+      <div class="filters">
+        <label>Topic <select id="ftopic"><option value="">All topics</option></select></label>
+      </div>
+      <div class="plist" id="plist" role="group" aria-label="Problems"></div>
+      <div class="pstate hidden" id="pstate" aria-live="polite"></div>
+    </div>
+
+    <div id="ownwrap" class="hidden">
+      <label>Problem statement <small class="tex2jax_ignore">(LaTeX between dollar signs is fine)</small>
+        <textarea id="prob" placeholder="State the problem exactly as set."></textarea></label>
+      <label>Marking scheme <select id="scheme"></select></label>
+      <p class="tally">Your own problems are marked against a general scheme, because there is no problem-specific mark scheme to compare with. Library problems are marked more reliably.</p>
+    </div>
+
+    <h2>2. Your solution</h2>
+    <label>Your solution <small class="tex2jax_ignore">(LaTeX between dollar signs is fine)</small>
       <textarea id="sol" placeholder="Write it as you would on paper: every step you would expect a marker to read."></textarea></label>
+    <div class="row" style="margin-top:.5rem"><button type="button" class="btn quiet" id="pvbtn" aria-expanded="false" aria-controls="preview">Show preview</button></div>
+    <div class="preview hidden" id="preview" aria-live="polite"></div>
     <label id="photorow" class="hidden">Or attach a photo of your handwritten solution <small>(Claude only)</small>
       <input type="file" id="photo" multiple style="margin-top:.4rem"></label>
-    <label>Marking scheme <select id="scheme"></select></label>
+    <p class="history hidden" id="history"></p>
 
-    <h2>Who marks it</h2>
-    <div class="cards" role="group" aria-label="Choose a marker">
-      <button type="button" class="card" id="card-claude" aria-pressed="false">
-        <span class="t">Claude, built in</span>
-        <span class="d" id="claude-note">Runs on your own Claude account, with no setup. Free accounts work.</span>
-        <span class="s" id="claude-state">Checking</span>
+    <h2>3. Who marks it</h2>
+    <div class="cards four" role="group" aria-label="Choose a marker">
+      <button type="button" class="card" id="card-free" aria-pressed="true">
+        <span class="t">Free marker</span>
+        <span class="d">No account or key. Runs on a free model through this site, with the same two-pass check. Good for quick feedback; less sharp on hard proofs.</span>
+        <span class="s" id="free-state">Free, with a daily limit</span>
       </button>
-      <button type="button" class="card" id="card-chat" aria-pressed="true">
+      <button type="button" class="card" id="card-chat" aria-pressed="false">
         <span class="t">Any chatbot</span>
-        <span class="d">ChatGPT, Gemini, Claude or another. Copy a prompt into it, paste its reply back here. Uses the plan you already have.</span>
+        <span class="d">ChatGPT, Gemini, Claude or another. Copy a prompt into it and paste its reply back. Uses the strongest model your plan allows.</span>
         <span class="s">Works everywhere</span>
       </button>
       <button type="button" class="card" id="card-key" aria-pressed="false">
         <span class="t">Your API key</span>
         <span class="d">OpenAI, Google Gemini or Anthropic. The key stays in your browser and goes straight to the provider.</span>
-        <span class="s">For developers</span>
+        <span class="s">Most accurate</span>
       </button>
+      <button type="button" class="card" id="card-claude" aria-pressed="false">
+        <span class="t">Claude, built in</span>
+        <span class="d" id="claude-note">Runs on your own Claude account, with no setup. Free accounts work.</span>
+        <span class="s" id="claude-state">Checking</span>
+      </button>
+    </div>
+
+    <div class="pane" id="pane-free">
+      <p class="panehead">Free marker</p>
+      <p class="tally" style="margin:0">Marking takes two or three requests: a first marking, an independent check, and a re-mark if the check finds something serious. Each visitor has a daily allowance shared with the mock interviews. Your solution is sent to the model only to be marked; this site does not store it.</p>
+      <div class="row"><button class="btn" id="go-free">Mark it</button></div>
+      <p class="msg" id="msg-free"></p>
     </div>
 
     <div class="pane hidden" id="pane-claude">
       <p class="panehead">Claude, built in</p>
-      <p class="tally" style="margin:0">Uses Claude's most capable reasoning model where your plan allows. Careful marking takes a minute or two.</p>
+      <p class="tally" style="margin:0">Uses Claude's most capable reasoning model where your plan allows, with the two-pass check. Careful marking takes a minute or two.</p>
       <div class="row"><button class="btn" id="go-claude">Mark with Claude</button><button class="btn quiet hidden" id="stop-claude">Stop</button></div>
       <p class="msg" id="msg-claude"></p>
     </div>
 
-    <div class="pane" id="pane-chat">
+    <div class="pane hidden" id="pane-chat">
       <p class="panehead">Any chatbot</p>
       <ol class="steps">
         <li>Pick your chatbot. The marking prompt is copied and the chatbot opens in a new tab.</li>
@@ -166,6 +244,15 @@
       <label>The chatbot's reply<textarea id="reply" placeholder="Paste the whole reply here."></textarea></label>
       <div class="row"><button class="btn" id="render">Show report</button></div>
       <p class="msg" id="msg-chat"></p>
+      <div class="step2 hidden" id="step2">
+        <p class="panehead">Second check (recommended)</p>
+        <p class="tally" style="margin:0">A second, independent read catches steps the first marking credited too generously. Start a new chat for it, so the checker has not seen its own earlier reply.</p>
+        <div class="row"><button class="btn" id="copy-check">Copy the checking prompt</button></div>
+        <div id="checkwrap" class="hidden"><label>The checking prompt <small>(in case copying was blocked)</small><textarea id="checkbox" readonly style="min-height:7rem;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.8rem"></textarea></label></div>
+        <label>The checker's reply<textarea id="checkreply" placeholder="Paste the whole reply here." style="min-height:6rem;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85rem"></textarea></label>
+        <div class="row"><button class="btn" id="apply-check">Apply the check</button></div>
+        <p class="msg" id="msg-check"></p>
+      </div>
     </div>
 
     <div class="pane hidden" id="pane-key">
@@ -180,18 +267,16 @@
 
     <div id="out" class="report hidden" aria-live="polite"></div>
   </main>
+<script src="marking/marker-core.js?v=20261022"></script>
+<script src="marking/library.js?v=20261022"></script>
+<script src="marking/eval/latest.js?v=20261022"></script>
 <script>
 /* ====================================================== configuration */
 var ARTIFACT_URL = "https://claude.ai/artifact/6MiSw7qdvz75ycpsFB1SMH";   /* the claude.ai copy of this page, where Claude runs built in */
-var SITE = "https://kevinvariant08.github.io/";
-
-var SCHEMES={
-  bmo:{max:10,name:'BMO round 1 style, out of 10',desc:'British Mathematical Olympiad Round 1 conventions. 10 for a complete and rigorous proof with all cases handled. 7 to 9 for essentially complete with a minor gap or an omitted degenerate case. 4 to 6 for substantial progress towards a complete method. 1 to 3 for relevant observations or a special case only. 0 for nothing of value, including a correct final answer with no valid argument.'},
-  bmo2:{max:10,name:'BMO round 2 style, out of 10, stricter',desc:'British Mathematical Olympiad Round 2 conventions, marked strictly. Any logical gap that could hide a false step costs at least 3 marks. Unjustified "clearly" or "it is easy to see" steps are treated as absent. A proof relying on one configuration of a diagram without handling the others is capped at 5.'},
-  step:{max:20,name:'STEP style, out of 20',desc:'STEP conventions. Marks for correct method and execution of each part; accuracy marks are lost for algebraic slips, method marks are not. A part that is not attempted scores zero for that part; a correct answer with no working scores at most one third of its marks.'},
-  mat:{max:15,name:'MAT long question, out of 15',desc:'Oxford MAT long question conventions. Marks are allocated per sub-part; later parts can be credited using an earlier wrong result if the method is correct. Full marks require every claim to be justified in writing, not asserted.'},
-  interview:{max:10,name:'Interview whiteboard, out of 10',desc:'A whiteboard argument in an Oxford interview. 10 if the argument is complete and each step would satisfy a tutor probing it; 7 if a tutor would need to ask one clarifying question; 4 if the idea is right but the argument would not survive questioning; 0 to 2 if the reasoning is circular, assumes the result, or is missing.'}
-};
+var FREE_PROXY = "https://hu-interviewer.kevinvariant08.workers.dev";    /* the same worker the mock interviews use */
+var M = window.HU_MARK, LIB = (window.HU_MARKING && window.HU_MARKING.problems) || [];
+var SCHEMES = M.SCHEMES;
+var TOPIC_NAMES = {'geometry':'Geometry','number theory':'Number theory','algebra':'Algebra','combinatorics':'Combinatorics','interview':'Interview'};
 
 /* ====================================================== small helpers */
 function $(id){ return document.getElementById(id); }
@@ -199,212 +284,260 @@ function esc(s){ return String(s).replace(/[&<>"]/g,function(c){return {'&':'&am
 function typeset(el){ if(window.MathJax&&MathJax.typesetPromise) MathJax.typesetPromise([el]).catch(function(){}); }
 function lsGet(k,d){ try{ var v=localStorage.getItem(k); return v==null?d:v; }catch(e){ return d; } }
 function lsSet(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
+function lsJSON(k,d){ try{ var v=localStorage.getItem(k); return v==null?d:JSON.parse(v); }catch(e){ return d; } }
+/* plain text with TeX to HTML paragraphs; the TeX itself is left for MathJax */
+function md(t){ return String(t||'').split(/\n\s*\n/).map(function(p){ return '<p>'+esc(p.trim()).replace(/\n/g,' ')+'</p>'; }).join(''); }
+function fmtDate(t){ var d=new Date(t); return d.getDate()+' '+['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()]; }
 
-/* ====================================================== prompt */
-function buildPrompt(prob, sol, schemeKey, arith, photoCount){
-  var S=SCHEMES[schemeKey];
-  var rules='You are an experienced olympiad and university-admissions mathematics marker. Mark the candidate\'s solution against this scheme: '+S.desc+' Maximum '+S.max+'.\n\n'
-   +'Principles. Award marks only for what is written, not for what the candidate probably meant. Before scoring, recompute every numerical and algebraic step yourself; never assume a computation is right because it looks plausible. A step that is true but not justified is a gap. Check that every case is covered and that every claimed equality, bound or existence statement is actually established. Do not write a corrected proof and do not supply the missing steps: describe each gap precisely enough for the candidate to fix it, and no more. If the solution is correct and complete, say so plainly and award full marks; do not invent nitpicks.';
-  var arithNote = arith.length
-    ? '\n\nEXACT ARITHMETIC CHECK (computed by a program, not an opinion). These equalities written in the solution are FALSE:\n'+arith.map(function(a){return '  '+a.claim+'   (left side equals '+a.left+', right side '+a.right+')';}).join('\n')+'\nEach is a genuine error and must appear as a gap. A wrong final answer caused by an arithmetic error cannot receive full marks.'
-    : (arith.checked ? '\n\nEXACT ARITHMETIC CHECK: '+arith.checked+' purely numerical equalities were found in the typed solution and all are correct. Algebraic steps were not machine-checked; verify them yourself.' : '');
-  var photo = photoCount ? '\n\nThe candidate\'s handwritten solution is attached as '+photoCount+' image'+(photoCount>1?'s':'')+'. Treat the images as the solution; any typed text below is supplementary. Read the handwriting carefully and say so if any part is illegible.' : '';
-  var format='\n\nReply with ONLY one JSON object and no other text, in exactly this shape:\n'
-   +'{"score": 7, "max": '+S.max+', "verdict": "one sentence", "sound": false, "gaps": [{"severity": "major", "where": "a short quote of the candidate\'s words", "what": "what is missing or wrong"}], "credit": ["what earned marks"], "next": "the single most valuable thing to fix first"}\n'
-   +'"severity" is one of "fatal", "major", "minor". "sound" is true only if the argument would convince a strict marker exactly as written. Keep quotes short; you may paraphrase LaTeX into words.';
-  return rules+arithNote+photo+'\n\nPROBLEM:\n'+prob+'\n\nCANDIDATE SOLUTION:\n'+(sol||'(see attached image)')+format;
+/* ====================================================== problem source */
+var source='lib', chosen=null;
+function setSource(s){
+  source=s; $('src-lib').setAttribute('aria-pressed',String(s==='lib')); $('src-own').setAttribute('aria-pressed',String(s==='own'));
+  $('libwrap').classList.toggle('hidden',s!=='lib'); $('ownwrap').classList.toggle('hidden',s!=='own');
+  lsSet('hu_mk_source',s); showHistory();
 }
-
-/* ====================================================== exact arithmetic */
-function cleanForArith(t){
-  return String(t)
-    .replace(/\\(?:boxed|text|mathrm|mathbf)\{([^{}]*)\}/g,'$1')
-    .replace(/\\(?:times|cdot)/g,'*').replace(/\\div/g,'/')
-    .replace(/\\(?:left|right|quad|qquad|,|;|!|blacksquare|square|qed)/g,' ')
-    .replace(/\\\[|\\\]|\\\(|\\\)|\$/g,' ')
-    .replace(/\\dfrac|\\tfrac/g,'\\frac')
-    .replace(/\\frac\s*\{([^{}]*)\}\s*\{([^{}]*)\}/g,'(($1)/($2))')
-    .replace(/[{}]/g,function(m){return m==='{'?'(':')';})
-    .replace(/\u00d7/g,'*').replace(/\u2212/g,'-');
+function drawList(){
+  var t=$('ftopic').value, box=$('plist');
+  var list=LIB.filter(function(p){ return !t||p.topic===t; });
+  if(!LIB.length){ box.innerHTML='<p class="tally">The problem library is empty at the moment. Use "My own problem" instead.</p>'; return; }
+  box.innerHTML=list.map(function(p){
+    return '<button type="button" class="pcard" data-id="'+esc(p.id)+'" aria-pressed="'+String(!!chosen&&chosen.id===p.id)+'">'
+      +'<span class="t">'+esc(p.title)+(p.reviewed?'':'<span class="badge">Draft scheme</span>')+'</span>'
+      +'<span class="m">'+esc(TOPIC_NAMES[p.topic]||p.topic)+' &middot; difficulty '+p.difficulty+'/10 &middot; out of '+p.max+'</span>'
+      +'<span class="m">'+esc(p.source)+'</span></button>';
+  }).join('')||'<p class="tally">No problems in this topic yet.</p>';
+  box.querySelectorAll('.pcard').forEach(function(b){ b.addEventListener('click',function(){ choose(b.getAttribute('data-id'),true); }); });
+  typeset(box);
 }
-function evalNumeric(expr){
-  var e=expr.trim().replace(/\^/g,'**');
-  if(!e||!/^[\d\s+\-*/().]+$/.test(e)||!/\d/.test(e)) return null;
-  if(/[+\-*/]\s*$/.test(e)||/^\s*[*/]/.test(e)) return null;
-  try{ var v=Function('"use strict";return ('+e+')')(); return (typeof v==='number'&&isFinite(v))?v:null; }catch(_){ return null; }
-}
-function checkArithmetic(solution){
-  var text=cleanForArith(solution||''), found=[], seen={}, checked=0, lastPos=-1;
-  var segs=[];
-  text.split(/[^0-9+\-*/().=\s^]+/).forEach(function(s){
-    /* two numbers separated only by space belong to different statements ("= 8    252 + ...") */
-    s.replace(/([\d)])\s+(?=[\d(])/g,'$1|').split('|').forEach(function(x){ segs.push(x); });
-  });
-  segs.forEach(function(seg){
-    seg=seg.replace(/^\s*=+|=+\s*$/g,'');
-    if(seg.indexOf('=')<0) return;
-    var sides=seg.split('=').map(function(s){return s.trim().replace(/^[.\s]+|[.\s]+$/g,'');});
-    if(sides.some(function(s){return !s;})) return;
-    if(!sides.some(function(s){return /[\d)]\s*[+\-*/^]\s*[\d(]/.test(s);})) return;
-    var vals=sides.map(evalNumeric); if(vals.some(function(v){return v===null;})) return;
-    var pos=text.indexOf(seg)/Math.max(1,text.length); if(pos>lastPos) lastPos=pos;
-    for(var k=0;k+1<vals.length;k++){
-      var a=vals[k],b=vals[k+1]; checked++;
-      if(Math.abs(a-b)>1e-9*Math.max(1,Math.abs(a),Math.abs(b))){
-        var shown=sides[k]+' = '+sides[k+1]; if(seen[shown]) continue; seen[shown]=1;
-        found.push({claim:shown.replace(/\*\*/g,'^'),left:a,right:b,pos:pos});
-      }
-    }
-  });
-  /* an error in the last numerical computation, or in the final quarter, is where the answer is formed */
-  found.forEach(function(f){ f.late=(f.pos>=lastPos-1e-9)||f.pos>0.75; });
-  found.checked=checked; return found;
+function choose(id,scroll){
+  chosen=LIB.filter(function(p){return p.id===id;})[0]||null;
+  lsSet('hu_mk_problem',chosen?chosen.id:'');
+  drawList();
+  var st=$('pstate');
+  if(!chosen){ st.classList.add('hidden'); showHistory(); return; }
+  st.classList.remove('hidden');
+  st.innerHTML='<h3>'+esc(chosen.title)+'</h3><p class="m">'+esc(chosen.source)+' &middot; marked out of '+chosen.max+'</p><div class="stmt">'+md(chosen.problem)+'</div>'
+    +(chosen.reviewed?'':'<p class="draftnote"><span class="badge">Draft scheme</span> This mark scheme has been drafted but not yet checked by the examiner, so treat marks on this problem with extra caution.</p>');
+  typeset(st); showHistory();
+  if(scroll) st.scrollIntoView({behavior:'smooth',block:'nearest'});
 }
 
-/* ====================================================== tolerant parsing */
-var LATEX_WORD=/^(frac|tfrac|dfrac|text|textbf|textit|times|theta|tau|tan|tanh|triangle|to|top|neq|nabla|nmid|notin|not|nu|ne|ni|right|rightarrow|rfloor|rceil|rangle|rho|binom|beta|begin|bmod|blacksquare|bigl|bigr|big|bar|boxed|underline|upsilon|uparrow|forall|flat)(?![a-zA-Z])/;
-function repairEscapes(s){
-  return s.replace(/\\([\s\S])/g,function(m,c,off,str){
-    if(c==='\\'||c==='"'||c==='/') return m;
-    if('bfnrtu'.indexOf(c)>=0) return LATEX_WORD.test(str.slice(off+1))?'\\\\'+c:m;
-    return '\\\\'+c;
-  });
+/* ====================================================== preview */
+var pvTimer=null;
+function updatePreview(){
+  var box=$('preview'); if(box.classList.contains('hidden')) return;
+  var t=$('sol').value.trim();
+  box.innerHTML=t?md(t):'<p class="tally">Your solution will appear here with the maths typeset.</p>';
+  typeset(box);
 }
-function tolerantJSON(txt){
-  var s=String(txt||'').replace(/```json|```/g,'').trim(), i=s.indexOf('{'); if(i<0) return null; s=s.slice(i);
-  function tryParse(t){ try{ return JSON.parse(t); }catch(e){ return null; } }
-  var fixed=repairEscapes(s), j=fixed.lastIndexOf('}'), r=j>0?tryParse(fixed.slice(0,j+1)):null; if(r) return r;
-  var stack=[], inStr=false, esc2=false;
-  for(var k=0;k<fixed.length;k++){ var c=fixed[k];
-    if(esc2){esc2=false;continue;} if(inStr&&c==='\\'){esc2=true;continue;}
-    if(c==='"'){inStr=!inStr;continue;} if(inStr) continue;
-    if(c==='{'||c==='[') stack.push(c); else if(c==='}'||c===']') stack.pop(); }
-  var tail=fixed; if(inStr) tail+='"'; tail=tail.replace(/[,:]\s*$/,'');
-  while(stack.length) tail+=(stack.pop()==='{')?'}':']';
-  return tryParse(tail);
+function togglePreview(){
+  var box=$('preview'), b=$('pvbtn'), open=box.classList.contains('hidden');
+  box.classList.toggle('hidden',!open); b.setAttribute('aria-expanded',String(open)); b.textContent=open?'Hide preview':'Show preview';
+  updatePreview();
 }
-function salvageReport(txt){
-  var s=String(txt||'').replace(/```json|```/g,'');
-  function unq(v){ return String(v||'').trim().replace(/^"+|"+$/g,'').replace(/\\"/g,'"').replace(/\\\\/g,'\\').trim(); }
-  var KEYS='score|max|verdict|sound|gaps|credit|next';
-  function field(name){ var m=s.match(new RegExp('"'+name+'"\\s*:\\s*([\\s\\S]*?)\\s*(?:,\\s*"(?:'+KEYS+')"\\s*:|\\}\\s*$)')); return m?m[1]:null; }
-  var r={}, sc=field('score'); if(sc&&/\d+/.test(sc)) r.score=parseInt(sc.match(/\d+/)[0],10); else return null;
-  var mx=field('max'); if(mx&&/\d+/.test(mx)) r.max=parseInt(mx.match(/\d+/)[0],10);
-  var sd=field('sound'); r.sound=sd?/true/.test(sd):false;
-  var vd=field('verdict'); if(vd) r.verdict=unq(vd);
-  var nx=field('next'); if(nx) r.next=unq(nx.replace(/\}\s*$/,''));
-  r.gaps=[]; var gre=/"severity"\s*:\s*"?([a-z]+)"?\s*,\s*"where"\s*:\s*"([\s\S]*?)"\s*,\s*"what"\s*:\s*"([\s\S]*?)"\s*\}/g, g;
-  while((g=gre.exec(s))) r.gaps.push({severity:g[1],where:unq(g[2]),what:unq(g[3])});
-  var cr=s.match(/"credit"\s*:\s*\[([\s\S]*?)\]\s*(?:,\s*"(?:score|max|verdict|sound|gaps|next)"|\}\s*$)/);
-  r.credit=cr?cr[1].split(/"\s*,\s*"/).map(unq).filter(Boolean):[];
-  return r;
-}
-function parseReport(txt){ var r=tolerantJSON(txt)||salvageReport(txt); return (r&&typeof r.score!=='undefined')?r:null; }
 
-/* ====================================================== report */
-function renderReport(r, arith, schemeKey, source, hadPhoto){
-  var S=SCHEMES[schemeKey], out=$('out'); out.classList.remove('hidden');
-  var capped=false;
-  if(arith.length){
-    r.gaps=r.gaps||[];
-    arith.forEach(function(a){
-      var key=a.claim.replace(/\s/g,'').split('=')[0];
-      var mentioned=r.gaps.some(function(g){ return ((g.where||'')+' '+(g.what||'')).replace(/\s/g,'').indexOf(key)>=0; });
-      if(!mentioned) r.gaps.unshift({severity:a.late?'major':'minor',where:a.claim,what:'This equality is false: the left side equals '+a.left+', not '+a.right+'.'+(a.late?' It sits where the final answer is computed, so the stated answer is wrong.':'')});
-    });
-    var mx0=r.max||S.max, cap=mx0-(arith.some(function(a){return a.late;})?2:1);
-    if((r.score|0)>cap){ r.score=cap; capped=true; }
-    r.sound=false;
-    if(/correct and complete/i.test(r.verdict||'')) r.verdict='The method is sound but the solution contains an arithmetic error.';
-    r.credit=(r.credit||[]).filter(function(c){ return !/calculat|comput|arithmetic|final answer/i.test(c); });
-    var first=arith.filter(function(a){return a.late;})[0]||arith[0];
-    r.next='Recompute '+first.claim.split('=')[0].trim()+': it equals '+first.left+', not '+first.right+'. Then check every later line that depends on it.';
-  }
-  var max=r.max||S.max, sc=Math.max(0,Math.min(max,r.score|0)), frac=sc/max, C=2*Math.PI*50;
-  var ring=frac>=0.8?'var(--ok)':frac>=0.5?'var(--warn)':'var(--bad)';
-  var order={fatal:0,major:1,minor:2};
-  var gaps=(r.gaps||[]).slice().sort(function(a,b){ var x=order[(a.severity||'').toLowerCase()], y=order[(b.severity||'').toLowerCase()]; return (x==null?3:x)-(y==null?3:y); });
-  var arithHtml = arith.length
-    ? '<p class="bad small">'+arith.length+' false equalit'+(arith.length>1?'ies':'y')+' found by exact computation'+(capped?'; score capped accordingly.':'.')+'</p>'+arith.map(function(a){return '<p class="struck"><s>'+esc(a.claim)+'</s> <span class="tally">left side is '+esc(a.left)+'</span></p>';}).join('')
-    : '<p class="ok small">'+(arith.checked?'All '+arith.checked+' numerical equalit'+(arith.checked>1?'ies':'y')+' in the typed solution check out.':(hadPhoto?'Solution given as a photo, so arithmetic was not machine-checked.':'No purely numerical equalities to check.'))+'</p><p class="tally">Algebra and logic are judged by the model, not machine-checked.</p>';
-  out.innerHTML=
-    '<div class="rhead">'
-    +'<div class="dial"><svg viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="50" fill="none" stroke="var(--rule)" stroke-width="8"/><circle cx="60" cy="60" r="50" fill="none" stroke="'+ring+'" stroke-width="8" stroke-dasharray="'+(C*frac)+' '+C+'"/></svg><div class="num"><b>'+sc+'</b><span>out of '+max+'</span></div></div>'
-    +'<div><p class="rmeta">'+esc(S.name)+' &middot; marked by '+esc(source)+'</p><p class="rverdict">'+esc(r.verdict||'')+'</p>'
-    +'<span class="status '+(r.sound?'ok':'bad')+'">'+(r.sound?'The argument stands as written':'The argument does not stand as written')+'</span></div></div>'
-    +'<div class="rsec"><h3>Exact arithmetic check</h3>'+arithHtml+'</div>'
-    +'<div class="rsec"><h3>Gaps'+(gaps.length?' &middot; '+gaps.length:'')+'</h3>'
-    +(gaps.length?gaps.map(function(g){ var sv=String(g.severity||'minor').toLowerCase(); if(!order.hasOwnProperty(sv)) sv='minor'; return '<div class="gapcard"><span class="sev '+sv+'">'+sv+'</span><div>'+(g.where?'<blockquote>'+esc(g.where)+'</blockquote>':'')+'<p class="what">'+esc(g.what||'')+'</p></div></div>'; }).join(''):'<p class="tally">No gaps found.</p>')+'</div>'
-    +((r.credit&&r.credit.length)?'<div class="rsec"><h3>Credited</h3><ul class="credit">'+r.credit.map(function(c){return '<li>'+esc(c)+'</li>';}).join('')+'</ul></div>':'')
-    +(r.next?'<div class="fixfirst"><span class="k">Fix first</span><p>'+esc(r.next)+'</p></div>':'')
-    +'<p class="rfoot">A second opinion from '+esc(source)+', not an examiner\'s verdict. Check each gap it names against your own reading before rewriting; models can miss errors and can invent them.</p>';
-  typeset(out); out.scrollIntoView({behavior:'smooth',block:'start'});
+/* ====================================================== history */
+function history(){ var h=lsJSON('hu_marker_history',[]); return Array.isArray(h)?h:[]; }
+function attemptsFor(pid){ return history().filter(function(h){ return h.pid===pid; }); }
+function showHistory(){
+  var el=$('history');
+  if(source!=='lib'||!chosen){ el.classList.add('hidden'); return; }
+  var a=attemptsFor(chosen.id);
+  if(!a.length){ el.classList.add('hidden'); return; }
+  var best=a.reduce(function(m,x){ return Math.max(m,x.score); },0), last=a[a.length-1];
+  el.textContent='You have marked '+a.length+' attempt'+(a.length>1?'s':'')+' at this problem. Last: '+last.score+'/'+last.max+' on '+fmtDate(last.t)+'. Best: '+best+'/'+last.max+'. Rewrite and resubmit to improve it.';
+  el.classList.remove('hidden');
+}
+function recordAttempt(r,src,run){
+  var pid=(source==='lib'&&chosen)?chosen.id:'own', h=history();
+  /* a second check on the same marking replaces that marking's entry rather than adding another */
+  if(h.length&&h[h.length-1].run===run) h.pop();
+  var prev=pid==='own'?[]:h.filter(function(x){ return x.pid===pid; });
+  var prevBest=prev.length?prev.reduce(function(m,x){ return Math.max(m,x.score); },0):null;
+  h.push({t:Date.now(),run:run,pid:pid,title:pid==='own'?'Own problem':chosen.title,score:r.score,max:r.max,source:src,uncertain:!!r.uncertain});
+  try{ localStorage.setItem('hu_marker_history',JSON.stringify(h.slice(-300))); }catch(e){}
+  var reward=null;
+  if(pid!=='own'&&prevBest!==null&&!r.uncertain&&r.score>=prevBest+2&&window.HU_REWARDS&&HU_REWARDS.markerImprove) reward=HU_REWARDS.markerImprove(pid);
+  showHistory();
+  return {prevBest:prevBest,reward:reward,first:prev.length===0&&pid!=='own'};
 }
 
 /* ====================================================== inputs */
 function readInputs(needSolution){
-  var prob=$('prob').value.trim(), sol=$('sol').value.trim(), sk=$('scheme').value;
+  var sol=$('sol').value.trim();
   var files=($('photo')&&$('photo').files)?Array.prototype.slice.call($('photo').files):[];
-  if(!prob){ return {err:'Enter the problem statement.'}; }
-  if(needSolution!==false&&!sol&&!files.length){ return {err:'Enter your solution'+(photoAllowed?' or attach a photo of it.':'.')}; }
-  return {prob:prob,sol:sol,sk:sk,files:files,arith:checkArithmetic(sol)};
+  var ctx={sol:sol,arith:M.checkArithmetic(sol),photoCount:0,files:files,run:Date.now()};
+  if(source==='lib'){
+    if(!chosen) return {err:'Choose a problem from the library first.'};
+    ctx.lib=chosen;
+  } else {
+    var prob=$('prob').value.trim(); if(!prob) return {err:'Enter the problem statement.'};
+    ctx.prob=prob; ctx.scheme=$('scheme').value;
+  }
+  if(needSolution!==false&&!sol&&!files.length) return {err:'Enter your solution'+(photoAllowed?' or attach a photo of it.':'.')};
+  return ctx;
+}
+var STAGE={mark:'Marking against the scheme.',check:'Running the independent check.',remark:'The check found something serious. Re-marking with it in view.'};
+
+/* ====================================================== report */
+function renderReport(r, ctx, source2){
+  var S=M.schemeOf(ctx), out=$('out'), arith=ctx.arith, capped=false, max=r.max||S.max;
+  out.classList.remove('hidden');
+  if(arith.length) capped=M.applyArithmetic(r,arith);
+  var sc=Math.max(0,Math.min(max,r.score|0)), frac=sc/max, C=2*Math.PI*50;
+  var ring=frac>=0.8?'var(--ok)':frac>=0.5?'var(--warn)':'var(--bad)';
+  var order={fatal:0,major:1,minor:2};
+  var gaps=r.gaps.slice().sort(function(a,b){ return order[a.severity]-order[b.severity]; });
+  var log=recordAttempt({score:sc,max:max,uncertain:r.uncertain},source2,ctx.run);
+  var arithHtml = arith.length
+    ? '<p class="bad small">'+arith.length+' false equalit'+(arith.length>1?'ies':'y')+' found by exact computation'+(capped?'; score capped accordingly.':'.')+'</p>'+arith.map(function(a){return '<p class="struck"><s>'+esc(a.claim)+'</s> <span class="tally">left side is '+esc(a.left)+'</span></p>';}).join('')
+    : '<p class="ok small">'+(arith.checked?'All '+arith.checked+' numerical equalit'+(arith.checked>1?'ies':'y')+' in the typed solution check out.':(ctx.photoCount?'Solution given as a photo, so arithmetic was not machine-checked.':'No purely numerical equalities to check.'))+'</p><p class="tally">Algebra and logic are judged by the model, not machine-checked.</p>';
+  var cpHtml='';
+  if(r.checkpoints&&r.fromCheckpoints){
+    var rows=r.checkpoints.map(function(c){
+      var off=c.route&&c.route!==r.route;
+      return '<tr'+(off?' class="off"':'')+'><td class="n">'+c.awarded+' / '+c.marks+'</td><td><p>'+esc(c.text)+(c.route?' <span class="tally">(Route '+esc(c.route)+(off?', not used':'')+')</span>':'')+'</p>'+(c.reason?'<p class="why">'+esc(c.reason)+'</p>':'')+'</td></tr>';
+    }).join('');
+    var capRow=(r.capApplied!==null&&r.capApplied!==undefined)?'<p class="tally" style="margin-top:.5rem">A cap of '+r.capApplied+' applies: '+esc((ctx.lib.caps.filter(function(c){return c.cap===r.capApplied;})[0]||{}).text||'')+'</p>':'';
+    cpHtml='<div class="rsec"><h3>Checkpoints</h3><div class="cpwrap"><table class="cptable"><thead><tr><th scope="col">Marks</th><th scope="col">What earns them</th></tr></thead><tbody>'+rows+'</tbody></table></div>'+capRow+'</div>';
+  }
+  var passes=r.passes===3?'marked, checked independently, then re-marked':r.passes===2?'marked, then checked independently':'marked once';
+  var unsure=r.uncertain?'<div class="warnbox"><b>Uncertain mark.</b> The two passes disagreed by more than 2 marks. '+esc((r.checkNotes||[]).join(' '))+' Check the gaps below carefully, ideally with a teacher, before trusting this mark.</div>':'';
+  var improve='';
+  if(log.prevBest!==null){
+    var d=sc-log.prevBest;
+    improve='<div class="improve">'+(d>0?'Up '+d+' on your previous best of '+log.prevBest+'.':d===0?'The same as your previous best of '+log.prevBest+'.':'Your previous best on this problem is '+log.prevBest+'.')
+      +(log.reward?' Improvement reward: +'+log.reward.xp+' XP and +'+log.reward.coins+' coins.':'')+'</div>';
+  }
+  var more='';
+  if(ctx.lib){
+    var L=ctx.lib;
+    more='<details class="more"><summary>Compare with the intended solution'+(L.solutions.length>1?'s':'')+'</summary><div class="body">'
+      +L.solutions.map(function(s){ return '<h4>'+esc(s.title)+'</h4>'+md(s.text); }).join('')+'</div></details>'
+      +'<details class="more"><summary>See the examiner\'s marked examples</summary><div class="body">'
+      +L.examples.map(function(e){ return '<h4>'+esc(e.title)+'</h4><p class="exmeta">Examiner\'s mark: '+e.mark+' / '+L.max+'. '+esc(e.comment)+'</p>'+md(e.script); }).join('')+'</div></details>';
+  }
+  out.innerHTML=
+    '<div class="rhead">'
+    +'<div class="dial"><svg viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="50" fill="none" stroke="var(--rule)" stroke-width="8"/><circle cx="60" cy="60" r="50" fill="none" stroke="'+ring+'" stroke-width="8" stroke-dasharray="'+(C*frac)+' '+C+'"/></svg><div class="num"><b>'+sc+'</b><span>out of '+max+'</span></div></div>'
+    +'<div><p class="rmeta">'+esc(ctx.lib?ctx.lib.title+(ctx.lib.reviewed?'':' (draft scheme)'):S.name)+' &middot; '+esc(source2)+' &middot; '+passes+'</p><p class="rverdict">'+esc(r.verdict||'')+'</p>'
+    +'<span class="status '+(r.sound?'ok':'bad')+'">'+(r.sound?'The argument stands as written':'The argument does not stand as written')+'</span></div></div>'
+    +unsure+improve+cpHtml
+    +'<div class="rsec"><h3>Gaps'+(gaps.length?' &middot; '+gaps.length:'')+'</h3>'
+    +(gaps.length?gaps.map(function(g){ return '<div class="gapcard"><span class="sev '+g.severity+'">'+g.severity+'</span><div>'+(g.where?'<blockquote>'+esc(g.where)+'</blockquote>':'')+'<p class="what">'+esc(g.what||'')+'</p>'+(g.from==='check'?'<span class="fromcheck">Raised by the second check</span>':'')+'</div></div>'; }).join(''):'<p class="tally">No gaps found.</p>')+'</div>'
+    +(r.credit.length?'<div class="rsec"><h3>Credited</h3><ul class="credit">'+r.credit.map(function(c){return '<li>'+esc(c)+'</li>';}).join('')+'</ul></div>':'')
+    +(r.next?'<div class="fixfirst"><span class="k">Fix first</span><p>'+esc(r.next)+'</p></div>':'')
+    +'<div class="rsec"><h3>Exact arithmetic check</h3>'+arithHtml+'</div>'
+    +more
+    +'<p class="rfoot">A second opinion from '+esc(source2)+', not an examiner\'s verdict. Check each gap it names against your own reading before rewriting; models can miss errors and can invent them.</p>';
+  typeset(out); out.scrollIntoView({behavior:'smooth',block:'start'});
 }
 
 /* ====================================================== mode switching */
-var mode='chat', sampleFn=null, photoAllowed=false, inArtifact=!!window.claude;
+var mode='free', sampleFn=null, photoAllowed=false, inArtifact=!!window.claude;
 function setMode(m){
   mode=m;
-  ['claude','chat','key'].forEach(function(k){ var c=$('card-'+k); if(c) c.setAttribute('aria-pressed',String(k===m)); var p=$('pane-'+k); if(p) p.classList.toggle('hidden',k!==m); });
+  ['free','claude','chat','key'].forEach(function(k){ var c=$('card-'+k); if(c) c.setAttribute('aria-pressed',String(k===m)); var p=$('pane-'+k); if(p) p.classList.toggle('hidden',k!==m); });
   $('photorow').classList.toggle('hidden',!(m==='claude'&&photoAllowed));
   lsSet('hu_mk_mode',m);
+}
+function busy(btn,on){ btn.disabled=on; }
+function failMessage(e){
+  if(e&&e.code==='unreadable') return 'The reply could not be read as a report. Try again, or try a more capable model.';
+  return 'The request failed: '+String((e&&e.message)||e).slice(0,200);
+}
+
+/* ------------------------------ free marker, through the site's worker */
+async function callFree(prompt,kind){
+  var res=await fetch(FREE_PROXY,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({
+    system:'You are a careful mathematics examiner. You reply with one JSON object and nothing else.',
+    messages:[{role:'user',content:prompt}], max_tokens:1500, json_schema:kind==='check'?M.CHECK_SCHEMA:M.REPORT_SCHEMA})});
+  var d=null; try{ d=await res.json(); }catch(_){}
+  if(!res.ok){ var e=new Error((d&&d.message)||('HTTP '+res.status)); e.status=res.status; throw e; }
+  return ((d&&d.content)||[]).filter(function(b){return b.type==='text';}).map(function(b){return b.text;}).join('');
+}
+async function markFree(){
+  var ctx=readInputs(), msg=$('msg-free'), btn=$('go-free'); if(ctx.err){ msg.textContent=ctx.err; return; }
+  busy(btn,true);
+  try{
+    var r=await M.markTwoPass(callFree,ctx,function(s){ msg.textContent=STAGE[s]; });
+    msg.textContent=''; renderReport(r,ctx,'the free marker');
+  }catch(e){
+    msg.textContent=(e&&e.status===403)?'The free marker only works on kevinvariant08.github.io. Use a chatbot or your own key here.':(e&&e.status===429)?String(e.message):failMessage(e);
+  }
+  busy(btn,false);
 }
 
 /* ------------------------------ Claude, built in */
 var ctl=null;
 async function markWithClaude(){
-  var inp=readInputs(), msg=$('msg-claude'); if(inp.err){ msg.textContent=inp.err; return; }
+  var ctx=readInputs(), msg=$('msg-claude'); if(ctx.err){ msg.textContent=ctx.err; return; }
   if(!sampleFn){ msg.textContent='Claude is not available in this view.'; return; }
   var btn=$('go-claude'), stop=$('stop-claude');
-  btn.disabled=true; stop.classList.remove('hidden'); msg.textContent='Thinking. Careful marking can take a minute or two.';
-  ctl=new AbortController();
-  var prompt=buildPrompt(inp.prob,inp.sol,inp.sk,inp.arith,inp.files.length);
-  var opts={modelTier:'complex',signal:ctl.signal,cache:false,onText:function(){ msg.textContent='Writing the report.'; }};
-  if(inp.files.length) opts.images=inp.files;
+  busy(btn,true); stop.classList.remove('hidden');
+  ctl=new AbortController(); ctx.photoCount=ctx.files.length;
+  var lighter=false;
+  function call(prompt){
+    var opts={modelTier:'complex',signal:ctl.signal,cache:false};
+    if(ctx.files.length) opts.images=ctx.files;
+    return sampleFn(prompt,opts).then(function(res){ if(res.modelTierApplied&&res.modelTierApplied!=='complex') lighter=true; return res.text; });
+  }
   try{
-    var res=await sampleFn(prompt,opts), r=parseReport(res.text);
-    if(!r){ msg.textContent='The reply could not be read as a report. Try again.'; }
-    else{ msg.textContent=(res.modelTierApplied&&res.modelTierApplied!=='complex')?'Marked on a lighter model than requested, which your plan allowed.':''; renderReport(r,inp.arith,inp.sk,'Claude',inp.files.length>0); }
+    var r=await M.markTwoPass(call,ctx,function(s){ msg.textContent=STAGE[s]; });
+    msg.textContent=lighter?'Marked on a lighter model than requested, which your plan allowed.':'';
+    renderReport(r,ctx,'Claude');
   }catch(e){
-    var code=e&&e.code, copy={cancelled:'Stopped.',not_granted:'Claude was not allowed for this page. Use the chatbot option instead.',sampling_disabled:'Claude is not available on this account. Use the chatbot option instead.',rate_limited:'You have hit a usage limit on your Claude plan. Try again later, or use another chatbot.',session_expired:'Please sign in to Claude again.',prompt_too_large:'The problem and solution are too long to send in one go. Shorten them.',image_rejected:'That photo could not be used. Try a clearer JPEG or PNG.',refused:'Claude declined this request.'};
+    var code=e&&e.code, copy={cancelled:'Stopped.',not_granted:'Claude was not allowed for this page. Use the chatbot option instead.',sampling_disabled:'Claude is not available on this account. Use the chatbot option instead.',rate_limited:'You have hit a usage limit on your Claude plan. Try again later, or use another chatbot.',session_expired:'Please sign in to Claude again.',prompt_too_large:'The problem and solution are too long to send in one go. Shorten them.',image_rejected:'That photo could not be used. Try a clearer JPEG or PNG.',refused:'Claude declined this request.',unreadable:'The reply could not be read as a report. Try again.'};
     msg.textContent=copy[code]||'Something went wrong on the way to Claude. Try again in a moment.';
     if(code==='not_granted'||code==='sampling_disabled'){ $('card-claude').classList.add('off'); }
   }
-  btn.disabled=false; stop.classList.add('hidden');
+  busy(btn,false); stop.classList.add('hidden');
 }
 
-/* ------------------------------ any chatbot */
-var lastPromptArith=null, lastPromptScheme=null;
-function makeChatPrompt(){
-  var inp=readInputs(), msg=$('msg-chat'); if(inp.err){ msg.textContent=inp.err; return null; }
-  lastPromptArith=inp.arith; lastPromptScheme=inp.sk;
-  var p='You are being used as a mathematics marker by a web page. Your reply will be pasted back into that page and read by a program, so follow the output format exactly.\n\n'+buildPrompt(inp.prob,inp.sol,inp.sk,inp.arith,0);
+/* ------------------------------ any chatbot: two steps by hand */
+var chatCtx=null, chatFirst=null;
+function chatPrompt(){
+  var ctx=readInputs(), msg=$('msg-chat'); if(ctx.err){ msg.textContent=ctx.err; return null; }
+  chatCtx=ctx; chatFirst=null; $('step2').classList.add('hidden');
+  var p='You are being used as a mathematics marker by a web page. Your reply will be pasted back into that page and read by a program, so follow the output format exactly.\n\n'+M.buildMarkPrompt(ctx);
   $('promptbox').value=p; $('promptwrap').classList.remove('hidden'); msg.textContent='';
   return p;
 }
-async function copyPrompt(open){
-  var p=makeChatPrompt(); if(!p) return;
+async function copyText(text,box,msg,okText){
   var ok=false;
-  try{ await navigator.clipboard.writeText(p); ok=true; }catch(e){ try{ $('promptbox').select(); ok=document.execCommand('copy'); }catch(_){ ok=false; } }
-  $('msg-chat').textContent=ok?'Prompt copied. Paste it into your chatbot, then paste its whole reply below.':'Copying was blocked here. Select the prompt below, copy it yourself, and paste it into your chatbot.';
+  try{ await navigator.clipboard.writeText(text); ok=true; }catch(e){ try{ box.select(); ok=document.execCommand('copy'); }catch(_){ ok=false; } }
+  msg.textContent=ok?okText:'Copying was blocked here. Select the prompt below, copy it yourself, and paste it into your chatbot.';
+}
+async function copyPrompt(open){
+  var p=chatPrompt(); if(!p) return;
+  await copyText(p,$('promptbox'),$('msg-chat'),'Prompt copied. Paste it into your chatbot, then paste its whole reply below.');
   if(open) window.open(open,'_blank','noopener');
 }
 function renderPasted(){
   var txt=$('reply').value.trim(), msg=$('msg-chat');
   if(!txt){ msg.textContent='Paste the chatbot\'s reply first.'; return; }
-  if(!lastPromptArith){ var inp=readInputs(); if(inp.err){ msg.textContent=inp.err; return; } lastPromptArith=inp.arith; lastPromptScheme=inp.sk; }
-  var r=parseReport(txt);
-  if(!r){ msg.textContent='That reply does not contain a report in the expected format. Make sure you pasted all of it; if the chatbot added commentary, ask it to reply with only the JSON.'; return; }
-  msg.textContent=''; renderReport(r,lastPromptArith,lastPromptScheme,$('whichbot').value||'your chatbot',false);
+  if(!chatCtx){ var ctx=readInputs(); if(ctx.err){ msg.textContent=ctx.err; return; } chatCtx=ctx; }
+  var raw=M.parseReport(txt);
+  if(!raw){ msg.textContent='That reply does not contain a report in the expected format. Make sure you pasted all of it; if the chatbot added commentary, ask it to reply with only the JSON.'; return; }
+  chatFirst=M.normaliseReport(raw,chatCtx);
+  var shown=M.reconcile(JSON.parse(JSON.stringify(chatFirst)),null,null,chatCtx);
+  msg.textContent=''; renderReport(shown,chatCtx,$('whichbot').value||'your chatbot');
+  $('step2').classList.remove('hidden'); $('checkreply').value=''; $('msg-check').textContent='';
+}
+async function copyCheck(){
+  if(!chatFirst||!chatCtx) return;
+  var p='You are being used as a mathematics examiner by a web page. Your reply will be read by a program, so follow the output format exactly.\n\n'+M.buildCheckPrompt(chatCtx,chatFirst);
+  $('checkbox').value=p; $('checkwrap').classList.remove('hidden');
+  await copyText(p,$('checkbox'),$('msg-check'),'Checking prompt copied. Paste it into a new chat, then paste the reply below.');
+}
+function applyCheck(){
+  var txt=$('checkreply').value.trim(), msg=$('msg-check');
+  if(!chatFirst){ msg.textContent='Show the first report before applying a check.'; return; }
+  var check=M.parseCheck(txt);
+  if(!check){ msg.textContent='That reply does not contain a check in the expected format. Make sure you pasted all of it.'; return; }
+  var final=M.reconcile(JSON.parse(JSON.stringify(chatFirst)),check,null,chatCtx);
+  msg.textContent=check.objections.length?'Check applied.':'The checker agreed with the first marking.';
+  renderReport(final,chatCtx,($('whichbot').value||'your chatbot')+', with a second check');
 }
 
 /* ------------------------------ own API key */
@@ -418,56 +551,71 @@ function loadKeyUI(){
   $('apikey').placeholder=P.keyHint; $('apikey').value=lsGet('hu_mk_key_'+p,'');
   $('apimodel').value=lsGet('hu_mk_model_'+p,P.model);
 }
+async function callKey(p,key,model,prompt){
+  if(p==='openai'){
+    var res=await fetch('https://api.openai.com/v1/chat/completions',{method:'POST',headers:{'content-type':'application/json','authorization':'Bearer '+key},body:JSON.stringify({model:model,messages:[{role:'user',content:prompt}],response_format:{type:'json_object'},max_completion_tokens:6000})});
+    var d=await res.json(); if(!res.ok) throw new Error((d.error&&d.error.message)||('HTTP '+res.status));
+    return d.choices&&d.choices[0]&&d.choices[0].message&&d.choices[0].message.content||'';
+  }
+  if(p==='gemini'){
+    var res2=await fetch('https://generativelanguage.googleapis.com/v1beta/models/'+encodeURIComponent(model)+':generateContent?key='+encodeURIComponent(key),{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({contents:[{role:'user',parts:[{text:prompt}]}],generationConfig:{responseMimeType:'application/json',maxOutputTokens:8192,temperature:0.2}})});
+    var d2=await res2.json(); if(!res2.ok) throw new Error((d2.error&&d2.error.message)||('HTTP '+res2.status));
+    return ((d2.candidates&&d2.candidates[0]&&d2.candidates[0].content&&d2.candidates[0].content.parts)||[]).map(function(x){return x.text||'';}).join('');
+  }
+  var res3=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'content-type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:model,max_tokens:4000,messages:[{role:'user',content:prompt}]})});
+  var d3=await res3.json(); if(!res3.ok) throw new Error((d3.error&&d3.error.message)||('HTTP '+res3.status));
+  return (d3.content||[]).filter(function(b){return b.type==='text';}).map(function(b){return b.text;}).join('');
+}
 async function markWithKey(){
-  var inp=readInputs(), msg=$('msg-key'); if(inp.err){ msg.textContent=inp.err; return; }
+  var ctx=readInputs(), msg=$('msg-key'); if(ctx.err){ msg.textContent=ctx.err; return; }
   var p=$('prov').value, key=$('apikey').value.trim(), model=$('apimodel').value.trim()||PROVIDERS[p].model;
   if(!key){ msg.textContent='Enter your API key.'; return; }
   if($('remember').checked){ lsSet('hu_mk_key_'+p,key); lsSet('hu_mk_model_'+p,model); } else { lsSet('hu_mk_key_'+p,''); }
-  var prompt=buildPrompt(inp.prob,inp.sol,inp.sk,inp.arith,0), btn=$('go-key');
-  btn.disabled=true; msg.textContent='Marking with '+PROVIDERS[p].label+'. This can take a minute.';
+  var btn=$('go-key'); busy(btn,true);
   try{
-    var text='';
-    if(p==='openai'){
-      var res=await fetch('https://api.openai.com/v1/chat/completions',{method:'POST',headers:{'content-type':'application/json','authorization':'Bearer '+key},body:JSON.stringify({model:model,messages:[{role:'user',content:prompt}],response_format:{type:'json_object'},max_completion_tokens:6000})});
-      var d=await res.json(); if(!res.ok) throw new Error((d.error&&d.error.message)||('HTTP '+res.status));
-      text=d.choices&&d.choices[0]&&d.choices[0].message&&d.choices[0].message.content||'';
-    } else if(p==='gemini'){
-      var res2=await fetch('https://generativelanguage.googleapis.com/v1beta/models/'+encodeURIComponent(model)+':generateContent?key='+encodeURIComponent(key),{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({contents:[{role:'user',parts:[{text:prompt}]}],generationConfig:{responseMimeType:'application/json',maxOutputTokens:8192,temperature:0.2}})});
-      var d2=await res2.json(); if(!res2.ok) throw new Error((d2.error&&d2.error.message)||('HTTP '+res2.status));
-      text=((d2.candidates&&d2.candidates[0]&&d2.candidates[0].content&&d2.candidates[0].content.parts)||[]).map(function(x){return x.text||'';}).join('');
-    } else {
-      var res3=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'content-type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:model,max_tokens:4000,messages:[{role:'user',content:prompt}]})});
-      var d3=await res3.json(); if(!res3.ok) throw new Error((d3.error&&d3.error.message)||('HTTP '+res3.status));
-      text=(d3.content||[]).filter(function(b){return b.type==='text';}).map(function(b){return b.text;}).join('');
-    }
-    var r=parseReport(text);
-    if(!r){ msg.textContent='The reply could not be read as a report. Try again, or try a more capable model.'; }
-    else{ msg.textContent=''; renderReport(r,inp.arith,inp.sk,PROVIDERS[p].label+' ('+model+')',false); }
-  }catch(e){ msg.textContent='The request failed: '+String(e.message||e).slice(0,200); }
-  btn.disabled=false;
+    var r=await M.markTwoPass(function(prompt){ return callKey(p,key,model,prompt); },ctx,function(s){ msg.textContent=STAGE[s]+' ('+PROVIDERS[p].label+')'; });
+    msg.textContent=''; renderReport(r,ctx,PROVIDERS[p].label+' ('+model+')');
+  }catch(e){ msg.textContent=failMessage(e); }
+  busy(btn,false);
 }
 
 /* ====================================================== boot */
 function boot(){
+  var A=window.HU_MARKER_AGREEMENT;
+  if(A&&A.n>=50){ var ag=$('agreement'); ag.textContent='Within 1 mark of a human examiner on '+A.within1+'% of '+A.n+' test scripts the marker had never seen (measured '+A.date+').'; ag.classList.remove('hidden'); }
   var sel=$('scheme'); Object.keys(SCHEMES).forEach(function(k){ var o=document.createElement('option'); o.value=k; o.textContent=SCHEMES[k].name; sel.appendChild(o); }); sel.value=lsGet('hu_mk_scheme','bmo');
   sel.addEventListener('change',function(){ lsSet('hu_mk_scheme',sel.value); });
-  ['claude','chat','key'].forEach(function(k){ var c=$('card-'+k); if(c) c.addEventListener('click',function(){ if(!c.classList.contains('off')||k!=='claude') setMode(k); }); });
+  var topics={}; LIB.forEach(function(p){ topics[p.topic]=1; });
+  Object.keys(topics).sort().forEach(function(t){ var o=document.createElement('option'); o.value=t; o.textContent=TOPIC_NAMES[t]||t; $('ftopic').appendChild(o); });
+  $('ftopic').addEventListener('change',drawList);
+  $('src-lib').addEventListener('click',function(){ setSource('lib'); });
+  $('src-own').addEventListener('click',function(){ setSource('own'); });
+  var want=(location.hash.match(/problem=([a-z0-9-]+)/)||[])[1]||lsGet('hu_mk_problem','');
+  drawList(); if(want) choose(want,false);
+  setSource(LIB.length?(location.hash.indexOf('problem=')>=0?'lib':lsGet('hu_mk_source','lib')):'own');
+  $('pvbtn').addEventListener('click',togglePreview);
+  $('sol').addEventListener('input',function(){ clearTimeout(pvTimer); pvTimer=setTimeout(updatePreview,500); });
+
+  ['free','claude','chat','key'].forEach(function(k){ var c=$('card-'+k); if(c) c.addEventListener('click',function(){ if(!c.classList.contains('off')||k!=='claude') setMode(k); }); });
+  $('go-free').addEventListener('click',markFree);
   $('go-claude').addEventListener('click',markWithClaude);
   $('stop-claude').addEventListener('click',function(){ if(ctl) ctl.abort(); });
   $('copy-plain').addEventListener('click',function(){ copyPrompt(null); });
   document.querySelectorAll('[data-open]').forEach(function(b){ b.addEventListener('click',function(){ $('whichbot').value=b.getAttribute('data-name'); copyPrompt(b.getAttribute('data-open')); }); });
   $('render').addEventListener('click',renderPasted);
+  $('copy-check').addEventListener('click',copyCheck);
+  $('apply-check').addEventListener('click',applyCheck);
   $('prov').addEventListener('change',loadKeyUI); loadKeyUI();
   $('go-key').addEventListener('click',markWithKey);
 
   if(inArtifact){
-    $('card-key').classList.add('hidden');
+    $('card-key').classList.add('hidden'); $('card-free').classList.add('hidden');
     $('claude-note').textContent='Runs on your own Claude account. The first time, Claude asks your permission.';
     window.claude.use('sample').then(function(fn){
       if(fn){ sampleFn=fn;
         $('card-claude').classList.remove('off'); $('claude-state').textContent='Ready';
         if(fn.limits) fn.limits().then(function(l){ photoAllowed=!!(l&&l.images); if(photoAllowed){ $('photo').accept=l.images.mediaTypes.join(','); } setMode(mode); }).catch(function(){});
-        setMode(lsGet('hu_mk_mode','claude')==='key'?'claude':lsGet('hu_mk_mode','claude'));
+        setMode(lsGet('hu_mk_mode','claude')==='chat'?'chat':'claude');
       } else { $('claude-state').textContent='Unavailable here'; $('card-claude').classList.add('off'); setMode('chat'); }
     });
   } else {
@@ -476,11 +624,10 @@ function boot(){
       $('claude-state').innerHTML='<a href="'+ARTIFACT_URL+'" target="_blank" rel="noopener">Open on claude.ai</a>';
       $('claude-note').textContent='Claude runs directly only in the claude.ai copy of this page, on your own account. Free accounts work.';
     } else { $('claude-state').textContent='Coming soon'; $('claude-note').textContent='The claude.ai copy of this page is not linked yet.'; }
-    var m=lsGet('hu_mk_mode','chat'); setMode(m==='claude'?'chat':m);
+    var m=lsGet('hu_mk_mode','free'); setMode(m==='claude'?'free':m);
   }
 }
 boot();
-
 </script>
 <script src="site.js?v=20261022"></script>
 </body>
