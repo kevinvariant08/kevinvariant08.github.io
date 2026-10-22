@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Problem editor</title>
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="/favicon.ico" sizes="32x32">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <meta name="theme-color" content="#F6F4EF">
+  <link rel="stylesheet" href="style.css?v=20261022">
+  <script>try{if(localStorage.getItem('kv_mode')==='dark')document.documentElement.setAttribute('data-mode','dark')}catch(e){}</script>
+  <script>window.MathJax={tex:{inlineMath:[['$','$']],displayMath:[['\\[','\\]']],processEscapes:true},options:{skipHtmlTags:['script','noscript','style','textarea','pre','input']}};</script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js" async></script>
+  <style>
+    :where(:root){--ink:#F3F1FF;--soft:var(--ink-soft,#BDBBE6);--faint:var(--ink-faint,#8A89BD);--rule:var(--line,#343A82);--paper:var(--bg,#15173B);--card:var(--surface,#1D2052);--ok:var(--mint,#5BE3A6);--okbg:rgba(91,227,166,.14);--bad:var(--rose,#FF6B8B);--badbg:rgba(255,107,139,.14);--warn:var(--saffron,#FFC53D);--warnbg:rgba(255,197,61,.14);--serif:"IBM Plex Serif",Georgia,"Times New Roman",serif;--sans:"Bricolage Grotesque","IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif}
+    .ed{font-family:var(--sans);color:var(--ink);line-height:1.55;max-width:84rem}
+    .ed .hidden{display:none!important}
+    .ed h1{font-family:var(--serif);font-weight:600;font-size:1.9rem;margin:.2rem 0 .4rem}
+    .ed h2{font-family:var(--serif);font-weight:600;font-size:1.15rem;margin:1.6rem 0 .6rem}
+    .ed h3{font-family:var(--sans);font-size:.82rem;font-weight:500;letter-spacing:.03em;color:var(--faint);margin:1.4rem 0 .5rem;padding-bottom:.3rem;border-bottom:1px solid var(--rule)}
+    .ed .lead{color:var(--soft);max-width:70ch;margin:0 0 1rem}
+    .ed label{display:block;font-size:.88rem;color:var(--soft);margin-top:.8rem}
+    .ed label small{color:var(--faint)}
+    .ed textarea,.ed input[type=text],.ed input[type=number],.ed select{width:100%;font-family:var(--sans);font-size:.95rem;padding:.5rem .65rem;border:1px solid var(--rule);border-radius:2px;background:var(--card);color:var(--ink);margin-top:.25rem}
+    .ed textarea{resize:vertical;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.88rem;line-height:1.5;min-height:5rem}
+    .ed textarea.tall{min-height:10rem}
+    .ed .btn{font-family:var(--sans);font-size:.92rem;font-weight:500;color:var(--ink);background:transparent;border:1px solid var(--ink);border-radius:2px;padding:.5rem 1rem;cursor:pointer;min-height:44px}
+    .ed .btn:hover{background:var(--ink);color:var(--paper)}
+    .ed .btn.quiet{border-color:var(--rule);color:var(--soft);font-weight:400}
+    .ed .btn.quiet:hover{background:transparent;border-color:var(--ink);color:var(--ink)}
+    .ed .btn.danger{border-color:var(--bad);color:var(--bad)}
+    .ed .btn.danger:hover{background:var(--bad);color:var(--paper)}
+    .ed .btn.small{min-height:36px;padding:.3rem .7rem;font-size:.85rem}
+    .ed .btn[disabled]{opacity:.4;cursor:default}
+    .ed .btn:focus-visible,.ed a:focus-visible{outline:2px solid var(--bad);outline-offset:2px}
+    .ed .row{display:flex;gap:.5rem;flex-wrap:wrap;align-items:center;margin-top:.8rem}
+    .ed .grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 .8rem}
+    .ed .grid4{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:0 .8rem}
+    @media (max-width:640px){.ed .grid2,.ed .grid4{grid-template-columns:1fr}}
+    .ed .msg{font-size:.9rem;color:var(--soft);min-height:1.3em;margin:.6rem 0 0}
+    .ed .box{padding:1rem 1.1rem;border:1px solid var(--rule);background:var(--card);margin-top:1rem}
+    .ed .box.warn{border-color:var(--warn);background:var(--warnbg)}
+    .ed .box p{margin:.3rem 0}
+    .ed .box ol{margin:.4rem 0 0;padding-left:1.2rem}
+    .ed code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85em}
+    .ed .tbl{width:100%;border-collapse:collapse;font-size:.92rem}
+    .ed .tbl th,.ed .tbl td{text-align:left;padding:.55rem .4rem;border-bottom:1px solid var(--rule);vertical-align:middle}
+    .ed .tbl th{font-weight:500;font-size:.78rem;color:var(--faint)}
+    .ed .tblwrap{overflow-x:auto}
+    .ed .tag{display:inline-block;font-size:.74rem;font-weight:500;padding:.1rem .45rem;border-radius:2px}
+    .ed .tag.pub{background:var(--okbg);color:var(--ok)} .ed .tag.draft{background:var(--warnbg);color:var(--warn)} .ed .tag.hid{background:var(--badbg);color:var(--bad)} .ed .tag.site{border:1px solid var(--rule);color:var(--soft)}
+    .ed .work{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:1.6rem;align-items:start;margin-top:.6rem}
+    @media (max-width:980px){.ed .work{grid-template-columns:1fr}}
+    .ed .pv{position:sticky;top:1rem;max-height:calc(100vh - 2rem);overflow:auto;border:1px solid var(--rule);background:var(--card);padding:1rem 1.2rem}
+    @media (max-width:980px){.ed .pv{position:static;max-height:none}}
+    .ed .pv p,.ed .pv li{font-family:var(--serif);font-size:1rem;line-height:1.7}
+    .ed .pv h4{font-family:var(--serif);font-weight:600;margin:1rem 0 .2rem}
+    .ed .pv .pt{font-family:var(--serif);font-weight:600;font-size:1.15rem;margin:0}
+    .ed .pv .pm{font-size:.84rem;color:var(--faint);margin:.2rem 0 .6rem}
+    .ed .pv .sec{font-family:var(--sans);font-size:.78rem;font-weight:500;color:var(--faint);margin:1.2rem 0 .3rem;padding-bottom:.25rem;border-bottom:1px solid var(--rule)}
+    .ed .pv ul{padding-left:1.1rem}
+    .ed .item{border:1px solid var(--rule);padding:.6rem .8rem .8rem;margin-top:.6rem;background:var(--card)}
+    .ed .item .ih{display:flex;justify-content:space-between;align-items:center;gap:.5rem}
+    .ed .item .ih span{font-size:.82rem;color:var(--faint)}
+    .ed .cp{display:grid;grid-template-columns:4.5rem 7rem minmax(0,1fr) auto;gap:.5rem;align-items:start;margin-top:.5rem}
+    .ed .cp input,.ed .cp select{margin-top:0}
+    .ed .cp textarea{margin-top:0;min-height:2.6rem}
+    @media (max-width:640px){.ed .cp{grid-template-columns:4.5rem 7rem auto}.ed .cp textarea{grid-column:1/-1;grid-row:2}}
+    .ed .total{font-size:.88rem;margin:.5rem 0 0}
+    .ed .total.ok{color:var(--ok)} .ed .total.bad{color:var(--bad)}
+    .ed .errs{margin:.4rem 0 0;padding-left:1.2rem;color:var(--bad);font-size:.88rem}
+    .ed .warns{margin:.4rem 0 0;padding-left:1.2rem;color:var(--soft);font-size:.88rem}
+    .ed .actions{position:sticky;bottom:0;background:var(--paper);border-top:1px solid var(--rule);padding:.6rem 0 .8rem;margin-top:1.4rem;z-index:2}
+  </style>
+</head>
+<body data-theme-v2>
+  <nav id="sitenav"><div class="nav-links"><a href="index.html">Home</a> <a href="marker.html">Proof marker</a></div></nav>
+  <main class="container ed">
+    <h1>Problem editor</h1>
+    <p class="lead">Write Proof marker problems here, with their solutions and mark scheme, and publish them straight to the site. Only the site's admin can use this page.</p>
+
+    <div id="gate" class="box" aria-live="polite"><p>Checking your account.</p></div>
+
+    <div id="setup" class="box warn hidden">
+      <p><b>One-time setup needed.</b> The database table for editor problems does not exist yet.</p>
+      <ol>
+        <li>Open your Supabase project, then <b>SQL Editor</b>, then <b>New query</b>.</li>
+        <li>Paste the whole of <code>marker-problems.sql</code> from the site's repository and press <b>Run</b>.</li>
+        <li>Reload this page.</li>
+      </ol>
+    </div>
+
+    <div id="app" class="hidden">
+      <h2>Problems in the Proof marker</h2>
+      <div class="tblwrap"><table class="tbl"><thead><tr><th scope="col">Problem</th><th scope="col">Where</th><th scope="col">Status</th><th scope="col">Actions</th></tr></thead><tbody id="plist"></tbody></table></div>
+      <div class="row"><button class="btn" id="newbtn">New problem</button><button class="btn quiet" id="importbtn">Paste a problem file</button></div>
+      <div id="importbox" class="hidden">
+        <label>A problem in the file format of <code>marking/TEMPLATE.md</code><textarea id="importtext" class="tall"></textarea></label>
+        <div class="row"><button class="btn" id="importgo">Load into the editor</button><button class="btn quiet" id="importcancel">Cancel</button></div>
+      </div>
+      <p class="msg" id="listmsg"></p>
+
+      <div id="editor" class="hidden">
+        <h2 id="edtitle">New problem</h2>
+        <div class="work">
+          <div>
+            <h3>Details</h3>
+            <label>Title <small>(shown to students; $...$ maths is fine)</small><input type="text" id="f-title"></label>
+            <div class="grid2">
+              <label>Id <small>(lower case and hyphens; fixed once saved)</small><input type="text" id="f-id" spellcheck="false"></label>
+              <label>Source <small>(competition, year, number)</small><input type="text" id="f-source"></label>
+            </div>
+            <div class="grid4">
+              <label>Topic <select id="f-topic"><option value="geometry">Geometry</option><option value="number theory">Number theory</option><option value="algebra">Algebra</option><option value="combinatorics">Combinatorics</option><option value="interview">Interview</option></select></label>
+              <label>Difficulty <small>1 to 10</small><input type="number" id="f-difficulty" min="1" max="10" step="1" value="6"></label>
+              <label>Out of <input type="number" id="f-max" min="1" max="50" step="1" value="10"></label>
+              <span></span>
+            </div>
+
+            <h3>Problem</h3>
+            <label>Statement <small>(LaTeX: $...$ inline, \[...\] displayed; a blank line starts a new paragraph)</small><textarea id="f-problem" class="tall"></textarea></label>
+
+            <h3>Solutions</h3>
+            <div id="sols"></div>
+            <div class="row"><button class="btn quiet small" id="addsol">Add another solution</button></div>
+
+            <h3>Mark scheme</h3>
+            <p class="lead" style="font-size:.88rem;margin:0">One checkpoint per row: marks, an optional route for alternative solutions, and what the candidate must show. Every route plus the shared checkpoints must add up to the total.</p>
+            <div id="cps"></div>
+            <div class="row"><button class="btn quiet small" id="addcp">Add checkpoint</button><button class="btn quiet small" id="addcap">Add cap</button><button class="btn quiet small" id="aischeme">Draft a mark scheme from my solution</button></div>
+            <div id="caps"></div>
+            <p class="total" id="total"></p>
+            <label>Fatal errors <small>(one per line: a mistake that breaks the proof, and what it costs)</small><textarea id="f-fatal"></textarea></label>
+            <label>Not enough <small>(one per line: things that look like progress but earn nothing)</small><textarea id="f-notenough"></textarea></label>
+
+            <h3>Marked examples</h3>
+            <p class="lead" style="font-size:.88rem;margin:0">Scripts in a student's voice with your mark. Three (full marks, partial, convincing but wrong) make the marker far more consistent.</p>
+            <div id="exs"></div>
+            <div class="row"><button class="btn quiet small" id="addex">Add example</button><button class="btn quiet small" id="aiex">Draft three examples</button></div>
+            <p class="msg" id="aimsg"></p>
+
+            <div class="actions">
+              <div class="row" style="margin-top:0">
+                <button class="btn" id="publish">Publish</button>
+                <button class="btn quiet" id="savedraft">Save as draft</button>
+                <button class="btn quiet" id="download">Download as a file</button>
+                <button class="btn quiet" id="closeed">Close</button>
+              </div>
+              <p class="msg" id="savemsg" aria-live="polite"></p>
+              <ul class="errs" id="errs"></ul>
+              <ul class="warns" id="warns"></ul>
+            </div>
+          </div>
+          <div class="pv" id="pv" aria-label="Preview" aria-live="off"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+<script src="tools/marking-parse.js?v=20261022"></script>
+<script src="marking/library.js?v=20261022"></script>
+<script src="marking/problems-db.js?v=20261022"></script>
+<script>
+var FREE_PROXY = "https://hu-interviewer.kevinvariant08.workers.dev";
+var DB = window.HU_MARKER_DB, PARSE = window.HU_MARK_PARSE;
+var BUILTIN = (window.HU_MARKING && window.HU_MARKING.problems) || [];
+var ROWS = [], editing = null, idTouched = false;
+
+function $(id){ return document.getElementById(id); }
+function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+function md(t){ return String(t||'').split(/\n\s*\n/).filter(function(p){return p.trim();}).map(function(p){ return '<p>'+esc(p.trim()).replace(/\n/g,' ')+'</p>'; }).join(''); }
+function typeset(el){ if(window.MathJax&&MathJax.typesetPromise){ if(MathJax.typesetClear) MathJax.typesetClear([el]); MathJax.typesetPromise([el]).catch(function(){}); } }
+function slug(s){ return String(s||'').toLowerCase().replace(/\$[^$]*\$/g,' ').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,48); }
+function oneLine(s){ return String(s||'').replace(/\s*\n\s*/g,' ').trim(); }
+function draftKey(){ return 'hu_editor_draft'; }
+
+/* ====================================================== gate */
+async function start(){
+  var A=await DB.whenAuth(9000);
+  if(!A||!A.configured){ $('gate').innerHTML='<p>Accounts are not available on this copy of the site, so the editor cannot save. Use it on kevinvariant08.github.io.</p>'; return; }
+  if(!A.user()){ $('gate').innerHTML='<p>Sign in with the admin account to use the editor. <a href="auth.html#signin">Sign in</a></p>'; A.onChange&&A.onChange(function(){ if(A.user()) location.reload(); }); return; }
+  var admin=await DB.isAdmin();
+  if(!admin){ $('gate').innerHTML='<p>This page is only for the site\'s admin.</p>'; return; }
+  $('gate').classList.add('hidden');
+  await refresh();
+}
+async function refresh(){
+  var r=await DB.fetchRows();
+  if(r.error==='no-table'){ $('setup').classList.remove('hidden'); return; }
+  if(r.error){ $('gate').classList.remove('hidden'); $('gate').innerHTML='<p>Could not read the problems: '+esc(r.error)+'</p>'; return; }
+  ROWS=r.rows; $('app').classList.remove('hidden'); drawList();
+}
+
+/* ====================================================== list */
+function drawList(){
+  var byId={}; ROWS.forEach(function(r){ byId[r.id]=r; });
+  var items=[];
+  BUILTIN.forEach(function(p){ var r=byId[p.id]; if(r&&r.data) return; items.push({id:p.id,title:p.title,where:'site',status:r&&r.status==='hidden'?'hidden':'published',data:p,row:r}); });
+  ROWS.forEach(function(r){ if(!r.data) return; items.push({id:r.id,title:r.data.title,where:'editor',status:r.status,data:r.data,row:r,replaces:BUILTIN.some(function(p){return p.id===r.id;})}); });
+  var TAG={published:'<span class="tag pub">Live</span>',draft:'<span class="tag draft">Draft, only you see it</span>',hidden:'<span class="tag hid">Hidden</span>'};
+  $('plist').innerHTML=items.map(function(it){
+    var acts='<button class="btn quiet small" data-act="edit" data-id="'+esc(it.id)+'">Edit</button> ';
+    if(it.status==='hidden') acts+='<button class="btn quiet small" data-act="show" data-id="'+esc(it.id)+'">Show</button> ';
+    else acts+='<button class="btn quiet small" data-act="hide" data-id="'+esc(it.id)+'">Hide</button> ';
+    if(it.where==='editor') acts+='<button class="btn danger small" data-act="delete" data-id="'+esc(it.id)+'">Delete</button>';
+    return '<tr><td>'+esc(it.title)+'<br><span style="color:var(--faint);font-size:.8rem">'+esc(it.id)+'</span></td><td>'+(it.where==='site'?'<span class="tag site">Built in</span>':'Editor'+(it.replaces?' (replaces a built-in)':''))+'</td><td>'+TAG[it.status]+'</td><td>'+acts+'</td></tr>';
+  }).join('')||'<tr><td colspan="4">No problems yet.</td></tr>';
+  typeset($('plist'));
+  $('plist').querySelectorAll('button').forEach(function(b){ b.addEventListener('click',function(){ act(b.getAttribute('data-act'),b.getAttribute('data-id'),items.filter(function(x){return x.id===b.getAttribute('data-id');})[0]); }); });
+}
+async function act(a,id,it){
+  var msg=$('listmsg'); msg.textContent='';
+  try{
+    if(a==='edit'){ openEditor(it.data,it.where==='editor'?it.status:null); return; }
+    if(a==='hide'){ if(it.where==='site') await DB.save(id,'hidden',null,null); else await DB.save(id,'hidden',it.data,it.row.source_md); msg.textContent='Hidden from the Proof marker.'; }
+    if(a==='show'){ if(it.where==='site') await DB.remove(id); else await DB.save(id,'published',it.data,it.row.source_md); msg.textContent='Showing in the Proof marker again.'; }
+    if(a==='delete'){ if(!confirm('Delete "'+it.title+'" permanently?')) return; await DB.remove(id); msg.textContent='Deleted.'; }
+    await refresh();
+  }catch(e){ msg.textContent='That did not work: '+e.message; }
+}
+
+/* ====================================================== editor state */
+function solItem(s){
+  var d=document.createElement('div'); d.className='item sol';
+  d.innerHTML='<div class="ih"><span>Solution</span><button class="btn quiet small" data-rm>Remove</button></div>'
+    +'<label>Name <small>(for example "Homothety, then power of a point")</small><input type="text" class="s-title"></label>'
+    +'<label>Full solution<textarea class="s-text tall"></textarea></label>';
+  d.querySelector('.s-title').value=s&&s.title||''; d.querySelector('.s-text').value=s&&s.text||'';
+  d.querySelector('[data-rm]').addEventListener('click',function(){ if($('sols').children.length>1){ d.remove(); changed(); } });
+  $('sols').appendChild(d);
+}
+function cpItem(c){
+  var d=document.createElement('div'); d.className='cp';
+  d.innerHTML='<input type="number" class="c-marks" min="0" max="50" aria-label="Marks"><select class="c-route" aria-label="Route"><option value="">Shared</option><option value="A">Route A</option><option value="B">Route B</option><option value="C">Route C</option></select><textarea class="c-text" aria-label="What earns the marks"></textarea><button class="btn quiet small" data-rm aria-label="Remove checkpoint">&times;</button>';
+  d.querySelector('.c-marks').value=c?c.marks:1; d.querySelector('.c-route').value=c&&c.route||''; d.querySelector('.c-text').value=c&&c.text||'';
+  d.querySelector('[data-rm]').addEventListener('click',function(){ d.remove(); changed(); });
+  $('cps').appendChild(d);
+}
+function capItem(c){
+  var d=document.createElement('div'); d.className='cp capr';
+  d.innerHTML='<input type="number" class="k-cap" min="0" max="49" aria-label="Cap"><span style="font-size:.85rem;color:var(--faint);align-self:center">Cap</span><textarea class="k-text" aria-label="When the cap applies"></textarea><button class="btn quiet small" data-rm aria-label="Remove cap">&times;</button>';
+  d.querySelector('.k-cap').value=c?c.cap:5; d.querySelector('.k-text').value=c&&c.text||'';
+  d.querySelector('[data-rm]').addEventListener('click',function(){ d.remove(); changed(); });
+  $('caps').appendChild(d);
+}
+function exItem(e){
+  var d=document.createElement('div'); d.className='item ex';
+  d.innerHTML='<div class="ih"><span>Marked example</span><button class="btn quiet small" data-rm>Remove</button></div>'
+    +'<div class="grid2"><label>Name <small>(for example "Convincing but wrong")</small><input type="text" class="e-title"></label><label>Your mark<input type="number" class="e-mark" min="0" max="50"></label></div>'
+    +'<label>Your comment<textarea class="e-comment"></textarea></label><label>The script<textarea class="e-script tall"></textarea></label>';
+  d.querySelector('.e-title').value=e&&e.title||''; d.querySelector('.e-mark').value=e?e.mark:''; d.querySelector('.e-comment').value=e&&e.comment||''; d.querySelector('.e-script').value=e&&e.script||'';
+  d.querySelector('[data-rm]').addEventListener('click',function(){ d.remove(); changed(); });
+  $('exs').appendChild(d);
+}
+function openEditor(p,status){
+  editing={id:p?p.id:null,status:status||null,fromSite:!!p&&!status&&BUILTIN.some(function(b){return b.id===p.id;})};
+  idTouched=!!p;
+  $('editor').classList.remove('hidden');
+  $('edtitle').textContent=p?('Editing: '+(p.title||p.id)):'New problem';
+  $('f-title').value=p&&p.title||''; $('f-id').value=p&&p.id||''; $('f-id').disabled=!!(p&&(status||editing.fromSite));
+  $('f-source').value=p&&p.source||''; $('f-topic').value=p&&p.topic||'geometry';
+  $('f-difficulty').value=p&&p.difficulty||6; $('f-max').value=p&&p.max||10;
+  $('f-problem').value=p&&p.problem||'';
+  $('sols').innerHTML=''; (p&&p.solutions&&p.solutions.length?p.solutions:[{title:'Solution',text:''}]).forEach(solItem);
+  $('cps').innerHTML=''; (p&&p.checkpoints&&p.checkpoints.length?p.checkpoints:[{marks:1,route:'',text:''}]).forEach(cpItem);
+  $('caps').innerHTML=''; (p&&p.caps||[]).forEach(capItem);
+  $('f-fatal').value=(p&&p.fatal||[]).join('\n'); $('f-notenough').value=(p&&p.notEnough||[]).join('\n');
+  $('exs').innerHTML=''; (p&&p.examples||[]).forEach(exItem);
+  if(editing.fromSite) $('savemsg').textContent='This is a built-in problem. Saving it here creates an editor copy that replaces the built-in one on the site.';
+  else $('savemsg').textContent='';
+  $('errs').innerHTML=''; $('warns').innerHTML='';
+  changed(); $('editor').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+/* ====================================================== build the file text from the form */
+function collect(){
+  var q=function(el,c){ return el.querySelector(c).value; };
+  return {
+    id:$('f-id').value.trim(), title:oneLine($('f-title').value), source:oneLine($('f-source').value), topic:$('f-topic').value,
+    difficulty:$('f-difficulty').value, max:$('f-max').value, problem:$('f-problem').value.trim(),
+    solutions:[].map.call(document.querySelectorAll('#sols .sol'),function(d){ return {title:oneLine(q(d,'.s-title'))||'Solution',text:q(d,'.s-text').trim()}; }),
+    checkpoints:[].map.call(document.querySelectorAll('#cps .cp'),function(d){ return {marks:q(d,'.c-marks'),route:q(d,'.c-route'),text:oneLine(q(d,'.c-text'))}; }).filter(function(c){ return c.text; }),
+    caps:[].map.call(document.querySelectorAll('#caps .capr'),function(d){ return {cap:q(d,'.k-cap'),text:oneLine(q(d,'.k-text'))}; }).filter(function(c){ return c.text; }),
+    fatal:$('f-fatal').value.split('\n').map(function(s){return s.replace(/^\s*-\s*/,'').trim();}).filter(Boolean),
+    notEnough:$('f-notenough').value.split('\n').map(function(s){return s.replace(/^\s*-\s*/,'').trim();}).filter(Boolean),
+    examples:[].map.call(document.querySelectorAll('#exs .ex'),function(d){ return {title:oneLine(q(d,'.e-title'))||'Example',mark:q(d,'.e-mark'),comment:oneLine(q(d,'.e-comment')),script:q(d,'.e-script').trim()}; }).filter(function(e){ return e.script||e.comment; })
+  };
+}
+/* a line starting with # inside free text would be read as a heading, so escape it */
+function safe(t){ return String(t||'').replace(/^(\s*)#/gm,'$1\\#'); }
+function toFile(f,published){
+  var L=['---','id: '+f.id,'title: '+f.title,'source: '+(f.source||'Original problem'),'topic: '+f.topic,'difficulty: '+f.difficulty,'max: '+f.max,'reviewed: '+(published?'true':'false'),'---','','## Problem','',safe(f.problem),'','## Solutions',''];
+  f.solutions.forEach(function(s){ L.push('### '+s.title,'',safe(s.text),''); });
+  L.push('## Mark scheme','');
+  f.checkpoints.forEach(function(c){ L.push('- ['+c.marks+'] '+(c.route?'(Route '+c.route+') ':'')+c.text); });
+  f.caps.forEach(function(c){ L.push('- Cap '+c.cap+': '+c.text); });
+  L.push('','## Fatal errors','');
+  f.fatal.forEach(function(x){ L.push('- '+x); });
+  L.push('','## Not enough','');
+  f.notEnough.forEach(function(x){ L.push('- '+x); });
+  L.push('','## Marked examples','');
+  f.examples.forEach(function(e){ L.push('### '+e.title,'Mark: '+e.mark,'Comment: '+(e.comment||'(no comment)'),'',safe(e.script)||'(no script)',''); });
+  return L.join('\n')+'\n';
+}
+function check(published){
+  var f=collect(); var text=toFile(f,published);
+  var res=PARSE.parseProblem(text,(f.id||'untitled')+'.md');
+  var clean=function(m){ return m.replace(/^[^:]+\.md(:\d+)?: /,''); };
+  return {f:f,text:text,problem:res.problem,errors:res.errors.map(clean),warnings:res.warnings.map(clean)};
+}
+
+/* ====================================================== preview and totals */
+var pvTimer=null;
+function changed(){
+  if(!idTouched&&!$('f-id').disabled) $('f-id').value=slug($('f-title').value);
+  var f=collect(), max=Number(f.max)||0, common=0, routes={};
+  f.checkpoints.forEach(function(c){ var m=Number(c.marks)||0; if(c.route) routes[c.route]=(routes[c.route]||0)+m; else common+=m; });
+  var rk=Object.keys(routes).sort(), t=$('total'), ok;
+  if(!rk.length){ ok=common===max; t.textContent='Checkpoints total '+common+' of '+max+(ok?'.':(common<max?': '+(max-common)+' still to allocate.':': '+(common-max)+' too many.')); }
+  else { ok=rk.every(function(r){ return common+routes[r]===max; }); t.textContent=rk.map(function(r){ return 'Route '+r+': '+(common+routes[r])+' of '+max; }).join(' · ')+(ok?'.':'. Each route plus the shared checkpoints must make '+max+'.'); }
+  t.className='total '+(ok?'ok':'bad');
+  $('errs').innerHTML='';
+  clearTimeout(pvTimer); pvTimer=setTimeout(function(){ drawPreview(f); saveLocal(); },350);
+}
+function drawPreview(f){
+  var h='<p class="pt">'+esc(f.title||'Untitled problem')+'</p><p class="pm">'+esc(f.source||'No source yet')+' &middot; '+esc(f.topic)+' &middot; difficulty '+esc(f.difficulty)+'/10 &middot; out of '+esc(f.max)+'</p>'
+    +'<div class="sec">Problem</div>'+(md(f.problem)||'<p style="color:var(--faint)">The statement will appear here.</p>');
+  f.solutions.forEach(function(s,i){ h+='<div class="sec">Solution'+(f.solutions.length>1?' '+(i+1):'')+': '+esc(s.title)+'</div>'+(md(s.text)||'<p style="color:var(--faint)">Empty.</p>'); });
+  h+='<div class="sec">Mark scheme</div><ul>'+f.checkpoints.map(function(c){ return '<li><b>'+esc(c.marks)+'</b> '+(c.route?'(Route '+esc(c.route)+') ':'')+esc(c.text)+'</li>'; }).join('')+f.caps.map(function(c){ return '<li><b>Cap '+esc(c.cap)+':</b> '+esc(c.text)+'</li>'; }).join('')+'</ul>';
+  if(f.fatal.length) h+='<div class="sec">Fatal errors</div><ul>'+f.fatal.map(function(x){return '<li>'+esc(x)+'</li>';}).join('')+'</ul>';
+  if(f.notEnough.length) h+='<div class="sec">Not enough</div><ul>'+f.notEnough.map(function(x){return '<li>'+esc(x)+'</li>';}).join('')+'</ul>';
+  f.examples.forEach(function(e){ h+='<div class="sec">Example: '+esc(e.title)+' ('+esc(e.mark)+'/'+esc(f.max)+')</div><p style="font-family:var(--sans);font-size:.88rem;color:var(--soft)">'+esc(e.comment)+'</p>'+md(e.script); });
+  $('pv').innerHTML=h; typeset($('pv'));
+}
+function saveLocal(){ try{ localStorage.setItem(draftKey(),JSON.stringify({at:Date.now(),editing:editing,form:collect()})); }catch(e){} }
+
+/* ====================================================== save */
+function showIssues(r){
+  $('errs').innerHTML=r.errors.map(function(e){return '<li>'+esc(e)+'</li>';}).join('');
+  $('warns').innerHTML=r.warnings.map(function(e){return '<li>'+esc(e)+'</li>';}).join('');
+}
+async function save(published){
+  var r=check(published), msg=$('savemsg'); showIssues(r);
+  if(r.errors.length){ msg.textContent='Fix the '+(r.errors.length>1?r.errors.length+' problems':'problem')+' listed below first.'; return; }
+  var exists=ROWS.some(function(x){ return x.id===r.problem.id&&x.data; });
+  if(!editing.id&&(exists||BUILTIN.some(function(b){return b.id===r.problem.id;}))&&!confirm('A problem with the id "'+r.problem.id+'" already exists. Replace it?')) return;
+  $('publish').disabled=$('savedraft').disabled=true; msg.textContent='Saving.';
+  try{
+    await DB.save(r.problem.id,published?'published':'draft',r.problem,r.text);
+    editing.id=r.problem.id; editing.status=published?'published':'draft'; $('f-id').disabled=true; idTouched=true;
+    msg.innerHTML=published?'Published. It is live in the <a href="marker.html#problem='+esc(r.problem.id)+'" target="_blank" rel="noopener">Proof marker</a> now.':'Saved as a draft. Only you can see it in the Proof marker.';
+    try{ localStorage.removeItem(draftKey()); }catch(e){}
+    await refresh();
+  }catch(e){ msg.textContent='Saving failed: '+e.message; }
+  $('publish').disabled=$('savedraft').disabled=false;
+}
+function download(){
+  var r=check(editing&&editing.status==='published'); showIssues(r);
+  var blob=new Blob([r.text],{type:'text/markdown'}), a=document.createElement('a');
+  a.href=URL.createObjectURL(blob); a.download=(r.f.id||'problem')+'.md'; document.body.appendChild(a); a.click(); setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); },500);
+}
+
+/* ====================================================== AI drafts, through the site's free worker */
+async function ask(prompt,schema){
+  var res=await fetch(FREE_PROXY,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({system:'You are an experienced olympiad examiner who writes mark schemes. You reply with one JSON object and nothing else.',messages:[{role:'user',content:prompt}],max_tokens:1500,json_schema:schema})});
+  var d=null; try{ d=await res.json(); }catch(_){}
+  if(!res.ok) throw new Error((d&&d.message)||('HTTP '+res.status));
+  var t=((d&&d.content)||[]).map(function(b){return b.text||'';}).join('');
+  var s=t.indexOf('{'), e=t.lastIndexOf('}'); return JSON.parse(t.slice(s,e+1));
+}
+function problemBrief(f){ return 'PROBLEM:\n'+f.problem+'\n\n'+f.solutions.map(function(s,i){ return 'INTENDED SOLUTION '+(i+1)+' ('+s.title+'):\n'+s.text; }).join('\n\n'); }
+async function aiScheme(){
+  var f=collect(), msg=$('aimsg');
+  if(!f.problem||!f.solutions.some(function(s){return s.text;})){ msg.textContent='Write the problem and at least one solution first.'; return; }
+  if(f.checkpoints.length&&!confirm('Replace the current checkpoints, fatal errors and "not enough" list with a draft?')) return;
+  msg.textContent='Drafting a mark scheme. This takes about half a minute.';
+  try{
+    var j=await ask(problemBrief(f)+'\n\nWrite a mark scheme out of '+f.max+' for this olympiad problem, in the style of BMO marking. Give 4 to 8 checkpoints, each a specific thing the candidate must show, with whole-number marks adding up to exactly '+f.max+'. If there are two genuinely different solutions, give their specific checkpoints route "A" and "B" so that the shared checkpoints plus either route total '+f.max+'; otherwise leave route empty. Add caps only where natural. Also list 2 to 4 fatal errors (common mistakes that break the proof, with what they cost) and 1 to 3 things that look like progress but earn nothing. British spelling, no em dashes, LaTeX in $...$.',
+      {type:'object',properties:{checkpoints:{type:'array',items:{type:'object',properties:{marks:{type:'integer'},route:{type:'string'},text:{type:'string'}},required:['marks','text']}},caps:{type:'array',items:{type:'object',properties:{cap:{type:'integer'},text:{type:'string'}},required:['cap','text']}},fatal:{type:'array',items:{type:'string'}},notEnough:{type:'array',items:{type:'string'}}},required:['checkpoints','fatal','notEnough']});
+    $('cps').innerHTML=''; (j.checkpoints||[]).forEach(function(c){ cpItem({marks:c.marks,route:/^[ABC]$/.test(c.route||'')?c.route:'',text:c.text}); });
+    $('caps').innerHTML=''; (j.caps||[]).forEach(capItem);
+    $('f-fatal').value=(j.fatal||[]).join('\n'); $('f-notenough').value=(j.notEnough||[]).join('\n');
+    changed(); msg.textContent='Draft added. Check every checkpoint and the total before publishing: a free model wrote it.';
+  }catch(e){ msg.textContent=(/403/.test(e.message)?'Drafting only works on kevinvariant08.github.io.':'Drafting failed: '+e.message); }
+}
+async function aiExamples(){
+  var f=collect(), msg=$('aimsg');
+  if(!f.problem||!f.checkpoints.length){ msg.textContent='Write the problem, a solution and the mark scheme first.'; return; }
+  msg.textContent='Drafting three marked examples. This takes about half a minute.';
+  try{
+    var j=await ask(problemBrief(f)+'\n\nMARK SCHEME out of '+f.max+':\n'+f.checkpoints.map(function(c){ return '['+c.marks+'] '+(c.route?'(Route '+c.route+') ':'')+c.text; }).join('\n')
+      +'\n\nWrite three short student scripts for this problem, in a student\'s voice, each with the mark it earns under this scheme and a one or two sentence examiner\'s comment: (1) a complete solution earning '+f.max+'; (2) a typical partial answer; (3) a solution that looks convincing but contains a false or unjustified step, with the mark it actually earns. Make the marks consistent with the scheme. British spelling, no em dashes, LaTeX in $...$. Keep each script under 150 words.',
+      {type:'object',properties:{examples:{type:'array',items:{type:'object',properties:{title:{type:'string'},mark:{type:'integer'},comment:{type:'string'},script:{type:'string'}},required:['title','mark','comment','script']}}},required:['examples']});
+    (j.examples||[]).forEach(exItem); changed();
+    msg.textContent='Examples added. Re-mark each one yourself before publishing: these are what the marker calibrates against.';
+  }catch(e){ msg.textContent=(/403/.test(e.message)?'Drafting only works on kevinvariant08.github.io.':'Drafting failed: '+e.message); }
+}
+
+/* ====================================================== import a file */
+function importFile(){
+  var t=$('importtext').value; if(!t.trim()) return;
+  var m=t.match(/^id:\s*(\S+)/m), res=PARSE.parseProblem(t,(m?m[1]:'untitled')+'.md');
+  if(!res.problem){ $('listmsg').textContent='That file has problems: '+res.errors.slice(0,3).map(function(e){return e.replace(/^[^:]+\.md(:\d+)?: /,'');}).join('; '); return; }
+  $('importbox').classList.add('hidden'); $('importtext').value=''; $('listmsg').textContent='';
+  openEditor(res.problem,null); editing.id=null; $('f-id').disabled=false;
+}
+
+/* ====================================================== boot */
+function boot(){
+  $('newbtn').addEventListener('click',function(){ openEditor(null,null); });
+  $('importbtn').addEventListener('click',function(){ $('importbox').classList.remove('hidden'); $('importtext').focus(); });
+  $('importcancel').addEventListener('click',function(){ $('importbox').classList.add('hidden'); });
+  $('importgo').addEventListener('click',importFile);
+  $('addsol').addEventListener('click',function(){ solItem(null); changed(); });
+  $('addcp').addEventListener('click',function(){ cpItem(null); changed(); });
+  $('addcap').addEventListener('click',function(){ capItem(null); changed(); });
+  $('addex').addEventListener('click',function(){ exItem(null); changed(); });
+  $('aischeme').addEventListener('click',aiScheme);
+  $('aiex').addEventListener('click',aiExamples);
+  $('publish').addEventListener('click',function(){ save(true); });
+  $('savedraft').addEventListener('click',function(){ save(false); });
+  $('download').addEventListener('click',download);
+  $('closeed').addEventListener('click',function(){ $('editor').classList.add('hidden'); try{ localStorage.removeItem(draftKey()); }catch(e){} });
+  $('f-id').addEventListener('input',function(){ idTouched=true; });
+  $('editor').addEventListener('input',changed);
+  $('editor').addEventListener('change',changed);
+  /* recover unsaved work after a reload */
+  try{ var d=JSON.parse(localStorage.getItem(draftKey())||'null');
+    if(d&&d.form&&Date.now()-d.at<7*864e5){ window.__recover=d; }
+  }catch(e){}
+  start().then(function(){
+    var d=window.__recover; if(!d||$('app').classList.contains('hidden')) return;
+    var f=d.form;
+    openEditor({id:f.id,title:f.title,source:f.source,topic:f.topic,difficulty:f.difficulty,max:f.max,problem:f.problem,solutions:f.solutions,checkpoints:f.checkpoints,caps:f.caps,fatal:f.fatal,notEnough:f.notEnough,examples:f.examples},d.editing&&d.editing.status);
+    if(d.editing){ editing=d.editing; $('f-id').disabled=!!(editing.status||editing.fromSite); }
+    $('savemsg').textContent='Recovered your unsaved work from '+new Date(d.at).toLocaleString()+'.';
+  });
+}
+boot();
+</script>
+<script src="site.js?v=20261022"></script>
+</body>
+</html>

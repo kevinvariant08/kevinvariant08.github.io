@@ -1,5 +1,6 @@
 /* Parses one problem file from marking/problems/ into the object the marker uses.
    Shared by tools/build-marking.js and tools/eval-marker.js.  See marking/README.md for the format. */
+(function (root) {
 'use strict';
 
 var TOPICS = ['geometry', 'number theory', 'algebra', 'combinatorics', 'interview'];
@@ -23,7 +24,7 @@ function parseProblem(text, file) {
   var bodyStart = i + 1;
 
   var p = { id: '', title: '', source: '', topic: '', difficulty: 0, max: 0, reviewed: false };
-  ['id', 'title', 'source', 'topic', 'difficulty', 'max', 'reviewed'].forEach(function (k) {
+  ['id', 'title', 'topic', 'difficulty', 'max', 'reviewed'].forEach(function (k) {
     if (!fm[k] || !fm[k].v) err(2, 'front matter is missing "' + k + '"');
   });
   if (fm.id) { p.id = fm.id.v; if (!/^[a-z0-9][a-z0-9-]*$/.test(p.id)) err(fm.id.line, 'id must use lower-case letters, digits and hyphens only'); }
@@ -114,7 +115,7 @@ function parseProblem(text, file) {
       if (!ex.script) err(s.line, 'example "' + s.title + '" has no script text');
       return ex;
     });
-    if (!p.examples.length) err(secs['Marked examples'].line, 'give at least one marked example under a ### heading');
+    if (!p.examples.length) warn(secs['Marked examples'].line, 'no marked examples yet: the marker is much more consistent with three (full marks, partial, convincing but wrong)');
     else if (p.examples.length < 3) warn(secs['Marked examples'].line, 'three or more examples (full marks, partial, convincing but wrong) make marking much more consistent');
     if (p.examples.length && p.max && !p.examples.some(function (e) { return e.mark === p.max; })) warn(secs['Marked examples'].line, 'no example has full marks');
   }
@@ -122,4 +123,6 @@ function parseProblem(text, file) {
   return { problem: errors.length ? null : p, errors: errors, warnings: warnings };
 }
 
-module.exports = { parseProblem: parseProblem, TOPICS: TOPICS, SECTIONS: SECTIONS };
+var API = { parseProblem: parseProblem, TOPICS: TOPICS, SECTIONS: SECTIONS };
+if (typeof module === 'object' && module.exports) module.exports = API; else root.HU_MARK_PARSE = API;
+})(typeof window !== 'undefined' ? window : this);

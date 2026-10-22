@@ -156,6 +156,7 @@
   <main class="container mk">
     <h1>Proof marker</h1>
     <p class="tally hidden" id="agreement"></p>
+    <p class="tally hidden" id="adminlink"><a href="marker-admin.html">Open the Problem editor</a> to add, edit or hide problems.</p>
     <p class="lead">Write a solution to an olympiad or interview problem and get it marked like an examiner would: checkpoint by checkpoint, with the exact line where the argument breaks. Problems from the library are marked against their own mark scheme and examples, then checked a second time by an independent pass. Treat the result as a demanding second opinion, not an official mark.</p>
 
     <h2>1. The problem</h2>
@@ -270,11 +271,12 @@
 <script src="marking/marker-core.js?v=20261022"></script>
 <script src="marking/library.js?v=20261022"></script>
 <script src="marking/eval/latest.js?v=20261022"></script>
+<script src="marking/problems-db.js?v=20261022"></script>
 <script>
 /* ====================================================== configuration */
 var ARTIFACT_URL = "https://claude.ai/artifact/6MiSw7qdvz75ycpsFB1SMH";   /* the claude.ai copy of this page, where Claude runs built in */
 var FREE_PROXY = "https://hu-interviewer.kevinvariant08.workers.dev";    /* the same worker the mock interviews use */
-var M = window.HU_MARK, LIB = (window.HU_MARKING && window.HU_MARKING.problems) || [];
+var M = window.HU_MARK, BUILTIN = (window.HU_MARKING && window.HU_MARKING.problems) || [], LIB = BUILTIN.slice();
 var SCHEMES = M.SCHEMES;
 var TOPIC_NAMES = {'geometry':'Geometry','number theory':'Number theory','algebra':'Algebra','combinatorics':'Combinatorics','interview':'Interview'};
 
@@ -302,7 +304,7 @@ function drawList(){
   if(!LIB.length){ box.innerHTML='<p class="tally">The problem library is empty at the moment. Use "My own problem" instead.</p>'; return; }
   box.innerHTML=list.map(function(p){
     return '<button type="button" class="pcard" data-id="'+esc(p.id)+'" aria-pressed="'+String(!!chosen&&chosen.id===p.id)+'">'
-      +'<span class="t">'+esc(p.title)+(p.reviewed?'':'<span class="badge">Draft scheme</span>')+'</span>'
+      +'<span class="t">'+esc(p.title)+(p.status==='draft'?'<span class="badge">Draft, only you see it</span>':p.reviewed?'':'<span class="badge">Draft scheme</span>')+'</span>'
       +'<span class="m">'+esc(TOPIC_NAMES[p.topic]||p.topic)+' &middot; difficulty '+p.difficulty+'/10 &middot; out of '+p.max+'</span>'
       +'<span class="m">'+esc(p.source)+'</span></button>';
   }).join('')||'<p class="tally">No problems in this topic yet.</p>';
@@ -585,8 +587,7 @@ function boot(){
   if(A&&A.n>=50){ var ag=$('agreement'); ag.textContent='Within 1 mark of a human examiner on '+A.within1+'% of '+A.n+' test scripts the marker had never seen (measured '+A.date+').'; ag.classList.remove('hidden'); }
   var sel=$('scheme'); Object.keys(SCHEMES).forEach(function(k){ var o=document.createElement('option'); o.value=k; o.textContent=SCHEMES[k].name; sel.appendChild(o); }); sel.value=lsGet('hu_mk_scheme','bmo');
   sel.addEventListener('change',function(){ lsSet('hu_mk_scheme',sel.value); });
-  var topics={}; LIB.forEach(function(p){ topics[p.topic]=1; });
-  Object.keys(topics).sort().forEach(function(t){ var o=document.createElement('option'); o.value=t; o.textContent=TOPIC_NAMES[t]||t; $('ftopic').appendChild(o); });
+  drawTopics();
   $('ftopic').addEventListener('change',drawList);
   $('src-lib').addEventListener('click',function(){ setSource('lib'); });
   $('src-own').addEventListener('click',function(){ setSource('own'); });
@@ -628,6 +629,28 @@ function boot(){
   }
 }
 boot();
+
+function drawTopics(){
+  var sel=$('ftopic'), cur=sel.value, topics={};
+  LIB.forEach(function(p){ topics[p.topic]=1; });
+  sel.innerHTML='<option value="">All topics</option>';
+  Object.keys(topics).sort().forEach(function(t){ var o=document.createElement('option'); o.value=t; o.textContent=TOPIC_NAMES[t]||t; sel.appendChild(o); });
+  if(topics[cur]) sel.value=cur;
+}
+/* problems written in the Problem editor come from the database */
+(async function(){
+  var DB=window.HU_MARKER_DB; if(!DB) return;
+  var A=await DB.whenAuth(9000); if(!A||!A.configured) return;
+  var admin=await DB.isAdmin(), r=await DB.fetchRows();
+  if(admin) $('adminlink').classList.remove('hidden');
+  if(r.error||(!r.rows.length)) return;
+  LIB=DB.merge(BUILTIN,r.rows,admin);
+  var want=(location.hash.match(/problem=([a-z0-9-]+)/)||[])[1]||(chosen&&chosen.id)||lsGet('hu_mk_problem','');
+  drawTopics(); chosen=null; drawList();
+  if(want&&LIB.some(function(p){return p.id===want;})) choose(want,false); else { $('pstate').classList.add('hidden'); showHistory(); }
+  if(location.hash.indexOf('problem=')>=0&&LIB.length) setSource('lib');
+  if(!LIB.length) setSource('own');
+})();
 </script>
 <script src="site.js?v=20261022"></script>
 </body>
