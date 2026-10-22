@@ -1,6 +1,7 @@
 /* Trap Map data tool. Run from the repo root.
      node tools/traps-tool.js check                    validate traps.js against questions.js
      node tools/traps-tool.js init types.json          create traps.js with these trap types and no traps
+     node tools/traps-tool.js check-draft draft.json   validate a draft file without writing anything
      node tools/traps-tool.js merge draft.json ...     add drafted questions as reviewed: false
        --replace   also overwrite questions that already have an unreviewed draft
    A draft file is {"B1-1": {"A": {"trap", "why", "working"}, ...}, ...}. Reviewed questions are never overwritten.
@@ -21,6 +22,9 @@ function report(r){
 
 var args=process.argv.slice(2), cmd=args.shift();
 if(cmd==='check'){ var d=loadTraps(); process.exit(report(TM.validate(d.T,d.Q,questions()))); }
+else if(cmd==='check-draft'){ var dd=loadTraps(), draft=JSON.parse(fs.readFileSync(args[0],'utf8')), only={};
+  Object.keys(draft).forEach(function(id){ only[id]={reviewed:false,opts:draft[id]}; });
+  process.exit(report(TM.validate(dd.T,only,questions()))); }
 else if(cmd==='init'){
   if(fs.existsSync(path.join(ROOT,'traps.js'))){ console.error('traps.js already exists.'); process.exit(1); }
   write(JSON.parse(fs.readFileSync(args[0],'utf8')),{}); console.log('Wrote traps.js'); }
