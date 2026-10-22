@@ -1,6 +1,6 @@
 # Kevinvariant redesign plan
 
-Status: **implemented on branch `redesign`, not pushed or merged.** See "Implementation notes" at the end.
+Status: **implemented, merged into `main` and live since 21 October 2026.** See "Implementation notes" at the end.
 
 Scope: structure, navigation and UI only. Every existing page URL, PDF URL, tool and
 `drill.html?paper=XX` deep link keeps working. Long-form content (paper blurbs, book text,

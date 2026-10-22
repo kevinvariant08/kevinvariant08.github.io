@@ -8,7 +8,7 @@
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <meta name="theme-color" content="#F6F4EF">
-  <link rel="stylesheet" href="style.css?v=20261022">
+  <link rel="stylesheet" href="style.css?v=20261023">
   <script>try{if(localStorage.getItem('kv_mode')==='dark')document.documentElement.setAttribute('data-mode','dark')}catch(e){}</script>
   <script>window.MathJax={tex:{inlineMath:[['$','$']],displayMath:[['\\[','\\]']],processEscapes:true},options:{skipHtmlTags:['script','noscript','style','textarea','pre']}};</script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js" async></script>
@@ -87,6 +87,8 @@
 
 <script src="site.js?v=20261022"></script>
 <script src="questions.js?v=20260927"></script>
+<script src="traps.js?v=20261023"></script>
+<script src="trap-map.js?v=20261023"></script>
 <script>
 (function(){
   var Q=window.HU_QUESTIONS, TECH=window.HU_TECH, PAPERS=window.HU_PAPERS;
@@ -136,13 +138,14 @@
   function build(q,body,li){
     body.dataset.built='1'; var t0=Date.now();
     body.innerHTML='<div class="qtext">'+q.q+'</div><ul class="opts">'+q.opts.map(function(o,k){ var L='ABCDEFGH'[k]; return '<li><button class="opt" type="button" data-l="'+L+'"><span class="L">'+L+'</span><span>'+o+'</span></button></li>'; }).join('')+'</ul>'
-      +'<div class="actions"><span class="verdict" aria-live="polite"></span><button class="btn ghost" type="button" data-act="sol">Show the solution</button><a class="btn secondary" href="arena.html?q='+encodeURIComponent(q.id)+'">Race a bot on this one</a></div><div class="sol" hidden>'+q.sol+'</div>';
+      +'<div class="actions"><span class="verdict" aria-live="polite"></span><button class="btn ghost" type="button" data-act="sol">Show the solution</button><a class="btn secondary" href="arena.html?q='+encodeURIComponent(q.id)+'">Race a bot on this one</a></div><div class="trapslot" aria-live="polite"></div><div class="sol" hidden>'+q.sol+'</div>';
     typeset(body);
     body.querySelectorAll('.opt').forEach(function(b){ b.addEventListener('click',function(){
       var L=b.dataset.l, ok=L===q.ans, secs=Math.round((Date.now()-t0)/1000);
       body.querySelectorAll('.opt').forEach(function(x){ x.disabled=true; if(x.dataset.l===q.ans) x.classList.add('right'); });
       if(!ok) b.classList.add('wrong');
       var v=body.querySelector('.verdict'); v.className='verdict '+(ok?'ok':'bad'); v.textContent=ok?'Correct.':'Not this one. The answer is '+q.ans+'.';
+      var ts=body.querySelector('.trapslot'); if(!ok&&window.HU_TRAPMAP){ ts.innerHTML=HU_TRAPMAP.note(q.id,L); typeset(ts); }
       var log=load('hu_drill_log',[]); log.push({t:Date.now(),id:q.id,paper:q.paper,correct:ok,chosen:L,secs:secs,mode:'bank',tags:q.tags}); save('hu_drill_log',log.slice(-2000));
       var stEl=li.querySelector('.state'); stEl.className='state '+(ok?'ok':'bad'); stEl.textContent=ok?'Solved':'Missed';
     }); });

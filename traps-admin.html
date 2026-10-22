@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Trap Map review | Kevinvariant</title>
+  <link rel="icon" href="/favicon.ico" sizes="32x32">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#F6F4EF">
+  <link rel="stylesheet" href="style.css?v=20261023">
+  <script>try{if(localStorage.getItem('kv_mode')==='dark')document.documentElement.setAttribute('data-mode','dark')}catch(e){}</script>
+  <script>window.MathJax={tex:{inlineMath:[['$','$']],displayMath:[['\\[','\\]']],processEscapes:true},options:{skipHtmlTags:['script','noscript','style','textarea','pre']}};</script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js" async></script>
+  <style>
+    .ta{max-width:62rem}
+    .ta .lede{max-width:46rem}
+    .tools{display:flex;flex-wrap:wrap;gap:.7rem 1rem;align-items:end;margin:1.4rem 0 .4rem}
+    .tools label{font-size:.82rem;color:var(--ink-faint);display:flex;flex-direction:column;gap:.25rem;min-width:0}
+    .tools select,.tq select,.tq textarea{font-family:var(--display);font-size:.95rem;background:var(--bg-deep);color:var(--ink);border:1px solid var(--line);border-radius:var(--r-sm);padding:.45rem .6rem;max-width:100%}
+    .counts{color:var(--ink-soft);font-size:.9rem;margin:.6rem 0 0}
+    .keys{color:var(--ink-faint);font-size:.85rem;margin:.5rem 0 0}
+    kbd{font-family:var(--display);font-size:.78rem;border:1px solid var(--line);border-bottom-width:2px;border-radius:4px;padding:0 .3rem;background:var(--surface)}
+    .list{list-style:none;padding:0;margin:1rem 0 0}
+    .tq{background:var(--surface);border:1px solid var(--line-soft);border-radius:var(--r-lg);padding:1rem 1.2rem;margin:0 0 1rem;scroll-margin-top:5rem}
+    .tq.cur{border-color:var(--ink-faint)}
+    .tq:focus{outline:none}.tq:focus-visible{outline:2px solid var(--aqua);outline-offset:2px}
+    .hd{display:flex;flex-wrap:wrap;gap:.3rem .7rem;align-items:baseline}
+    .hd .t{font-weight:600}
+    .hd .m{color:var(--ink-faint);font-size:.85rem}
+    .st{font-size:.78rem;border:1px solid var(--line);border-radius:999px;padding:.02rem .55rem;color:var(--ink-soft)}
+    .st.done{color:var(--mint);border-color:var(--mint)}
+    .st.todo{color:var(--saffron);border-color:var(--saffron)}
+    .st.local{color:var(--aqua);border-color:var(--aqua)}
+    .qtext{font-family:var(--serif);line-height:1.7;margin:.6rem 0}
+    .qtext .c{text-align:center;margin:.5rem 0}
+    .qtext ol.stmts{margin:.4rem 0 .4rem 1.6rem;list-style-type:upper-roman}
+    /* long formulas scroll inside the card; position keeps MathJax's hidden copy inside too */
+    .tq mjx-container{position:relative}.tq mjx-assistive-mml{max-width:100%}
+    .tq mjx-container[display="true"]{overflow-x:auto;overflow-y:hidden;max-width:100%}
+    .ot>span{min-width:0}
+    .ol{list-style:none;padding:0;margin:.4rem 0 0;display:grid;gap:.45rem}
+    .ol>li{border-top:1px solid var(--line-soft);padding-top:.45rem}
+    .ot{display:flex;gap:.7rem;align-items:baseline;font-family:var(--serif)}
+    .ot b{font-family:var(--display);min-width:1.1rem}
+    .ot .ok{font-family:var(--display);font-size:.82rem;color:var(--mint);font-weight:600;white-space:nowrap}
+    .tr{margin:.25rem 0 0 1.8rem;font-size:.93rem}
+    .tr p{margin:.1rem 0}
+    .tr .wk{color:var(--ink-soft);font-size:.87rem}
+    .tr .wk b,.tr .none{font-weight:600;color:var(--ink-faint)}
+    .tr label{display:block;font-size:.82rem;color:var(--ink-faint);margin:.35rem 0 0}
+    .tr select,.tr textarea{display:block;width:100%;margin-top:.15rem}
+    .tr textarea{resize:vertical;line-height:1.45}
+    .act{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;margin-top:.9rem}
+    .msg{font-size:.88rem;margin-top:.5rem}
+    .msg .e{color:var(--rose)} .msg .w{color:var(--saffron)}
+    @media (max-width:640px){.tr{margin-left:0}.tq{padding:.9rem .9rem}}
+  </style>
+</head>
+<body data-theme-v2>
+  <nav id="sitenav"><div class="nav-links"><a href="index.html">Home</a> <a href="drill.html">Drill</a> <a href="progress.html">My progress</a></div></nav>
+  <main class="container ta">
+    <h1>Trap Map review</h1>
+    <p class="lede">Check the drafted trap behind every wrong option. Students see a question's traps only once it is approved. Decisions stay in this browser until you download the updated traps.js and replace the file in the repo.</p>
+    <div id="gate" class="card" role="status">Checking admin access.</div>
+    <div id="app" hidden>
+      <div class="tools">
+        <label>Paper<select id="fpaper"></select></label>
+        <label>Show<select id="fstate"><option value="todo">To review</option><option value="done">Approved</option><option value="local">Changed here</option><option value="all">All</option></select></label>
+        <button class="btn" type="button" id="dl">Download updated traps.js</button>
+        <button class="btn ghost" type="button" id="discard">Discard changes made here</button>
+      </div>
+      <p class="counts" id="counts" aria-live="polite"></p>
+      <p class="keys">Keys: <kbd>J</kbd> next, <kbd>K</kbd> previous, <kbd>A</kbd> approve, <kbd>U</kbd> unapprove, <kbd>E</kbd> edit. In the editor, <kbd>Ctrl</kbd> + <kbd>Enter</kbd> saves and approves, <kbd>Esc</kbd> cancels.</p>
+      <ol class="list" id="list"></ol>
+    </div>
+  </main>
+<script src="site.js?v=20261022"></script>
+<script src="questions.js?v=20260927"></script>
+<script src="trap-map.js?v=20261023"></script>
+<script>
+/* the download is built on traps.js, so always load the current file, never a cached copy */
+(function(){ var s=document.createElement('script'); s.src='traps.js?t='+Date.now(); s.onload=reviewPage;
+  s.onerror=function(){ document.getElementById('gate').textContent='Could not load traps.js.'; }; document.head.appendChild(s); })();
+function reviewPage(){
+  var TM=window.HU_TRAPMAP, QS=(window.HU_QUESTIONS||[]).slice().sort(function(a,b){ return TM.cmpId(a.id,b.id); }), PAPERS=window.HU_PAPERS||{}, TECH=window.HU_TECH||{};
+  var TYPES=TM.types(), BASE=JSON.parse(JSON.stringify(TM.traps())), KEY='hu_traps_admin', byId={};
+  QS.forEach(function(q){ byId[q.id]=q; });
+  function $(id){ return document.getElementById(id); }
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+  function typeset(el){ if(window.MathJax&&MathJax.typesetPromise) MathJax.typesetPromise([el]).catch(function(){}); }
+  function wrongLetters(q){ return 'ABCDEFGH'.slice(0,q.opts.length).split('').filter(function(L){ return L!==q.ans; }); }
+
+  /* ---------------- decisions made here: {q: {id: entry}}, kept only where they differ from traps.js */
+  function loadLocal(){ try{ var v=JSON.parse(localStorage.getItem(KEY)||'null'); return v&&v.q?v:{q:{}}; }catch(e){ return {q:{}}; } }
+  function saveLocal(){ try{ localStorage.setItem(KEY,JSON.stringify(LOCAL)); }catch(e){} }
+  function canon(e){ if(!e) return 'null'; var o={}; Object.keys(e.opts||{}).sort().forEach(function(L){ var x=e.opts[L]; o[L]=[x.trap,x.why||'',x.working||'']; }); return JSON.stringify([!!e.reviewed,o]); }
+  var LOCAL=loadLocal();
+  Object.keys(LOCAL.q).forEach(function(id){ if(canon(LOCAL.q[id])===canon(BASE[id])) delete LOCAL.q[id]; }); saveLocal();
+  function eff(id){ return LOCAL.q[id]||BASE[id]||null; }
+  function setEntry(id,e){ if(canon(e)===canon(BASE[id])) delete LOCAL.q[id]; else LOCAL.q[id]=e; saveLocal(); }
+  function merged(){ var o={}; Object.keys(BASE).forEach(function(k){ o[k]=BASE[k]; }); Object.keys(LOCAL.q).forEach(function(k){ o[k]=LOCAL.q[k]; }); return o; }
+  function stateOf(id){ var e=eff(id); return !e?'none':e.reviewed?'done':'todo'; }
+
+  /* ---------------- toolbar */
+  var papers=[], paperInit=false; QS.forEach(function(q){ if(papers.indexOf(q.paper)<0) papers.push(q.paper); });
+  function paintPapers(){ var sel=$('fpaper'), cur=sel.value;
+    sel.innerHTML=papers.map(function(p){ var ids=QS.filter(function(q){ return q.paper===p; }).map(function(q){ return q.id; }), dr=ids.filter(function(id){ return eff(id); }), ok=dr.filter(function(id){ return stateOf(id)==='done'; });
+      return '<option value="'+p+'">'+esc(PAPERS[p]||p)+(dr.length?', '+ok.length+' of '+dr.length+' approved':', no drafts')+'</option>'; }).join('')+'<option value="">All papers</option>';
+    if(paperInit){ sel.value=cur; return; }
+    /* start on the first paper with drafts still to review */
+    paperInit=true; sel.value=papers.filter(function(p){ return QS.some(function(q){ return q.paper===p&&stateOf(q.id)==='todo'; }); })[0]||papers[0]; }
+  function paintCounts(){ var all=Object.keys(merged()), ok=all.filter(function(id){ return stateOf(id)==='done'; }).length, loc=Object.keys(LOCAL.q).length;
+    $('counts').textContent=ok+' of '+all.length+' drafted questions approved ('+(QS.length-all.length)+' not drafted yet). '+(loc?loc+' question'+(loc>1?'s':'')+' changed here and not yet in traps.js.':'Nothing changed here since traps.js was last replaced.'); }
+
+  /* ---------------- cards */
+  var shown=[], cur=-1, editing=null;
+  function viewTrap(x){ if(!x) return '<p class="e" style="color:var(--rose)">No entry for this option.</p>';
+    var wk='<p class="wk"><b>Working:</b> '+(x.working||'<em>missing</em>')+'</p>';
+    if(x.trap==='none') return '<p class="none">No trap.</p>'+wk;
+    var T=TYPES[x.trap]; return '<p><strong>'+esc(T?T.name:'Unknown trap '+x.trap)+'.</strong> '+(x.why||'<em>why missing</em>')+'</p>'+wk; }
+  function editTrap(id,L){ var o='<option value="none">No trap</option>'+Object.keys(TYPES).map(function(k){ return '<option value="'+k+'">'+esc(TYPES[k].name)+'</option>'; }).join('');
+    var p=id+'-'+L; return '<label for="t-'+p+'">Trap for '+L+'</label><select id="t-'+p+'" data-l="'+L+'" data-f="trap">'+o+'</select>'
+      +'<label for="w-'+p+'">Why, shown to students (one sentence)</label><textarea id="w-'+p+'" rows="2" data-l="'+L+'" data-f="why"></textarea>'
+      +'<label for="k-'+p+'">Working, admin only</label><textarea id="k-'+p+'" rows="2" data-l="'+L+'" data-f="working"></textarea>'; }
+  function cardHTML(q){ var e=eff(q.id), st=stateOf(q.id), ed=editing===q.id, wr=wrongLetters(q);
+    return '<div class="hd"><span class="t">'+esc(PAPERS[q.paper]||q.paper)+', question '+q.n+'</span><span class="m">rated '+(q.rating!=null?q.rating.toFixed(1):'?')+' \u00b7 '+q.tags.map(function(t){ return esc(TECH[t]||t); }).join(', ')+'</span>'
+      +'<span class="st '+st+'">'+(st==='done'?'Approved':st==='todo'?'To review':'Not drafted')+'</span>'+(LOCAL.q[q.id]?'<span class="st local">Changed here</span>':'')+'</div>'
+      +'<div class="qtext">'+q.q+'</div><ul class="ol">'
+      +q.opts.map(function(o,k){ var L='ABCDEFGH'[k], right=L===q.ans;
+        return '<li><div class="ot"><b>'+L+'</b><span>'+o+'</span>'+(right?'<span class="ok">Correct answer</span>':'')+'</div>'+(right?'':'<div class="tr">'+(ed?editTrap(q.id,L):viewTrap(e&&e.opts[L]))+'</div>')+'</li>'; }).join('')
+      +'</ul><div class="msg" role="status"></div><div class="act">'
+      +(ed?'<button class="btn" type="button" data-act="saveok">Save and approve</button><button class="btn ghost" type="button" data-act="save">Save as draft</button><button class="btn ghost" type="button" data-act="cancel">Cancel</button>'
+          :(st==='done'?'<button class="btn ghost" type="button" data-act="unapprove">Unapprove</button>':'<button class="btn" type="button" data-act="approve">Approve</button>')+'<button class="btn ghost" type="button" data-act="edit">Edit</button>')
+      +'</div>'; }
+  function paintCard(li){ var q=byId[li.dataset.id], e=eff(q.id); li.innerHTML=cardHTML(q);
+    if(editing===q.id){ wrongLetters(q).forEach(function(L){ var x=(e&&e.opts[L])||{trap:'none'};
+      li.querySelector('[data-l="'+L+'"][data-f="trap"]').value=TYPES[x.trap]?x.trap:'none';
+      li.querySelector('[data-l="'+L+'"][data-f="why"]').value=x.why||'';
+      li.querySelector('[data-l="'+L+'"][data-f="working"]').value=x.working||''; }); }
+    typeset(li); }
+  function paintList(){ var p=$('fpaper').value, f=$('fstate').value, ul=$('list'); editing=null;
+    shown=QS.filter(function(q){ if(p&&q.paper!==p) return false; var st=stateOf(q.id);
+      return f==='all'||(f==='local'?!!LOCAL.q[q.id]:f==='todo'?st!=='done':st===f); });
+    ul.innerHTML=shown.length?'':'<li class="counts">Nothing to show with these filters.</li>';
+    shown.forEach(function(q){ var li=document.createElement('li'); li.className='tq'; li.tabIndex=-1; li.dataset.id=q.id; ul.appendChild(li); paintCard(li); });
+    /* the first card is selected, so A and E work straight away */
+    cur=shown.length?0:-1; if(cur===0) ul.firstChild.classList.add('cur'); paintCounts(); }
+  function cards(){ return Array.prototype.slice.call($('list').querySelectorAll('.tq')); }
+  function focusCard(i){ var c=cards(); if(!c.length) return; i=Math.max(0,Math.min(c.length-1,i)); c.forEach(function(x){ x.classList.remove('cur'); }); cur=i; c[i].classList.add('cur'); c[i].focus(); }
+  function msg(li,errs,warns,ok){ li.querySelector('.msg').innerHTML=(ok?'<span>'+esc(ok)+'</span> ':'')+errs.map(function(m){ return '<span class="e">'+esc(m)+'.</span>'; }).join(' ')+' '+warns.map(function(m){ return '<span class="w">'+esc(m)+'.</span>'; }).join(' '); }
+
+  /* ---------------- actions */
+  function approve(li,on){ var id=li.dataset.id, e=eff(id), q=byId[id];
+    if(on){ var r=e?TM.checkEntry(TYPES,q,e):{errors:['No draft to approve; use Edit first'],warnings:[]}; if(r.errors.length){ msg(li,r.errors,r.warnings); return false; } }
+    if(!e) return false;
+    setEntry(id,{reviewed:on,opts:e.opts}); paintCard(li); paintCounts(); paintPapers(); return true; }
+  function formEntry(li){ var q=byId[li.dataset.id], o={};
+    wrongLetters(q).forEach(function(L){ function v(f){ return li.querySelector('[data-l="'+L+'"][data-f="'+f+'"]').value.trim(); }
+      var x={trap:v('trap'),working:v('working')}; if(x.trap!=='none'&&v('why')) x.why=v('why'); o[L]=x; });
+    return o; }
+  function saveEdit(li,approveToo){ var id=li.dataset.id, q=byId[id], e={reviewed:!!approveToo,opts:formEntry(li)}, r=TM.checkEntry(TYPES,q,e);
+    if(r.errors.length){ msg(li,r.errors,r.warnings); return; }
+    editing=null; setEntry(id,e); paintCard(li); paintCounts(); paintPapers(); if(r.warnings.length) msg(li,[],r.warnings,'Saved, with warnings:');
+    if(approveToo) next(li); else li.focus(); }
+  function edit(li){ if(editing&&editing!==li.dataset.id) return; editing=li.dataset.id; paintCard(li); var s=li.querySelector('select'); if(s) s.focus(); }
+  function cancel(li){ editing=null; paintCard(li); li.focus(); }
+  /* after approving, move to the next card still to review */
+  function next(li){ var c=cards(), i=c.indexOf(li), j=i+1; while(j<c.length&&stateOf(c[j].dataset.id)==='done') j++; focusCard(j<c.length?j:i+1); }
+  $('list').addEventListener('click',function(ev){ var b=ev.target.closest('button[data-act]'), li=ev.target.closest('.tq'); if(!li) return;
+    var c=cards(); cur=c.indexOf(li); c.forEach(function(x){ x.classList.toggle('cur',x===li); }); if(!b) return;
+    var a=b.dataset.act;
+    if(a==='approve'){ if(approve(li,true)) next(li); } else if(a==='unapprove'){ approve(li,false); li.focus(); }
+    else if(a==='edit') edit(li); else if(a==='cancel') cancel(li); else if(a==='save') saveEdit(li,false); else if(a==='saveok') saveEdit(li,true); });
+  document.addEventListener('keydown',function(ev){ if($('app').hidden) return; var c=cards(), li=c[cur];
+    var inField=/^(INPUT|TEXTAREA|SELECT)$/.test(ev.target.tagName);
+    if(editing){ var eli=$('list').querySelector('.tq[data-id="'+editing+'"]'); if(!eli) return;
+      if(ev.key==='Escape'){ ev.preventDefault(); cancel(eli); } else if(ev.key==='Enter'&&(ev.ctrlKey||ev.metaKey)){ ev.preventDefault(); saveEdit(eli,true); } return; }
+    if(inField||ev.ctrlKey||ev.metaKey||ev.altKey) return;
+    var k=ev.key.toLowerCase();
+    if(k==='j'){ ev.preventDefault(); focusCard(cur+1); }
+    else if(k==='k'){ ev.preventDefault(); focusCard(cur<0?0:cur-1); }
+    else if(!li) return;
+    else if(k==='a'){ ev.preventDefault(); if(approve(li,true)) next(li); }
+    else if(k==='u'){ ev.preventDefault(); approve(li,false); li.focus(); }
+    else if(k==='e'){ ev.preventDefault(); edit(li); } });
+  $('fpaper').addEventListener('change',paintList); $('fstate').addEventListener('change',paintList);
+  $('dl').addEventListener('click',function(){ var all=merged(), r=TM.validate(TYPES,all,QS), out=$('counts');
+    if(r.errors.length){ out.textContent='Not downloaded. Fix these first: '+r.errors.slice(0,5).join('; ')+(r.errors.length>5?'; and '+(r.errors.length-5)+' more.':'.'); return; }
+    var url=URL.createObjectURL(new Blob([TM.serialize(TYPES,all)],{type:'text/javascript'})), a=document.createElement('a'); a.href=url; a.download='traps.js'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(function(){ URL.revokeObjectURL(url); },2000);
+    out.textContent='Downloaded traps.js with '+r.stats.reviewed+' approved questions. Replace traps.js in the repo with it and commit. Changes made here clear themselves once the new file is live.'; });
+  var armed=0; $('discard').addEventListener('click',function(){ var n=Object.keys(LOCAL.q).length, b=this; if(!n){ $('counts').textContent='Nothing to discard.'; return; }
+    if(Date.now()-armed>5000){ armed=Date.now(); b.textContent='Click again to discard '+n+' change'+(n>1?'s':''); setTimeout(function(){ b.textContent='Discard changes made here'; },5000); return; }
+    LOCAL={q:{}}; saveLocal(); armed=0; b.textContent='Discard changes made here'; paintPapers(); paintList(); });
+
+  /* ---------------- admin gate: sign-in finishes after page load */
+  var started=false, poll=setInterval(check,1500);
+  function check(){ if(started||!TM.admin()) return; started=true; clearInterval(poll); $('gate').hidden=true; $('app').hidden=false; paintPapers(); paintList(); }
+  window.addEventListener('hu-rewards',check); window.addEventListener('hu-auth-ready',check);
+  setTimeout(function(){ if(!started) $('gate').innerHTML='This page is for the site admin. <a href="auth.html#signin">Sign in</a> with the admin account, then come back to this page.'; },6000);
+  check();
+}
+</script>
+</body>
+</html>

@@ -47,7 +47,7 @@
   }
 
   /* ---------------------------------------------------------- progress sync */
-  var KEYS=['hu_drill_log','hu_drill_attempts','hu_iv_hist','hu_scores','hu_arena','hu_ladder_best','hu_rewards','hu_duels','hu_qotw','hu_review'];
+  var KEYS=['hu_drill_log','hu_drill_attempts','hu_iv_hist','hu_scores','hu_arena','hu_ladder_best','hu_rewards','hu_duels','hu_qotw','hu_review','hu_traps'];
   function readLocal(){ var o={}; KEYS.forEach(function(k){ try{ var v=localStorage.getItem(k); if(v!=null) o[k]=JSON.parse(v); }catch(e){} }); return o; }
   function writeLocal(o){ KEYS.forEach(function(k){ if(o[k]!==undefined){ try{ localStorage.setItem(k,JSON.stringify(o[k])); }catch(e){} } }); }
   function unionBy(a,b,keyFn,cap,sortFn){ var seen={}, out=[]; (a||[]).concat(b||[]).forEach(function(x){ var k=keyFn(x); if(!seen[k]){ seen[k]=1; out.push(x); } }); if(sortFn) out.sort(sortFn); return cap?out.slice(-cap):out; }
@@ -77,6 +77,8 @@
     var lv=L.hu_review||{}, cv=C.hu_review||{}, items={};
     [cv.items||{},lv.items||{}].forEach(function(src){ Object.keys(src).forEach(function(id){ if(!items[id]||(src[id].last||0)>=(items[id].last||0)) items[id]=src[id]; }); });
     if(L.hu_review||C.hu_review) o.hu_review={items:items,upto:Math.max(lv.upto||0,cv.upto||0)};
+    // trap clears are one-off events keyed by week and trap, so a union counts each once
+    if(L.hu_traps||C.hu_traps) o.hu_traps={clears:Object.assign({},(C.hu_traps||{}).clears||{},(L.hu_traps||{}).clears||{})};
     return o;
   }
   var lastPushed='', syncing=false, lastSync=null;

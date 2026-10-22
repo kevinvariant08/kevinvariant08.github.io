@@ -21,7 +21,7 @@
   function answerXP(e){ return e.correct?Math.round(rating(e.id)*2):2; }
   function paperXP(a){ return 50+5*(a.score||0); }
   function duelXP(h){ return h.you>h.them?40:(h.you===h.them?20:10); }
-  var XP_RULES=[['Correct answer','twice the question\u2019s rating (9 to 18)'],['Wrong answer','2, for the attempt'],['Finishing a timed paper','50, plus 5 per mark'],['Arena duel','40 for a win, 20 for a draw, 10 for a loss'],['Daily challenge','60 if correct plus 5 per streak day (up to 50), 15 if not'],['Weekly quest','150 to 250 each'],['Friend duel','40 for a win, 20 for a draw, 10 for a loss, 15 for sending a challenge'],['Problem of the week','100 if solved, 25 for an attempt'],['Mistake review','the usual answer XP for each review']];
+  var XP_RULES=[['Correct answer','twice the question\u2019s rating (9 to 18)'],['Wrong answer','2, for the attempt'],['Finishing a timed paper','50, plus 5 per mark'],['Arena duel','40 for a win, 20 for a draw, 10 for a loss'],['Daily challenge','60 if correct plus 5 per streak day (up to 50), 15 if not'],['Weekly quest','150 to 250 each'],['Friend duel','40 for a win, 20 for a draw, 10 for a loss, 15 for sending a challenge'],['Problem of the week','100 if solved, 25 for an attempt'],['Mistake review','the usual answer XP for each review'],['Clearing a trap','30, for at least 4 of 5 right in a trap drill on a trap you have fallen for; once per trap a week']];
 
   /* ---------------- levels: need(n) = 50 n (n-1) */
   var TITLES=['Point','Segment','Ray','Angle','Triangle','Median','Centroid','Incircle','Circumcircle','Orthocentre','Euler Line','Nine-Point Circle','Feuerbach Point','Symmedian','Brocard Point','Excircle','Mixtilinear Circle','Isogonal Conjugate','Simson Line','Morley Triangle','Poncelet Porism','Radical Axis','Pole and Polar','Inversion','Invariant'];
@@ -70,6 +70,7 @@
     var bonus={};
     Object.keys(R.daily).forEach(function(k){ bonus[k]=(bonus[k]||0)+(R.daily[k].xp||0); });
     Object.keys(R.claimed).forEach(function(q){ var c=R.claimed[q]; bonus[c.day]=(bonus[c.day]||0)+(c.xp||0); });
+    var TC=trapClears(); Object.keys(TC).forEach(function(k){ var c=TC[k]; bonus[c.day]=(bonus[c.day]||0)+(c.xp||0); });
     var xp=0, perDay={};
     Object.keys(R.bank).forEach(function(k){ perDay[k]=(perDay[k]||0)+R.bank[k]; });
     Object.keys(bonus).forEach(function(k){ perDay[k]=(perDay[k]||0)+bonus[k]; });
@@ -99,13 +100,14 @@
 
   /* ---------------- coins: worked out per day from activity, banked on the server (at most 400 a day, last 7 days only) */
   var COIN_CAP=400, COIN='<svg class="coin" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="7" fill="#FFC53D" stroke="#B7791F" stroke-width="1.2"/><circle cx="8" cy="8" r="4.1" fill="none" stroke="#B7791F" stroke-width="1.1"/></svg>';
-  var COIN_RULES=[['Correct answer','12 for a question rated 8 or more, 7 for 7 or more, 4 for 6 or more, otherwise 2; once per question per day'],['Timed paper','10, plus 2 per mark'],['Daily challenge','30 if right, 5 for trying'],['Weekly quest','80 each'],['Problem of the week','120 when you solve it'],['Arena duel','8 for a win'],['Friend duel','15 for a win'],['Mock interview','25'],['Streak','15 a day from day 3 of a streak, 30 a day from day 7'],['Daily limit','400 coins a day']];
+  var COIN_RULES=[['Correct answer','12 for a question rated 8 or more, 7 for 7 or more, 4 for 6 or more, otherwise 2; once per question per day'],['Timed paper','10, plus 2 per mark'],['Daily challenge','30 if right, 5 for trying'],['Weekly quest','80 each'],['Problem of the week','120 when you solve it'],['Arena duel','8 for a win'],['Friend duel','15 for a win'],['Mock interview','25'],['Clearing a trap','10, once per trap a week'],['Streak','15 a day from day 3 of a streak, 30 a day from day 7'],['Daily limit','400 coins a day']];
   function coinQ(id){ var r=rating(id); return r>=8?12:r>=7?7:r>=6?4:2; }
   function coinDays(s){ var c={}, seen={}; function add(k,v){ if(k) c[k]=(c[k]||0)+v; }
     s.L.forEach(function(e){ if(!e.correct||!e.id) return; var k=dkey(e.t), key=k+'|'+e.id; if(seen[key]) return; seen[key]=1; add(k,coinQ(e.id)); });
     s.A.forEach(function(a){ if(a.date) add(a.date,10+2*(a.score||0)); });
     Object.keys(s.R.daily).forEach(function(k){ add(k,s.R.daily[k].ok?30:5); });
     Object.keys(s.R.claimed).forEach(function(q){ add(s.R.claimed[q].day,80); });
+    var TC=trapClears(); Object.keys(TC).forEach(function(k){ add(TC[k].day,TC[k].coins||0); });
     (s.AR.history||[]).forEach(function(h){ if(h.you>h.them) add(dkey(h.t),8); });
     load('hu_duels',[]).forEach(function(h){ if(h.res==='win') add(dkey(h.t),15); });
     var QW=load('hu_qotw',{}); Object.keys(QW).forEach(function(w){ var e=QW[w]; if(e&&e.t&&e.ok&&!e.gaveUp) add(dkey(e.t),120); });
@@ -241,6 +243,12 @@
     var w={L:s.L.filter(function(e){return e.t>=t0;}),H:(s.AR.history||[]).filter(function(h){return h.t>=t0;}),A:s.A.filter(function(a){return a.date>=ws;}),D:Object.keys(s.R.daily).filter(function(k){return k>=ws;}).map(function(k){return s.R.daily[k];})};
     return out.map(function(q){ var key=ws+':'+q.id, p=Math.min(q.goal,q.f(w)); return {q:q,key:key,progress:p,done:p>=q.goal,claimed:!!s.R.claimed[key]}; }); }
   function claim(key,xp){ var R=state(); if(R.claimed[key]) return; R.claimed[key]={xp:xp,day:today()}; save('hu_rewards',R); tick(); }
+  /* trap clears, from trap drills (drill.html?trap=): at most one per trap a week */
+  var TRAP_XP=30, TRAP_COINS=10;
+  function trapClears(){ var T=load('hu_traps',{}); return (T&&T.clears)||{}; }
+  function trapCleared(type){ return !!trapClears()[weekStart(today())+':'+type]; }
+  function trapClear(type){ if(trapCleared(type)) return null; var T=load('hu_traps',{})||{}; T.clears=T.clears||{};
+    T.clears[weekStart(today())+':'+type]={day:today(),xp:TRAP_XP,coins:TRAP_COINS}; save('hu_traps',T); tick(); return {xp:TRAP_XP,coins:TRAP_COINS}; }
 
   /* ---------------- daily challenge: the same question for everyone each day */
   function dailyId(k){ var pool=Object.keys(RATING).filter(function(id){return RATING[id]>=6.5;}).sort(); return pool[hash('daily'+k)%pool.length]; }
@@ -333,7 +341,7 @@
     return q.limit(25).then(function(r){ return r.error?{error:r.error.message}:{rows:r.data}; }); }
   function setTheme(id){ var R=state(); R.theme=id; save('hu_rewards',R); applyTheme(id); }
 
-  window.HU_REWARDS={snapshot:snapshot,tick:tick,BADGES:BADGES,TIER:TIER,TIERCOL:TIERCOL,METAL:METAL,medal:medal,metrics:metrics,THEMES:THEMES,setTheme:setTheme,weekQuests:weekQuests,claim:claim,
+  window.HU_REWARDS={snapshot:snapshot,tick:tick,BADGES:BADGES,TIER:TIER,TIERCOL:TIERCOL,METAL:METAL,medal:medal,metrics:metrics,THEMES:THEMES,setTheme:setTheme,weekQuests:weekQuests,claim:claim,isAdmin:isAdmin,trapClear:trapClear,trapCleared:trapCleared,
     dailyId:dailyId,dailyNumber:dailyNumber,recordDaily:recordDaily,earnedBadges:earnedBadges,titleOf:titleOf,need:need,XP_RULES:XP_RULES,rating:rating,
     setLeaderboard:setLeaderboard,fetchLeaderboard:fetchLeaderboard,displayName:displayName,dkey:dkey,shift:shift,today:today,esc:esc,FLAME:FLAME,
     coins:{rules:COIN_RULES,cap:COIN_CAP,icon:COIN,byDay:coinDays,sync:syncCoins,wallet:wallet,owns:owns,count:boughtCount,buy:buy,titles:SHOP_TITLES,worn:worn,setWear:setWear},themeOK:themeOK,
