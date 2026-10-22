@@ -96,7 +96,8 @@
       <div class="tblwrap"><table class="tbl"><thead><tr><th scope="col">Problem</th><th scope="col">Where</th><th scope="col">Status</th><th scope="col">Actions</th></tr></thead><tbody id="plist"></tbody></table></div>
       <div class="row"><button class="btn" id="newbtn">New problem</button><button class="btn quiet" id="importbtn">Paste a problem file</button></div>
       <div id="importbox" class="hidden">
-        <label>A problem in the file format of <code>marking/TEMPLATE.md</code><textarea id="importtext" class="tall"></textarea></label>
+        <label>Choose a problem file (.md) from your computer <input type="file" id="importfile" accept=".md,.txt,text/markdown,text/plain" style="margin-top:.4rem"></label>
+        <label>Or paste the file's whole contents here <small>(open the file, select all, copy; not just its name)</small><textarea id="importtext" class="tall"></textarea></label>
         <div class="row"><button class="btn" id="importgo">Load into the editor</button><button class="btn quiet" id="importcancel">Cancel</button></div>
       </div>
       <p class="msg" id="listmsg"></p>
@@ -408,6 +409,8 @@ async function aiExamples(){
 /* ====================================================== import a file */
 function importFile(){
   var t=$('importtext').value; if(!t.trim()) return;
+  if(!/^\s*---/.test(t)){ $('listmsg').textContent='That is not a problem file: it should start with a line of three dashes (---). If you typed a file name, choose the file above or paste its contents instead.'; return; }
+  t=t.replace(/^\s+/,'');
   var m=t.match(/^id:\s*(\S+)/m), res=PARSE.parseProblem(t,(m?m[1]:'untitled')+'.md');
   if(!res.problem){ $('listmsg').textContent='That file has problems: '+res.errors.slice(0,3).map(function(e){return e.replace(/^[^:]+\.md(:\d+)?: /,'');}).join('; '); return; }
   $('importbox').classList.add('hidden'); $('importtext').value=''; $('listmsg').textContent='';
@@ -420,6 +423,7 @@ function boot(){
   $('importbtn').addEventListener('click',function(){ $('importbox').classList.remove('hidden'); $('importtext').focus(); });
   $('importcancel').addEventListener('click',function(){ $('importbox').classList.add('hidden'); });
   $('importgo').addEventListener('click',importFile);
+  $('importfile').addEventListener('change',function(){ var f=this.files&&this.files[0]; if(!f) return; var rd=new FileReader(); rd.onload=function(){ $('importtext').value=String(rd.result||''); importFile(); }; rd.readAsText(f); this.value=''; });
   $('addsol').addEventListener('click',function(){ solItem(null); changed(); });
   $('addcp').addEventListener('click',function(){ cpItem(null); changed(); });
   $('addcap').addEventListener('click',function(){ capItem(null); changed(); });
