@@ -8,3 +8,7 @@ The physical manuscript is regularly updated based on community feedback. Thank 
 
 ### Current Corrections (First Edition)
 *No corrections submitted yet. The current live Amazon version is V1.0.*
+
+## Errata: TMUA mock papers
+
+- **Set G Paper 2, question 8.** The answer key has been corrected.
