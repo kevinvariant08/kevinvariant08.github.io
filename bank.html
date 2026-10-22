@@ -8,7 +8,7 @@
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <meta name="theme-color" content="#F6F4EF">
-  <link rel="stylesheet" href="style.css?v=20261023">
+  <link rel="stylesheet" href="style.css?v=20261024">
   <script>try{if(localStorage.getItem('kv_mode')==='dark')document.documentElement.setAttribute('data-mode','dark')}catch(e){}</script>
   <script>window.MathJax={tex:{inlineMath:[['$','$']],displayMath:[['\\[','\\]']],processEscapes:true},options:{skipHtmlTags:['script','noscript','style','textarea','pre']}};</script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js" async></script>
@@ -57,6 +57,8 @@
     .opt .L{font-family:var(--display);font-weight:700;color:var(--ink-faint);min-width:1.1rem}
     .opt.right{border-color:var(--mint);background:var(--mint-wash)} .opt.wrong{border-color:var(--rose);background:var(--rose-wash)}
     .opt[disabled]{cursor:default}
+    .opt.sel{border-color:var(--saffron);background:var(--saffron-wash)}
+    .asktoggle{font-size:.88rem;color:var(--ink-soft);display:flex;gap:.45rem;align-items:center;margin:0 0 .6rem}
     .actions{display:flex;flex-wrap:wrap;gap:.2rem .6rem;align-items:center;margin-top:1rem}
     .sol{font-family:var(--serif);line-height:1.75;color:var(--ink-soft);margin-top:1rem;padding:1rem 1.1rem;border-left:3px solid var(--aqua);background:color-mix(in srgb,var(--bg-deep) 50%,transparent);border-radius:0 12px 12px 0}
     .verdict{font-weight:600}
@@ -81,6 +83,7 @@
       <label>Status<select id="fstate"><option value="">Any</option><option value="unseen">Not tried</option><option value="ok">Solved</option><option value="bad">Missed</option></select></label>
       <label>Order<select id="fsort"><option value="asc">Easiest first</option><option value="desc">Hardest first</option></select></label>
     </div>
+    <label class="asktoggle"><input type="checkbox" id="askconf"> Ask how sure I am (Guess, Unsure or Sure) before each answer is checked</label>
     <p class="count" id="count"></p>
     <ul class="list" id="list"></ul>
   </main>
@@ -89,6 +92,7 @@
 <script src="questions.js?v=20260927"></script>
 <script src="traps.js?v=20261023"></script>
 <script src="trap-map.js?v=20261023"></script>
+<script src="confidence.js?v=20261024"></script>
 <script>
 (function(){
   var Q=window.HU_QUESTIONS, TECH=window.HU_TECH, PAPERS=window.HU_PAPERS;
@@ -137,21 +141,29 @@
   }
   function build(q,body,li){
     body.dataset.built='1'; var t0=Date.now();
-    body.innerHTML='<div class="qtext">'+q.q+'</div><ul class="opts">'+q.opts.map(function(o,k){ var L='ABCDEFGH'[k]; return '<li><button class="opt" type="button" data-l="'+L+'"><span class="L">'+L+'</span><span>'+o+'</span></button></li>'; }).join('')+'</ul>'
+    body.innerHTML='<div class="qtext">'+q.q+'</div><ul class="opts">'+q.opts.map(function(o,k){ var L='ABCDEFGH'[k]; return '<li><button class="opt" type="button" data-l="'+L+'"><span class="L">'+L+'</span><span>'+o+'</span></button></li>'; }).join('')+'</ul><div class="confslot"></div>'
       +'<div class="actions"><span class="verdict" aria-live="polite"></span><button class="btn ghost" type="button" data-act="sol">Show the solution</button><a class="btn secondary" href="arena.html?q='+encodeURIComponent(q.id)+'">Race a bot on this one</a></div><div class="trapslot" aria-live="polite"></div><div class="sol" hidden>'+q.sol+'</div>';
     typeset(body);
-    body.querySelectorAll('.opt').forEach(function(b){ b.addEventListener('click',function(){
-      var L=b.dataset.l, ok=L===q.ans, secs=Math.round((Date.now()-t0)/1000);
-      body.querySelectorAll('.opt').forEach(function(x){ x.disabled=true; if(x.dataset.l===q.ans) x.classList.add('right'); });
-      if(!ok) b.classList.add('wrong');
-      var v=body.querySelector('.verdict'); v.className='verdict '+(ok?'ok':'bad'); v.textContent=ok?'Correct.':'Not this one. The answer is '+q.ans+'.';
+    function submit(L,conf){ var b=body.querySelector('.opt[data-l="'+L+'"]'), ok=L===q.ans, secs=Math.round((Date.now()-t0)/1000);
+      body.querySelectorAll('.opt').forEach(function(x){ x.disabled=true; x.classList.remove('sel'); x.removeAttribute('aria-pressed'); if(x.dataset.l===q.ans) x.classList.add('right'); });
+      if(!ok) b.classList.add('wrong'); body.querySelector('.confslot').innerHTML='';
+      var v=body.querySelector('.verdict'); v.className='verdict '+(ok?'ok':'bad'); v.textContent=(ok?'Correct.':'Not this one. The answer is '+q.ans+'.')+(conf!=null?' You said '+HU_CONF.level(conf).label+'.':'');
       var ts=body.querySelector('.trapslot'); if(!ok&&window.HU_TRAPMAP){ ts.innerHTML=HU_TRAPMAP.note(q.id,L); typeset(ts); }
-      var log=load('hu_drill_log',[]); log.push({t:Date.now(),id:q.id,paper:q.paper,correct:ok,chosen:L,secs:secs,mode:'bank',tags:q.tags}); save('hu_drill_log',log.slice(-2000));
-      var stEl=li.querySelector('.state'); stEl.className='state '+(ok?'ok':'bad'); stEl.textContent=ok?'Solved':'Missed';
+      var e={t:Date.now(),id:q.id,paper:q.paper,correct:ok,chosen:L,secs:secs,mode:'bank',tags:q.tags}; if(conf!=null) e.conf=conf;
+      var log=load('hu_drill_log',[]); log.push(e); save('hu_drill_log',log.slice(-2000));
+      var stEl=li.querySelector('.state'); stEl.className='state '+(ok?'ok':'bad'); stEl.textContent=ok?'Solved':'Missed'; }
+    /* with "ask how sure" on, picking an option selects it and Guess, Unsure or Sure submits it */
+    body.querySelectorAll('.opt').forEach(function(b){ b.addEventListener('click',function(){
+      if(!(window.HU_CONF&&HU_CONF.on())){ submit(b.dataset.l,null); return; }
+      body.querySelectorAll('.opt').forEach(function(x){ var on=x===b; x.classList.toggle('sel',on); x.setAttribute('aria-pressed',String(on)); });
+      var cs=body.querySelector('.confslot'); if(cs.firstChild) return;
+      cs.innerHTML=HU_CONF.buttons('btn ghost');
+      cs.querySelectorAll('button[data-conf]').forEach(function(c){ c.addEventListener('click',function(){ var s=body.querySelector('.opt.sel'); if(s) submit(s.dataset.l,+c.dataset.conf); }); });
     }); });
     body.querySelector('[data-act="sol"]').addEventListener('click',function(){ var s=body.querySelector('.sol'); s.hidden=!s.hidden; this.textContent=s.hidden?'Show the solution':'Hide the solution'; });
   }
   ['q','fpaper','ftech','fstate','fsort'].forEach(function(id){ document.getElementById(id).addEventListener(id==='q'?'input':'change',render); });
+  var ac=document.getElementById('askconf'); if(ac&&window.HU_CONF){ ac.checked=HU_CONF.on(); ac.addEventListener('change',function(){ HU_CONF.set(ac.checked); }); } else if(ac) ac.parentNode.hidden=true;
   render();
 })();
 </script>

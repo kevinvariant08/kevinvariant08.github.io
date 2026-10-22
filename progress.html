@@ -9,7 +9,7 @@
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
   <meta name="theme-color" content="#F6F4EF">
-  <link rel="stylesheet" href="style.css?v=20261023">
+  <link rel="stylesheet" href="style.css?v=20261024">
   <script>try{if(localStorage.getItem('kv_mode')==='dark')document.documentElement.setAttribute('data-mode','dark')}catch(e){}</script>
   <style>
     .hu{--soft:var(--ink-soft);--faint:var(--ink-faint);--rule:var(--line);--paper:var(--bg);--ok:var(--mint);--bad:var(--rose);--warn:var(--saffron);--acc:var(--aqua);--acc2:color-mix(in srgb,var(--aqua) 35%,transparent);
@@ -47,6 +47,9 @@
     .hu table{border-collapse:collapse;font-size:.9rem}
     .hu td,.hu th{border-bottom:1px solid var(--rule);padding:.3rem .9rem .3rem 0;text-align:left;font-weight:400}
     .hu th{color:var(--faint)}
+    .hu .ctip{position:absolute;pointer-events:none;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-sm);padding:.35rem .6rem;font-size:.85rem;min-width:9rem;box-shadow:0 2px 8px rgba(0,0,0,.12)}
+    .hu .ctip strong{display:block;color:var(--ink)} .hu .ctip span{color:var(--ink-soft)}
+    .hu .cpt{cursor:default;outline:none} .hu .cpt:focus-visible .dot,.hu .cpt:hover .dot{stroke:var(--ink);stroke-width:2.5}
     .hu .rec{border-left:2px solid var(--acc);padding:.3rem 0 .3rem 1rem;font-family:var(--serif);font-size:1.02rem;margin:1.2rem 0}
   </style>
 </head>
@@ -60,6 +63,7 @@
 
 <script src="traps.js?v=20261023"></script>
 <script src="trap-map.js?v=20261023"></script>
+<script src="confidence.js?v=20261024"></script>
 <script>
 function load(k,d){ try{ return JSON.parse(localStorage.getItem(k)||'null')||d; }catch(e){ return d; } }
 function esc(s){return String(s).replace(/[&<>]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c];});}
@@ -104,7 +108,7 @@ if(!L.length&&!A.length&&!IV.length&&!SC.length){
     out+='<div class="two"><div><h3>Accuracy by technique</h3>'+bars+'</div><div><h3>Shape of your strengths</h3>'+(radar||'<p class="tally">The radar appears once three techniques have data.</p>')+'</div></div>';
   }
 
-  out+='<div id="trapprof"></div>';
+  out+='<div id="trapprof"></div><div id="confprof"></div>';
 
   // time distribution
   if(L.length){
@@ -150,6 +154,43 @@ function paintTraps(){ var el=document.getElementById('trapprof'), TM=window.HU_
     +(rows||'<p class="tally">No traps recorded yet. When a wrong answer matches a known mistake, it appears here.</p>'); }
 paintTraps();
 window.addEventListener('hu-rewards',function(){ if(window.HU_TRAPMAP&&HU_TRAPMAP.admin()!==trapAdmin) paintTraps(); });
+
+// Confidence: stated confidence against accuracy, from answers rated Guess, Unsure or Sure (confidence.js)
+var confWeekShown=false;
+function paintConf(){ var el=document.getElementById('confprof'), C=window.HU_CONF; if(!el||!C) return;
+  var st=C.stats(L,TECH), head='<h3 id="confidence">Confidence</h3>';
+  if(!st.n){ el.innerHTML=head+'<p class="tally">Say how sure you are (Guess, Unsure or Sure) before checking an answer in <a href="drill.html">Drill</a> or the <a href="bank.html">question bank</a>, and this section shows whether that confidence is justified.</p>'; return; }
+  /* plot: stated confidence (x) against accuracy (y), both 0 to 100; the diagonal is where they match */
+  var X0=46,X1=324,Y0=206,Y1=14, sx=function(v){ return X0+(X1-X0)*v/100; }, sy=function(v){ return Y0-(Y0-Y1)*v/100; };
+  var svg='<svg viewBox="0 0 340 250" role="img" aria-label="Accuracy at each confidence level; the table below gives the values">';
+  [0,50,100].forEach(function(v){ svg+='<line x1="'+X0+'" x2="'+X1+'" y1="'+sy(v)+'" y2="'+sy(v)+'" style="stroke:var(--line-soft)" stroke-width="1"/><text x="'+(X0-8)+'" y="'+(sy(v)+4)+'" text-anchor="end" font-size="11" style="fill:var(--ink-faint)">'+v+'%</text>'; });
+  svg+='<line x1="'+sx(0)+'" y1="'+sy(0)+'" x2="'+sx(100)+'" y2="'+sy(100)+'" style="stroke:var(--ink-faint)" stroke-width="1"/>';
+  st.levels.forEach(function(l){ svg+='<text x="'+sx(100*l.p)+'" y="'+(Y0+18)+'" text-anchor="middle" font-size="11" style="fill:var(--ink-soft)">'+l.label+'</text><text x="'+sx(100*l.p)+'" y="'+(Y0+32)+'" text-anchor="middle" font-size="10" style="fill:var(--ink-faint)">said '+Math.round(100*l.p)+'%</text>'; });
+  st.levels.forEach(function(l,i){ if(!l.n) return; var acc=100*l.right/l.n, x=sx(100*l.p), y=sy(acc);
+    svg+='<g class="cpt" tabindex="0" data-i="'+i+'" aria-label="'+l.label+': '+Math.round(acc)+' percent right over '+l.n+' answers"><circle cx="'+x+'" cy="'+y+'" r="16" fill="transparent"/><circle class="dot" cx="'+x+'" cy="'+y+'" r="6" style="fill:var(--aqua);stroke:var(--bg)" stroke-width="2"/></g>'; });
+  svg+='</svg>';
+  var rows=st.levels.map(function(l){ return '<tr><td>'+l.label+'</td><td>'+Math.round(100*l.p)+'%</td><td>'+(l.n?Math.round(100*l.right/l.n)+'%':'–')+'</td><td>'+l.n+'</td></tr>'; }).join('');
+  var vs=C.verdicts(st).slice(0,3);
+  el.innerHTML=head+'<p class="tally">Each dot shows how often you were right at that confidence. On the line, confidence matches results; below it, you were less often right than you thought.</p>'
+    +'<div class="two"><div class="cchart" style="position:relative;max-width:26rem">'+svg+'<div class="ctip" role="status" hidden></div></div>'
+    +'<div><table><tr><th>You said</th><th>Meaning</th><th>Right</th><th>Answers</th></tr>'+rows+'</table>'
+    +'<p class="tally">Calibration score '+st.brier.toFixed(2)+' over '+st.n+' rated answers. Lower is better: 0 is perfect, and saying Unsure every time at 60% accuracy scores 0.24.</p><p class="tally" id="confweek"></p></div></div>'
+    +(vs.length?vs.map(function(v){ return '<div class="rec">'+esc(v.text)+'</div>'; }).join(''):'<p class="tally">A verdict for a technique appears once it has '+C.MIN+' rated answers.</p>');
+  /* tooltip: value first, level second; same on hover and keyboard focus */
+  var box=el.querySelector('.cchart'), tip=el.querySelector('.ctip');
+  function showTip(g){ var l=st.levels[+g.getAttribute('data-i')], r=g.querySelector('.dot').getBoundingClientRect(), b=box.getBoundingClientRect();
+    tip.textContent=''; var s=document.createElement('strong'); s.textContent=Math.round(100*l.right/l.n)+'% right'; var sp=document.createElement('span'); sp.textContent=l.label+', '+l.n+' answer'+(l.n>1?'s':'');
+    tip.appendChild(s); tip.appendChild(sp); tip.hidden=false;
+    tip.style.left=Math.max(0,Math.min(b.width-150,r.left-b.left-60))+'px'; tip.style.top=Math.max(0,r.top-b.top-54)+'px'; }
+  el.querySelectorAll('.cpt').forEach(function(g){ g.addEventListener('pointerenter',function(){ showTip(g); }); g.addEventListener('focus',function(){ showTip(g); });
+    g.addEventListener('pointerleave',function(){ tip.hidden=true; }); g.addEventListener('blur',function(){ tip.hidden=true; }); });
+  paintConfWeek(); }
+function paintConfWeek(){ var p=document.getElementById('confweek'), H=window.HU_REWARDS; if(!p||!H||!H.calibration) return; confWeekShown=true;
+  var W=H.calibration.weeks(L), R=H.calibration.rule, cur=W.filter(function(w){ return !w.finished; })[0], last=W.filter(function(w){ return w.finished; }).slice(-1)[0];
+  p.textContent=(cur?'This week: '+cur.n+' rated answer'+(cur.n===1?'':'s')+(cur.n<R.min?', '+(R.min-cur.n)+' more for the calibration bonus.':', score '+cur.brier.toFixed(2)+(cur.brier<=R.maxBrier?', on track for the bonus.':'; the bonus needs '+R.maxBrier.toFixed(2)+' or lower.')):'No rated answers yet this week.')
+    +(last&&last.earned?' Last week earned the calibration bonus.':''); }
+paintConf();
+window.addEventListener('hu-rewards',function(){ if(!confWeekShown) paintConfWeek(); });
 </script>
 <script src="site.js?v=20261022"></script>
 </body>

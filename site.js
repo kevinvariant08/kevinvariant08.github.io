@@ -26,7 +26,7 @@
       {href:'rewards.html', name:'Rewards', note:'Levels, badges, quests and the daily challenge'},
       {href:'shop.html', name:'Shop', note:'Spend coins on titles, themes and papers'},
       {href:'games.html', name:'Labs', note:'Maths minigames from the Shop'},
-      {href:'progress.html', name:'My progress', note:'Accuracy, timing, streaks and traps'}]},
+      {href:'progress.html', name:'My progress', note:'Accuracy, timing, traps and confidence'}]},
     {label:'Book', sec:'book', href:'book.html'}
   ];
   var FOOT='<div class="foot-grid">'
@@ -95,7 +95,7 @@
     window.addEventListener('hu-auth-ready',function(){ window.HU_AUTH.onChange(paint); });
     if(window.HU_AUTH) window.HU_AUTH.onChange(paint);
   }
-  function loadRewards(){ if(window.HU_REWARDS) return; var sc=document.createElement('script'); sc.src='rewards.js?v=20261023'; sc.defer=true; document.head.appendChild(sc); }
+  function loadRewards(){ if(window.HU_REWARDS) return; var sc=document.createElement('script'); sc.src='rewards.js?v=20261024'; sc.defer=true; document.head.appendChild(sc); }
   function loadAccounts(){
     if(window.HU_AUTH) return;
     loadScript('auth-config.js?v=20260927').catch(function(){}).then(function(){
