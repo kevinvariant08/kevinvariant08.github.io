@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TMUA grade boundaries | Kevinvariant</title>
+  <meta name="description" content="Estimated grade boundaries on the TMUA 2024+ scale (1.0 to 9.0) for every Kevinvariant mock set, with a score calculator and the method behind it.">
+  <link rel="icon" href="/favicon.ico" sizes="32x32">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#FFFFFF">
+  <link rel="stylesheet" href="style.css?v=20261023">
+  <script>try{if(localStorage.getItem('kv_mode')==='dark')document.documentElement.setAttribute('data-mode','dark')}catch(e){}</script>
+  <style>
+    .calc{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:1.6rem 2.4rem;align-items:start;background:var(--bg-deep);border:1px solid var(--line-soft);border-radius:var(--r-lg);padding:1.4rem}
+    @media (max-width:760px){.calc{grid-template-columns:1fr}}
+    .calc label{display:block;font-size:.88rem;color:var(--ink-soft);margin:.7rem 0 .25rem}
+    .calc select,.calc input{font:inherit;width:100%;max-width:16rem;min-height:44px;padding:.45rem .6rem;border:1px solid var(--line);border-radius:var(--r-md);background:var(--surface);color:var(--ink)}
+    .calc .pair{display:flex;gap:.8rem}
+    .calc .pair>div{flex:1}
+    .out .big{font:600 clamp(2.6rem,7vw,3.6rem)/1 var(--heading);color:var(--ink);font-variant-numeric:tabular-nums}
+    .out .big small{font:500 1rem var(--display);color:var(--ink-faint);margin-left:.4rem}
+    .out p{margin:.6rem 0 0;color:var(--ink-soft)}
+    .out .bar{position:relative;height:8px;border-radius:99px;background:var(--line-soft);margin:1.1rem 0 .3rem;max-width:26rem}
+    .out .bar i{position:absolute;top:-4px;width:3px;height:16px;border-radius:2px;background:var(--aqua)}
+    .out .bar b{position:absolute;top:-3px;width:1px;height:14px;background:var(--ink-faint)}
+    .out .ticks{display:flex;justify-content:space-between;max-width:26rem;font-size:.78rem;color:var(--ink-faint)}
+    table.bounds{border-collapse:collapse;width:100%;font-size:.95rem;font-variant-numeric:tabular-nums}
+    table.bounds th,table.bounds td{padding:.55rem .5rem;text-align:center;border-bottom:1px solid var(--line-soft)}
+    table.bounds th:first-child,table.bounds td:first-child{text-align:left;white-space:nowrap}
+    table.bounds thead th{color:var(--ink-faint);font-weight:600;font-size:.82rem}
+    table.bounds .key{background:var(--aqua-wash)}
+    table.bounds td small{display:block;color:var(--ink-faint);font-size:.75rem}
+    details.conv{border-bottom:1px solid var(--line-soft);padding:.7rem 0}
+    details.conv summary{cursor:pointer;font-weight:600;min-height:36px;display:flex;align-items:center;gap:.6rem}
+    details.conv summary span{font-weight:400;color:var(--ink-faint);font-size:.9rem}
+    .grid40{display:grid;grid-template-columns:repeat(auto-fill,minmax(4.2rem,1fr));gap:.3rem;margin:.8rem 0 .4rem;font-variant-numeric:tabular-nums}
+    .grid40 div{border:1px solid var(--line-soft);border-radius:var(--r-sm);padding:.25rem .4rem;font-size:.85rem;display:flex;justify-content:space-between;gap:.3rem}
+    .grid40 div span{color:var(--ink-faint)}
+    .grid40 div.hit{border-color:var(--aqua);background:var(--aqua-wash)}
+    .facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(11rem,1fr));gap:.8rem;margin:1rem 0;padding:0;list-style:none}
+    .facts li{border:1px solid var(--line-soft);border-radius:var(--r-md);padding:.8rem .9rem}
+    .facts b{display:block;font:600 1.5rem var(--heading);color:var(--ink)}
+    .facts span{color:var(--ink-soft);font-size:.9rem}
+    .src li{margin:.3rem 0;color:var(--ink-soft)}
+  </style>
+</head>
+<body data-theme-v2>
+  <nav id="sitenav"><div class="nav-links"><a href="index.html">Home</a> <a href="tmua.html">TMUA</a> <a href="olympiad.html">Olympiad</a> <a href="compete.html">Practise and compete</a> <a href="book.html">Book</a></div></nav>
+
+  <main class="page" data-sec="tmua">
+    <header class="hub-head">
+      <span class="eyebrow">TMUA</span>
+      <h1>Grade boundaries</h1>
+      <p class="lede">Estimated raw marks for each score on the TMUA's 2024+ scale (1.0 to 9.0), for every mock set. They are estimates: UAT-UK publishes no raw-mark boundaries, so these come from a model calibrated to published data, explained below.</p>
+      <ul class="jump">
+        <li><a href="#calculator">Score calculator</a></li>
+        <li><a href="#table">Boundary table</a></li>
+        <li><a href="#scale">The official scale</a></li>
+        <li><a href="#method">How these were made</a></li>
+      </ul>
+    </header>
+
+    <section id="calculator" aria-labelledby="calc-h">
+      <h2 id="calc-h">Score calculator</h2>
+      <div class="calc">
+        <form id="calcform" onsubmit="return false">
+          <label for="cset">Mock set</label>
+          <select id="cset"></select>
+          <div class="pair">
+            <div><label for="cp1">Paper 1, out of 20</label><input id="cp1" type="number" inputmode="numeric" min="0" max="20" value="12"></div>
+            <div><label for="cp2">Paper 2, out of 20</label><input id="cp2" type="number" inputmode="numeric" min="0" max="20" value="11"></div>
+          </div>
+        </form>
+        <div class="out" aria-live="polite">
+          <div class="big" id="cscore">&ndash;</div>
+          <div class="bar" aria-hidden="true"><b style="left:43.75%"></b><b style="left:75%"></b><i id="cmark" style="left:0"></i></div>
+          <div class="ticks" aria-hidden="true"><span>1.0</span><span>4.5 median</span><span>7.0 top 10%</span><span>9.0</span></div>
+          <p id="cwhere"></p>
+          <p id="cofficial"></p>
+        </div>
+      </div>
+      <noscript><p>The calculator needs JavaScript. The boundary table below is generated by it too; the same numbers are in <a href="boundaries.js">boundaries.js</a>.</p></noscript>
+    </section>
+
+    <section id="table" aria-labelledby="table-h">
+      <h2 id="table-h">Boundary table</h2>
+      <p class="sub-intro">The lowest combined raw mark, out of 40 across both papers, expected to earn each score. Sets are in order of difficulty. Shaded columns are the two scores UAT-UK anchors: 4.5 for the median October candidate, 7.0 for the 90th percentile.</p>
+      <div class="table-wrap"><table class="bounds" id="btable"></table></div>
+      <p class="sub-intro" style="margin-top:1rem">Set A is not rated question by question, so it has no estimate. It is the gentlest set.</p>
+      <h3 style="margin-top:2rem">Full conversion for each set</h3>
+      <div id="convs"></div>
+    </section>
+
+    <section id="scale" aria-labelledby="scale-h">
+      <h2 id="scale-h">The official scale since 2024</h2>
+      <p>Since UAT-UK took over the TMUA in 2024, each candidate gets one score from 1.0 to 9.0, combining both papers. Every question is worth one mark, with no penalty for a wrong answer. Each sitting is equated statistically, so there is no fixed raw-mark table, and UAT-UK publishes no grade boundaries or pass mark. The scale is anchored so that, in the October sitting, the median candidate scores 4.5 and the candidate at the 90th percentile scores 7.0.</p>
+      <ul class="facts">
+        <li><b>4.5</b><span>median, October 2024 and October 2025</span></li>
+        <li><b>3.3</b><span>25th percentile, both Octobers</span></li>
+        <li><b>5.7&ndash;5.8</b><span>75th percentile (2024, 2025)</span></li>
+        <li><b>7.0</b><span>90th percentile, both Octobers</span></li>
+        <li><b>8,987 / 9,685</b><span>October candidates in 2024 / 2025</span></li>
+      </ul>
+      <p>January sittings score lower on average, so across a whole cycle the median is nearer 4.0. On a paper of official difficulty, JZMaths estimates that 4.5 needs about 17&ndash;19 marks out of 40, 6.5 about 25&ndash;27, and 7.5 about 30&ndash;32. It describes 6.5 and above as competitive for top courses.</p>
+    </section>
+
+    <section id="method" aria-labelledby="method-h">
+      <h2 id="method-h">How these boundaries were made</h2>
+      <ol>
+        <li><b>One scale for questions and candidates.</b> A question rated <i>r</i> on this site's 4.5 to 9.0 scale is taken to be solved, without guessing, by half of the candidates who would score <i>r</i> on the real TMUA.</li>
+        <li><b>A response model.</b> The chance of a correct answer rises smoothly as the candidate's score passes the question's rating (a logistic curve, as in the Rasch model UAT-UK uses). It never drops below 1 in the number of options, because blind guessing costs nothing.</li>
+        <li><b>Calibration.</b> The curve's steepness is fitted so that a paper of official difficulty reproduces the published raw-mark anchors above to within half a mark. As a check, the fit puts official TMUA questions at about 5.9 on this site's scale. That makes Sets D, E and F (average 5.6 to 5.8) close to the real thing, and Set C (6.4) harder, as its description says. That agreement was not built in.</li>
+        <li><b>Boundaries.</b> For every score from 1.0 to 9.0, the model gives the raw mark a candidate at that level is expected to get on each set, using each question's real rating and number of options. The table reads that backwards.</li>
+      </ol>
+      <div class="callout">
+        <p><b>How much to trust them.</b> Treat each estimate as plus or minus about 0.4. The ratings are expert judgements, not measured from thousands of candidates, and the anchors are estimates for the 2024+ scale. Drill shows a single-paper estimate, which assumes you would do equally well on the other paper. Anyone can rerun or adjust the model: <code>tools/calibrate_boundaries.py</code> in the site's repository.</p>
+      </div>
+      <h3>Sources</h3>
+      <ul class="src">
+        <li>UAT-UK, <a href="https://esat-tmua.ac.uk/test-results/" target="_blank" rel="noopener">ESAT and TMUA test results</a>: the 1.0 to 9.0 scale and its anchoring. The October 2024 and 2025 percentiles above are UAT-UK's published figures as reported by <a href="https://dukesplus.com/guides/applying-to-university-in-the-uk/uk-university-admissions-tests/tmua-scores-grade-boundaries/" target="_blank" rel="noopener">Dukes Plus</a>, <a href="https://ghostprep.co.uk/tmua/guides/good-score" target="_blank" rel="noopener">GhostPrep</a> and <a href="https://www.uniadmissions.co.uk/tmua/guides/tmua-scoring-and-results/" target="_blank" rel="noopener">UniAdmissions</a>.</li>
+        <li>JZMaths, <a href="https://jzmaths.com/tmua" target="_blank" rel="noopener">TMUA guide</a>: raw-mark anchors for the 2024+ scale and what scores mean.</li>
+        <li>Question ratings: this site's <a href="bank.html">question bank</a>. Checked October 2026.</li>
+      </ul>
+    </section>
+  </main>
+
+<script src="boundaries.js?v=20261022"></script>
+<script>
+(function(){
+  var B=window.KV_BOUNDARIES; if(!B) return;
+  var ORDER=['E','F','D','C','B','J','H','I','G'].filter(function(s){ return B.sets[s]; });
+  var COLS=['9.0','8.0','7.5','7.0','6.5','6.0','5.5','5.0','4.5','4.0'];
+  function pct(S){ /* official October percentiles fit a normal curve: 4.5 median, 7.0 at the 90th */
+    var z=(S-4.5)/1.9507, t=1/(1+0.2316419*Math.abs(z)), d=0.3989423*Math.exp(-z*z/2),
+        p=d*t*(0.3193815+t*(-0.3565638+t*(1.781478+t*(-1.821256+t*1.330274)))); return z>0?1-p:p; }
+  function where(S){ var p=pct(S);
+    if(S>=8.95) return 'The top of the scale, above roughly 99% of October candidates.';
+    if(p>=.5) return 'Above about '+Math.round(p*100)+'% of October candidates, so roughly the top '+Math.max(1,Math.round((1-p)*100))+'%.';
+    return 'Above about '+Math.max(1,Math.round(p*100))+'% of October candidates; the median is 4.5.'; }
+  function official(S){ var i=Math.round((S-1)*10); return B.official[Math.max(0,Math.min(80,i))]; }
+
+  var sel=document.getElementById('cset');
+  sel.innerHTML=ORDER.map(function(s){ return '<option value="'+s+'">Set '+s+' (average question '+B.sets[s].meanRating.toFixed(1)+')</option>'; }).join('');
+  try{ var last=localStorage.getItem('kv_calc_set'); if(last&&B.sets[last]) sel.value=last; }catch(e){}
+  function calc(){
+    var s=sel.value, a=Math.max(0,Math.min(20,parseInt(document.getElementById('cp1').value,10)||0)), b=Math.max(0,Math.min(20,parseInt(document.getElementById('cp2').value,10)||0)), raw=a+b, S=B.sets[s].combined[raw];
+    document.getElementById('cscore').innerHTML=S.toFixed(1)+'<small>estimated, from '+raw+'/40 on Set '+s+'</small>';
+    document.getElementById('cmark').style.left=((S-1)/8*100)+'%';
+    document.getElementById('cwhere').textContent=where(S);
+    var o=official(S); document.getElementById('cofficial').textContent=S>=8.95?'On a paper of official difficulty you would be expected to score about '+Math.round(o)+'/40 or more.':'On a paper of official difficulty, that is roughly '+Math.round(o)+'/40.';
+    try{ localStorage.setItem('kv_calc_set',s); }catch(e){}
+  }
+  ['change','input'].forEach(function(ev){ document.getElementById('calcform').addEventListener(ev,calc); }); calc();
+
+  var h='<thead><tr><th scope="col">Set</th>'+COLS.map(function(c){ return '<th scope="col"'+(c==='7.0'||c==='4.5'?' class="key"':'')+'>'+c+'</th>'; }).join('')+'</tr></thead><tbody>';
+  ORDER.forEach(function(s){ var d=B.sets[s];
+    h+='<tr><td><a href="#set-'+s.toLowerCase()+'">Set '+s+'</a><small>avg '+d.meanRating.toFixed(1)+'</small></td>'+COLS.map(function(c){ var v=d.boundaries[c]; return '<td'+(c==='7.0'||c==='4.5'?' class="key"':'')+'>'+(v==null?'&ndash;':v)+'</td>'; }).join('')+'</tr>'; });
+  document.getElementById('btable').innerHTML=h+'</tbody>';
+
+  function grid(arr,max){ var out='<div class="grid40">'; for(var r=0;r<=max;r++) out+='<div><span>'+r+'</span>'+arr[r].toFixed(1)+'</div>'; return out+'</div>'; }
+  document.getElementById('convs').innerHTML=ORDER.map(function(s){ var d=B.sets[s];
+    return '<details class="conv" id="set-'+s.toLowerCase()+'"><summary>Set '+s+' <span>combined raw mark out of 40, then each paper out of 20</span></summary>'
+      +'<p style="margin:.6rem 0 0;color:var(--ink-soft)">Both papers, out of 40</p>'+grid(d.combined,40)
+      +Object.keys(d.papers).sort().map(function(p){ return '<p style="margin:.6rem 0 0;color:var(--ink-soft)">Paper '+p.charAt(1)+' alone, out of 20 (as Drill estimates it)</p>'+grid(d.papers[p],20); }).join('')+'</details>'; }).join('');
+  var hsh=location.hash.match(/^#set-([a-z])$/); if(hsh){ var el=document.getElementById('set-'+hsh[1]); if(el){ el.open=true; el.scrollIntoView(); } }
+})();
+</script>
+<script src="site.js?v=20261023"></script>
+</body>
+</html>

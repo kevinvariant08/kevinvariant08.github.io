@@ -298,7 +298,7 @@ function finishPaper(){
   var techs=Object.keys(tb).sort(function(a,b){return (tb[a].c/tb[a].n)-(tb[b].c/tb[b].n);}).map(function(t){ var pc=Math.round(100*tb[t].c/tb[t].n); return '<div><span style="font-size:.9rem">'+TECH[t]+' <span class="tally">'+tb[t].c+'/'+tb[t].n+'</span></span><div class="bar"><span style="width:'+pc+'%"></span></div></div>'; }).join('');
   var slow=per.slice().sort(function(a,b){return b.secs-a.secs;}).slice(0,3).map(function(p){return 'Q'+byId(p.id).n+' ('+fmt(p.secs)+')';}).join(', ');
   var R=document.getElementById('review'); R.classList.remove('hidden'); document.getElementById('stage').classList.add('hidden');
-  R.innerHTML='<h2>'+PAPER_NAME[paper]+'</h2>'+(PAPER_RATING[paper]?'<p class="tally" style="margin:-.4rem 0 .6rem">Paper difficulty '+PAPER_RATING[paper].rating.toFixed(1)+' out of 9</p>':'')+'<div class="score"><div><div class="big">'+score+'<span style="font-size:1.2rem;color:var(--faint)">/20</span></div><div class="lab">score</div></div><div><div class="big">'+fmt(used)+'</div><div class="lab">time used</div></div><div><div class="big">'+fmt(used/Math.max(1,per.filter(function(p){return p.chosen;}).length))+'</div><div class="lab">per answered question</div></div></div>'
+  R.innerHTML='<h2>'+PAPER_NAME[paper]+'</h2>'+(PAPER_RATING[paper]?'<p class="tally" style="margin:-.4rem 0 .6rem">Paper difficulty '+PAPER_RATING[paper].rating.toFixed(1)+' out of 9</p>':'')+'<div class="score"><div><div class="big">'+score+'<span style="font-size:1.2rem;color:var(--faint)">/20</span></div><div class="lab">score</div></div><div><div class="big">'+fmt(used)+'</div><div class="lab">time used</div></div><div><div class="big">'+fmt(used/Math.max(1,per.filter(function(p){return p.chosen;}).length))+'</div><div class="lab">per answered question</div></div>'+tmuaEstimate(paper,score)+'</div>'
     +'<p class="tally">'+(limit?'Sat with '+TIMINGS[limit]+' ('+fmt(limit)+' allowed).':'Sat untimed.')+(pauses?' Paused '+pauses+' time'+(pauses>1?'s':'')+' for '+fmt(pausedSecs)+' in total; paused time is not counted.':'')+'</p>'
     +'<p class="tally">Longest: '+slow+'. Real papers ramp in difficulty; this one does not, so a flat time profile is expected.</p>'
     +'<h3>By technique</h3>'+techs
@@ -338,6 +338,12 @@ document.getElementById('startTech').addEventListener('click',function(){ var id
 document.getElementById('startWeak').addEventListener('click',function(){ var ids=weakQueue(); if(!ids.length) ids=QUESTIONS.slice().sort(function(){return Math.random()-0.5;}).slice(0,10).map(function(q){return q.id;}); start('weak',ids); });
 window.addEventListener('beforeunload',function(e){ if(S&&S.mode==='paper'){ e.preventDefault(); e.returnValue=''; } });
 renderHub();
+</script>
+<script src="boundaries.js?v=20261022"></script>
+<script>
+/* Estimated score on the TMUA 2024+ scale for one paper, from tools/calibrate_boundaries.py. */
+function tmuaEstimate(paper,score){ var B=window.KV_BOUNDARIES, s=B&&B.sets[paper.charAt(0)], t=s&&s.papers[paper]; if(!t||t[score]==null) return '';
+  return '<div><div class="big">'+t[score].toFixed(1)+'</div><div class="lab"><a href="tmua-boundaries.html#set-'+paper.charAt(0).toLowerCase()+'">estimated TMUA score</a></div></div>'; }
 </script>
 <script src="site.js?v=20261022"></script>
 <script src="locks.js?v=20260929"></script>
