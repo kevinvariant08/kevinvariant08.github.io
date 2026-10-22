@@ -30,6 +30,7 @@
   function fetchRows() {
     var c = client(); if (!c) return Promise.resolve({ rows: [], error: 'not-configured' });
     return c.from('marker_problems').select('id,status,data,source_md,updated_at').then(function (r) {
+      if (r.error && (r.error.code === '42501' || /permission denied/i.test(r.error.message || ''))) return { rows: [], error: 'no-grant' };
       if (r.error) return { rows: [], error: r.error.code === '42P01' || r.error.code === 'PGRST205' || /does not exist|could not find/i.test(r.error.message || '') ? 'no-table' : (r.error.message || 'error') };
       return { rows: r.data || [], error: null };
     }, function (e) { return { rows: [], error: String(e && e.message || e) }; });

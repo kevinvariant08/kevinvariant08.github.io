@@ -160,7 +160,7 @@
 
 <script src="tools/marking-parse.js?v=20261022"></script>
 <script src="marking/library.js?v=20261022"></script>
-<script src="marking/problems-db.js?v=20261023"></script>
+<script src="marking/problems-db.js?v=20261024"></script>
 <script>
 var FREE_PROXY = "https://hu-interviewer.kevinvariant08.workers.dev";
 var DB = window.HU_MARKER_DB, PARSE = window.HU_MARK_PARSE;
@@ -195,6 +195,7 @@ async function start(){
 async function refresh(){
   var r=await DB.fetchRows();
   if(r.error==='no-table'){ $('setup').classList.remove('hidden'); return; }
+  if(r.error==='no-grant'){ $('gate').classList.remove('hidden'); $('gate').innerHTML='<p><b>The website does not have permission to use the problems table yet.</b> In Supabase, open SQL Editor, then New query, paste these two lines and press Run, then reload this page:</p><pre style="white-space:pre-wrap;font-size:.85rem">grant select on public.marker_problems to anon, authenticated;\ngrant insert, update, delete on public.marker_problems to authenticated;</pre>'; return; }
   if(r.error){ $('gate').classList.remove('hidden'); $('gate').innerHTML='<p>Could not read the problems: '+esc(r.error)+'</p>'; return; }
   ROWS=r.rows; $('app').classList.remove('hidden'); drawList();
 }

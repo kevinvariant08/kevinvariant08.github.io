@@ -15,6 +15,11 @@ create table if not exists public.marker_problems (
 );
 alter table public.marker_problems enable row level security;
 
+-- Newer Supabase projects do not give the website (the anon and authenticated roles) access to new tables
+-- automatically, so grant it here. The row-level security policies below still decide who can do what.
+grant select on public.marker_problems to anon, authenticated;
+grant insert, update, delete on public.marker_problems to authenticated;
+
 drop policy if exists "anyone reads published problems" on public.marker_problems;
 create policy "anyone reads published problems" on public.marker_problems
   for select to anon, authenticated using (status in ('published', 'hidden'));
