@@ -269,7 +269,9 @@
     T.clears[weekStart(today())+':'+type]={day:today(),xp:TRAP_XP,coins:TRAP_COINS}; save('hu_traps',T); tick(); return {xp:TRAP_XP,coins:TRAP_COINS}; }
 
   /* ---------------- daily challenge: the same question for everyone each day */
-  function dailyId(k){ var pool=Object.keys(RATING).filter(function(id){return RATING[id]>=6.5;}).sort(); return pool[hash('daily'+k)%pool.length]; }
+  /* questions of locked papers (see locks.js) are never the daily question and never come back in review */
+  var LOCKED_Q=/^[EFGHIJK][12]-/;
+  function dailyId(k){ var pool=Object.keys(RATING).filter(function(id){return RATING[id]>=6.5&&!LOCKED_Q.test(id);}).sort(); return pool[hash('daily'+k)%pool.length]; }
   function dailyNumber(k){ var a=new Date(LAUNCH), p=k.split('-'), b=new Date(+p[0],p[1]-1,+p[2]); return Math.round((b-a)/DAY)+1; }
   function recordDaily(ok,secs,id,chosen,tags){ var R=state(), k=today(); if(R.daily[k]) return R.daily[k];
     var s=snapshot(), xp=ok?60+5*Math.min(10,s.streak+1):15; R=state(); R.daily[k]={ok:ok,secs:Math.round(secs),xp:xp,id:id}; save('hu_rewards',R);
@@ -286,7 +288,7 @@
     if(L.length&&L[L.length-1].t>S.upto){ S.upto=L[L.length-1].t; changed=true; }
     if(changed) save('hu_review',S); return S; }
   function reviewDue(){ var S=reviewSync(), t=today();
-    return Object.keys(S.items).filter(function(id){ var it=S.items[id]; return !it.mastered&&it.due<=t; })
+    return Object.keys(S.items).filter(function(id){ var it=S.items[id]; return !it.mastered&&it.due<=t&&!LOCKED_Q.test(id); })
       .sort(function(a,b){ return S.items[a].due<S.items[b].due?-1:S.items[a].due>S.items[b].due?1:rating(a)-rating(b); }); }
   function reviewRecord(id,ok,chosen,secs,tags){ var S=reviewSync(), it=S.items[id]; if(!it) return null; var t=today();
     if(ok){ if(it.stage>=GAPS.length-1){ it.mastered=true; it.masteredAt=Date.now(); } else { it.stage++; it.due=shift(t,GAPS[it.stage]); } }

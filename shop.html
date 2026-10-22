@@ -139,12 +139,22 @@
     'bti-chapter':{d:'Chapter 1 of Beyond the Incenter: angle chasing as the language of geometry, from the basic configurations to hunting invariants in olympiad diagrams. 34 pages, yours to keep.',p:6000,star:1,file:'chapter.pdf',scope:'bti-chapter'},
     'bti-book':{d:'The complete Beyond the Incenter, all 225 pages: triangle centres, projective geometry, radical axes, spiral similarity and the rest. Owning it also gives you the one title nobody can buy: Beyond the Incenter.',p:24000,star:1,file:'book.pdf',scope:'bti-book',requires:'bti-chapter'},
     'unlock-I1':{d:'Skip the challenge: Set I Paper 1 with full solutions, unlocked for good and playable in Drill.',p:3000,href:'drill.html?paper=I1'},
-    'unlock-I2':{d:'Skip the challenge: Set I Paper 2 with full solutions, unlocked for good and playable in Drill.',p:3000,href:'drill.html?paper=I2'}
+    'unlock-I2':{d:'Skip the challenge: Set I Paper 2 with full solutions, unlocked for good and playable in Drill.',p:3000,href:'drill.html?paper=I2'},
+    'unlock-K1':{d:'Skip the challenge: Set K Paper 1 with full solutions, unlocked for good and playable in Drill.',p:3500,href:'drill.html?paper=K1'},
+    'unlock-K2':{d:'Skip the challenge: Set K Paper 2 with full solutions, unlocked for good and playable in Drill.',p:3500,href:'drill.html?paper=K2'},
+    'unlock-H1':{d:'Skip the challenge: Set H Paper 1 with full solutions, unlocked for good and playable in Drill.',p:2500,href:'drill.html?paper=H1'},
+    'unlock-H2':{d:'Skip the challenge: Set H Paper 2 with full solutions, unlocked for good and playable in Drill.',p:2500,href:'drill.html?paper=H2'},
+    'unlock-G1':{d:'Skip the challenge: Set G Paper 1 with full solutions, unlocked for good and playable in Drill.',p:2500,href:'drill.html?paper=G1'},
+    'unlock-G2':{d:'Skip the challenge: Set G Paper 2 with full solutions, unlocked for good and playable in Drill.',p:2500,href:'drill.html?paper=G2'},
+    'unlock-F1':{d:'Skip the challenge: Set F Paper 1 with full solutions, unlocked for good and playable in Drill.',p:1500,href:'drill.html?paper=F1'},
+    'unlock-F2':{d:'Skip the challenge: Set F Paper 2 with full solutions, unlocked for good and playable in Drill.',p:1500,href:'drill.html?paper=F2'},
+    'unlock-E1':{d:'Skip the challenge: Set E Paper 1 with full solutions, unlocked for good and playable in Drill.',p:1500,href:'drill.html?paper=E1'},
+    'unlock-E2':{d:'Skip the challenge: Set E Paper 2 with full solutions, unlocked for good and playable in Drill.',p:1500,href:'drill.html?paper=E2'}
   };
   var ORDER=Object.keys(CAT), ITEMS={}, armed=null;
   ORDER.forEach(function(id,i){ ITEMS[id]={id:id,name:id,kind:kindOf(id),price:CAT[id].p,active:true,sort:i}; });
   function kindOf(id){ return id.indexOf('title-')===0?'title':id.indexOf('theme-')===0?'theme':id==='freeze'?'freeze':id.indexOf('game-')===0?'game':id.indexOf('unlock-')===0?'unlock':'content'; }
-  var NAMES={'title-lemma':'Lemma Hunter','title-telescoper':'Telescoper','title-angle':'Angle Chaser','title-vieta':'Vieta’s Apprentice','title-contra':'Contrapositive Knight','title-invariant':'Invariant Seeker','title-incenter':'Incenter Initiate','title-olympian':'Olympian','theme-blackboard':'Blackboard','theme-nebula':'Nebula','theme-parchment':'Parchment Night','freeze':'Streak freeze','game-factor':'Factor Fall','game-untangle':'Untangle','game-billiards':'Billiards Lab','game-graph':'Graph Golf','game-orbit':'Orbit Racer','bti-chapter':'Chapter 1: Angle Chasing','bti-book':'Beyond the Incenter: the complete book','unlock-I1':'Set I Paper 1','unlock-I2':'Set I Paper 2'};
+  var NAMES={'title-lemma':'Lemma Hunter','title-telescoper':'Telescoper','title-angle':'Angle Chaser','title-vieta':'Vieta’s Apprentice','title-contra':'Contrapositive Knight','title-invariant':'Invariant Seeker','title-incenter':'Incenter Initiate','title-olympian':'Olympian','theme-blackboard':'Blackboard','theme-nebula':'Nebula','theme-parchment':'Parchment Night','freeze':'Streak freeze','game-factor':'Factor Fall','game-untangle':'Untangle','game-billiards':'Billiards Lab','game-graph':'Graph Golf','game-orbit':'Orbit Racer','bti-chapter':'Chapter 1: Angle Chasing','bti-book':'Beyond the Incenter: the complete book','unlock-I1':'Set I Paper 1','unlock-I2':'Set I Paper 2','unlock-E1':'Set E Paper 1','unlock-E2':'Set E Paper 2','unlock-F1':'Set F Paper 1','unlock-F2':'Set F Paper 2','unlock-G1':'Set G Paper 1','unlock-G2':'Set G Paper 2','unlock-H1':'Set H Paper 1','unlock-H2':'Set H Paper 2','unlock-K1':'Set K Paper 1','unlock-K2':'Set K Paper 2'};
   function $(id){ return document.getElementById(id); }
   function ready(f){ if(window.HU_REWARDS) f(); else setTimeout(function(){ ready(f); },80); }
 
