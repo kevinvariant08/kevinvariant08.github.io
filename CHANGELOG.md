@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- 2026-10-23. The TMUA hub no longer lists the topics inside each mock paper, so a paper can be sat without knowing what is coming.
 - 2026-10-22. Sets E, F, G, H and K are now locked: unlock each paper with a challenge code or with coins in the Shop. Sets A to D stay free.
 - 2026-10-22. TMUA mock Set K (Papers 1 and 2), free: in the question bank, timed drill, technique index and as PDFs with worked solutions.
 - 2026-10-22. Problem editor (marker-admin.html, admin only): write Proof marker problems with a live LaTeX preview and publish them straight to the site, hide built-in problems, and draft mark schemes and examples with the free model.
