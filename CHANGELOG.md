@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- 2026-10-23. TMUA mock Set L (Papers 1 and 2), locked from the start: unlock each paper with a challenge code or 4,000 coins. Both papers rate 8.3, the hardest in the collection.
 - 2026-10-23. The TMUA hub no longer lists the topics inside each mock paper, so a paper can be sat without knowing what is coming.
 - 2026-10-22. Sets E, F, G, H and K are now locked: unlock each paper with a challenge code or with coins in the Shop. Sets A to D stay free.
 - 2026-10-22. TMUA mock Set K (Papers 1 and 2), free: in the question bank, timed drill, technique index and as PDFs with worked solutions.
