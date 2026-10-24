@@ -142,10 +142,10 @@
           <div class="acts"><a class="btn" href="UKMT_SMC_2026_Solutions.pdf" target="_blank" rel="noopener">Read the solutions (PDF)</a></div>
         </article>
         <article class="pc" data-sec="tmua">
-          <h3>TMUA mock Set J</h3>
-          <div class="chips"><a class="chip locked" href="how-it-works.html#access" data-badge="J1">Locked</a><a class="chip" href="how-it-works.html#difficulty">Paper 1 <b>7.4</b></a><a class="chip" href="how-it-works.html#difficulty">Paper 2 <b>7.2</b></a></div>
-          <p class="desc">The newest set keeps to the official TMUA specification and the style of the 2022 and 2023 papers. Its difficulty comes from parameters, casework and structure.</p>
-          <div class="acts"><a class="btn" href="tmua.html#newest" data-lock="J1">See Set J</a><span class="lockline" data-lockline="J1">Win a code in an <a href="https://www.instagram.com/kevinvariant/" target="_blank" rel="noopener">Instagram challenge</a>.</span></div>
+          <h3>TMUA mock Set K</h3>
+          <div class="chips"><a class="chip locked" href="how-it-works.html#access" data-badge="K1">Locked</a><a class="chip" href="how-it-works.html#difficulty">Paper 1 <b>8.0</b></a><a class="chip" href="how-it-works.html#difficulty">Paper 2 <b>8.1</b></a></div>
+          <p class="desc">Heavy computation next to short questions that turn on a single idea, with olympiad techniques hidden inside AS content.</p>
+          <div class="acts"><a class="btn" href="tmua.html#set-k" data-lock="K1">See Set K</a><span class="lockline" data-lockline="K1">Win a code in an <a href="https://www.instagram.com/kevinvariant/" target="_blank" rel="noopener">Instagram challenge</a>, or use coins in the <a href="shop.html">Shop</a>.</span></div>
         </article>
         <article class="pc" data-sec="tmua">
           <h3>TMUA mock Set L</h3>
@@ -264,12 +264,12 @@
 </script>
 <script src="locks.js?v=20260929"></script>
 <script>
-/* Flip the Set J card to "Unlocked" for accounts that have redeemed it. */
+/* Flip the Set K and Set L cards to "Unlocked" for accounts that have redeemed them. */
 (async function(){ if(!window.HU_LOCKS) return; var sc=[]; try{ sc=await HU_LOCKS.scopes(); }catch(e){ return; }
   document.querySelectorAll('[data-lock]').forEach(function(a){ var p=a.dataset.lock; if(sc.indexOf('*')<0&&sc.indexOf(p)<0) return;
     a.textContent='Sit Paper 1 timed'; a.href='drill.html?paper='+p;
     var b=document.querySelector('[data-badge="'+p+'"]'); if(b){ b.textContent='Unlocked'; b.classList.remove('locked'); b.classList.add('open'); }
-    var l=document.querySelector('[data-lockline="'+p+'"]'); if(l) l.innerHTML='<a href="tmua.html#newest">Both papers and solutions</a>'; }); })();
+    var l=document.querySelector('[data-lockline="'+p+'"]'); if(l) l.innerHTML='<a href="tmua.html#set-'+p.charAt(0).toLowerCase()+'">Both papers and solutions</a>'; }); })();
 </script>
 <script>
 /* Old homepage anchors moved to their own pages; keep old links working. */
