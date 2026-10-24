@@ -1,0 +1,52 @@
+# Weekly calibration: downloads the anonymous answers, refits question difficulty and opens a pull request
+# with data/item_params.json and calibration/report.md for Kevin to review. Raw answers never enter the repo.
+#
+# One-time setup (Kevin):
+#   1. Settings > Secrets and variables > Actions: add KV_CALIBRATION_KEY (see attempts.sql).
+#   2. Settings > Actions > General: allow GitHub Actions to create pull requests.
+name: Calibrate question difficulty
+
+on:
+  schedule:
+    - cron: '17 4 * * 1'        # Mondays 04:17 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency: calibrate
+
+jobs:
+  calibrate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install numpy and scipy
+        run: pip install numpy==2.2.6 scipy==1.15.3
+
+      - name: Download shared answers
+        env:
+          KV_CALIBRATION_KEY: ${{ secrets.KV_CALIBRATION_KEY }}
+        run: python calibration/export.py "$RUNNER_TEMP/attempts.json"
+
+      - name: Fit the model
+        run: python calibration/fit.py --attempts "$RUNNER_TEMP/attempts.json"
+
+      - name: Open a pull request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          branch: calibration/weekly
+          delete-branch: true
+          commit-message: 'Weekly calibration: update question parameters'
+          title: 'Weekly calibration'
+          body-path: calibration/report.md
+          add-paths: |
+            data/item_params.json
+            calibration/report.md

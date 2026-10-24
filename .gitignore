@@ -6,3 +6,5 @@ DECISIONS.md
 PROGRESS.md
 private/
 tools/node_modules/
+calibration/__pycache__/
+calibration/attempts*.json
