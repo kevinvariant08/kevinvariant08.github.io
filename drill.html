@@ -114,7 +114,7 @@
         </div>
       </div>
       <p class="tally"><label><input type="checkbox" id="askconf"> Ask how sure I am (Guess, Unsure or Sure) before each answer is checked.</label> Timed papers never ask. <a href="progress.html#confidence">See your calibration</a>.</p>
-      <p class="tally">Question bank: <span id="bankn"></span> questions across sixteen papers. Your history is kept in this browser and feeds the <a href="progress.html">Progress</a> page.</p>
+      <p class="tally">Question bank: <span id="bankn"></span> questions across <span id="bankp"></span> papers. Your history is kept in this browser and feeds the <a href="progress.html">Progress</a> page.</p>
     </section>
 
     <section id="stage" class="hidden">
@@ -182,6 +182,7 @@ function weakQueue(){
 var selTech={};
 function renderHub(){
   document.getElementById('bankn').textContent=QUESTIONS.length;
+  document.getElementById('bankp').textContent=Object.keys(QUESTIONS.reduce(function(o,q){o[q.paper]=1;return o;},{})).length;
   var ch=document.getElementById('techchips'); ch.innerHTML='';
   var counts={}; QUESTIONS.forEach(function(q){q.tags.forEach(function(t){counts[t]=(counts[t]||0)+1;});});
   var st=techStats();
@@ -381,7 +382,7 @@ function trapResult(T,c,n){ var H=window.HU_REWARDS, need=n>=5?n-1:n;
     start('trap',ids.slice(0,5)); }
   go(); })();
 </script>
-<script src="site.js?v=20261022"></script>
+<script src="site.js?v=20261025"></script>
 <script src="locks.js?v=20260929"></script>
 </body>
 </html>

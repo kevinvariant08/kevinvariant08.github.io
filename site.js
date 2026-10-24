@@ -6,6 +6,7 @@
   var GROUPS=[
     {label:'TMUA', sec:'tmua', items:[
       {href:'tmua.html', name:'TMUA home', note:'Every mock set, newest first'},
+      {href:'smart.html', name:'Smart Practice', note:'Questions chosen to suit your level'},
       {href:'drill.html', name:'Drill', note:'Sit a paper timed, or drill one technique'},
       {href:'bank.html', name:'Question bank', note:'Every free question, rated 4.5 to 9.0'},
       {href:'techniques.html', name:'Technique index', note:'Questions filed by the idea that cracks them'},
@@ -30,7 +31,7 @@
     {label:'Book', sec:'book', href:'book.html'}
   ];
   var FOOT='<div class="foot-grid">'
-    +'<div><b>TMUA</b><a href="tmua.html">Mock sets</a><a href="drill.html">Drill</a><a href="bank.html">Question bank</a><a href="techniques.html">Technique index</a></div>'
+    +'<div><b>TMUA</b><a href="tmua.html">Mock sets</a><a href="smart.html">Smart Practice</a><a href="drill.html">Drill</a><a href="bank.html">Question bank</a><a href="techniques.html">Technique index</a></div>'
     +'<div><b>Olympiad</b><a href="olympiad.html">Papers and solutions</a><a href="geometry.html">Geometry Lab</a><a href="sandbox.html">Conjecture sandbox</a><a href="marker.html">Proof marker</a></div>'
     +'<div><b>Practise and compete</b><a href="arena.html">Arena</a><a href="qotw.html">Problem of the week</a><a href="rewards.html">Rewards</a><a href="progress.html">My progress</a></div>'
     +'<div><b>About</b><a href="how-it-works.html">How it works</a><a href="how-it-works.html#difficulty">Difficulty scale</a><a href="how-it-works.html#access">Free and locked papers</a><a href="book.html">Beyond the Incenter</a><a href="privacy.html">Privacy</a></div>'
