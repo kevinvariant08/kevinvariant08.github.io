@@ -275,7 +275,7 @@
   function dailyNumber(k){ var a=new Date(LAUNCH), p=k.split('-'), b=new Date(+p[0],p[1]-1,+p[2]); return Math.round((b-a)/DAY)+1; }
   function recordDaily(ok,secs,id,chosen,tags){ var R=state(), k=today(); if(R.daily[k]) return R.daily[k];
     var s=snapshot(), xp=ok?60+5*Math.min(10,s.streak+1):15; R=state(); R.daily[k]={ok:ok,secs:Math.round(secs),xp:xp,id:id}; save('hu_rewards',R);
-    var L=load('hu_drill_log',[]); L.push({t:Date.now(),id:id,paper:id.split('-')[0],correct:ok,chosen:chosen||null,secs:Math.round(secs),mode:'daily',tags:tags||[]}); save('hu_drill_log',L.slice(-2000));
+    var L=load('hu_drill_log',[]); var kvEntry={t:Date.now(),id:id,paper:id.split('-')[0],correct:ok,chosen:chosen||null,secs:Math.round(secs),mode:'daily',tags:tags||[]}; L.push(kvEntry); save('hu_drill_log',L.slice(-2000)); if(window.KV_TELEMETRY) KV_TELEMETRY.record(kvEntry);
     tick(); return R.daily[k]; }
 
 
@@ -294,7 +294,7 @@
     if(ok){ if(it.stage>=GAPS.length-1){ it.mastered=true; it.masteredAt=Date.now(); } else { it.stage++; it.due=shift(t,GAPS[it.stage]); } }
     else { it.stage=0; it.due=shift(t,1); it.misses=(it.misses||0)+1; }
     it.last=Date.now(); S.items[id]=it;
-    var L=load('hu_drill_log',[]); L.push({t:Date.now(),id:id,paper:id.split('-')[0],correct:ok,chosen:chosen,secs:Math.round(secs),mode:'review',tags:tags||[]}); save('hu_drill_log',L.slice(-2000));
+    var L=load('hu_drill_log',[]); var kvEntry={t:Date.now(),id:id,paper:id.split('-')[0],correct:ok,chosen:chosen,secs:Math.round(secs),mode:'review',tags:tags||[]}; L.push(kvEntry); save('hu_drill_log',L.slice(-2000)); if(window.KV_TELEMETRY) KV_TELEMETRY.record(kvEntry);
     S.upto=Math.max(S.upto,Date.now()); save('hu_review',S); tick(); return it; }
   /* ---------------- on-page feedback */
   var css='.rw-toasts{position:fixed;right:1rem;bottom:1rem;z-index:9999;display:flex;flex-direction:column;gap:.5rem;align-items:flex-end;pointer-events:none}'

@@ -96,7 +96,7 @@
 
   function commit(wk,q,gaveUp){ var secs=(performance.now()-t0)/1000, ok=!gaveUp&&chosen===q.ans, all=load('hu_qotw',{});
     if(all[wk]) return; all[wk]={id:q.id,chosen:gaveUp?null:chosen,ok:ok,secs:Math.round(secs),t:Date.now(),gaveUp:gaveUp}; save('hu_qotw',all);
-    if(!gaveUp){ var L=load('hu_drill_log',[]); L.push({t:Date.now(),id:q.id,paper:q.paper,correct:ok,chosen:chosen,secs:Math.round(secs),mode:'qotw',tags:q.tags}); save('hu_drill_log',L.slice(-2000)); }
+    if(!gaveUp){ var L=load('hu_drill_log',[]); var kvEntry={t:Date.now(),id:q.id,paper:q.paper,correct:ok,chosen:chosen,secs:Math.round(secs),mode:'qotw',tags:q.tags}; L.push(kvEntry); save('hu_drill_log',L.slice(-2000)); if(window.KV_TELEMETRY) KV_TELEMETRY.record(kvEntry); }
     if(window.HU_REWARDS) HU_REWARDS.tick(); paint(); }
 
   /* ---------- discussion: locked until you have answered */

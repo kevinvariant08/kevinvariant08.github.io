@@ -198,7 +198,7 @@
   function typeset(el){ if(window.MathJax&&MathJax.typesetPromise) MathJax.typesetPromise([el]).catch(function(){}); }
   function band(r){ return r<6?'var(--aqua)':r<7.5?'var(--saffron)':'var(--rose)'; }
   function clamp(x,a,b){ return Math.max(a,Math.min(b,x)); }
-  function logAnswer(q,chosen,secs,mode){ var L=load('hu_drill_log',[]); L.push({t:Date.now(),id:q.id,paper:q.paper,correct:chosen===q.ans,chosen:chosen,secs:Math.round(secs),mode:mode,tags:q.tags}); save('hu_drill_log',L.slice(-2000)); }
+  function logAnswer(q,chosen,secs,mode){ var L=load('hu_drill_log',[]); var kvEntry={t:Date.now(),id:q.id,paper:q.paper,correct:chosen===q.ans,chosen:chosen,secs:Math.round(secs),mode:mode,tags:q.tags}; L.push(kvEntry); save('hu_drill_log',L.slice(-2000)); if(window.KV_TELEMETRY) KV_TELEMETRY.record(kvEntry); }
   var reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   /* ------------------------------------------------------------ sound */

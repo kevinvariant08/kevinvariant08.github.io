@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Privacy | Kevinvariant</title>
+  <meta name="description" content="What Kevinvariant stores, what it shares anonymously if you agree, and how to switch sharing off or delete it.">
+  <link rel="icon" href="/favicon.ico" sizes="32x32">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#F6F4EF">
+  <link rel="stylesheet" href="style.css?v=20261022">
+  <script>try{if(localStorage.getItem('kv_mode')==='dark')document.documentElement.setAttribute('data-mode','dark')}catch(e){}</script>
+  <style>
+    .share-box{border:1px solid var(--line);border-radius:var(--r-lg);padding:1rem 1.1rem;background:var(--surface)}
+    .share-box .acts{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:.8rem}
+    .share-state{font-weight:600}
+    dl.fields dt{font-weight:600;margin-top:.6rem}
+    dl.fields dd{margin:0 0 0 0}
+  </style>
+</head>
+<body data-theme-v2>
+  <nav id="sitenav"><div class="nav-links"><a href="index.html">Home</a> <a href="tmua.html">TMUA</a> <a href="olympiad.html">Olympiad</a> <a href="compete.html">Practise and compete</a> <a href="book.html">Book</a></div></nav>
+
+  <main class="page">
+    <header class="hub-head">
+      <span class="eyebrow">Guide</span>
+      <h1>Privacy</h1>
+      <p class="lede">If you agree, Kevinvariant shares your answers anonymously so the questions can be rated fairly. You can practise either way. This page explains exactly what that means, and what the site's other features send.</p>
+      <ul class="jump">
+        <li><a href="#choice">Your choice</a></li>
+        <li><a href="#what">What is shared</a></li>
+        <li><a href="#never">What is never collected</a></li>
+        <li><a href="#who">Who sees it</a></li>
+        <li><a href="#delete">Switching off and deleting</a></li>
+        <li><a href="#other">Accounts and other features</a></li>
+      </ul>
+    </header>
+
+    <section id="choice" aria-labelledby="choice-h">
+      <h2 id="choice-h">Your choice on this browser</h2>
+      <div class="share-box" id="share-box">
+        <p>Sharing is <span class="share-state" id="share-state">not chosen yet</span>. <span id="share-detail"></span></p>
+        <div class="acts">
+          <button type="button" class="btn" id="share-yes">Share anonymously</button>
+          <button type="button" class="btn2" id="share-no">Keep on this device</button>
+          <button type="button" class="btn2" id="share-forget">Delete what this browser shared</button>
+        </div>
+        <p id="share-msg" role="status" aria-live="polite"></p>
+      </div>
+    </section>
+
+    <section id="what" aria-labelledby="what-h">
+      <h2 id="what-h">What is shared, and why</h2>
+      <p>Smart Practice picks questions at the right level for you. To do that well it needs to know how hard each question really is, and the only fair way to find out is from how real students answer them. So, if you choose <b>Share anonymously</b>, each answer you give from then on sends these items and nothing else:</p>
+      <dl class="fields">
+        <dt>A random code</dt><dd>Made by your browser, for example <code>3f9c…</code>. It is not your name, email or account, and it is different on each device.</dd>
+        <dt>The question</dt><dd>Its id, such as <code>B1-7</code>.</dd>
+        <dt>The option you picked</dt><dd>A letter, such as C, and whether it was right.</dd>
+        <dt>How long you took</dt><dd>In whole seconds.</dd>
+        <dt>When you answered</dt><dd>The date and time.</dd>
+        <dt>Where on the site</dt><dd>For example Smart Practice, Drill or the question bank.</dd>
+      </dl>
+      <p>Answers you gave before choosing, or while sharing is off, never leave your browser.</p>
+    </section>
+
+    <section id="never" aria-labelledby="never-h">
+      <h2 id="never-h">What sharing never collects</h2>
+      <p>No names, emails, school, age, location or free text, and no link to your Kevinvariant account. Shared answers are sent without your sign-in details, so even if you are signed in they cannot be matched to your account. Sharing never stores IP addresses. The site uses no advertising or tracking cookies.</p>
+      <p>Like every website, the services that host Kevinvariant (GitHub Pages for the pages, Supabase for the database) keep short-lived technical logs of requests, which include IP addresses, for security and reliability. We do not use them.</p>
+    </section>
+
+    <section id="who" aria-labelledby="who-h">
+      <h2 id="who-h">Who sees it</h2>
+      <p>Nobody can read the shared answers from the website, including other visitors. Once a week a calibration program works out how hard each question is from all the shared answers together, and only those results (a difficulty number for each question) are published. Individual answers are never published.</p>
+      <p>The shared answers are kept while they help rate the questions. Your scores, streaks and progress stay in this browser, or in your account if you <a href="auth.html">sign in</a> to sync them; that is separate from sharing and is described on <a href="how-it-works.html#privacy">How it works</a>.</p>
+    </section>
+
+    <section id="delete" aria-labelledby="delete-h">
+      <h2 id="delete-h">Switching off and deleting</h2>
+      <p>Choose <b>Keep on this device</b> above at any time to stop sharing; you can still use everything on the site. <b>Delete what this browser shared</b> removes every answer sent with this browser's random code and gives it a new code. Because the code is random and kept only in this browser, we cannot find your answers any other way, so delete them from each device you used.</p>
+      </section>
+
+    <section id="other" aria-labelledby="other-h">
+      <h2 id="other-h">Accounts and other features</h2>
+      <p>These are separate from anonymous sharing, and each is optional.</p>
+      <dl class="fields">
+        <dt>Accounts</dt><dd>If you <a href="auth.html">create an account</a>, your email address is used to sign you in, and your progress, coins and unlocks are saved to it so they follow you between devices. Your email is never shown to other visitors.</dd>
+        <dt>Leaderboard</dt><dd>Only if you switch it on: your display name, title and points appear on the leaderboard. If you do not choose a display name, the part of your email address before the @ is used, so choose one.</dd>
+        <dt>Results</dt><dd>If you log a paper score, only the paper and the score are added to an anonymous tally. To stop spam, a counter tied to your internet connection's IP address is kept for about a day, then deleted automatically.</dd>
+        <dt>Mock interviews</dt><dd>What you type is sent to an AI model (run by Cloudflare, or another AI provider) to write the interviewer's replies. We do not keep it, but do not type personal details. A similar day-long counter tied to your IP address limits how many interviews each connection can start.</dd>
+      </dl>
+    </section>
+
+    <section aria-labelledby="contact-h">
+      <h2 id="contact-h">Questions</h2>
+      <p>Questions about privacy: message <a href="https://www.instagram.com/kevinvariant/" target="_blank" rel="noopener">@kevinvariant</a>. Last updated 24 October 2026.</p>
+    </section>
+  </main>
+
+<script src="site.js?v=20261022"></script>
+<script>
+(function(){
+  function ready(f){ if(window.KV_TELEMETRY) return f(window.KV_TELEMETRY); var n=0, t=setInterval(function(){ if(window.KV_TELEMETRY||++n>100){ clearInterval(t); if(window.KV_TELEMETRY) f(window.KV_TELEMETRY); } },100); }
+  var state=document.getElementById('share-state'), detail=document.getElementById('share-detail'), msg=document.getElementById('share-msg');
+  function paint(T){
+    var c=T.choice();
+    state.textContent=!c?'not chosen yet':c.choice==='yes'?'on':'off';
+    detail.textContent=!c?'Nothing has been shared.':c.choice==='yes'
+      ?'New answers are shared anonymously'+(T.pending()?' ('+T.pending()+' waiting to send).':'.')
+      :'Your answers stay on this device.';
+  }
+  ready(function(T){
+    paint(T);
+    document.getElementById('share-yes').addEventListener('click',function(){ T.setChoice('yes'); msg.textContent='Sharing is on. Thank you.'; paint(T); });
+    document.getElementById('share-no').addEventListener('click',function(){ T.setChoice('no'); msg.textContent='Sharing is off. Nothing more will be sent.'; paint(T); });
+    document.getElementById('share-forget').addEventListener('click',function(){
+      if(!T.choice()){ msg.textContent='This browser has not shared anything.'; return; }
+      msg.textContent='Deleting...';
+      T.forget().then(function(r){ msg.textContent=r&&r.ok?'Deleted '+(r.deleted||0)+' shared answers. This browser now has a new random code.':'Could not delete right now. Please try again later.'; paint(T); })
+        .catch(function(){ msg.textContent='Could not reach the server. Please try again later.'; });
+    });
+  });
+})();
+</script>
+</body>
+</html>

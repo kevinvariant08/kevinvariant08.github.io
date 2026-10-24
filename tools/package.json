@@ -1,0 +1,7 @@
+{
+  "private": true,
+  "description": "Test-only dependencies for tools/ (not used by the website).",
+  "devDependencies": {
+    "@electric-sql/pglite": "0.3.16"
+  }
+}

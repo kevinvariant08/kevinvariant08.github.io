@@ -33,8 +33,8 @@
     +'<div><b>TMUA</b><a href="tmua.html">Mock sets</a><a href="drill.html">Drill</a><a href="bank.html">Question bank</a><a href="techniques.html">Technique index</a></div>'
     +'<div><b>Olympiad</b><a href="olympiad.html">Papers and solutions</a><a href="geometry.html">Geometry Lab</a><a href="sandbox.html">Conjecture sandbox</a><a href="marker.html">Proof marker</a></div>'
     +'<div><b>Practise and compete</b><a href="arena.html">Arena</a><a href="qotw.html">Problem of the week</a><a href="rewards.html">Rewards</a><a href="progress.html">My progress</a></div>'
-    +'<div><b>About</b><a href="how-it-works.html">How it works</a><a href="how-it-works.html#difficulty">Difficulty scale</a><a href="how-it-works.html#access">Free and locked papers</a><a href="book.html">Beyond the Incenter</a></div>'
-    +'</div><p>Kevinvariant: free TMUA and olympiad preparation. Scores and progress stay in your browser unless you sign in to sync them.</p>';
+    +'<div><b>About</b><a href="how-it-works.html">How it works</a><a href="how-it-works.html#difficulty">Difficulty scale</a><a href="how-it-works.html#access">Free and locked papers</a><a href="book.html">Beyond the Incenter</a><a href="privacy.html">Privacy</a></div>'
+    +'</div><p>Kevinvariant: free TMUA and olympiad preparation. Scores and progress stay in your browser unless you sign in to sync them, or choose to share answers anonymously (<a href="privacy.html">privacy note</a>).</p>';
   var here=(location.pathname.split('/').pop()||'index.html').toLowerCase();
   var MOON='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>',
       SUN='<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>';
@@ -111,6 +111,7 @@
     /* one footer for every page; a page can opt out with <body data-nofoot> */
     if(!document.querySelector('.site-foot')&&!document.body.hasAttribute('data-nofoot')){ var f=document.createElement('footer'); f.className='site-foot'; f.innerHTML=FOOT; document.body.appendChild(f); }
     loadAccounts(); loadRewards();
+    loadScript('telemetry.js?v=20261024').catch(function(){});
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init); else init();
 })();
