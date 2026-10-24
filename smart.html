@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Smart Practice | Kevinvariant</title>
+  <meta name="description" content="Adaptive TMUA practice: each question is chosen to suit your level, with an ability estimate and topic strengths at the end.">
+  <link rel="icon" href="/favicon.ico" sizes="32x32">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#F6F4EF">
+  <link rel="stylesheet" href="style.css?v=20261024">
+  <script>try{if(localStorage.getItem('kv_mode')==='dark')document.documentElement.setAttribute('data-mode','dark')}catch(e){}</script>
+  <script>window.MathJax={tex:{inlineMath:[['$','$']],displayMath:[['\\[','\\]']],processEscapes:true},options:{skipHtmlTags:['script','noscript','style','textarea','pre']}};</script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js" async></script>
+  <style>
+    .sp{max-width:52rem}
+    .card{border:1px solid var(--line);border-radius:var(--r-lg);background:var(--surface);padding:1.2rem 1.3rem;margin:1.2rem 0}
+    .choices{display:flex;flex-wrap:wrap;gap:.5rem;margin:.4rem 0 1rem}
+    .choices label{display:flex;align-items:center;gap:.45rem;border:1px solid var(--line);border-radius:999px;padding:.4rem .9rem;cursor:pointer;background:var(--bg-deep)}
+    .choices input{accent-color:var(--ink)}
+    .choices label:has(input:checked){border-color:var(--ink);font-weight:600}
+    .choices label:focus-within{outline:2px solid var(--ink);outline-offset:2px}
+    fieldset{border:0;padding:0;margin:0}
+    legend{font-weight:600;margin-bottom:.2rem}
+    .muted{color:var(--ink-faint);font-size:.92rem}
+    .bar{display:flex;justify-content:space-between;gap:1rem;align-items:center;color:var(--ink-faint);font-size:.9rem;margin-bottom:.6rem}
+    .qtext{font-family:var(--serif);font-size:1.06rem;line-height:1.7}
+    .qtext .c{text-align:center;margin:.6rem 0}
+    .qtext ol.stmts{margin:.4rem 0 .4rem 1.6rem;list-style-type:upper-roman;padding-left:1.2rem}
+    .opts{list-style:none;padding:0;margin:.9rem 0 0;display:grid;gap:.4rem}
+    .opt{display:flex;gap:.9rem;align-items:baseline;width:100%;text-align:left;font-family:var(--serif);font-size:1.02rem;background:var(--bg-deep);color:var(--ink);border:1px solid var(--line-soft);border-radius:12px;padding:.65rem .9rem;cursor:pointer;min-height:44px}
+    .opt:hover{border-color:var(--ink-soft)}
+    .opt:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+    .opt .L{font-family:var(--display);font-weight:700;color:var(--ink-faint);min-width:1.1rem}
+    .opt.right{border-color:var(--mint);background:var(--mint-wash)} .opt.wrong{border-color:var(--rose);background:var(--rose-wash)}
+    .opt[disabled]{cursor:default}
+    .verdict{font-weight:700;margin:1rem 0 .4rem}
+    .verdict.ok{color:var(--mint)} .verdict.bad{color:var(--rose)}
+    .sol{font-family:var(--serif);line-height:1.7;border-top:1px solid var(--line-soft);margin-top:.6rem;padding-top:.6rem}
+    .acts{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:1rem}
+    .big{font-size:2rem;font-weight:800;line-height:1.1}
+    .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(12rem,1fr));gap:1rem}
+    .stats>div{border:1px solid var(--line-soft);border-radius:12px;padding:.8rem 1rem;background:var(--bg-deep)}
+    .topics{width:100%;border-collapse:collapse;margin-top:.6rem;font-size:.95rem}
+    .topics th,.topics td{text-align:left;padding:.45rem .3rem;border-bottom:1px solid var(--line-soft)}
+    .topics td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
+    .meter{position:relative;height:8px;border-radius:4px;background:var(--line-soft);min-width:5rem}
+    .meter i{position:absolute;top:0;bottom:0;border-radius:4px}
+    .chart svg{width:100%;height:auto;display:block}
+    .chart text{fill:var(--ink-faint);font-size:11px;font-family:var(--display)}
+    #done-h:focus{outline:none}
+    .kbd{font-family:var(--display);border:1px solid var(--line);border-radius:5px;padding:0 .3rem;font-size:.85em}
+  </style>
+</head>
+<body data-theme-v2>
+  <nav id="sitenav"><div class="nav-links"><a href="index.html">Home</a> <a href="tmua.html">TMUA</a> <a href="olympiad.html">Olympiad</a> <a href="compete.html">Practise and compete</a> <a href="book.html">Book</a></div></nav>
+
+  <main class="page sp" data-sec="tmua">
+    <header class="hub-head">
+      <span class="eyebrow">TMUA</span>
+      <h1>Smart Practice</h1>
+      <p class="lede">Each question is chosen to suit your level as it changes, rotating through topics. At the end you get an estimate of your level, your strongest and weakest topics, and what to practise next.</p>
+    </header>
+
+    <section id="setup" class="card" aria-labelledby="setup-h">
+      <h2 id="setup-h" class="visually-hidden">Start a session</h2>
+      <fieldset><legend>Paper</legend>
+        <div class="choices">
+          <label><input type="radio" name="paper" value="mix" checked> Mixed</label>
+          <label><input type="radio" name="paper" value="1"> Paper 1: knowledge</label>
+          <label><input type="radio" name="paper" value="2"> Paper 2: reasoning</label>
+        </div></fieldset>
+      <fieldset><legend>Length</legend>
+        <div class="choices">
+          <label><input type="radio" name="len" value="10" checked> 10 questions</label>
+          <label><input type="radio" name="len" value="20"> 20 questions</label>
+          <label><input type="radio" name="len" value="0"> Until I stop</label>
+        </div></fieldset>
+      <fieldset id="focus-wrap" hidden><legend>Focus</legend>
+        <div class="choices"><label><input type="checkbox" id="focus"> <span id="focus-label"></span></label></div></fieldset>
+      <div class="acts"><button type="button" class="btn" id="start" disabled>Loading questions...</button></div>
+      <p class="muted" id="pool-note" aria-live="polite"></p>
+    </section>
+
+    <section id="play" class="card" hidden aria-labelledby="qhead">
+      <div class="bar"><span id="qhead"></span><button type="button" class="btn ghost" id="stop">Finish now</button></div>
+      <div class="qtext" id="qtext"></div>
+      <ul class="opts" id="opts" role="group" aria-label="Options"></ul>
+      <div id="after" hidden>
+        <p class="verdict" id="verdict" role="status" aria-live="polite"></p>
+        <details class="sol-wrap" id="sol-wrap" open><summary>Worked solution</summary><div class="sol" id="sol"></div></details>
+        <div class="acts"><button type="button" class="btn" id="next">Next question</button></div>
+      </div>
+      <p class="muted">Keys: <span class="kbd">A</span> to <span class="kbd">F</span> or <span class="kbd">1</span> to <span class="kbd">6</span> to answer, <span class="kbd">Enter</span> for the next question.</p>
+    </section>
+
+    <section id="done" class="card" hidden aria-labelledby="done-h">
+      <h2 id="done-h">Your session</h2>
+      <div class="stats">
+        <div><div class="muted">Level</div><div class="big" id="s-level"></div><div class="muted" id="s-pct"></div></div>
+        <div><div class="muted">TMUA score, rough estimate</div><div class="big" id="s-tmua"></div><div class="muted" id="s-range"></div></div>
+        <div><div class="muted">Right</div><div class="big" id="s-right"></div><div class="muted" id="s-time"></div></div>
+      </div>
+      <p class="muted" id="s-caveat"></p>
+      <h3>Topics</h3>
+      <p class="muted">Compared with what someone at your level would usually score on the same questions.</p>
+      <table class="topics" id="s-topics"><thead><tr><th scope="col">Topic</th><th scope="col">Right</th><th scope="col">Against expectation</th></tr></thead><tbody></tbody></table>
+      <p id="s-suggest"></p>
+      <div class="acts"><button type="button" class="btn" id="again">Start another session</button><a class="btn ghost" href="review.html">Review mistakes</a></div>
+    </section>
+
+    <section class="card chart" id="history" hidden aria-labelledby="hist-h">
+      <h2 id="hist-h">Your progress</h2>
+      <p class="muted">Estimated level after each session (dots), with the likely range shaded. Stored only in this browser.</p>
+      <div id="hist-chart"></div>
+    </section>
+
+    <section aria-labelledby="how-h">
+      <h2 id="how-h">How it works</h2>
+      <p>Smart Practice uses item response theory, the standard method behind adaptive tests such as the GMAT. Every question has a difficulty, and after each answer your estimated level is updated. The next question is one that tells us most about you at that level, with topics rotated and an easier one now and then. Difficulties start from the site's ratings and are recalculated each week from answers students choose to <a href="privacy.html">share anonymously</a>, so the estimates sharpen over time.</p>
+      <p>Free questions come from Sets B to D. Papers you have <a href="how-it-works.html#access">unlocked</a> join automatically when you are signed in.</p>
+    </section>
+  </main>
+
+<script src="questions.js?v=20261024"></script>
+<script src="locks.js?v=20260929"></script>
+<script src="smart.js?v=20261024"></script>
+<script src="site.js?v=20261022"></script>
+<script>
+(function(){
+  var S=window.KV_SMART, $=function(id){ return document.getElementById(id); };
+  var TOPIC={}, bank=null, params=null, questions=(window.HU_QUESTIONS||[]).slice(), unlocked=[], scopes=[];
+  var META=(window.HU_LOCKS&&HU_LOCKS.meta)||{};
+  var sess=null, cur=null, t0=0, answeredNow=false;
+
+  function load(k,d){ try{ var v=localStorage.getItem(k); return v?JSON.parse(v):d; }catch(e){ return d; } }
+  function save(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} }
+  function esc(s){ return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+  function typeset(el){ if(window.MathJax&&MathJax.typesetPromise) MathJax.typesetPromise([el]).catch(function(){}); }
+  function rnd(){ var a=new Uint32Array(1); crypto.getRandomValues(a); return a[0]/4294967296; }
+  function allowed(p){ return !META[p]||scopes.indexOf('*')>=0||scopes.indexOf(p)>=0; }
+  function val(name){ var x=document.querySelector('input[name="'+name+'"]:checked'); return x?x.value:null; }
+  function fitted(){ return params&&params.model!=='prior'&&params.responses>0; }
+
+  function pool(){
+    var opts={allowed:allowed,paper:val('paper')};
+    var p=S.buildPool(questions.concat(unlocked),bank,params,opts);
+    if($('focus').checked&&sess0.suggest){ var f=p.filter(function(it){ return it.topic===sess0.suggest; }); if(f.length>=5) p=f; }
+    return p;
+  }
+  var sess0={suggest:null};
+  function note(){
+    var n=pool().length, extra=unlocked.length?' including '+(unlocked.length/20)+' unlocked paper'+(unlocked.length>20?'s':''):'';
+    $('pool-note').textContent=n+' questions available'+extra+'.'+(unlocked.length?'':' Sign in and unlock papers to add more.');
+  }
+
+  /* ------------------------------------------------------------ session */
+  function start(){
+    var hist=load('kv_smart_hist',[]), last=hist[hist.length-1];
+    var mu=fitted()?params.population.mean:0, sd=fitted()?params.population.sd:1;
+    if(last&&Date.now()-Date.parse(last.d)<60*86400000) mu=last.t;     /* start from where you left off */
+    var recent={}, cut=Date.now()-14*86400000;
+    load('hu_drill_log',[]).forEach(function(e){ if(e.t>cut) recent[e.id]=1; });
+    sess={pool:pool(),mu:mu,sd:sd,len:+val('len'),answered:[],log:[],recent:recent,started:Date.now()};
+    $('setup').hidden=true; $('done').hidden=true; $('play').hidden=false;
+    next();
+  }
+  function estimate(){ return S.eap(sess.answered,sess.mu,sess.sd); }
+  function next(){
+    if(sess.len&&sess.answered.length>=sess.len) return finish();
+    var ch=S.choose(sess.pool,{theta:estimate().mean,answered:sess.answered,recent:sess.recent},rnd);
+    if(!ch) return finish();
+    cur=ch.item; t0=Date.now(); answeredNow=false;
+    var q=cur.q, n=sess.answered.length+1;
+    $('qhead').textContent='Question '+n+(sess.len?' of '+sess.len:'')+' \u00b7 '+(TOPIC[cur.topic]||cur.topic);
+    $('qtext').innerHTML=q.q;
+    $('opts').innerHTML=q.opts.map(function(o,k){ var L='ABCDEFGH'[k]; return '<li><button class="opt" type="button" data-l="'+L+'"><span class="L">'+L+'</span><span>'+o+'</span></button></li>'; }).join('');
+    $('after').hidden=true;
+    $('opts').querySelectorAll('.opt').forEach(function(b){ b.addEventListener('click',function(){ answer(b.dataset.l); }); });
+    typeset($('play'));
+    var first=$('opts').querySelector('.opt'); if(first) first.focus({preventScroll:true});
+    $('play').scrollIntoView({block:'start',behavior:'smooth'});
+  }
+  function answer(L){
+    if(answeredNow||!cur) return; answeredNow=true;
+    var q=cur.q, ok=L===q.ans, secs=Math.round((Date.now()-t0)/1000);
+    $('opts').querySelectorAll('.opt').forEach(function(x){ x.disabled=true; if(x.dataset.l===q.ans) x.classList.add('right'); if(x.dataset.l===L&&!ok) x.classList.add('wrong'); });
+    sess.answered.push({item:cur,y:ok}); sess.log.push(secs);
+    var e={t:Date.now(),id:q.id,paper:q.paper,correct:ok,chosen:L,secs:secs,mode:'smart',tags:q.tags||[]};
+    var log=load('hu_drill_log',[]); log.push(e); save('hu_drill_log',log.slice(-2000));
+    if(window.KV_TELEMETRY) KV_TELEMETRY.record(e);
+    var v=$('verdict'); v.className='verdict '+(ok?'ok':'bad'); v.textContent=ok?'Correct.':'Not this one. The answer is '+q.ans+'.';
+    $('sol').innerHTML=q.sol||'<p>No worked solution for this question yet.</p>';
+    $('after').hidden=false;
+    $('next').textContent=(sess.len&&sess.answered.length>=sess.len)?'See my results':'Next question';
+    typeset($('after'));
+    $('next').focus({preventScroll:true});
+  }
+  function finish(){
+    if(!sess||!sess.answered.length){ $('play').hidden=true; $('setup').hidden=false; return; }
+    var est=estimate(), sm=S.summary(sess.answered,est,{fitted:fitted(),mean:params.population.mean,sd:params.population.sd});
+    var right=sess.answered.filter(function(r){ return r.y; }).length, mins=Math.round((Date.now()-sess.started)/60000);
+    $('s-level').textContent=sm.level;
+    $('s-pct').textContent='Around the '+ordinal(sm.percentile)+' percentile of '+sm.percentileOf;
+    $('s-tmua').textContent=sm.tmua.estimate.toFixed(1);
+    $('s-range').textContent='Likely between '+sm.tmua.low.toFixed(1)+' and '+sm.tmua.high.toFixed(1);
+    $('s-right').textContent=right+' of '+sm.n;
+    $('s-time').textContent=mins<1?'under a minute':mins+' minute'+(mins===1?'':'s');
+    $('s-caveat').textContent=sm.tmua.label+' It is based on '+sm.n+' questions'+(fitted()?'':' and on the site\u2019s difficulty ratings, which will be recalibrated as anonymous answers come in')+'. More questions narrow the range.';
+    var tb=$('s-topics').querySelector('tbody');
+    tb.innerHTML=sm.topics.slice().sort(function(a,b){ return b.residual-a.residual; }).map(function(t){
+      var x=Math.max(-1,Math.min(1,t.residual/Math.max(1,t.n/2))), w=Math.abs(x)*50, col=x>=0?'var(--mint)':'var(--rose)';
+      var bar='<div class="meter" role="img" aria-label="'+(t.residual>=0?'above':'below')+' expectation by '+Math.abs(t.residual).toFixed(1)+' questions"><i style="left:'+(x>=0?50:50-w)+'%;width:'+w+'%;background:'+col+'"></i></div>';
+      return '<tr><td>'+esc(TOPIC[t.topic]||t.topic)+'</td><td class="n">'+t.right+' of '+t.n+'</td><td>'+bar+'</td></tr>'; }).join('');
+    sess0.suggest=sm.suggest;
+    $('s-suggest').innerHTML=sm.suggest?'<b>Suggested next:</b> '+esc(TOPIC[sm.suggest]||sm.suggest)+'. Tick "Focus" when you start the next session to practise it.':'';
+    if(sm.suggest){ $('focus-wrap').hidden=false; $('focus-label').textContent='Mostly '+(TOPIC[sm.suggest]||sm.suggest)+' questions'; }
+    var hist=load('kv_smart_hist',[]); hist.push({d:new Date().toISOString(),t:+est.mean.toFixed(3),s:+est.sd.toFixed(3),n:sm.n,p:val('paper')}); save('kv_smart_hist',hist.slice(-200));
+    $('play').hidden=true; $('done').hidden=false; drawHistory();
+    $('done').scrollIntoView({block:'start',behavior:'smooth'}); $('done-h').setAttribute('tabindex','-1'); $('done-h').focus({preventScroll:true});
+    sess=null; cur=null;
+  }
+  function ordinal(n){ var s=['th','st','nd','rd'], v=n%100; return n+(s[(v-20)%10]||s[v]||s[0]); }
+
+  /* ------------------------------------------------------------ progress chart (TMUA-scale axis) */
+  function drawHistory(){
+    var h=load('kv_smart_hist',[]); if(!h.length){ $('history').hidden=true; return; }
+    $('history').hidden=false;
+    var W=640, H=220, L=40, R=12, T=12, B=28, n=h.length;
+    var x=function(i){ return n===1?L+(W-L-R)/2:L+i*(W-L-R)/(n-1); }, y=function(s){ return T+(9-s)/8*(H-T-B); };
+    var sc=function(t){ return S.tmua(t); };
+    var band=h.map(function(p,i){ return x(i)+','+y(sc(p.t+p.s)); }).join(' ')+' '+h.slice().reverse().map(function(p,j){ return x(n-1-j)+','+y(sc(p.t-p.s)); }).join(' ');
+    var grid=[2,3,4,5,6,7,8,9].map(function(s){ return '<line x1="'+L+'" x2="'+(W-R)+'" y1="'+y(s)+'" y2="'+y(s)+'" stroke="var(--line-soft)"/><text x="'+(L-8)+'" y="'+(y(s)+4)+'" text-anchor="end">'+s+'.0</text>'; }).join('');
+    var pts=h.map(function(p,i){ return '<circle cx="'+x(i)+'" cy="'+y(sc(p.t))+'" r="4" fill="var(--ink)"><title>'+p.d.slice(0,10)+': about '+sc(p.t).toFixed(1)+' ('+p.n+' questions)</title></circle>'; }).join('');
+    var line=h.map(function(p,i){ return x(i)+','+y(sc(p.t)); }).join(' ');
+    $('hist-chart').innerHTML='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Estimated TMUA level across '+n+' sessions, latest about '+sc(h[n-1].t).toFixed(1)+'">'
+      +grid+'<polygon points="'+band+'" fill="var(--aqua-wash)" stroke="none"/><polyline points="'+line+'" fill="none" stroke="var(--ink-soft)" stroke-width="1.5"/>'+pts
+      +'<text x="'+L+'" y="'+(H-8)+'">first session</text><text x="'+(W-R)+'" y="'+(H-8)+'" text-anchor="end">latest</text></svg>';
+  }
+
+  /* ------------------------------------------------------------ keys and buttons */
+  document.addEventListener('keydown',function(ev){
+    if($('play').hidden||ev.ctrlKey||ev.metaKey||ev.altKey) return;
+    var k=ev.key.toUpperCase(), i='ABCDEFGH'.indexOf(k); if(i<0&&/^[1-8]$/.test(k)) i=+k-1;
+    if(!answeredNow&&i>=0&&cur&&i<cur.q.opts.length){ ev.preventDefault(); answer('ABCDEFGH'[i]); }
+    else if(answeredNow&&ev.key==='Enter'&&document.activeElement!==$('next')){ ev.preventDefault(); next(); }
+  });
+  $('start').addEventListener('click',start);
+  $('next').addEventListener('click',next);
+  $('stop').addEventListener('click',finish);
+  $('again').addEventListener('click',function(){ $('done').hidden=true; $('setup').hidden=false; note(); $('setup').scrollIntoView({block:'start',behavior:'smooth'}); });
+  document.querySelectorAll('input[name="paper"],#focus').forEach(function(r){ r.addEventListener('change',note); });
+
+  /* ------------------------------------------------------------ data: bank, parameters, unlocked papers */
+  function json(u){ return fetch(u,{cache:'no-cache'}).then(function(r){ if(!r.ok) throw new Error(u); return r.json(); }); }
+  function timeout(p,ms){ return Promise.race([p,new Promise(function(res){ setTimeout(function(){ res(null); },ms); })]); }
+  Promise.all([json('data/item_bank.json'),json('data/item_params.json').catch(function(){ return {model:'prior',responses:0,population:{mean:0,sd:1},items:{}}; })])
+    .then(function(r){
+      bank=r[0]; params=r[1]; bank.topics.forEach(function(t){ TOPIC[t.key]=t.label; });
+      $('start').disabled=false; $('start').textContent='Start'; note(); drawHistory();
+      /* Locked papers: only those this account has unlocked, through HU_LOCKS (server-checked). */
+      return timeout(window.HU_LOCKS?HU_LOCKS.scopes().catch(function(){ return []; }):Promise.resolve([]),8000).then(function(sc){
+        scopes=sc||[]; if(!scopes.length) return;
+        return S.loadUnlocked(HU_LOCKS).then(function(qs){ unlocked=qs; note(); });
+      });
+    })
+    .catch(function(){ $('start').textContent='Could not load the questions'; $('pool-note').textContent='Check your connection and reload the page.'; });
+})();
+</script>
+</body>
+</html>

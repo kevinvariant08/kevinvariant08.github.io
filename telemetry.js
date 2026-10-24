@@ -97,7 +97,7 @@
       +'the question, the option you picked, whether it was right, how long you took and when, with a random code instead of '
       +'your name. Never your name, email or account. <a href="privacy.html">Privacy note</a></p>'
       +'<div class="kv-share-acts"><button type="button" class="btn" data-share="yes">Share anonymously</button>'
-      +'<button type="button" class="btn2" data-share="no">Keep on this device</button></div>';
+      +'<button type="button" class="btn ghost" data-share="no">Keep on this device</button></div>';
     notice.addEventListener('click',function(ev){ var v=ev.target.getAttribute&&ev.target.getAttribute('data-share'); if(v) setChoice(v); });
     document.body.appendChild(notice);
   }
