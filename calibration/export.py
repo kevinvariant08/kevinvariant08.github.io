@@ -5,7 +5,7 @@
 Uses the site's public Supabase URL and key (from auth-config.js) plus the secret calibration key, which only the
 export function accepts (see attempts.sql). Never commit the output: it holds the raw anonymous answers.
 """
-import json, os, re, sys, urllib.request
+import hashlib, json, os, re, sys, urllib.request
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PAGE = 10000
@@ -21,9 +21,11 @@ def config():
 def main():
     if len(sys.argv) != 2:
         sys.exit('usage: python calibration/export.py <output.json>')
-    secret = os.environ.get('KV_CALIBRATION_KEY', '').strip()
+    secret = os.environ.get('KV_CALIBRATION_KEY', '').strip()   # a pasted secret may carry a newline or spaces
     if not secret:
         sys.exit('Set KV_CALIBRATION_KEY first.')
+    # never print the key itself: its length and the start of its hash are enough to compare with calibration_keys
+    print(f'Calibration key: {len(secret)} characters, SHA-256 starts {hashlib.sha256(secret.encode("utf-8")).hexdigest()[:8]}')
     url, key = config()
     rows, after = [], 0
     while True:
