@@ -1,5 +1,5 @@
 # kevinvariant08.github.io
-Academic portfolio and official host of the Olympiad geometry guide "Beyond the Incenter".
+Kevinvariant: Oxbridge admissions test prep (TMUA and ESAT) and olympiad prep, and the official host of the olympiad geometry guide "Beyond the Incenter".
 
 📚 **New Book:** [Beyond the Incenter: A Modern Monograph on Olympiad Geometry](book.md)
 

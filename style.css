@@ -153,6 +153,8 @@ body:not([data-theme-v2]) main canvas,body:not([data-theme-v2]) main svg{backgro
 [data-sec="oly"],.sec-oly{--accent:var(--saffron)}
 [data-sec="play"],.sec-play{--accent:var(--rose)}
 [data-sec="book"],.sec-book{--accent:var(--mint)}
+[data-sec="esat"],.sec-esat{--accent:#6A3FB0}
+[data-mode="dark"] [data-sec="esat"],[data-mode="dark"] .sec-esat{--accent:#B9A2FF}
 
 .page{max-width:74rem;margin:0 auto;padding:0 1.4rem 4rem}
 .page>section{margin-top:3rem}
@@ -240,7 +242,7 @@ body:not([data-theme-v2]) main canvas,body:not([data-theme-v2]) main svg{backgro
 .page .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
 
 /* footer, injected by site.js on every page */
-.site-foot .foot-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1.4rem;margin-bottom:1.4rem}
+.site-foot .foot-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(9.5rem,1fr));gap:1.4rem;margin-bottom:1.4rem}
 .site-foot .foot-grid div{display:flex;flex-direction:column;gap:.15rem}
 .site-foot .foot-grid b{color:var(--ink);font-size:.92rem;margin-bottom:.2rem}
 .site-foot .foot-grid a{text-decoration:none;padding:.15rem 0}

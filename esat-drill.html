@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ESAT Drill | Kevinvariant</title>
+  <meta name="description" content="Sit original ESAT Mathematics 1 and Mathematics 2 mock papers under exam conditions: 27 questions in 40 minutes, no calculator, with full worked solutions.">
+  <link rel="icon" href="/favicon.ico" sizes="32x32">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#F6F4EF">
+  <link rel="stylesheet" href="style.css?v=20261029">
+  <script>try{if(localStorage.getItem('kv_mode')==='dark')document.documentElement.setAttribute('data-mode','dark')}catch(e){}</script>
+  <script>window.MathJax={tex:{inlineMath:[['$','$']],displayMath:[['\\[','\\]']],processEscapes:true},options:{skipHtmlTags:['script','noscript','style','textarea','pre']}};</script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js" async></script>
+  <style>
+    .ed{font-family:var(--display);color:var(--ink);line-height:1.55}
+    .ed h2{font-family:var(--serif);font-weight:600}
+    .ed p{max-width:70ch}
+    .ed .hidden{display:none!important}
+    .ed .btn2{font-family:var(--display);font-size:.95rem;font-weight:500;color:var(--ink);background:transparent;border:1px solid var(--ink);border-radius:var(--r-sm);padding:.55rem 1.05rem;cursor:pointer;min-height:44px}
+    .ed .btn2:hover{background:var(--ink);color:var(--on-accent)}
+    .ed .btn2.quiet{border-color:var(--line);color:var(--ink-soft);font-weight:400}
+    .ed .btn2.quiet:hover{background:transparent;border-color:var(--ink);color:var(--ink)}
+    .ed .erow{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;margin-top:.9rem}
+    .ed .modes{display:grid;grid-template-columns:repeat(auto-fit,minmax(16rem,1fr));gap:1rem;margin:1.4rem 0}
+    .ed .mode{border:1px solid var(--line);border-radius:var(--r-md);background:var(--surface);padding:1.1rem 1.2rem;display:flex;flex-direction:column;gap:.55rem}
+    .ed .mode h3{margin:0;font-size:1.1rem}
+    .ed .mode p{font-size:.93rem;color:var(--ink-soft);margin:0}
+    .ed label.lab{display:flex;flex-direction:column;gap:.25rem;font-size:.9rem;color:var(--ink-soft)}
+    .ed select{font-family:var(--display);font-size:.95rem;padding:.5rem .6rem;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--bg-deep);color:var(--ink);min-height:44px}
+    .ed .tally{color:var(--ink-faint);font-size:.88rem}
+    .ed .chips{display:flex;flex-wrap:wrap;gap:.4rem}
+    .ed .chips button{font:inherit;font-size:.88rem;border:1px solid var(--line);background:var(--bg-deep);color:var(--ink-soft);border-radius:999px;padding:.35rem .8rem;cursor:pointer;min-height:36px}
+    .ed .chips button[aria-pressed="true"]{border-color:var(--aqua);color:var(--aqua);background:var(--aqua-wash);font-weight:600}
+    .ed .clockrow{display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;border-top:2px solid var(--ink);border-bottom:1px solid var(--line);padding:.7rem 0;margin-bottom:1rem}
+    .ed #clock{font-family:var(--heading);font-size:1.9rem;font-weight:600;font-variant-numeric:tabular-nums;line-height:1.1}
+    .ed #clock.low{color:var(--rose)}
+    .ed .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(2.6rem,1fr));gap:.35rem;margin:0 0 1.1rem}
+    .ed .grid button{font:inherit;font-size:.9rem;min-height:2.6rem;border:1px solid var(--line);background:var(--bg-deep);color:var(--ink-soft);border-radius:var(--r-sm);cursor:pointer;position:relative}
+    .ed .grid button.ans{background:var(--aqua-wash);border-color:var(--aqua);color:var(--ink)}
+    .ed .grid button.cur{outline:2px solid var(--ink);outline-offset:1px}
+    .ed .grid button.flag::after{content:"";position:absolute;top:3px;right:3px;width:7px;height:7px;border-radius:50%;background:var(--saffron)}
+    .ed .grid button.right{background:var(--mint-wash);border-color:var(--mint);color:var(--ink)}
+    .ed .grid button.wrong{background:var(--rose-wash);border-color:var(--rose);color:var(--ink)}
+    .ed .qhead{font-weight:600;margin:.2rem 0 .4rem;display:flex;gap:.8rem;align-items:baseline;flex-wrap:wrap}
+    .ed .qbox{font-size:1.04rem;overflow-x:auto}
+    .ed .qbox ol.stmts{margin:.5rem 0 .5rem 1.4rem}
+    .ed ul.opts{list-style:none;padding:0;margin:1rem 0;display:grid;gap:.45rem}
+    .ed ul.opts button{width:100%;text-align:left;font:inherit;display:flex;gap:.8rem;align-items:baseline;padding:.6rem .85rem;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--surface);color:var(--ink);cursor:pointer;min-height:44px}
+    .ed ul.opts button:hover{border-color:var(--ink-soft)}
+    .ed ul.opts button[aria-pressed="true"]{border-color:var(--aqua);background:var(--aqua-wash)}
+    .ed ul.opts button.right{border-color:var(--mint);background:var(--mint-wash)}
+    .ed ul.opts button.wrong{border-color:var(--rose);background:var(--rose-wash)}
+    .ed ul.opts b{min-width:1.2rem}
+    .ed .sol{border-left:3px solid var(--aqua);background:var(--surface);padding:.8rem 1rem;margin:1rem 0;border-radius:0 var(--r-sm) var(--r-sm) 0}
+    .ed .confirm{border:1px solid var(--rose);background:var(--rose-wash);border-radius:var(--r-md);padding:1rem 1.2rem;margin:1rem 0}
+    .ed .scorebig{font-family:var(--heading);font-size:2.6rem;font-weight:600;line-height:1}
+    .ed table.res{border-collapse:collapse;width:100%;font-size:.92rem;margin:1rem 0}
+    .ed table.res th,.ed table.res td{border-bottom:1px solid var(--line-soft);padding:.4rem .5rem;text-align:left}
+    .ed .best{margin:.2rem 0 0}
+  </style>
+</head>
+<body data-theme-v2>
+  <nav id="sitenav"><div class="nav-links"><a href="index.html">Home</a> <a href="tmua.html">TMUA</a> <a href="esat.html">ESAT</a> <a href="olympiad.html">Olympiad</a> <a href="compete.html">Practise and compete</a> <a href="book.html">Book</a></div></nav>
+
+  <main class="page ed" data-sec="esat">
+    <section id="menu">
+      <header class="hub-head">
+        <span class="eyebrow">ESAT</span>
+        <h1>ESAT Drill</h1>
+        <p class="lede">Sit an ESAT mathematics module the way the real test runs it: 27 questions, 40 minutes, no calculator, nothing marked until you submit. Then go through every question with its worked solution.</p>
+      </header>
+      <div class="modes">
+        <div class="mode">
+          <h3>Full module, timed</h3>
+          <p>An answer grid you can jump around, a flag for questions to come back to, and a clock. Your best standard-time score for each paper is kept in this browser.</p>
+          <label class="lab" for="paper">Paper
+            <select id="paper"></select>
+          </label>
+          <label class="lab" for="timing">Time allowed
+            <select id="timing"><option value="2400" selected>Standard: 40:00</option><option value="3000">+25%: 50:00</option><option value="3600">+50%: 60:00</option><option value="0">Untimed</option></select>
+          </label>
+          <div class="erow"><button class="btn2" id="startPaper" type="button">Start</button></div>
+          <p class="tally best" id="best"></p>
+        </div>
+        <div class="mode">
+          <h3>Practise by topic</h3>
+          <p>Choose topics; questions come one at a time with the answer and the worked solution straight after each. Untimed.</p>
+          <div class="chips" id="topics" role="group" aria-label="Topics"></div>
+          <div class="erow"><button class="btn2" id="startTopic" type="button">Start</button><span class="tally" id="topiccount"></span></div>
+        </div>
+      </div>
+      <p class="tally">The papers are original and written for this site. Choose a paper on the <a href="esat.html">ESAT page</a> to download it as a PDF instead.</p>
+    </section>
+
+    <section id="stage" class="hidden" aria-live="polite">
+      <div class="clockrow">
+        <div><span class="tally" id="modelabel"></span><div id="clock" role="timer">40:00</div></div>
+        <div class="erow" style="margin:0"><button class="btn2 quiet" id="flag" type="button">Flag</button><button class="btn2" id="submit" type="button">Submit</button><button class="btn2 quiet hidden" id="quit" type="button">Back to menu</button></div>
+      </div>
+      <div id="confirmbox" class="confirm hidden" role="alertdialog" aria-labelledby="confirmtitle">
+        <p id="confirmtitle" style="margin:0 0 .4rem"><b>Submit the paper?</b> <span id="confirmnote"></span></p>
+        <div class="erow" style="margin-top:.4rem"><button class="btn2" id="confirmYes" type="button">Submit and mark</button><button class="btn2 quiet" id="confirmNo" type="button">Keep going</button></div>
+      </div>
+      <div class="grid" id="grid"></div>
+      <p class="qhead" id="qhead"></p>
+      <div class="qbox" id="qbox"></div>
+      <ul class="opts" id="opts"></ul>
+      <div id="fb"></div>
+      <div class="erow"><button class="btn2 quiet" id="prev" type="button">Previous</button><button class="btn2" id="next" type="button">Next</button></div>
+    </section>
+
+    <section id="results" class="hidden">
+      <h2>Your result</h2>
+      <p><span class="scorebig" id="score"></span> <span class="tally" id="scorenote"></span></p>
+      <p class="tally">Select a question in the grid below to see the options you chose and the worked solution.</p>
+      <div class="grid" id="rgrid"></div>
+      <table class="res" id="topictable"></table>
+      <div class="erow"><button class="btn2" id="again" type="button">Back to menu</button><a class="btn2 quiet" href="esat.html" style="text-decoration:none">ESAT page</a></div>
+    </section>
+  </main>
+
+  <script src="esat-questions.js?v=20261024"></script>
+  <script>
+  (function(){
+    var Q=window.HU_ESAT||[], PAPERS=window.HU_ESAT_PAPERS||{}, TOPICS=window.HU_ESAT_TOPICS||{};
+    var $=function(id){return document.getElementById(id);};
+    var L='ABCDEFGH';
+    function store(k,v){ try{ if(v===undefined) return JSON.parse(localStorage.getItem(k)||'null'); localStorage.setItem(k,JSON.stringify(v)); }catch(e){ return null; } }
+    function typeset(el){ if(window.MathJax&&MathJax.typesetPromise){ MathJax.typesetPromise([el]).catch(function(){}); } else { setTimeout(function(){ typeset(el); },300); } }
+    function fmt(s){ s=Math.max(0,Math.round(s)); var m=Math.floor(s/60), r=s%60; return m+':'+(r<10?'0':'')+r; }
+
+    /* menu */
+    var sel=$('paper');
+    Object.keys(PAPERS).forEach(function(p){ var o=document.createElement('option'); o.value=p; o.textContent=PAPERS[p].title+(PAPERS[p].rating?', difficulty '+PAPERS[p].rating:''); sel.appendChild(o); });
+    var want=new URLSearchParams(location.search).get('paper'); if(want&&PAPERS[want]) sel.value=want;
+    function showBest(){ var b=store('kv_esat_best')||{}, p=sel.value; $('best').textContent=b[p]!=null?'Your best standard-time score on this paper: '+b[p]+' / '+PAPERS[p].questions+'.':''; }
+    sel.addEventListener('change',showBest); showBest();
+    var picked={};
+    Object.keys(TOPICS).forEach(function(t){
+      var b=document.createElement('button'); b.type='button'; b.textContent=TOPICS[t]; b.setAttribute('aria-pressed','false');
+      b.addEventListener('click',function(){ picked[t]=!picked[t]; b.setAttribute('aria-pressed',picked[t]?'true':'false'); countTopic(); });
+      $('topics').appendChild(b);
+    });
+    function topicPool(){ var on=Object.keys(picked).filter(function(t){return picked[t];}); return Q.filter(function(q){ return !on.length||q.tags.some(function(t){return on.indexOf(t)>=0;}); }); }
+    function countTopic(){ var n=topicPool().length; $('topiccount').textContent=n+' question'+(n===1?'':'s'); }
+    countTopic();
+
+    /* state */
+    var S=null, timer=null;
+    function start(list,mode,limit,label,paper){
+      S={list:list,mode:mode,limit:limit,label:label,paper:paper,i:0,ans:{},flag:{},checked:{},t0:Date.now(),done:false};
+      $('menu').classList.add('hidden'); $('results').classList.add('hidden'); $('stage').classList.remove('hidden');
+      $('modelabel').textContent=label;
+      $('submit').classList.toggle('hidden',mode!=='paper'); $('flag').classList.toggle('hidden',mode!=='paper'); $('quit').classList.toggle('hidden',mode==='paper');
+      $('grid').classList.toggle('hidden',mode!=='paper');
+      buildGrid($('grid'),false); show(0); tick();
+      clearInterval(timer); timer=setInterval(tick,500);
+      window.scrollTo(0,0);
+    }
+    function elapsed(){ return (Date.now()-S.t0)/1000; }
+    function tick(){
+      if(!S||S.done) return;
+      if(S.mode!=='paper'||!S.limit){ $('clock').textContent=fmt(elapsed()); $('clock').classList.remove('low'); return; }
+      var left=S.limit-elapsed(); $('clock').textContent=fmt(left); $('clock').classList.toggle('low',left<300);
+      if(left<=0) finish(true);
+    }
+    function buildGrid(g,review){
+      g.innerHTML='';
+      S.list.forEach(function(q,k){
+        var b=document.createElement('button'); b.type='button'; b.textContent=k+1;
+        b.setAttribute('aria-label','Question '+(k+1));
+        b.addEventListener('click',function(){ if(review) reviewQ(k); else show(k); });
+        g.appendChild(b);
+      });
+      paintGrid(g,review);
+    }
+    function paintGrid(g,review){
+      Array.prototype.forEach.call(g.children,function(b,k){
+        var q=S.list[k];
+        b.className='';
+        if(review){ b.classList.add(S.ans[q.id]===q.ans?'right':'wrong'); }
+        else { if(S.ans[q.id]) b.classList.add('ans'); if(S.flag[q.id]) b.classList.add('flag'); if(k===S.i) b.classList.add('cur'); }
+      });
+    }
+    function show(k){
+      S.i=k; var q=S.list[k];
+      $('qhead').innerHTML='<span>Question '+(k+1)+' of '+S.list.length+'</span>'+(S.mode!=='paper'?'<span class="tally">'+PAPERS[q.paper].title+', question '+q.n+'</span>':'');
+      $('qbox').innerHTML=q.q;
+      var ul=$('opts'); ul.innerHTML='';
+      q.opts.forEach(function(o,j){
+        var li=document.createElement('li'), b=document.createElement('button'); b.type='button';
+        b.innerHTML='<b>'+L[j]+'</b><span>'+o+'</span>';
+        b.setAttribute('aria-pressed',S.ans[q.id]===L[j]?'true':'false');
+        b.addEventListener('click',function(){ choose(q,L[j]); });
+        li.appendChild(b); ul.appendChild(li);
+      });
+      $('fb').innerHTML='';
+      if(S.mode!=='paper'&&S.checked[q.id]) feedback(q);
+      $('prev').disabled=k===0; $('next').textContent=(k===S.list.length-1)?(S.mode==='paper'?'Review grid':'Finish'):'Next';
+      $('flag').textContent=S.flag[q.id]?'Unflag':'Flag';
+      paintGrid($('grid'),false);
+      typeset($('stage'));
+    }
+    function choose(q,letter){
+      if(S.mode!=='paper'&&S.checked[q.id]) return;
+      S.ans[q.id]=letter;
+      if(S.mode!=='paper'){ S.checked[q.id]=true; }
+      show(S.i);
+    }
+    function feedback(q){
+      var mine=S.ans[q.id];
+      Array.prototype.forEach.call($('opts').querySelectorAll('button'),function(b,j){ if(L[j]===q.ans) b.classList.add('right'); else if(L[j]===mine) b.classList.add('wrong'); });
+      $('fb').innerHTML='<p><b>'+(mine===q.ans?'Correct.':'Not quite: the answer is '+q.ans+'.')+'</b></p><div class="sol">'+q.sol+'</div>';
+    }
+    $('prev').addEventListener('click',function(){ if(S.i>0) show(S.i-1); });
+    $('next').addEventListener('click',function(){
+      if(S.i<S.list.length-1) return show(S.i+1);
+      if(S.mode==='paper'){ $('grid').scrollIntoView({behavior:'smooth'}); } else finishTopic();
+    });
+    $('flag').addEventListener('click',function(){ var q=S.list[S.i]; S.flag[q.id]=!S.flag[q.id]; show(S.i); });
+    $('submit').addEventListener('click',function(){
+      var blank=S.list.filter(function(q){return !S.ans[q.id];}).length, fl=S.list.filter(function(q){return S.flag[q.id];}).length;
+      $('confirmnote').textContent=(blank?blank+' unanswered. ':'All answered. ')+(fl?fl+' flagged. ':'')+'There is no penalty for wrong answers.';
+      $('confirmbox').classList.remove('hidden'); $('confirmYes').focus();
+    });
+    $('confirmNo').addEventListener('click',function(){ $('confirmbox').classList.add('hidden'); });
+    $('confirmYes').addEventListener('click',function(){ $('confirmbox').classList.add('hidden'); finish(false); });
+    $('quit').addEventListener('click',function(){ finishTopic(); });
+
+    function finish(timeUp){
+      S.done=true; clearInterval(timer);
+      var right=S.list.filter(function(q){return S.ans[q.id]===q.ans;}).length, n=S.list.length, used=elapsed();
+      $('stage').classList.add('hidden'); $('results').classList.remove('hidden');
+      $('score').textContent=right+' / '+n;
+      var note=(timeUp?'Time ran out. ':'')+'Time used: '+fmt(Math.min(used,S.limit||used))+'.';
+      if(S.limit===2400){ var b=store('kv_esat_best')||{}; if(b[S.paper]==null||right>b[S.paper]){ b[S.paper]=right; store('kv_esat_best',b); note+=' A new best for this paper.'; } }
+      else note+=' Non-standard timing, so this is not counted as your best.';
+      var h=store('kv_esat_history')||[]; h.push({paper:S.paper,score:right,of:n,secs:Math.round(used),limit:S.limit,at:new Date().toISOString()}); store('kv_esat_history',h.slice(-200));
+      $('scorenote').textContent=note;
+      var by={}; S.list.forEach(function(q){ q.tags.forEach(function(t){ by[t]=by[t]||[0,0]; by[t][1]++; if(S.ans[q.id]===q.ans) by[t][0]++; }); });
+      $('topictable').innerHTML='<thead><tr><th scope="col">Topic</th><th scope="col">Correct</th></tr></thead><tbody>'+Object.keys(by).map(function(t){ return '<tr><td>'+(TOPICS[t]||t)+'</td><td>'+by[t][0]+' / '+by[t][1]+'</td></tr>'; }).join('')+'</tbody>';
+      buildGrid($('rgrid'),true);
+      var box=document.createElement('div'); box.id='rbox'; $('rgrid').after(box);
+      reviewQ(0);
+      window.scrollTo(0,0);
+    }
+    function reviewQ(k){
+      var q=S.list[k], mine=S.ans[q.id], box=$('rbox');
+      box.innerHTML='<p class="qhead">Question '+(k+1)+'<span class="tally">'+(mine?(mine===q.ans?'You answered '+mine+': correct.':'You answered '+mine+'; the answer is '+q.ans+'.'):'Not answered; the answer is '+q.ans+'.')+'</span></p><div class="qbox">'+q.q+'</div><ul class="opts">'+q.opts.map(function(o,j){ var c=L[j]===q.ans?' class="right"':(L[j]===mine?' class="wrong"':''); return '<li><button type="button" disabled'+c+'><b>'+L[j]+'</b><span>'+o+'</span></button></li>'; }).join('')+'</ul><div class="sol">'+q.sol+'</div>';
+      Array.prototype.forEach.call($('rgrid').children,function(b,j){ b.classList.toggle('cur',j===k); });
+      typeset(box);
+    }
+    function finishTopic(){
+      S.done=true; clearInterval(timer);
+      var tried=S.list.filter(function(q){return S.checked[q.id];}), right=tried.filter(function(q){return S.ans[q.id]===q.ans;}).length;
+      $('stage').classList.add('hidden'); $('menu').classList.remove('hidden');
+      $('topiccount').textContent='Last session: '+right+' / '+tried.length+' correct.';
+    }
+    $('again').addEventListener('click',function(){ var r=$('rbox'); if(r) r.remove(); $('results').classList.add('hidden'); $('menu').classList.remove('hidden'); showBest(); window.scrollTo(0,0); });
+
+    $('startPaper').addEventListener('click',function(){
+      var p=sel.value, list=Q.filter(function(q){return q.paper===p;}).sort(function(a,b){return a.n-b.n;});
+      start(list,'paper',+$('timing').value,PAPERS[p].title,p);
+    });
+    $('startTopic').addEventListener('click',function(){
+      var pool=topicPool().slice(); for(var i=pool.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=pool[i]; pool[i]=pool[j]; pool[j]=t; }
+      if(!pool.length) return;
+      start(pool.slice(0,12),'topic',0,'Topic practice',null);
+    });
+  })();
+  </script>
+  <script src="site.js?v=20261029" defer></script>
+</body>
+</html>
