@@ -27,6 +27,7 @@
   --mint-wash:rgba(42,122,84,.10);
   --on-accent:#FFFFFF;   /* text on a solid pigment or ink fill */
   --btn-bg:#1B1E33; --btn-ink:#FFFFFF; --btn-hover:#30344F;
+  --board:#F6F4EF; --chalk:#1B1E33; --chalk-cyan:#1F7A94; --chalk-rose:#BE3358; --chalk-gold:#986500; /* Geometry Lab ink */
   --display:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
   --heading:"Bricolage Grotesque",system-ui,-apple-system,"Segoe UI",sans-serif;
   --serif:"IBM Plex Serif",Georgia,"Times New Roman",serif;
@@ -41,6 +42,7 @@
   --rose-wash:rgba(255,107,139,.14); --saffron-wash:rgba(255,197,61,.14); --aqua-wash:rgba(79,216,232,.13); --mint-wash:rgba(91,227,166,.14);
   --on-accent:#15173B;
   --btn-bg:var(--ink); --btn-ink:var(--bg); --btn-hover:var(--ink-soft);
+  --board:#15173B; --chalk:#F3F1FF; --chalk-cyan:#8FD3E8; --chalk-rose:#F2A49C; --chalk-gold:#F2D98D;
   color-scheme:dark;
 }
 

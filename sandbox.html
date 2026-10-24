@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-mode="dark" data-mode-lock>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,16 +8,18 @@
   <link rel="icon" href="/favicon.svg?v=4" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=4">
   <link rel="manifest" href="/site.webmanifest?v=4">
-  <meta name="theme-color" content="#F3F1FF">
+  <meta name="theme-color" content="#F6F4EF">
   <link rel="stylesheet" href="style.css?v=20261029">
   <script>try{if(localStorage.getItem('kv_mode')==='dark')document.documentElement.setAttribute('data-mode','dark')}catch(e){}</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&display=swap" rel="stylesheet">
   <style>
-    .sb{--ink:#F3F1FF;--soft:#BDBBE6;--faint:#8A89BD;--rule:#343A82;--paper:#15173B;--grid:rgba(143,150,255,.08);
-        --stable:#5BE3A6;--maybe:#FFC53D;--derived:#4FD8E8;--circ:#FF6B8B;--dline:#FFC53D;
+    .sb{--ink:#1B1E33;--soft:#4A4D62;--faint:#6C6F84;--rule:#D9D4C8;--paper:#FFFFFF;--well:#FFFFFF;--onink:#FFFFFF;--glass:rgba(255,255,255,.88);--grid:rgba(27,30,51,.06);
+        --stable:#2A7A54;--maybe:#986500;--derived:#1F7A94;--circ:#BE3358;--dline:#986500;
         --serif:"IBM Plex Serif",Georgia,serif;--sans:"Bricolage Grotesque","IBM Plex Sans",system-ui,sans-serif;--mono:"IBM Plex Mono",monospace;
         font-family:var(--sans);color:var(--ink);line-height:1.55}
+    [data-mode="dark"] .sb{--ink:#F3F1FF;--soft:#BDBBE6;--faint:#8A89BD;--rule:#343A82;--paper:#15173B;--well:#0F1130;--onink:#15173B;--glass:rgba(21,23,59,.86);--grid:rgba(143,150,255,.08);
+        --stable:#5BE3A6;--maybe:#FFC53D;--derived:#4FD8E8;--circ:#FF6B8B;--dline:#FFC53D}
     .sb h2{font-family:var(--serif);font-weight:600}
     .sb p{max-width:68ch}
     .sb .lead{font-size:1.05rem;color:var(--soft)}
@@ -27,17 +29,17 @@
     .sb .tools h4{font-size:.74rem;font-weight:500;letter-spacing:.03em;color:var(--faint);margin:.7rem 0 .15rem}
     .sb .tool{font-family:var(--sans);font-size:.88rem;text-align:left;background:transparent;border:1px solid var(--rule);border-radius:2px;padding:.35rem .6rem;cursor:pointer;color:var(--ink);line-height:1.25}
     .sb .tool:hover{border-color:var(--ink)}
-    .sb .tool.on{background:var(--ink);color:#15173B;border-color:var(--ink)}
+    .sb .tool.on{background:var(--ink);color:var(--onink);border-color:var(--ink)}
     .sb .tool small{display:block;color:var(--faint);font-size:.74rem}
-    .sb .tool.on small{color:#3B3F7A}
+    .sb .tool.on small{color:var(--onink);opacity:.75}
     .sb .canvaswrap{border:1px solid var(--rule);background-color:var(--paper);
         background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:30px 30px;position:relative}
     .sb svg{display:block;width:100%;height:auto;touch-action:none;cursor:crosshair}
     #cv *{vector-effect:non-scaling-stroke}
     .zoombar{position:absolute;right:.6rem;top:.6rem;display:flex;gap:.3rem}
-    .zoombar button{width:2rem;height:2rem;border-radius:8px;border:1px solid var(--line);background:rgba(21,23,59,.85);color:var(--ink);font:700 1rem var(--display);cursor:pointer}
+    .zoombar button{width:2rem;height:2rem;border-radius:8px;border:1px solid var(--line);background:var(--glass);color:var(--ink);font:700 1rem var(--display);cursor:pointer}
     .zoombar button.fit{width:auto;padding:0 .6rem;font-size:.8rem}
-    .sb .status{position:absolute;left:.8rem;bottom:.6rem;font-size:.85rem;color:var(--soft);pointer-events:none;background:rgba(21,23,59,.86);padding:.15rem .5rem;max-width:80%}
+    .sb .status{position:absolute;left:.8rem;bottom:.6rem;font-size:.85rem;color:var(--soft);pointer-events:none;background:var(--glass);padding:.15rem .5rem;max-width:80%}
     .figinfo{margin-top:.8rem;padding:.9rem 1.1rem;border:1px solid var(--line-soft);border-left:3px solid var(--saffron);border-radius:12px;background:var(--surface)}
     .figinfo .fi-head{display:flex;gap:.8rem;flex-wrap:wrap;font:600 .78rem var(--display);color:var(--ink-faint);text-transform:uppercase;letter-spacing:.06em}
     .figinfo .fi-book em{color:var(--saffron);font-style:italic;text-transform:none;letter-spacing:0}
@@ -50,18 +52,18 @@
     .sb .rel.stable{color:var(--stable)} .sb .rel.maybe{color:var(--maybe)} .sb .rel.meas{color:var(--ink)}
     .sb .empty{color:var(--faint);font-style:italic}
     .sb .btn2{font-family:var(--sans);font-size:.9rem;font-weight:500;color:var(--ink);background:transparent;border:1px solid var(--ink);border-radius:2px;padding:.45rem .9rem;cursor:pointer}
-    .sb .btn2:hover{background:var(--ink);color:#15173B}
+    .sb .btn2:hover{background:var(--ink);color:var(--onink)}
     .sb .btn2.quiet{border-color:var(--rule);color:var(--soft);font-weight:400}
     .sb .btn2.quiet:hover{border-color:var(--ink);color:var(--ink);background:transparent}
     .sb .row{display:flex;gap:.5rem;flex-wrap:wrap;align-items:center;margin-top:.8rem}
-    .sb textarea{width:100%;min-height:12rem;font-family:var(--mono);font-size:.82rem;line-height:1.45;border:1px solid var(--rule);padding:.6rem;background:#0F1130;color:var(--ink);resize:vertical}
+    .sb textarea{width:100%;min-height:12rem;font-family:var(--mono);font-size:.82rem;line-height:1.45;border:1px solid var(--rule);padding:.6rem;background:var(--well);color:var(--ink);resize:vertical}
     .sb .export{margin-top:1.4rem}
     .sb .legend{display:flex;gap:1.1rem;font-size:.82rem;color:var(--soft);margin-top:.5rem;flex-wrap:wrap}
     .sb .legend span::before{content:"";display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:.35rem;vertical-align:middle}
     .sb .legend .f::before{background:var(--ink)} .sb .legend .o::before{background:var(--derived)} .sb .legend .d::before{border:2px solid var(--derived);width:6px;height:6px}
     .sb .legend .l::before{background:var(--dline);border-radius:0;height:2px;width:14px}
     .sb .legend .s::before{background:var(--stable)} .sb .legend .m::before{background:var(--maybe)}
-    .sb select{font-family:var(--sans);font-size:.85rem;padding:.3rem .5rem;border:1px solid var(--rule);border-radius:2px;background:#0F1130;color:var(--ink)}
+    .sb select{font-family:var(--sans);font-size:.85rem;padding:.3rem .5rem;border:1px solid var(--rule);border-radius:2px;background:var(--well);color:var(--ink)}
   </style>
   <script>window.MathJax={tex:{inlineMath:[["$","$"]],displayMath:[["\\[","\\]"]],processEscapes:true},options:{skipHtmlTags:["script","noscript","style","textarea","pre","svg"]}};</script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js" async></script>
@@ -113,6 +115,10 @@
   </main>
 
 <script>
+/* The figure is drawn with the dark palette; in light mode each colour is swapped for its light equivalent. */
+var LIGHT_COLS={'#F3F1FF':'#1B1E33','#15173B':'#FFFFFF','#4FD8E8':'#1F7A94','#5BE3A6':'#2A7A54','#FF6B8B':'#BE3358','#FFC53D':'#986500','#8A89BD':'#6C6F84','#B38CFF':'#6A3FB0','#FFB86B':'#B35C00'};
+function themeCols(str){ if(document.documentElement.getAttribute('data-mode')==='dark') return str; return str.replace(/#[0-9A-Fa-f]{6}\b/g,function(c){ return LIGHT_COLS[c.toUpperCase()]||c; }); }
+try{ new MutationObserver(function(){ if(typeof draw==='function') draw(); }).observe(document.documentElement,{attributes:true,attributeFilter:['data-mode']}); }catch(e){}
 var W=760,H=520,objs=[],labels=0,tool='point',picks=[],drag=null,stableSet=null,groups=[],nextId=1;
 var VB={x:0,y:0,w:760,h:520}; function Z(){ return VB.w/W; }
 function setVB(v){ VB=v; svg.setAttribute('viewBox',VB.x+' '+VB.y+' '+VB.w+' '+VB.h); }
@@ -434,7 +440,7 @@ function draw(){
     var t1=Math.atan2(a.y-b.y,a.x-b.x),t2=Math.atan2(c.y-b.y,c.x-b.x),r=22*z,d=t2-t1; while(d<=-Math.PI)d+=2*Math.PI; while(d>Math.PI)d-=2*Math.PI;
     var sw=d>0?1:0; s+='<path d="M'+(b.x+r*Math.cos(t1))+' '+(b.y+r*Math.sin(t1))+' A'+r+' '+r+' 0 0 '+sw+' '+(b.x+r*Math.cos(t2))+' '+(b.y+r*Math.sin(t2))+'" fill="none" stroke="#5BE3A6" stroke-width="1.2"/>';
   });
-  svg.innerHTML=s; renderRelations(); renderMeas(); exportTex();
+  svg.innerHTML=themeCols(s); renderRelations(); renderMeas(); exportTex();
 }
 /* merge collinear triples on one line, and concyclic quadruples on one circle, into maximal sets */
 function mergeSets(keys,prefix,share,word){ var sets=[];

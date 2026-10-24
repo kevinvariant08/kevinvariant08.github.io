@@ -43,7 +43,7 @@
   var here=(location.pathname.split('/').pop()||'index.html').toLowerCase();
   var MOON='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>',
       SUN='<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>';
-  /* Light is the default. Dark is remembered per browser; the labs pages lock themselves to dark. */
+  /* Light is the default on every page. Dark is remembered per browser. */
   function isDark(){ return document.documentElement.getAttribute('data-mode')==='dark'; }
   function paintMode(b){ var d=isDark(); b.innerHTML=d?SUN:MOON; b.setAttribute('aria-label',d?'Switch to light mode':'Switch to dark mode'); b.title=b.getAttribute('aria-label'); }
   function caret(){return '<svg class="caret" viewBox="0 0 10 10" aria-hidden="true"><path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>';}

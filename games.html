@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en-GB" data-mode="dark" data-mode-lock>
+<html lang="en-GB">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -7,7 +7,7 @@
   <meta name="description" content="Maths games from the Kevinvariant shop: Factor Fall, Untangle, Billiards Lab, Graph Golf and Orbit Racer, each with a global high-score table.">
   <link rel="icon" href="/favicon.svg?v=4" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=4">
-  <meta name="theme-color" content="#15173B">
+  <meta name="theme-color" content="#F6F4EF">
   <link rel="stylesheet" href="style.css?v=20261029">
   <script>try{if(localStorage.getItem('kv_mode')==='dark')document.documentElement.setAttribute('data-mode','dark')}catch(e){}</script>
   <style>
@@ -41,6 +41,9 @@
     .key.off{opacity:.3}
     .lockwall{position:absolute;inset:0;z-index:6;display:grid;place-items:center;text-align:center;padding:1.5rem;background:rgba(10,11,32,.86);backdrop-filter:blur(5px)}
     .lockwall[hidden]{display:none}
+    /* light mode: the lock veil matches the page; the game screens stay dark, so their overlays keep light text */
+    :root:not([data-mode="dark"]) .lockwall{background:rgba(246,244,239,.9)}
+    .overlay{--ink:#F3F1FF;--ink-soft:#BDBBE6;--ink-faint:#8A89BD;--btn-bg:#F3F1FF;--btn-ink:#15173B;--btn-hover:#BDBBE6;color:var(--ink)}
     .lockwall h2{font:800 1.4rem var(--display);margin:0 0 .4rem}.lockwall p{color:var(--ink-soft);margin:0 0 1rem}
     .ggrow{display:flex;gap:.5rem;align-items:center;margin-top:.7rem}
     .gglab{font:800 1.2rem var(--display);color:var(--saffron)}
