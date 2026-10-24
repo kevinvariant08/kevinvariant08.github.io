@@ -13,6 +13,7 @@
      node tools/upload-locked.js                  uploads Sets E, F, G, H and K
      $env:HU_BUNDLE_KEY="the bundle key"
      node tools/upload-locked.js --bundle setL    uploads Set L from locked-bundles/setL.bin
+     node tools/upload-locked.js --bundle setsEK  uploads Sets E, F, G, H and K (watermarked) from locked-bundles/setsEK.bin
    Add --dry-run to list what would be uploaded without sending anything.
 
    The service key is secret: it bypasses all security rules. Never commit it, paste it into a web page,
@@ -54,7 +55,7 @@ if (bundle) {
 } else {
   var git = function (a, binary) { return execFileSync('git', a, { cwd: root, encoding: binary ? 'buffer' : 'utf8', maxBuffer: 64 * 1024 * 1024 }); };
   try { git(['cat-file', '-e', SOURCE + '^{commit}']); }
-  catch (e) { console.error('Commit ' + SOURCE + ' is not in this clone. Run "git fetch --unshallow" or "git pull" first, then try again.'); process.exit(1); }
+  catch (e) { console.error('Commit ' + SOURCE + ' is no longer in the history. Use the encrypted bundle instead:  node tools/upload-locked.js --bundle setsEK'); process.exit(1); }
   var all = JSON.parse(git(['show', SOURCE + ':questions.js']).match(/window\.HU_QUESTIONS=(\[[\s\S]*?\]);/)[1]);
   PAPERS.forEach(function (p) {
     var qs = all.filter(function (q) { return q.paper === p; });
