@@ -351,7 +351,13 @@
     }
     paintPill(s); last=s; pushLeaderboard(s); syncCoins(s);
     window.dispatchEvent(new CustomEvent('hu-rewards',{detail:s})); return s; }
-  function displayName(u){ var R=state(); if(R.lbName) return R.lbName; var m=u&&u.user_metadata||{}; return (m.display_name||m.name||(u&&u.email?u.email.split('@')[0]:'Player')).slice(0,24); }
+  /* never show any part of an email address: names that look like one fall back to "Player NNNN", fixed per account
+     (digits from the random account id, matching leaderboard-names.sql) so every device shows the same name */
+  function defaultName(u){ var h=parseInt(String(u&&u.id||'').replace(/-/g,'').slice(0,8),16); return 'Player '+('000'+(isNaN(h)?0:h%10000)).slice(-4); }
+  function emailish(n,u){ n=String(n||'').trim().toLowerCase(); var local=String(u&&u.email||'').toLowerCase().split('@')[0];
+    return !n||n.indexOf('@')>=0||(!!local&&(n===local||n===local.slice(0,24))); }
+  function displayName(u){ var R=state(), m=u&&u.user_metadata||{}, c=[R.lbName,m.display_name,m.name];
+    for(var i=0;i<c.length;i++) if(!emailish(c[i],u)) return String(c[i]).trim().slice(0,24); return defaultName(u); }
   function pushLeaderboard(s){ var A=window.HU_AUTH, R=state(); if(s.admin) return; if(!A||!A.configured||!A.user()||!R.lb) return; if(Date.now()-lbPushed<60000) return; lbPushed=Date.now();
     var u=A.user(); var row={user_id:u.id,name:displayName(u),xp:s.xp,week_xp:s.weekXP,week:s.week,level:s.level,streak:s.streak,title:worn()||null,updated_at:new Date().toISOString()}; A.client.from('leaderboard').upsert(row).then(function(){}); }
   function setLeaderboard(on,name){ var R=state(); R.lb=!!on; if(name!=null) R.lbName=String(name).trim().slice(0,24); save('hu_rewards',R); lbPushed=0;

@@ -41,3 +41,8 @@ cd tools && npm install && cd .. && node tools/test_attempts_sql.mjs
     and a suggested next topic; the TMUA figure is labelled as a rough estimate.
 23. Keyboard only: options selectable with A to F / 1 to 6 and Enter; focus is visible.
 24. Progress chart shows previous sessions after a reload.
+
+## Leaderboard names
+25. Signed in, no name chosen: Rewards > leaderboard offers "Player NNNN"; after joining, the board shows that name,
+    never any part of the email address. The same name appears on a second device.
+26. A chosen name (for example "Mathlete") is kept and shown.

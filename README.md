@@ -31,6 +31,7 @@ node tools/test_item_bank.js
 node tools/test_telemetry.js
 node tools/test_smart.js
 cd tools && npm install && cd .. && node tools/test_attempts_sql.mjs
+node tools/test_leaderboard_names.mjs
 python calibration/test_fit.py
 ```
 Manual checks before every deploy: [`SMART_PRACTICE_CHECKS.md`](SMART_PRACTICE_CHECKS.md).

@@ -95,7 +95,7 @@
     window.addEventListener('hu-auth-ready',function(){ window.HU_AUTH.onChange(paint); });
     if(window.HU_AUTH) window.HU_AUTH.onChange(paint);
   }
-  function loadRewards(){ if(window.HU_REWARDS) return; var sc=document.createElement('script'); sc.src='rewards.js?v=20261026'; sc.defer=true; document.head.appendChild(sc); }
+  function loadRewards(){ if(window.HU_REWARDS) return; var sc=document.createElement('script'); sc.src='rewards.js?v=20261027'; sc.defer=true; document.head.appendChild(sc); }
   function loadAccounts(){
     if(window.HU_AUTH) return;
     loadScript('auth-config.js?v=20260927').catch(function(){}).then(function(){
