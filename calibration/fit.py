@@ -85,8 +85,12 @@ def diagnostics(data, res, a, b, c, ids, choices):
             wrong = ch[~yy]
             if len(wrong):
                 top_wrong = max(set(wrong), key=list(wrong).count)
-                prefer_wrong = right is None or list(wrong).count(top_wrong) > list(ch).count(right)
-        out[qid] = {'n': n, 'p': float(y.mean()), 'r': r, 'prefer_wrong': bool(prefer_wrong)}
+                n_top, n_right = list(wrong).count(top_wrong), (list(ch).count(right) if right else 0)
+                # a wrong option that pulls strong students at least twice as hard as random guessing would, and
+                # more than the keyed answer does: the classic sign of a wrong key
+                share = len(wrong) / max(int(round(1 / c[i])) - 1, 1)
+                prefer_wrong = n_top > n_right and n_top >= 2 * share and n_top >= 5
+        out[qid] = {'n': n, 'p': float(y.mean()), 'r': r, 'prefer_wrong': bool(prefer_wrong), 'floor': float(c[i])}
     return out
 
 
@@ -162,9 +166,9 @@ def write_report(path, params, stats, diag, items, b0, b_sd0):
     flags = {'key': [], 'zero': [], 'easy': [], 'hard': [], 'rating': []}
     for i, it in enumerate(items):
         q, d, p = it['id'], diag.get(it['id'], {'n': 0}), params['items'][it['id']]
-        if d['n'] >= 30 and ((d.get('r') is not None and d['r'] < 0) or d.get('prefer_wrong')):
+        if d['n'] >= 30 and ((d.get('r') is not None and d['r'] < -0.1) or d.get('prefer_wrong')):
             flags['key'].append(f'{q} (n {d["n"]}, correlation {d["r"]:.2f}{", strong students prefer a wrong option" if d.get("prefer_wrong") else ""})' if d.get('r') is not None else f'{q} (n {d["n"]})')
-        elif d['n'] >= 30 and d.get('r') is not None and d['r'] < 0.1:
+        elif d['n'] >= 30 and d.get('r') is not None and d['r'] < 0.1 and d['p'] > d['floor'] + 0.1:
             flags['zero'].append(f'{q} (n {d["n"]}, correlation {d["r"]:.2f})')
         if d['n'] >= 30 and d['p'] > 0.95:
             flags['easy'].append(f'{q} ({100 * d["p"]:.0f}% right)')

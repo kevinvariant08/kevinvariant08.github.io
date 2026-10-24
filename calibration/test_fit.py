@@ -14,7 +14,7 @@ def check(cond, msg):
 
 bank = json.load(open(os.path.join(ROOT, 'data', 'item_bank.json'), encoding='utf-8'))['items']
 keys = {q['id']: q['ans'] for q in fit.js_value(os.path.join(ROOT, 'questions.js'), 'HU_QUESTIONS')}
-rng = np.random.default_rng(7)
+rng = np.random.default_rng(int(os.environ.get("KV_SEED", "7")))
 ids = [it['id'] for it in bank]
 k = np.array([it['options'] or 5 for it in bank])
 c = 1 / k
@@ -74,6 +74,8 @@ check(fit_err < 0.6 * prior_err, f'difficulty recovery: prior RMSE {prior_err:.3
 key_section = rep.split('## Check the answer key or wording')[1].split('##')[0]
 check(WRONG_KEY in key_section, 'planted wrong key not flagged')
 check(REVERSED in key_section, 'reversed locked question not flagged')
+flagged = re.findall(r'^- (\S+) \(', key_section, re.M)
+check(set(flagged) <= {WRONG_KEY, REVERSED}, 'false key alarms: ' + ', '.join(sorted(set(flagged) - {WRONG_KEY, REVERSED})))
 print(f'2PL: {p["responses"]} answers, b RMSE prior {prior_err:.3f} -> fit {fit_err:.3f}; flagged: {len(re.findall(r"^- ", key_section, re.M))} item(s)')
 
 # 4. outputs carry parameters only
