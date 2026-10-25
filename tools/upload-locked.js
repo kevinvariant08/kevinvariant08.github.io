@@ -22,6 +22,8 @@
 'use strict';
 var execFileSync = require('child_process').execFileSync;
 var fs = require('fs'), path = require('path'), crypto = require('crypto');
+/* Some home networks advertise IPv6 but cannot route it, which shows up as a connect timeout; prefer IPv4. */
+try { require('dns').setDefaultResultOrder('ipv4first'); require('net').setDefaultAutoSelectFamily && require('net').setDefaultAutoSelectFamily(true); } catch (e) {}
 
 var SOURCE = 'efa4511';                        /* last commit with these papers public */
 var PAPERS = ['E1', 'E2', 'F1', 'F2', 'G1', 'G2', 'H1', 'H2', 'K1', 'K2'];
@@ -74,9 +76,16 @@ if (bundle) {
     if (dry) { console.log('would upload locked/' + j.path + ' (' + Math.round(j.body.length / 1024) + ' KB)'); continue; }
     var headers = { apikey: key, 'content-type': j.type, 'x-upsert': 'true' };
     if (/^eyJ/.test(key)) headers.authorization = 'Bearer ' + key;   /* legacy JWT keys; new sb_secret_ keys go in apikey only */
-    var res = await fetch(url + '/storage/v1/object/locked/' + j.path, { method: 'POST', headers: headers, body: j.body });
-    if (res.ok) console.log('uploaded locked/' + j.path);
-    else { failed++; console.log('FAILED  locked/' + j.path + ': ' + res.status + ' ' + (await res.text()).slice(0, 200)); }
+    var res = null, err = null;
+    for (var attempt = 1; attempt <= 5; attempt++) {           /* retry: uploads over a shaky connection often fail once */
+      try { res = await fetch(url + '/storage/v1/object/locked/' + j.path, { method: 'POST', headers: headers, body: j.body, signal: AbortSignal.timeout(120000) }); err = null; }
+      catch (e) { res = null; err = e; }
+      if (res && (res.ok || res.status < 500)) break;
+      var why = err ? ((err.cause && err.cause.code) || err.name || 'network error') : ('HTTP ' + res.status);
+      if (attempt < 5) { console.log('  retrying locked/' + j.path + ' (' + why + '), attempt ' + (attempt + 1) + ' of 5'); await new Promise(function (r) { setTimeout(r, 2000 * attempt); }); }
+    }
+    if (res && res.ok) console.log('uploaded locked/' + j.path);
+    else { failed++; console.log('FAILED  locked/' + j.path + ': ' + (res ? res.status + ' ' + (await res.text()).slice(0, 200) : ((err && err.cause && err.cause.code) || String(err)))); }
   }
   if (dry) return;
   console.log(failed ? '\n' + failed + ' uploads failed; fix the error above and run again (it is safe to repeat).' : '\nAll ' + jobs.length + ' files uploaded. The locked papers will open for anyone who unlocks them.');
