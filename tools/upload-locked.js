@@ -81,7 +81,7 @@ if (ei >= 0) {                          /* fallback: write the files to a folder
   for (var i = 0; i < jobs.length; i++) {
     var j = jobs[i];
     if (dry) { console.log('would upload locked/' + j.path + ' (' + Math.round(j.body.length / 1024) + ' KB)'); continue; }
-    var headers = { apikey: key, 'content-type': j.type, 'x-upsert': 'true' };
+    var headers = { apikey: key, 'content-type': j.type, 'x-upsert': 'true', 'cache-control': 'max-age=300' };
     if (/^eyJ/.test(key)) headers.authorization = 'Bearer ' + key;   /* legacy JWT keys; new sb_secret_ keys go in apikey only */
     var res = null, err = null;
     for (var attempt = 1; attempt <= 5; attempt++) {           /* retry: uploads over a shaky connection often fail once */
