@@ -38,7 +38,7 @@ var cfgText = fs.readFileSync(path.join(root, 'auth-config.js'), 'utf8');
 var url = (cfgText.match(/url:\s*"([^"]+)"/) || [])[1];
 if (!url) { console.error('Could not read the Supabase URL from auth-config.js.'); process.exit(1); }
 var key = (process.env.SUPABASE_SERVICE_KEY || '').trim();
-if (!dry && !key) { console.error('Set SUPABASE_SERVICE_KEY first. In PowerShell:  $env:SUPABASE_SERVICE_KEY="your-secret-key"'); process.exit(1); }
+if (!dry && !key && args.indexOf('--extract') < 0) { console.error('Set SUPABASE_SERVICE_KEY first. In PowerShell:  $env:SUPABASE_SERVICE_KEY="your-secret-key"'); process.exit(1); }
 
 var jobs = [];
 if (bundle) {
@@ -69,6 +69,13 @@ if (bundle) {
   });
 }
 
+var ei = args.indexOf('--extract');
+if (ei >= 0) {                          /* fallback: write the files to a folder, to upload by hand in the Supabase dashboard */
+  var dir = path.resolve(args[ei + 1] || 'locked-upload');
+  jobs.forEach(function (j) { var f = path.join(dir, j.path); fs.mkdirSync(path.dirname(f), { recursive: true }); fs.writeFileSync(f, j.body); });
+  console.log('Wrote ' + jobs.length + ' files to ' + dir + '. In Supabase > Storage > locked, drag in the paper folders (E1, E2, ...) from there, choosing to replace existing files. Delete the folder afterwards, and never commit it.');
+  process.exit(0);
+}
 (async function () {
   var failed = 0;
   for (var i = 0; i < jobs.length; i++) {
