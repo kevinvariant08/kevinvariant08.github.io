@@ -26,9 +26,9 @@ def tex(s, figs):
     def figure(m):
         i = re.search(r'data-id="([A-Za-z0-9\-]+)"|diagrams/([A-Za-z0-9\-]+)\.svg', m.group(0))   # data-id: locked papers embed the SVG
         if not i: return ''
-        p = os.path.join(figs, (i.group(1) or i.group(2)) + '.pdf')
+        p = os.path.abspath(os.path.join(figs, (i.group(1) or i.group(2)) + '.pdf'))
         return ('\n\n\\begin{center}\\includegraphics[max width=0.8\\linewidth,max height=8.5cm]{%s}\\end{center}\n\n' % p) if os.path.exists(p) else ''
-    s = re.sub(r'<figure class="sol-fig">.*?</figure>', figure, s, flags=re.S)
+    s = re.sub(r'<figure class="sol-fig"[^>]*>.*?</figure>', figure, s, flags=re.S)
     s = s.replace('\\"', '"')
     s = re.sub(r'<ol class="stmts" type="I">', r'\\begin{enumerate}[label=\\Roman*.,leftmargin=2.2em,itemsep=2pt,topsep=4pt]', s)
     s = re.sub(r'<ol[^>]*>', r'\\begin{enumerate}[itemsep=2pt,topsep=4pt]', s)
