@@ -269,3 +269,7 @@ mjx-assistive-mml{max-width:100%;max-height:100%}
 .confrow{display:flex;flex-wrap:wrap;gap:.45rem;align-items:center;margin-top:.9rem}
 .confrow .conflab{flex-basis:100%;font-size:.9rem;color:var(--ink-soft)}
 .confrow button .confp{font-size:.8rem;opacity:.8}
+
+/* Solution diagrams (tkz-euclide, built by tools/build-diagrams.py). White card so the black linework reads in dark mode too. */
+.sol-fig{margin:.4rem 0 1rem;padding:.6rem .8rem;background:#fff;border:1px solid var(--line);border-radius:var(--r-md);display:block;width:fit-content;max-width:100%;box-sizing:border-box}
+.sol-fig img{display:block;max-width:min(100%,32rem);height:auto}
