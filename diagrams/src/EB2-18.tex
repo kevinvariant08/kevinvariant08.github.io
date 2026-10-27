@@ -1,0 +1,18 @@
+\begin{tikzpicture}[scale=0.22]
+\tkzDefPoints{0/0/O1, 24/0/O2, 18/0/X, 4.5/7.794229/T1, 4.5/-7.794229/S1, 22.5/-2.598076/T2, 22.5/2.598076/S2}
+\draw (O1) circle (9);
+\draw (O2) circle (3);
+\draw[key,line width=1.4pt] (T1) arc[start angle=60,end angle=300,radius=9];
+\draw[key,line width=1.4pt] (T2) arc[start angle=240,end angle=480,radius=3];
+\draw[key,line width=1.4pt] (T1) -- (T2) (S1) -- (S2);
+\tkzDrawSegments[aux](O1,O2 O1,T1 O1,S1)
+\tkzMarkRightAngle[size=1.2](O1,T1,X)
+\tkzMarkAngle[size=4](T1,X,O1)
+\tkzLabelAngle[pos=5.6](T1,X,O1){$\alpha$}
+\tkzLabelSegment[above left=-1pt](O1,T1){$9$}
+\tkzLabelSegment[below,pos=0.62](O1,X){$18$}
+\draw[aux] (O2) -- (27,0);
+\node[above=-1pt] at (25.6,0) {$3$};
+\tkzDrawPoints(O1,O2,X)
+\tkzLabelPoint[above=2pt](X){$X$}
+\end{tikzpicture}

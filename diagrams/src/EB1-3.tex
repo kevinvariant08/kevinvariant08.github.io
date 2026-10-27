@@ -1,0 +1,17 @@
+\begin{tikzpicture}[scale=1]
+\tkzDefPoints{0/0/A, 6/0/B, 5/5/C, 1/5/D, 3/3/X}
+\tkzFillPolygon[fillalt](A,X,D)
+\tkzFillPolygon[fillalt](D,X,C)
+\tkzDrawPolygon[key](A,B,C,D)
+\tkzDrawSegments(A,C B,D)
+\tkzDrawPoints(A,B,C,D,X)
+\tkzLabelPoint[below left](A){$A$}
+\tkzLabelPoint[below right](B){$B$}
+\tkzLabelPoint[above right](C){$C$}
+\tkzLabelPoint[above left](D){$D$}
+\tkzLabelPoint[right=3pt](X){$X$}
+\node at (1.35,2.75) {$6$};
+\node at (3,4.35) {$4$};
+\node at (4.65,2.75) {$6$};
+\node at (3,1.1) {$9$};
+\end{tikzpicture}

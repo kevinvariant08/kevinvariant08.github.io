@@ -1,0 +1,13 @@
+\begin{tikzpicture}[scale=0.07]
+\tkzDefPoints{-20/0/P, 20/0/Q, 50/60/R, -50/60/S, -30/20/W1, 30/20/W2}
+\tkzFillPolygon[fillkey](P,Q,W2,W1)
+\tkzDrawSegments[key](W1,W2)
+\tkzDrawPolygon(P,Q,R,S)
+\tkzLabelSegment[below](P,Q){$40$}
+\tkzLabelSegment[above](S,R){$100$}
+\node at (0,12) {$40+h$};
+\draw[<->,>=Stealth] (-46,0) -- (-46,20) node[midway,left] {$h$};
+\draw[<->,>=Stealth] (58,0) -- (58,60) node[midway,right] {$60$};
+\draw[black!45] (20,0) -- (60,0) (50,60) -- (60,60);
+\draw[black!45] (-20,0) -- (-48,0) (-30,20) -- (-48,20);
+\end{tikzpicture}

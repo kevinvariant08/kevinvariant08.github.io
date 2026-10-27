@@ -1,0 +1,19 @@
+\begin{tikzpicture}[scale=0.55]
+  \draw[->] (-1.5,0) -- (6,0) node[right] {$x$};
+  \draw[->] (0,-6.4) -- (0,8.4) node[above] {$y$};
+  \foreach \t in {1,...,5} { \draw (\t,0.1) -- (\t,-0.1); }
+  \foreach \t in {-6,...,-1,1,2,...,8} { \draw (0.1,\t) -- (-0.1,\t); }
+  \node[left] at (0,7) {$7$};
+  \node[left] at (0,-5) {$-5$};
+  \draw[key,-{Stealth}] (1,7) -- (1,8.3);
+  \draw[key] (1,7) -- (1,2) -- (3,0) -- (3,-5);
+  \draw[key,-{Stealth}] (3,-5) -- (3,-6.3);
+  \foreach \y in {2,...,7} \fill (1,\y) circle (3pt);
+  \fill (2,1) circle (3pt);
+  \foreach \y in {0,-1,...,-5} \fill (3,\y) circle (3pt);
+  \draw[fill=white] (0,0) circle (3pt) node[below left] {$A$};
+  \draw[fill=white] (4,2) circle (3pt) node[right] {$B(4,2)$};
+  \node[left] at (1,2.1) {$(1,2)$};
+  \node[below right] at (3,0) {$(3,0)$};
+  \node[right] at (2,1) {$(2,1)$};
+\end{tikzpicture}

@@ -1,0 +1,26 @@
+\begin{tikzpicture}[scale=1.25]
+  \tkzDefPoint(0,0){C}
+  \tkzDefPoint(2.2981,1.9284){P}
+  \tkzDefPoint(2.8191,-1.0261){Q}
+  \foreach \pt in {C,P,Q} {
+    \draw[aux,-{Stealth}] (\pt) -- ++(0,1.15);
+    \node[above] at ($(\pt)+(0,1.15)$) {N};
+  }
+  \tkzDrawSegments[thick](C,P P,Q)
+  \tkzDrawSegments[key](Q,C)
+  \tkzDefPoint(0,1){NC}
+  \tkzDefPoint(2.8191,0){NQ}
+  \tkzMarkAngle[size=0.6](P,C,NC)
+  \tkzLabelAngle[pos=0.85](P,C,NC){$50^\circ$}
+  \tkzMarkAngle[size=0.5](C,P,Q)
+  \tkzLabelAngle[pos=0.8](C,P,Q){$60^\circ$}
+  \tkzMarkAngle[size=0.5](P,Q,C)
+  \tkzLabelAngle[pos=0.8](P,Q,C){$60^\circ$}
+  \tkzMarkSegments[mark=|](C,P P,Q)
+  \tkzLabelSegment[above left,pos=0.68](C,P){$3$ km}
+  \tkzLabelSegment[right,pos=0.3](P,Q){$3$ km}
+  \tkzDrawPoints(C,P,Q)
+  \tkzLabelPoint[below left](C){$C$}
+  \tkzLabelPoint[right](P){$P$}
+  \tkzLabelPoint[below right](Q){$Q$}
+\end{tikzpicture}

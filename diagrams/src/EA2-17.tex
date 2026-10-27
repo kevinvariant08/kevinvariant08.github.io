@@ -1,0 +1,18 @@
+\begin{tikzpicture}[xscale=2,yscale=2.2]
+\fill[fillalt] plot[domain=0:pi/3,samples=60] (\x,{sin(2*\x r)}) -- plot[domain=pi/3:0,samples=60] (\x,{sin(\x r)}) -- cycle;
+\fill[fillkey] plot[domain=pi/3:pi,samples=100] (\x,{sin(\x r)}) -- plot[domain=pi:pi/3,samples=100] (\x,{sin(2*\x r)}) -- cycle;
+\draw[->] (-0.2,0) -- (3.55,0) node[right] {$x$};
+\draw[->] (0,-1.2) -- (0,1.3) node[above] {$y$};
+\draw[key] plot[domain=0:pi,samples=100,smooth] (\x,{sin(\x r)});
+\draw[thick] plot[domain=0:pi,samples=100,smooth] (\x,{sin(2*\x r)});
+\node[above right] at (1.75,0.98) {$y=\sin x$};
+\node[below] at (2.45,-1.0) {$y=\sin 2x$};
+\draw[aux] (pi/3,0) -- (pi/3,0.8660254);
+\tkzDefPoint(pi/3,0.8660254){I}
+\tkzDrawPoints(I)
+\node[below] at (pi/3,0) {$\tfrac{\pi}{3}$};
+\node[below right] at (pi,0) {$\pi$};
+\node[below left] at (0,0) {$O$};
+\node at (2.0,0.35) {$\tfrac94$};
+\draw[<-] (0.42,0.6) -- (0.25,1.1) node[above] {$\tfrac14$};
+\end{tikzpicture}

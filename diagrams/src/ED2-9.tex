@@ -1,0 +1,16 @@
+\begin{tikzpicture}[scale=1]
+  \tkzDefPoints{0/0/A, 6/0/B, 3/5.19615/C}
+  \fill[fillalt] (0,0) arc[start angle=240,end angle=300,radius=6] -- cycle;
+  \fill[fillalt] (6,0) arc[start angle=0,end angle=60,radius=6] -- cycle;
+  \fill[fillalt] (3,5.19615) arc[start angle=120,end angle=180,radius=6] -- cycle;
+  \tkzFillPolygon[fillkey](A,B,C)
+  \tkzDrawPolygon(A,B,C)
+  \draw[key] (0,0) arc[start angle=240,end angle=300,radius=6];
+  \draw[key] (6,0) arc[start angle=0,end angle=60,radius=6];
+  \draw[key] (3,5.19615) arc[start angle=120,end angle=180,radius=6];
+  \tkzMarkAngle[size=0.8](A,C,B)
+  \tkzLabelAngle[pos=1.15](A,C,B){$60^\circ$}
+  \tkzLabelSegment[above left](A,C){$6$}
+  \tkzLabelSegment[above right](B,C){$6$}
+  \tkzDrawPoints(A,B,C)
+\end{tikzpicture}

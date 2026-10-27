@@ -1,0 +1,18 @@
+\begin{tikzpicture}[scale=1.25]
+\draw[->] (-0.6,0) -- (5.6,0) node[right] {$x$};
+\draw[->] (0,-1.4) -- (0,4.2) node[above] {$y$};
+\tkzDefPoints{3/1/K, 1/1/U, 3/3/W, 2/2/H}
+\fill[fillkey] (3,3) arc (90:180:2) -- cycle;
+\draw (K) circle (2);
+\draw (-0.5,-0.5) -- (3.9,3.9) node[above right] {$y=x$};
+\tkzDrawSegments[key](K,U K,W)
+\tkzDrawSegment[aux](K,H)
+\tkzMarkRightAngle[size=0.25](U,K,W)
+\tkzLabelSegment[below](K,U){$2$}
+\tkzLabelSegment[right](K,W){$2$}
+\tkzLabelSegment[above right=-1pt](K,H){$\sqrt2$}
+\tkzDrawPoints(K,U,W)
+\tkzLabelPoint[below right](K){$(3,1)$}
+\tkzLabelPoint[left](U){$(1,1)$}
+\tkzLabelPoint[above left](W){$(3,3)$}
+\end{tikzpicture}

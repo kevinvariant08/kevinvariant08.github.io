@@ -1,0 +1,17 @@
+\begin{tikzpicture}[scale=0.72]
+\tkzDefPoints{0/0/O, -3/4/A, 3/4/B, 3/-4/C, -3/-4/D, -4.830/1.294/P}
+\draw (O) circle (5);
+\tkzDrawPolygon(A,B,C,D)
+\tkzDrawSegments[aux](A,C B,D)
+\tkzDrawSegments[key](P,A P,C)
+\tkzDrawSegments[key,dashed](P,B P,D)
+\tkzMarkRightAngle[size=0.45](A,P,C)
+\tkzLabelSegment[above](A,B){$6$}
+\tkzLabelSegment[right](B,C){$8$}
+\tkzDrawPoints(A,B,C,D,P)
+\tkzLabelPoint[above left](A){$A$}
+\tkzLabelPoint[above right](B){$B$}
+\tkzLabelPoint[below right](C){$C$}
+\tkzLabelPoint[below left](D){$D$}
+\tkzLabelPoint[left](P){$P$}
+\end{tikzpicture}

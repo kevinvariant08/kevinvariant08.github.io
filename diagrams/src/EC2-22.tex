@@ -1,0 +1,13 @@
+\begin{tikzpicture}[scale=1.3]
+\tkzDefPoints{0/0/A, 2.8868/1/B, 0.5774/3/C}
+\draw (-1.4,0) -- (4.4,0) node[right] {$y=0$};
+\draw (-1.4,1) -- (4.4,1) node[right] {$y=1$};
+\draw (-1.4,3) -- (4.4,3) node[right] {$y=3$};
+\tkzFillPolygon[fillkey](A,B,C)
+\tkzDrawPolygon[key](A,B,C)
+\tkzMarkSegments[mark=|](A,B B,C C,A)
+\tkzDrawPoints(A,B,C)
+\tkzLabelPoint[below](A){$(0,0)$}
+\tkzLabelPoint[below right](B){$(b,1)$}
+\tkzLabelPoint[above](C){$(c,3)$}
+\end{tikzpicture}

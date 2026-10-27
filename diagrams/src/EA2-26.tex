@@ -1,0 +1,14 @@
+\begin{tikzpicture}[scale=0.62]
+\draw[->] (-5.2,0) -- (8,0) node[right] {$x$};
+\draw[->] (0,-3.6) -- (0,3.8) node[above] {$y$};
+\tkzDefPoints{0/0/O, 4/0/K}
+\draw[thick] (O) circle (1);
+\draw[thick] (K) circle (2);
+\draw[key] (-4.6,-0.1549) -- (7.6,2.9951) node[right] {$\tfrac{1}{\sqrt{15}}$};
+\draw[key] (-4.6,0.1549) -- (7.6,-2.9951) node[right] {$-\tfrac{1}{\sqrt{15}}$};
+\draw[key] (-1.55,-3.2694) -- (4.25,3.3072) node[above] {$\tfrac{3}{\sqrt7}$};
+\draw[key] (-1.55,3.2694) -- (4.25,-3.3072) node[below] {$-\tfrac{3}{\sqrt7}$};
+\tkzDrawPoints(O,K)
+\node[below left] at (O) {$O$};
+\node[below right] at (K) {$(4,0)$};
+\end{tikzpicture}

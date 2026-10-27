@@ -1,0 +1,20 @@
+\begin{tikzpicture}[scale=0.5]
+\tkzDefPoints{0/0/A, 12/0/B, 12/12/C, 0/12/D, 12/6/E, 6/12/F, 7.2/4.8/P}
+\tkzFillPolygon[fillkey](A,P,F,D)
+\tkzFillPolygon[fillalt](B,P,E)
+\tkzDrawPolygon(A,B,C,D)
+\tkzDrawSegments(A,E B,F)
+\tkzDrawPolygon[key](A,P,F,D)
+\tkzMarkRightAngle[size=0.6](B,P,E)
+\tkzMarkSegments[mark=|](B,E E,C)
+\tkzMarkSegments[mark=||](C,F F,D)
+\tkzLabelSegment[below](A,B){$12$}
+\tkzDrawPoints(A,B,C,D,E,F,P)
+\tkzLabelPoints[below left](A)
+\tkzLabelPoints[below right](B)
+\tkzLabelPoints[above right](C)
+\tkzLabelPoints[above left](D)
+\tkzLabelPoints[right](E)
+\tkzLabelPoints[above](F)
+\tkzLabelPoints[above left](P)
+\end{tikzpicture}

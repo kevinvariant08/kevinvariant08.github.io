@@ -1,0 +1,20 @@
+\begin{tikzpicture}[scale=0.8]
+  \draw[->] (-6,0) -- (6.4,0) node[right] {$x$};
+  \draw[->] (0,-1.8) -- (0,4) node[above] {$y$};
+  \draw[line width=2.2pt] (0,0) -- (6,0);
+  \draw[line width=2.2pt] (0,0) -- (0,3.7);
+  \tkzDefPoints{2/3/A, 5/1/B, 5/-1/B1, -5/-1/B2, 0/1.85714/U, 3.25/0/V, -3.25/0/W}
+  \draw[aux] (U) -- (W) -- (B2);
+  \draw[aux] (V) -- (B1);
+  \draw[aux,black!35,dotted] (B) -- (B1) -- (B2);
+  \draw[key,-{Stealth[length=6pt]}] (A) -- ($(A)!0.55!(U)$);
+  \draw[key] (A) -- (U) -- (V) -- (B);
+  \draw[key,-{Stealth[length=6pt]}] (U) -- ($(U)!0.55!(V)$);
+  \tkzDrawPoints(A,B,B1,B2,U,V)
+  \tkzLabelPoint[above right](A){$A(2,3)$}
+  \tkzLabelPoint[right](B){$B(5,1)$}
+  \tkzLabelPoint[right](B1){$(5,-1)$}
+  \tkzLabelPoint[below](B2){$B''(-5,-1)$}
+  \tkzLabelPoint[left](U){$\left(0,\tfrac{13}{7}\right)$}
+  \tkzLabelPoint[below left](V){$\left(\tfrac{13}{4},0\right)$}
+\end{tikzpicture}

@@ -1,0 +1,17 @@
+\begin{tikzpicture}[scale=0.32]
+\tkzDefPoints{0/4/P, 12/9/Q, 4.8/1.44/S, 0/0/P1, 12/0/Q1, 4.8/0/S1, 12/4/H}
+\draw (-5.5,0) -- (22,0) node[above left] {$\ell$};
+\tkzDrawCircle[black](P,P1)
+\tkzDrawCircle[black](Q,Q1)
+\tkzDrawCircle[key](S,S1)
+\tkzDrawSegments[aux](P,H H,Q)
+\tkzDrawSegments[key](P,Q)
+\tkzDrawSegments(P,P1 Q,Q1)
+\tkzLabelSegment[left](P,P1){$4$}
+\tkzLabelSegment[right](Q,Q1){$9$}
+\node[below] at (10,4) {$12$};
+\draw[<-] (5.3,1.2) -- (6.8,2.4) node[right] {$x$};
+\draw[decorate,decoration={brace,mirror,amplitude=4pt}] (0,-0.5) -- (4.8,-0.5) node[midway,below=4pt] {$4\sqrt{x}$};
+\draw[decorate,decoration={brace,mirror,amplitude=4pt}] (4.8,-0.5) -- (12,-0.5) node[midway,below=4pt] {$6\sqrt{x}$};
+\tkzDrawPoints(P,Q,S,P1,Q1,S1)
+\end{tikzpicture}

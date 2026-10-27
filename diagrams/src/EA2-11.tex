@@ -1,0 +1,15 @@
+\begin{tikzpicture}[scale=1.4]
+\draw[->] (-2.3,0) -- (2.4,0) node[right] {$x$};
+\draw[->] (0,-2.3) -- (0,3.1) node[above] {$y$};
+\draw[thick] plot[domain=-1.68:1.68,samples=100,smooth] (\x,{(\x)*(\x)});
+\node[right] at (1.68,2.82) {$y=x^2$};
+\tkzDefPoints{0/1.25/C, 0/-1/D, 0.8660254/0.75/T, -0.8660254/0.75/S, 0/0/O}
+\draw[key] (C) circle (1);
+\draw[key] (D) circle (1);
+\tkzDrawSegments[key](C,T C,S)
+\tkzLabelSegment[above right=-1pt](C,T){$1$}
+\tkzLabelSegment[right,pos=0.5](D,O){$1$}
+\tkzDrawPoints(C,D,T,S,O)
+\node[above right] at (C) {$\left(0,\tfrac54\right)$};
+\node[below right] at (D) {$(0,-1)$};
+\end{tikzpicture}

@@ -1,0 +1,14 @@
+\begin{tikzpicture}[scale=1.5]
+\tkzDefPoint(0,0){O}
+\foreach \k in {0,...,5} {\tkzDefPoint(60*\k:2){V\k}}
+\foreach \k in {0,...,5} {\tkzDefPoint(60*\k+30:1.7320508){M\k}}
+\tkzFillPolygon[fillkey](M0,M2,M4)
+\tkzDrawPolygon(V0,V1,V2,V3,V4,V5)
+\tkzDrawPolygon[key](M0,M2,M4)
+\tkzDrawSegments[aux](O,M0 O,M2 O,M4)
+\tkzLabelSegment[above left,pos=0.55](O,M0){$\sqrt3$}
+\tkzMarkAngle[size=0.35](M0,O,M2)
+\tkzLabelAngle[pos=0.55](M0,O,M2){$120^\circ$}
+\foreach \k/\n in {0/1,1/2,2/3,3/4,4/5,5/6} {\node at (60*\k+30:2.05) {$\n$};}
+\tkzDrawPoints(O,M0,M2,M4)
+\end{tikzpicture}

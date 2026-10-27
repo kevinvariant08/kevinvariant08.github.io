@@ -1,0 +1,18 @@
+\begin{tikzpicture}[scale=1]
+\tkzDefPoints{0/0/A, 3/0/B, 4/2/P, 4/0/K}
+\tkzFillPolygon[fillkey](P,A,B)
+\draw[->] (-0.8,0) -- (6.8,0) node[right] {$x$};
+\draw[->] (0,-2.6) -- (0,2.9) node[above] {$y$};
+\draw[key] (K) circle (2);
+\tkzDrawPolygon(P,A,B)
+\tkzDrawSegments[aux](P,K)
+\tkzMarkRightAngle[size=0.2](P,K,B)
+\tkzLabelSegment[right](K,P){$2$}
+\node[below] at (1.5,0) {$3$};
+\node at (6.4,-1.4) {$PA=2PB$};
+\tkzDrawPoints(A,B,P,K)
+\node[below left] at (A) {$A$};
+\node[below left] at (B) {$B$};
+\node[above] at (P) {$P(4,2)$};
+\node[below right] at (K) {$(4,0)$};
+\end{tikzpicture}

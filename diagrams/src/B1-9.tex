@@ -1,0 +1,21 @@
+\begin{tikzpicture}[scale=2.7]
+\tkzDefPoints{0/0/O, 0/1.1524/A, 0.901/0.7185/B, 1.1235/-0.2564/C, 0.5/-1.0383/D, -0.5/-1.0383/E, -1.1235/-0.2564/F, -0.901/0.7185/G}
+\tkzDrawCircle[aux](O,A)
+\tkzDrawPolygon(A,B,C,D,E,F,G)
+\tkzDrawPolygon[key](A,B,C,E)
+\tkzDrawSegments[key,dashed](A,C B,E)
+\tkzLabelSegment[below left](A,B){$1$}
+\tkzLabelSegment[left](B,C){$1$}
+\tkzLabelSegment[below right](C,E){$p$}
+\tkzLabelSegment[left](E,A){$q$}
+\tkzLabelSegment[below left,pos=0.3](A,C){$p$}
+\tkzLabelSegment[below right,pos=0.68](B,E){$q$}
+\tkzDrawPoints(A,B,C,D,E,F,G)
+\tkzLabelPoint[above](A){$A$}
+\tkzLabelPoint[above right](B){$B$}
+\tkzLabelPoint[right](C){$C$}
+\tkzLabelPoint[below right](D){$D$}
+\tkzLabelPoint[below left](E){$E$}
+\tkzLabelPoint[left](F){$F$}
+\tkzLabelPoint[above left](G){$G$}
+\end{tikzpicture}

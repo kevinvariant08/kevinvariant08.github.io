@@ -1,0 +1,20 @@
+\begin{tikzpicture}[scale=3]
+\tkzDefPoints{0/0/A, 1/0/B, 1.5/0.866025/C, 1/1.732051/D, 0/1.732051/E, -0.5/0.866025/F, 0.5/0.866025/O, 1.25/1.299038/M, 0.357143/0.371154/P}
+\tkzDrawPolygon(A,B,C,D,E,F)
+\tkzDrawSegments[aux](B,F)
+\tkzDrawSegments[key](A,M)
+\draw[key,-{Stealth[length=7pt]}] (A) -- (B);
+\draw[key,-{Stealth[length=7pt]}] (A) -- (F);
+\tkzLabelSegment[below](A,B){$\mathbf a$}
+\tkzLabelSegment[below left=-1pt](A,F){$\mathbf b$}
+\tkzDrawPoints(C,D,E,O,M,P)
+\tkzLabelPoint[below left](A){$A$}
+\tkzLabelPoint[below right](B){$B$}
+\tkzLabelPoint[right](C){$C$}
+\tkzLabelPoint[above right](D){$D$}
+\tkzLabelPoint[above left](E){$E$}
+\tkzLabelPoint[left](F){$F$}
+\tkzLabelPoint[above](O){$O$}
+\tkzLabelPoint[right](M){$M$}
+\tkzLabelPoint[left=3pt](P){$P$}
+\end{tikzpicture}

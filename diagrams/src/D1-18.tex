@@ -1,0 +1,15 @@
+\begin{tikzpicture}[scale=1.55]
+\fill[fillalt] plot[domain=0:4,samples=100,smooth] (\x,{\x*(4-\x)}) -- cycle;
+\fill[fillkey] plot[domain=0:3.1748,samples=100,smooth] (\x,{\x*(4-\x)}) -- cycle;
+\draw[->] (-0.4,0) -- (4.6,0) node[right] {$x$};
+\draw[->] (0,-0.4) -- (0,4.5) node[above] {$y$};
+\draw[thick] plot[domain=-0.15:4.15,samples=100,smooth] (\x,{\x*(4-\x)});
+\draw[key] (0,0) -- (4.3,3.5484) node[right] {$y=kx$};
+\fill (3.1748,2.6198) circle (1.3pt);
+\draw[aux] (3.1748,2.6198) -- (3.1748,0) node[below] {$4-k$};
+\node[below right] at (4,0) {$4$};
+\node[below left] at (0,0) {$O$};
+\node at (1.65,2.25) {$\dfrac{16}{3}$};
+\node at (2.6,0.75) {$\dfrac{16}{3}$};
+\node at (1.1,4.15) {$y=x(4-x)$};
+\end{tikzpicture}

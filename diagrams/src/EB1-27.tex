@@ -1,0 +1,29 @@
+\begin{tikzpicture}
+% oblique view of the pyramid, section shaded
+\begin{scope}[scale=0.5]
+\coordinate (F1) at (-4.05,-1.05); \coordinate (F2) at (1.95,-1.05);
+\coordinate (B2) at (4.05,1.05);  \coordinate (B1) at (-1.95,1.05);
+\coordinate (V) at (0,4.2426); \coordinate (L) at (-3,0); \coordinate (R) at (3,0);
+\fill[fillkey] (L) -- (R) -- (V) -- cycle;
+\draw[aux] (B1) -- (F1) (B1) -- (B2) (B1) -- (V);
+\draw[key] (L) -- (R) -- (V) -- cycle;
+\draw (F1) -- (F2) -- (B2) (F1) -- (V) (F2) -- (V) (B2) -- (V);
+\end{scope}
+% the section with its incircle
+\begin{scope}[xshift=4.9cm,scale=0.6]
+\tkzDefPoints{-3/0/L, 3/0/R, 0/4.242641/V, 0/1.552914/I, 0/0/K}
+\tkzFillPolygon[fillkey](L,R,V)
+\tkzDrawPolygon[key](L,R,V)
+\draw[key] (I) circle (1.552914);
+\tkzDrawSegments[aux](V,K)
+\draw (I) -- ++(1.552914,0);
+\tkzMarkRightAngle[size=0.3](R,K,V)
+\node[above,inner sep=1.5pt] at (0.78,1.55) {$r$};
+\tkzLabelSegment[below](L,R){$6$}
+\tkzLabelSegment[above left=-1pt](L,V){$3\sqrt3$}
+\tkzLabelSegment[above right=-1pt](R,V){$3\sqrt3$}
+\draw[black!45] (V) -- (4.4,4.242641) (R) -- (4.4,0);
+\draw[<->,>=Stealth] (4.2,0) -- (4.2,4.242641) node[midway,right] {$3\sqrt2$};
+\tkzDrawPoints(I)
+\end{scope}
+\end{tikzpicture}

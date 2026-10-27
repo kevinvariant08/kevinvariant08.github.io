@@ -1,0 +1,12 @@
+\begin{tikzpicture}[scale=1.35]
+\tkzDefPoints{-2/0/W, 0/1/N, 2/0/E, 0/-3/S, -1/0.5/a, 1/0.5/b, 1/-1.5/c, -1/-1.5/d}
+\tkzFillPolygon[fillkey](a,b,c,d)
+\tkzDrawSegments[aux](W,E N,S)
+\tkzDrawPolygon[key](a,b,c,d)
+\tkzDrawPolygon[thick](W,N,E,S)
+\tkzDrawPoints(W,N,E,S,a,b,c,d)
+\tkzLabelPoint[left](W){$(-2,0)$}
+\tkzLabelPoint[above](N){$(0,1)$}
+\tkzLabelPoint[right](E){$(2,0)$}
+\tkzLabelPoint[below](S){$(0,-3)$}
+\end{tikzpicture}

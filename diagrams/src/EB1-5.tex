@@ -1,0 +1,12 @@
+\begin{tikzpicture}[scale=2.5]
+\tkzDefPoints{-1/0/P, 1/0/Q, 0.5/0.9/R, -0.5/0.9/S, 0/1.8/V}
+\tkzFillPolygon[fillkey](P,Q,R,S)
+\tkzDrawPolygon[key](P,Q,R,S)
+\tkzDrawSegments[aux](S,V R,V)
+\draw (-1.3,0) -- (1.3,0);
+\node[below] at (0,-0.02) {$2$ m};
+\node[above] at (0,0.92) {$1$ m};
+\draw[<->,>=Stealth] (1.25,0) -- (1.25,0.9) node[midway,right] {$0.9$ m};
+\draw[<->,>=Stealth] (1.25,0.9) -- (1.25,1.8) node[midway,right] {$0.9$ m};
+\draw[black!45] (0.5,0.9) -- (1.32,0.9) (0,1.8) -- (1.32,1.8);
+\end{tikzpicture}

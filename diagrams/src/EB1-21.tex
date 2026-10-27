@@ -1,0 +1,17 @@
+\begin{tikzpicture}[scale=5]
+\def\r{1.414214}
+\fill[fillkey] (1,0.828427) rectangle (\r,1);
+\draw (0,0) rectangle (\r,1);
+\draw (1,0) -- (1,1);
+\draw (1,0.414214) -- (\r,0.414214);
+\draw (1,0.828427) -- (\r,0.828427);
+\draw[key] (1,0.828427) rectangle (\r,1);
+\node at (0.5,0.5) {first};
+\node at (1.207107,0.207107) {second};
+\node at (1.207107,0.621320) {third};
+\node[above] at (0.707107,1) {$\sqrt2$};
+\node[left] at (0,0.5) {$1$};
+\node[below] at (1.207107,0) {$\sqrt2-1$};
+\draw[<->,>=Stealth] (1.48,0.828427) -- (1.48,1) node[midway,right] {$3-2\sqrt2$};
+\draw[black!45] (\r,0.828427) -- (1.52,0.828427) (\r,1) -- (1.52,1);
+\end{tikzpicture}

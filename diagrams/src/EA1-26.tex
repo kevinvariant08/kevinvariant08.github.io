@@ -1,0 +1,16 @@
+\begin{tikzpicture}[scale=0.8]
+\tkzDefPoints{0/0/O, 9.7416574/0/X, 0/2.2583426/Y, 1/1/I, 1/0/P, 0/1/Q, 1.2258343/1.9741657/T}
+\tkzDrawPolygon(O,X,Y)
+\tkzDrawCircle[key](I,P)
+\tkzDrawSegments[aux](I,P I,Q I,T)
+\tkzMarkRightAngle[size=0.3](X,O,Y)
+\tkzLabelSegment[below](O,P){$1$}
+\tkzLabelSegment[below](P,X){$a-1$}
+\tkzLabelSegment[left](O,Q){$1$}
+\tkzLabelSegment[left](Q,Y){$b-1$}
+\tkzLabelSegment[above](Y,T){$b-1$}
+\tkzLabelSegment[above right](T,X){$a-1$}
+\draw[decorate,decoration={brace,mirror,amplitude=5pt}] (0,-0.75) -- (9.7416574,-0.75) node[midway,below=5pt] {$a$};
+\draw[decorate,decoration={brace,amplitude=5pt}] (-1.25,0) -- (-1.25,2.2583426) node[midway,left=5pt] {$b$};
+\tkzDrawPoints(P,Q,T,I)
+\end{tikzpicture}

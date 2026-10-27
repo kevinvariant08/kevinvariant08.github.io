@@ -1,0 +1,22 @@
+\begin{tikzpicture}[scale=0.17]
+% cross-section: vertex V at origin, base at height 12 (radius 10), water at 18 (radius 15), rim at 24 (radius 20)
+\fill[fillkey] (-10,12) -- (10,12) -- (15,18) -- (-15,18) -- cycle;
+\fill[fillkey] (0,18) ellipse (15 and 2.4);
+\draw[aux] (-10,12) -- (0,0) -- (10,12);
+\draw[aux] (0,0) -- (0,24);
+\draw (0,12) ellipse (10 and 1.6);
+\draw[key] (0,18) ellipse (15 and 2.4);
+\draw (0,24) ellipse (20 and 3.2);
+\draw (-10,12) -- (-20,24) (10,12) -- (20,24);
+\draw[key] (0,12) -- (10,12);
+\node at (4.6,9.2) {$10$};
+\draw[key] (0,24) -- node[above=1pt,pos=0.55] {$20$} (20,24);
+% heights measured from V
+\draw[|-|] (23,0) -- node[right] {$h$} (23,12);
+\draw[|-|] (27,0) -- node[right] {$\tfrac32h$} (27,18);
+\draw[|-|] (32,0) -- node[right] {$2h$} (32,24);
+\draw[aux] (0,0) -- (32,0);
+\tkzDefPoint(0,0){V}
+\tkzDrawPoints(V)
+\tkzLabelPoint[below](V){$V$}
+\end{tikzpicture}

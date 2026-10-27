@@ -1,0 +1,16 @@
+\begin{tikzpicture}[scale=1.15]
+\def\h{1.480158}\def\a{1.587401}
+\fill[fillalt] plot[domain=-2:-\a,samples=60] (\x,{4-\x*\x}) -- (\a,\h) -- plot[domain=\a:2,samples=60] (\x,{4-\x*\x}) -- cycle;
+\fill[fillkey] plot[domain=-\a:\a,samples=100] (\x,{4-\x*\x}) -- cycle;
+\draw[->] (-2.7,0) -- (2.9,0) node[right] {$x$};
+\draw[->] (0,-0.4) -- (0,4.6) node[above] {$y$};
+\draw[line width=0.9pt] plot[domain=-2.06:2.06,samples=100,smooth] (\x,{4-\x*\x});
+\draw[key,line width=1.4pt] (-\a,\h) -- (\a,\h) node[right=3pt] {$y=h$};
+\draw[aux] (-\a,\h) -- (-\a,0) (\a,\h) -- (\a,0);
+\node[below] at (-\a,0) {$-a$};
+\node[below] at (\a,0) {$a$};
+\node[below left] at (-2,0) {$-2$};
+\node[below right] at (2,0) {$2$};
+\node[above right] at (0,4) {$4$};
+\node[right] at (1.25,2.6) {$y=4-x^2$};
+\end{tikzpicture}

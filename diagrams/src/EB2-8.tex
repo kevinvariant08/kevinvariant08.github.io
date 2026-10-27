@@ -1,0 +1,17 @@
+\begin{tikzpicture}[scale=1.4]
+\tkzDefPoints{0/0/O, -1.732051/1/U, 1.732051/1/W, 0/1/K}
+\fill[fillkey] (150:2) arc[start angle=150,end angle=390,radius=2] -- cycle;
+\draw (O) circle (2);
+\draw[key,line width=1.6pt] (150:2) arc[start angle=150,end angle=390,radius=2];
+\draw (U) -- (W);
+\tkzDrawSegments[aux](O,U O,W O,K)
+\tkzMarkRightAngle[size=0.15](O,K,W)
+\tkzMarkAngle[size=0.45](W,O,U)
+\node at (122:0.8) {$2\pi/3$};
+\tkzLabelSegment[below right=-1pt,pos=0.6](O,W){$2$}
+\tkzLabelSegment[right=0pt,pos=0.72](O,K){$1$}
+\draw[black!45] (0,-2) -- (2.5,-2) (W) -- (2.5,1);
+\draw[<->,>=Stealth] (2.4,-2) -- (2.4,1) node[midway,right] {$3$};
+\tkzDrawPoints(O)
+\tkzLabelPoint[below](O){$O$}
+\end{tikzpicture}

@@ -1,0 +1,18 @@
+\begin{tikzpicture}[scale=0.72]
+  \fill[fillkey] plot[domain=1:6,samples=100,smooth] (\x,{\x*\x-6*\x+5}) -- cycle;
+  \draw[->] (-0.8,0) -- (7.6,0) node[right] {$x$};
+  \draw[->] (0,-4.8) -- (0,6.4) node[above] {$y$};
+  \foreach \t in {1,...,7} \draw (\t,0.08) -- (\t,-0.08);
+  \foreach \t in {-4,...,6} \draw (0.08,\t) -- (-0.08,\t);
+  \node[below left] at (0,0) {$O$};
+  \draw[key] plot[domain=0:6.24,samples=100,smooth] (\x,{\x*\x-6*\x+5});
+  \draw[key] (-0.6,-1.6) -- (7.3,6.3);
+  \foreach \x/\lo/\hi in {2/-2/0, 3/-3/1, 4/-2/2, 5/1/3}
+    \foreach \y in {\lo,...,\hi} \fill (\x,\y) circle (2.2pt);
+  \foreach \p in {(1,0),(2,1),(3,2),(4,3),(5,4),(6,5),(2,-3),(3,-4),(4,-3),(5,0)}
+    \draw[fill=white] \p circle (2.2pt);
+  \node[below right] at (1,0) {$(1,0)$};
+  \node[right] at (6.15,4.75) {$(6,5)$};
+  \node[left] at (-0.05,5) {$y=x^2-6x+5$};
+  \node[right] at (7.3,6.3) {$y=x-1$};
+\end{tikzpicture}

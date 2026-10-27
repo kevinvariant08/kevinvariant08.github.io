@@ -1,0 +1,15 @@
+\begin{tikzpicture}[scale=0.6]
+\draw[->] (-3,0) -- (9.5,0) node[right] {$x$};
+\draw[->] (0,-5) -- (0,7.5) node[above] {$y$};
+\tkzDefPoints{-1/4/A, 6/5/B, 7/-2/C, 3/1/M}
+\tkzDrawCircle[black](M,A)
+\tkzDrawPolygon(A,B,C)
+\tkzDrawSegments[key](A,C M,B)
+\tkzMarkRightAngle[size=0.5](A,B,C)
+\tkzLabelSegment[above left=-1pt,pos=0.55](M,B){$5$}
+\tkzDrawPoints(A,B,C,M)
+\tkzLabelPoint[left](A){$A(-1,4)$}
+\tkzLabelPoint[above right](B){$B(6,5)$}
+\tkzLabelPoint[below right](C){$C(7,-2)$}
+\tkzLabelPoint[below left](M){$M(3,1)$}
+\end{tikzpicture}

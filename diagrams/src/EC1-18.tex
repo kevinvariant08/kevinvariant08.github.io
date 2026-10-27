@@ -1,0 +1,22 @@
+\begin{tikzpicture}[scale=0.72]
+\tkzDefPoint(0.0000,6.0000){P1}
+\tkzDefPoint(-5.1962,-3.0000){P2}
+\tkzDefPoint(5.1962,-3.0000){P3}
+\tkzDefPoint(0.0000,4.0000){Q1}
+\tkzDefPoint(-3.4641,-2.0000){Q2}
+\tkzDefPoint(3.4641,-2.0000){Q3}
+\tkzDefPoint(0,0){I}
+\tkzDefPoint(0,-3){F}
+\tkzDefPoint(0,-2){G}
+\tkzFillPolygon[fillkey](Q1,Q2,Q3)
+\tkzDrawPolygon(P1,P2,P3)
+\tkzDrawPolygon[key](Q1,Q2,Q3)
+\draw[aux] (I) -- (F);
+\tkzMarkRightAngle[size=0.3](I,F,P3)
+\draw[|-|] (0.35,0) -- node[right] {$2$} (0.35,-2);
+\draw[|-|] (0.35,-2) -- node[right] {$1$} (0.35,-3);
+\draw[aux] (-2.2,-2) circle (1);
+\tkzDefPoint(-2.2,-2){K}
+\tkzLabelSegment[below,pos=0.75](P2,P3){$6\sqrt3$}
+\tkzDrawPoints(I,K)
+\end{tikzpicture}

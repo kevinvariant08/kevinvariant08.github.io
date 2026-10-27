@@ -1,0 +1,13 @@
+\begin{tikzpicture}[xscale=1.55,yscale=0.38]
+\draw[->] (-1.3,0) -- (3.4,0) node[right] {$x$};
+\draw[->] (0,-3.4) -- (0,14) node[above] {$y$};
+\draw[line width=0.9pt] plot[domain=-0.85:2.92,samples=150,smooth] (\x,{\x*\x*\x*\x-4*\x*\x*\x+3*\x*\x+5*\x});
+\draw[key] (-1.0,-3.25) -- (3.0,8.75) node[right] {$y=3x-\tfrac14$};
+\tkzDefPoint(-0.224745,-0.924235){P}\tkzDefPoint(2.224745,6.424235){Q}\tkzDefPoint(2.224745,-0.924235){K}
+\draw[aux] (P) -- (K) -- (Q);
+\draw[aux] (Q) -- (2.224745,0) (P) -- (-0.224745,0);
+\node[below=6pt,fill=white,inner sep=1pt] at (1,-0.924235) {$\sqrt6$};
+\node[above] at (-0.224745,0) {$p$};
+\node[below right] at (2.224745,0) {$q$};
+\tkzDrawPoints(P,Q)
+\end{tikzpicture}

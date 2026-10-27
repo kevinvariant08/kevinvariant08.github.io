@@ -1,0 +1,14 @@
+\begin{tikzpicture}[scale=0.24]
+\tkzDefPoints{0/0/V, 18/0/C1, 6/0/C2, 13.5/7.794229/T1, 4.5/2.598076/T2}
+\draw[line width=1pt] (V) -- (30:31);
+\draw[line width=1pt] (V) -- (-30:31);
+\foreach \c/\r in {18/9, 6/3, 2/1, 0.6667/0.3333}{\fill[fillkey] (\c,0) circle (\r); \draw (\c,0) circle (\r);}
+\draw[aux] (V) -- (31,0);
+\tkzDrawSegments[key](C1,T1 C2,T2)
+\tkzMarkRightAngle[size=1.2](V,T1,C1)
+\draw (29.5,0) arc[start angle=0,end angle=30,radius=29.5];
+\node at (15:31.6) {$30^\circ$};
+\tkzLabelSegment[right=1pt](C1,T1){$r$}
+\tkzLabelSegment[above right=-2pt,pos=0.4](C2,T2){$s$}
+\tkzDrawPoints(C1,C2)
+\end{tikzpicture}

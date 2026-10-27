@@ -1,0 +1,14 @@
+\begin{tikzpicture}[scale=0.62]
+\draw[->] (-3.5,0) -- (8,0) node[right] {$x$};
+\draw[->] (0,-6.5) -- (0,4.8) node[above] {$y$};
+\tkzDefPoints{2/-1/C, 4/1/P, 4/-1/M, 4/3.582576/E1, 4/-5.582576/E2, 3/0/K}
+\draw (C) circle (5);
+\draw[key] (K) circle (1.414214);
+\tkzDrawSegments(E1,E2)
+\tkzDrawSegments[aux](C,P C,M)
+\tkzMarkRightAngle[size=0.4](C,M,P)
+\tkzDrawPoints(C,P,M,E1,E2)
+\tkzLabelPoint[below left](C){$C(2,-1)$}
+\tkzLabelPoint[right](P){$P(4,1)$}
+\tkzLabelPoint[below right](M){$M$}
+\end{tikzpicture}

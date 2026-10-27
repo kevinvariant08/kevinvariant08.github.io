@@ -1,0 +1,25 @@
+\begin{tikzpicture}[scale=1]
+  \tkzDefPoint(0,0){O}
+  \tkzDefPoint(-2.2981,-1.9284){A}
+  \tkzDefPoint(1.0261,-2.8191){B}
+  \tkzDefPoint(2.8191,1.0261){C}
+  \tkzDefPoint(1.0261,2.8191){D}
+  \tkzDefPoint(-2.2981,1.9284){E}
+  \draw (O) circle (3);
+  \draw[key,line width=2.2pt] (140:3) arc[start angle=140,end angle=220,radius=3];
+  \tkzDrawPolygon(A,B,C,D,E)
+  \tkzDrawSegments[key](A,C C,E)
+  \tkzMarkAngle[size=0.55](C,B,A)
+  \tkzLabelAngle[pos=0.95](C,B,A){$100^\circ$}
+  \tkzMarkAngle[size=0.55](E,D,C)
+  \tkzLabelAngle[pos=0.95](E,D,C){$120^\circ$}
+  \tkzMarkAngle[size=1.1,key](E,C,A)
+  \tkzLabelAngle[pos=1.5](E,C,A){$40^\circ$}
+  \node at (180:3.55) {$80^\circ$};
+  \tkzDrawPoints(A,B,C,D,E)
+  \tkzLabelPoint[below left](A){$A$}
+  \tkzLabelPoint[below right](B){$B$}
+  \tkzLabelPoint[right](C){$C$}
+  \tkzLabelPoint[above right](D){$D$}
+  \tkzLabelPoint[above left](E){$E$}
+\end{tikzpicture}

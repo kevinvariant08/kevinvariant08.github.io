@@ -1,0 +1,27 @@
+\begin{tikzpicture}[scale=0.7]
+\tkzDefPoint(0,0){O}
+\tkzDefPoint(0.0000,5.0771){A}
+\tkzDefPoint(-4.3969,-2.5386){B}
+\tkzDefPoint(-1.7365,-4.7709){C}
+\tkzDefPoint(4.3969,-2.5386){D}
+\tkzDefPoint(-1.1334,-1.3507){E}
+\tkzFillPolygon[fillalt](B,E,A)
+\tkzFillPolygon[fillkey](B,C,D)
+\draw (O) circle (5.0771);
+\tkzDrawPolygon(A,B,C,D)
+\tkzDrawSegment(B,D)
+\tkzDrawSegment[key](A,C)
+\tkzDrawSegment[aux](B,E)
+\tkzMarkSegments[mark=|](C,E C,B)
+\tkzMarkSegments[mark=||](E,A C,D)
+\tkzMarkAngle[size=0.75](A,C,B)
+\tkzLabelAngle[pos=1.15](A,C,B){$60^\circ$}
+\tkzMarkAngle[size=0.75](D,C,A)
+\tkzLabelAngle[pos=1.15](D,C,A){$60^\circ$}
+\tkzDrawPoints(A,B,C,D,E)
+\tkzLabelPoint[above](A){$A$}
+\tkzLabelPoint[left](B){$B$}
+\tkzLabelPoint[below](C){$C$}
+\tkzLabelPoint[right](D){$D$}
+\tkzLabelPoint[left](E){$E$}
+\end{tikzpicture}

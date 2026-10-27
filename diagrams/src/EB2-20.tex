@@ -1,0 +1,25 @@
+\begin{tikzpicture}[scale=0.85]
+\tkzDefPoints{-2/0/A, 2/0/B, 0/2/O, 0/4.828427/P}
+\begin{scope}
+\clip (-3.2,0) rectangle (3.2,5.2);
+\fill[fillkey] (O) circle (2.828427);
+\end{scope}
+\draw[key] (O) circle (2.828427);
+\draw[pattern=north east lines,pattern color=black!40] (A) arc[start angle=225,end angle=315,radius=2.828427] -- cycle;
+\draw[line width=1pt] (-3.6,0) -- (3.6,0) node[right] {goal line};
+\tkzDrawSegments[aux](P,A P,B)
+\tkzDrawSegments(O,A O,B)
+\tkzMarkRightAngle[size=0.3](A,O,B)
+\tkzMarkAngle[size=0.9](A,P,B)
+\tkzLabelAngle[pos=1.25](A,P,B){$45^\circ$}
+\tkzLabelSegment[above right=-2pt,pos=0.5](O,B){$2\sqrt2$}
+\draw[black!60] (O) -- (0,0);
+\node[left] at (0,1) {$2$};
+\node[below=6pt] at (0,-0.85) {$4$};
+\draw[<->,>=Stealth] (-2,-1.2) -- (2,-1.2);
+\tkzDrawPoints(A,B,O,P)
+\tkzLabelPoint[below left](A){$A$}
+\tkzLabelPoint[below right](B){$B$}
+\tkzLabelPoint[above](O){$O$}
+\tkzLabelPoint[above](P){$P$}
+\end{tikzpicture}

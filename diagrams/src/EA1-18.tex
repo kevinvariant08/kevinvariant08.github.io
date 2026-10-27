@@ -1,0 +1,26 @@
+\begin{tikzpicture}[scale=1]
+% left cube: the vertex V and its three neighbours
+\foreach \x in {0,1} \foreach \y in {0,1} \foreach \z in {0,1}
+  {\coordinate (L\x\y\z) at ({2.4*\x+1.2*\y},{2.4*\z+1.0*\y});
+   \coordinate (R\x\y\z) at ({5.8+2.4*\x+1.2*\y},{2.4*\z+1.0*\y});}
+\fill[fillkey] (L000) -- (L110) -- (L101) -- cycle;
+\draw (L000) -- (L100) -- (L101) -- (L001) -- cycle;
+\draw (L100) -- (L110) -- (L111) -- (L101);
+\draw (L001) -- (L011) -- (L111);
+\draw[dashed] (L010) -- (L000) (L010) -- (L110) (L010) -- (L011);
+\draw[key] (L000) -- (L110) -- (L101) -- cycle;
+\tkzDrawPoints(L100,L000,L110,L101)
+\node[below] at (L100) {$V$};
+% right cube: a triangle with sides 1, sqrt2, sqrt3
+\fill[fillalt] (R001) -- (R111) -- (R110) -- cycle;
+\draw (R000) -- (R100) -- (R101) -- (R001) -- cycle;
+\draw (R100) -- (R110) -- (R111) -- (R101);
+\draw (R001) -- (R011) -- (R111);
+\draw[dashed] (R010) -- (R000) (R010) -- (R110) (R010) -- (R011);
+\draw[key] (R001) -- (R111) -- (R110) -- cycle;
+\tkzMarkRightAngle[size=0.25](R001,R111,R110)
+\node[right] at ($(R111)!0.5!(R110)$) {$1$};
+\node[above=1pt] at ($(R001)!0.45!(R111)$) {$\sqrt2$};
+\node[below left] at ($(R001)!0.3!(R110)$) {$\sqrt3$};
+\tkzDrawPoints(R001,R111,R110)
+\end{tikzpicture}

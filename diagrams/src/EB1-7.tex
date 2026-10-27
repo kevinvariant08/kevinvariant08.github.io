@@ -1,0 +1,22 @@
+\begin{tikzpicture}[scale=0.3]
+\tkzDefPoints{0/0/O, -12/-5/A, 12/-5/B, 5/-12/C, -5/-12/D, 0/-5/M, 0/-12/N}
+\draw (O) circle (13);
+\tkzFillPolygon[fillkey](A,B,C,D)
+\tkzDrawPolygon(A,B,C,D)
+\tkzDrawSegments[aux](O,N)
+\tkzDrawSegments[key](O,B O,C)
+\tkzMarkRightAngle[size=0.9](O,M,B)
+\tkzMarkRightAngle[size=0.9](O,N,C)
+\tkzLabelSegment[above right=-1pt,pos=0.6](O,B){$13$}
+\tkzLabelSegment[right=1pt,pos=0.75](O,C){$13$}
+\tkzLabelSegment[below,pos=0.6](M,B){$12$}
+\tkzLabelSegment[below](N,C){$5$}
+\tkzLabelSegment[left](O,M){$5$}
+\tkzLabelSegment[left](M,N){$7$}
+\tkzDrawPoints(O,A,B,C,D)
+\tkzLabelPoint[above](O){$O$}
+\tkzLabelPoint[left](A){$A$}
+\tkzLabelPoint[right](B){$B$}
+\tkzLabelPoint[below right](C){$C$}
+\tkzLabelPoint[below left](D){$D$}
+\end{tikzpicture}

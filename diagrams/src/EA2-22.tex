@@ -1,0 +1,14 @@
+\begin{tikzpicture}[xscale=1.4,yscale=0.55]
+\fill[fillkey] plot[domain=0:2,samples=60] (\x,{(\x)*((\x)-3)*((\x)-3)}) -- cycle;
+\fill[fillkey] plot[domain=2:4,samples=60] (\x,{(\x)*((\x)-3)*((\x)-3)}) -- cycle;
+\draw[->] (-0.6,0) -- (5,0) node[right] {$x$};
+\draw[->] (0,-2.3) -- (0,9.4) node[above] {$y$};
+\draw[thick] plot[domain=-0.2:4.4,samples=120,smooth] (\x,{(\x)*((\x)-3)*((\x)-3)});
+\draw[key] (-0.5,-0.5) -- (4.8,4.8) node[right] {$y=x$};
+\node[left] at (4.4,8.8) {$y=x^3-6x^2+9x$};
+\tkzDefPoints{0/0/O, 2/2/I, 4/4/Q}
+\tkzDrawPoints(O,I,Q)
+\node[above left] at (O) {$O$};
+\node[right=2pt] at (I) {$(2,2)$};
+\node[below right] at (Q) {$(4,4)$};
+\end{tikzpicture}

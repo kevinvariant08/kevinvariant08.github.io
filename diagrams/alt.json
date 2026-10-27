@@ -1,0 +1,299 @@
+{
+ "B1-11": {
+  "alt": "The parabolas y = x^2 and y = -x^2 + 6x - 10 with their two common tangents, each touching both curves at the marked points."
+ },
+ "B1-13": {
+  "alt": "The circle x^2 + y^2 = 25 with centre O, the point P(3,1) at distance root 10 from O, a dashed circle of radius 4, and a sample chord of length 6 whose distance from O is 4, forming a 3-4-5 right triangle with a radius.",
+  "refers": "In the figure, every chord of length 6 touches the dashed circle of radius 4, which lies entirely outside P."
+ },
+ "B1-18": {
+  "alt": "A(1,2) and B(5,2) with the circle of radius 2 root 2 through them, centre at distance 2 above AB; the major arc where the angle ACB is 45 degrees is highlighted, and the triangle ABC with C at the top of the arc is shaded, its height drawn through the centre."
+ },
+ "B1-9": {
+  "alt": "Regular heptagon ABCDEFG inscribed in a dashed circle, with the cyclic quadrilateral ABCE highlighted: sides AB = BC = 1, CE = p, EA = q, and dashed diagonals AC = p and BE = q."
+ },
+ "B2-10": {
+  "alt": "Two quadrilaterals ABCD with AB = CD and BC = AD and the shared diagonal AC dashed: on the left D is on the opposite side of AC from B, giving a parallelogram; on the right D is on the same side as B, giving a crossed quadrilateral with BD parallel to AC.",
+  "refers": "The figure shows both positions of D: the parallelogram on the left and the crossed quadrilateral on the right."
+ },
+ "B2-11": {
+  "alt": "The kite with vertices (-2,0), (0,1), (2,0), (0,-3), its perpendicular diagonals of length 4 dashed, and the square formed by the midpoints of its sides shaded."
+ },
+ "C1-10": {
+  "alt": "The circle with centre C(4,3) and radius 2, with the two tangents from the origin O; OC has length 5, the radii to the tangent points are perpendicular to the tangents, alpha is the angle between OC and a tangent, and theta is the angle between the two tangents."
+ },
+ "C1-15": {
+  "alt": "First-quadrant graphs of y = f(x) and y = f^{-1}(x), mirror images in the dashed line y = x, meeting at O and (1,1); the region between them is shaded in two halves on either side of y = x."
+ },
+ "C1-19": {
+  "alt": "Graph of y = x^3 with the tangent y = 3x - 2 at P(1,1) meeting the curve again at Q(-2,-8); the region between the curve and the segment PQ is shaded."
+ },
+ "D1-11": {
+  "alt": "The curve y = x^3 - 3x^2 + 2x crossing the x-axis at O, 1 and 2, with the line for m = 2 through O meeting the curve again at (3,6), and the line for m = -1/4 through O touching the curve."
+ },
+ "D1-12": {
+  "alt": "The circle with centre (3,4) through the origin O, with the two lines through O that cut chords of length 8: the line x = 0 meeting the circle again at (0,8), and the line y = 7x/24 meeting it again at P; both lines are at distance 3 from the centre."
+ },
+ "D1-13": {
+  "alt": "Graph of y = x^3 - 4x for x from -2 to 3, with the three regions between the curve and the x-axis shaded and labelled with areas 4 (above, from -2 to 0), 4 (below, from 0 to 2) and 25/4 (above, from 2 to 3)."
+ },
+ "D1-14": {
+  "alt": "Triangle with AB = 10 and a 30 degree angle at A; the circle of radius 6 about B meets the ray from A at two points C1 and C2, giving the two possible triangles ABC1 and ABC2."
+ },
+ "D1-15": {
+  "alt": "Graph of y = x^3 - 3x with the two tangents passing through (2,2): the tangent at t = 2, which is the curve's own tangent at (2,2), and the horizontal tangent y = 2 at t = -1, touching the curve at (-1,2)."
+ },
+ "D1-17": {
+  "alt": "Parallelogram OABC with O(0,0), A(6,0), B(8,4), C(2,4); M on AB, the line OM meets the diagonal AC at P(5,1), triangle OPC is shaded, and the dashed rectangle from (0,0) to (5,4) encloses it."
+ },
+ "D1-18": {
+  "alt": "The region under y = x(4 - x) between x = 0 and x = 4, split by the line y = kx into a segment between the curve and the line and a lower part, each of area 16/3; the line meets the curve again at x = 4 - k."
+ },
+ "D1-9": {
+  "alt": "A triangle with sides x, x+1 and x+2, where the 120 degree angle lies between the sides x and x+1, opposite the longest side x+2."
+ },
+ "D2-2": {
+  "alt": "Graph of y = x cubed passing through the origin O, with its horizontal tangent (gradient 0) at O highlighted; the curve keeps increasing through O."
+ },
+ "EA1-10": {
+  "alt": "Regular hexagon with sides numbered 1 to 6 and the shaded triangle joining the midpoints of sides 1, 3 and 5; dashed lines of length root 3 join the centre to these midpoints, 120 degrees apart."
+ },
+ "EA1-14": {
+  "alt": "Triangle with sides 5, 7 and 8, the angle theta between the sides 5 and 8, and its incircle with the three radii r to the touching points; dashed lines join the incentre to the vertices."
+ },
+ "EA1-16": {
+  "alt": "Cross-section through the centre of the cube parallel to a face: a 10 by 10 square whose four 3 by 3 corner squares are wood, with the tunnel arms and the 4 by 4 central cube left open.",
+  "refers": "The figure shows the cross-section through the centre of the cube, parallel to one face: the shaded corner squares are wood and the white cross is the tunnels."
+ },
+ "EA1-18": {
+  "alt": "Two cubes: in the first, the three neighbours of a vertex V form a shaded equilateral triangle; in the second, a shaded right-angled triangle with sides 1, root 2 and root 3 made of an edge, a face diagonal and a space diagonal."
+ },
+ "EA1-19": {
+  "alt": "Circle with perpendicular chords AC and BD meeting at X, with AX = 2, XC = 6, BX = 3 and XD = 4, the dashed perpendicular bisectors x = 2 and y = -1/2 meeting at the centre, and a radius r."
+ },
+ "EA1-20": {
+  "alt": "Two views of the cone of height 12: vertex up with water 6 deep and air filling the top cone of height 6, and vertex down with the water forming a cone of depth d."
+ },
+ "EA1-24": {
+  "alt": "Triangle ABC with AB = 13, BC = 14, CA = 15, the altitude AD = 12, the angle bisector AE and the median AM, with the thin triangle AEM shaded."
+ },
+ "EA1-25": {
+  "alt": "Square ABCD of side 12 with E the midpoint of BC and F the midpoint of CD; AE and BF meet at right angles at P, the quadrilateral APFD is shaded blue and triangle BPE is shaded orange."
+ },
+ "EA1-26": {
+  "alt": "Right-angled triangle with legs a and b and its incircle of radius 1; the tangent lengths are 1 from the right angle, a - 1 and b - 1 from the other two vertices."
+ },
+ "EA1-27": {
+  "alt": "Circles of radii 4 and 9 touching each other and the line l, with the small circle of radius x in the gap; the centres are joined, the horizontal distance 12 is marked, and the touching points on l are 4 root x and 6 root x apart."
+ },
+ "EA1-9": {
+  "alt": "Circle with diameter AB, the tangent at B, and the line from A through C to T on the tangent, with right angles at B and C, AC = 9, CT = 16, and the perpendicular h from C to AB highlighted."
+ },
+ "EA2-10": {
+  "alt": "Parabola y = x^2 - 2x with the lines y = 4x and y = -8x, meeting it at (6, 24) and (-6, 48); the two enclosed regions are shaded."
+ },
+ "EA2-11": {
+  "alt": "Parabola y = x^2 with two unit circles: one centred at (0, 5/4) touching the parabola at two symmetric points, and one centred at (0, -1) touching it at the origin."
+ },
+ "EA2-12": {
+  "alt": "Points A(0,0) and B(3,0), the circle of points with PA = 2PB centred at (4,0) with radius 2, and the shaded triangle PAB with P at (4,2), base 3 and height 2."
+ },
+ "EA2-17": {
+  "alt": "Graphs of y = sin x and y = sin 2x for x from 0 to pi, meeting at pi/3, with the region of area 1/4 between 0 and pi/3 and the region of area 9/4 between pi/3 and pi shaded."
+ },
+ "EA2-19": {
+  "alt": "The lines y = 0 and 3y = 4x with their dashed angle bisector, and the two circles centred on it at (2r, r) that touch both lines and pass through the point (8, 1)."
+ },
+ "EA2-22": {
+  "alt": "Cubic y = x^3 - 6x^2 + 9x and the line y = x, meeting at O, (2,2) and (4,4), with the two equal shaded regions either side of (2,2)."
+ },
+ "EA2-26": {
+  "alt": "Circles of radius 1 centred at O and radius 2 centred at (4,0) with their four common tangents, labelled with gradients 1/root 15, -1/root 15, 3/root 7 and -3/root 7."
+ },
+ "EB1-1": {
+  "alt": "Axes with A(-1,4), B(6,5), C(7,-2) on a circle centred at M(3,1); AC is a diameter, angle ABC is marked as a right angle and MB has length 5."
+ },
+ "EB1-11": {
+  "alt": "Triangle ALB with AB = 12 km due east, north lines at A and B, the bearing angle 30 degrees at A, angles of 60 degrees at A and 45 degrees at B, and the perpendicular LH of length h to AB."
+ },
+ "EB1-12": {
+  "alt": "The parabolas C_0, C_1, C_2 and C_4 all passing through (2,4), with their turning points marked on the highlighted curve y = 4x - x^2, which lies below the dashed line y = 4."
+ },
+ "EB1-14": {
+  "alt": "Left: half of the cone's axial section, showing the frustum with radii 6 and 10, height 3 and slant 5, and the removed cone of slant 7.5. Right: the flat annular sector of angle 288 degrees with inner radius 7.5 and outer radius 12.5.",
+  "refers": "In the figure, the left diagram is half of a vertical section through the axis of the completed cone and the right diagram is the flat piece of card."
+ },
+ "EB1-15": {
+  "alt": "Trapezium cross-section of the trough with base 40, top 100 and depth 60, with water shaded to depth h and the water surface of width 40 + h."
+ },
+ "EB1-19": {
+  "alt": "Regular hexagon ABCDEF with centre O, vectors a along AB and b along AF, M the midpoint of CD, and the line AM crossing the diagonal BF at P."
+ },
+ "EB1-20": {
+  "alt": "Triangle ABC with BC = 12 and two fences parallel to BC of lengths 2 root 6 and 6 root 2, dividing it into regions with areas in the ratio 1 : 2 : 3 from A."
+ },
+ "EB1-21": {
+  "alt": "A rectangle 1 by root 2 from which a first square of side 1 and then a second and third square of side root 2 minus 1 are cut, leaving a shaded strip of height 3 minus 2 root 2."
+ },
+ "EB1-27": {
+  "alt": "Left: the square-based pyramid with the vertical section through the apex and the midpoints of two opposite base edges shaded. Right: that section, an isosceles triangle with base 6, sides 3 root 3 and height 3 root 2, with its inscribed circle of radius r.",
+  "refers": "The figure shows the pyramid with the section used, and the section itself with the sphere appearing as its inscribed circle."
+ },
+ "EB1-3": {
+  "alt": "Trapezium ABCD with AB parallel to DC and diagonals meeting at X; the four triangles are labelled with areas 6 (AXD), 4 (DXC), 6 (BXC) and 9 (AXB), the two given beds shaded."
+ },
+ "EB1-5": {
+  "alt": "Side view of the plinth as a trapezium with base 2 m, top 1 m and height 0.9 m, its sloping sides extended (dashed) to an apex a further 0.9 m above the top face.",
+  "refers": "The figure shows a side view of the plinth with the sloping faces extended to the apex."
+ },
+ "EB1-7": {
+  "alt": "Circle of radius 13 with centre O above the isosceles trapezium ABCD; the perpendicular from O meets AB at distance 5 and CD at distance 12, giving height 7, with radii OB and OC of length 13 and half-chords 12 and 5."
+ },
+ "EB2-15": {
+  "alt": "Axes with the boundary circle of centre C(2,-1) and radius 5, the point P(4,1), a chord through P with midpoint M where angle CMP is a right angle, and the highlighted small circle on diameter CP traced by M."
+ },
+ "EB2-17": {
+  "alt": "Two walls meeting at 60 degrees with the bisector dashed, half-angle 30 degrees marked, and a sequence of discs shrinking towards the corner; the first disc has radius r and the next radius s, each drawn to its tangent point on a wall."
+ },
+ "EB2-18": {
+  "alt": "Pulleys of radii 9 and 3 with the crossed belt highlighted; the straight sections cross at X on the line of centres, 18 from the larger centre, making angle alpha with that line, with the radius to a tangent point at right angles to the belt."
+ },
+ "EB2-20": {
+  "alt": "Goal posts A and B 4 m apart on the goal line, the circle of radius 2 root 2 centred at O, 2 m from AB, with angle AOB a right angle; the part of the disc on the pitch side is shaded, the minor segment beyond the line is hatched, and a point P on the arc shows the 45 degree angle."
+ },
+ "EB2-21": {
+  "alt": "Graph of y = f(x) rising to a cusp at the origin, falling to a minimum at (2, -3 times 2 to the power 2/3), then rising through (5,0); the dashed line y = -4 meets the graph at three points."
+ },
+ "EB2-22": {
+  "alt": "The parabola y = 4 - x^2 above the x-axis between -2 and 2, cut by the highlighted horizontal bar y = h between x = -a and x = a into an upper part and a lower part of equal area."
+ },
+ "EB2-26": {
+  "alt": "Graph of y = x^4 - 4x^3 + 3x^2 + 5x with the line y = 3x - 1/4 touching it at two points with x-coordinates p and q, whose horizontal separation is root 6."
+ },
+ "EB2-3": {
+  "alt": "Harbour H, lighthouse L with HL = 10 at 30 degrees to the course, the circle of radius 7 about L cutting the course in a highlighted chord; the perpendicular from L to the course has length 5 and the half-chord is 2 root 6."
+ },
+ "EB2-7": {
+  "alt": "Axes with the circle of centre (3,-2) and radius 5, and a line y = 2x + c cutting it in a highlighted chord AB of half-length 3 at perpendicular distance d from the centre.",
+  "refers": "The figure shows the extreme case, a chord of length exactly 6."
+ },
+ "EB2-8": {
+  "alt": "Circular cross-section of radius 2 with centre O and water shaded up to a horizontal surface 1 above O, so 3 deep; the dry segment's chord subtends 2 pi over 3 at O and the wetted arc is highlighted."
+ },
+ "EC1-13": {
+  "alt": "Cross-section of the bucket extended downwards to a cone with vertex V: base radius 10 at height h, the shaded water surface at height three halves h, and the rim radius 20 at height 2h."
+ },
+ "EC1-16": {
+  "alt": "The unrolled hat: a sector with vertex V, radius 6, angle 120 degrees and arc 4 pi, with A and B on the arc 60 degrees apart and the shaded equilateral triangle VAB whose side AB is 6.",
+  "refers": "In the net shown, the shortest route is the segment AB."
+ },
+ "EC1-18": {
+  "alt": "An equilateral tile of side 6 root 3 with a smaller shaded equilateral triangle inside, sharing its incentre, at distance 1 from each side; the inradius 3 is split as 2 plus 1 and a coin of radius 1 is shown with its centre on the inner triangle."
+ },
+ "EC1-21": {
+  "alt": "Cyclic quadrilateral ABCD with ABD equilateral and diagonal AC; E lies on CA with CE = CB, the 60 degree angles ACB and ACD are marked, and the congruent triangles BEA and BCD are shaded with EA = CD marked."
+ },
+ "EC1-24": {
+  "alt": "The removed corner piece: three mutually perpendicular edges p, q and r meeting at the corner of the block, with the triangular cut face having sides 5, 6 and 7."
+ },
+ "EC1-26": {
+  "alt": "The crate's starting square with corner P at the origin and the shaded region under the path of P: quarter circles of radius 2 centred at (2,0) and (6,0), a quarter circle of radius 2 root 2 centred at (4,0) from (2,2) to (6,2), and the two right-angled triangles beneath."
+ },
+ "EC1-27": {
+  "alt": "Triangle with A(0,0), B(4,0), C(0,4), the paths AD, BE and CF to D(3,1), E(0,3) and F(1,0), and the small shaded triangle they enclose."
+ },
+ "EC1-5": {
+  "alt": "Rectangle ABCD with AB = 6 and BC = 8 inscribed in a circle, its diagonals AC and BD drawn as diameters, and a point P on the circle joined to all four vertices with a right angle marked at P in triangle APC."
+ },
+ "EC2-1": {
+  "alt": "Circle with centre C(4,5) and radius 5 through A(1,1) and B(7,1), found from the lines x = 4 and y = 2x - 3; a path from the origin O meets the circle at P and Q, and the tangent from O touches the circle at (4,0) with length 4, while OC = root 41."
+ },
+ "EC2-10": {
+  "alt": "An annular sector centred at O with angle theta, inner radius r and outer radius R; the two straight edges have length w, and the curved edges have lengths r theta and R theta."
+ },
+ "EC2-13": {
+  "alt": "Cyclic quadrilateral ABCD with AB = 5, BC = 3, CD = 3 and DA = 8 in a circle with centre O and radius R; the diagonal AC = 7 is highlighted and the angle ABC of 120 degrees is marked."
+ },
+ "EC2-18": {
+  "alt": "The circles x squared plus y squared = 9 and the circle with centre (3,-2) of radius 4 meeting at A and B, together with the highlighted circle x squared plus y squared minus 9x plus 6y = 0, centre (9/2, -3), passing through A, B and the origin O."
+ },
+ "EC2-20": {
+  "alt": "Circle with centre O'(1,2) and radius 3, a larger highlighted concentric circle of radius 3 root 2, and the line x + y = c meeting it at two points P; from one P the perpendicular tangents touch at T1 and T2, forming a square O'T1PT2."
+ },
+ "EC2-22": {
+  "alt": "The parallel lines y = 0, y = 1 and y = 3 with a shaded equilateral triangle whose vertices (0,0), (b,1) and (c,3) lie one on each line."
+ },
+ "EC2-24": {
+  "alt": "The disc x squared plus y squared = 12 and the parabola y = x squared meeting at (plus or minus root 3, 3); the region above the parabola inside the disc is shaded, with the radii from O making an angle of pi over 3 and dashed verticals marking the two right-angled triangles."
+ },
+ "EC2-25": {
+  "alt": "Twelve equally spaced points on a circle with centre O and a shaded triangle on three of them, with radii from O splitting the full angle into central angles 30i, 30j and 30k degrees."
+ },
+ "EC2-26": {
+  "alt": "The circle x squared plus y squared = 5 and the line x + 2y = 10 with a point P on the line; the tangents from P touch at A and B, the chord AB passes through the fixed point Q(1/2, 1), M is the foot of the perpendicular from O on AB, and M lies on the highlighted small circle with diameter OQ."
+ },
+ "EC2-4": {
+  "alt": "Circle with centre (3,1) and radius 2 cut by the line y = x at (1,1) and (3,3); the radii to these points are perpendicular, the perpendicular distance from the centre to the chord is root 2, and the minor segment is shaded."
+ },
+ "EC2-9": {
+  "alt": "A regular hexagon of side 3 with a wheel of radius 2 rolling along a side and another wheel swinging about a vertex through the exterior angle pi over 3; the dashed path of the wheel's centre consists of straight pieces and arcs of radius 2."
+ },
+ "ED1-1": {
+  "alt": "The parabola y = x^2 - 6x + 5 and the line y = x - 1 meeting at (1,0) and (6,5), with the region between them shaded, the 16 interior lattice points shown as filled dots and the 10 boundary lattice points as hollow dots.",
+  "refers": "In the figure, the filled dots are the points counted and the hollow dots lie on the boundary."
+ },
+ "ED1-17": {
+  "alt": "Three lines through the point (2,3), each cutting off a triangle of area 12 with the coordinate axes: one in the first quadrant with intercepts 4 and 6, one in the second quadrant and a steep one in the fourth quadrant.",
+  "refers": "In the figure, the blue triangle comes from the double root and the two orange triangles from the other quadratic."
+ },
+ "ED1-20": {
+  "alt": "The set of points at equal taxi distance from A(0,0) and B(4,2): a vertical ray upwards from (1,2), the segment from (1,2) to (3,0) and a vertical ray downwards from (3,0), with the 13 counted lattice points marked from (1,7) down to (3,-5)."
+ },
+ "ED1-25": {
+  "alt": "Two unit squares with the same centre, one rotated by 30 degrees; their common octagon is shaded, one 30-60-90 corner triangle is highlighted, and the bottom side of the upright square is split into lengths c/2, c and root 3 c/2."
+ },
+ "ED1-27": {
+  "alt": "A 5 by 5 array of dots with an upright bounding square of side k (dashed) and a tilted square inside it whose vertices lie a distance j along each side of the bounding square."
+ },
+ "ED1-3": {
+  "alt": "A cyclic pentagon ABCDE in a circle with angle ABC = 100 degrees and angle CDE = 120 degrees marked, chords AC and CE highlighted, the angle ACE = 40 degrees marked, and the arc EA of 80 degrees drawn thick."
+ },
+ "ED1-8": {
+  "alt": "Triangle CPQ with north lines at C, P and Q: CP is on a bearing of 50 degrees, CP = PQ = 3 km marked equal, the angles at P and Q are 60 degrees, and QC is highlighted."
+ },
+ "ED2-11": {
+  "alt": "The two possible curves y = x^2(x - 3), touching the x-axis at 0 and crossing at 3 with the region below the axis shaded, and y = (x + 1)(x - 2)^2, crossing at -1 and touching at 2 with the region above the axis shaded."
+ },
+ "ED2-15": {
+  "alt": "The curve y = 4 - x^2 in the first quadrant with the tangent at P(a, 4 - a^2) meeting the axes at a^2 + 4 and (a^2 + 4)/(2a), and the triangle it forms with the axes shaded."
+ },
+ "ED2-17": {
+  "alt": "The four-pointed star-shaped region root|x| + root|y| <= 2 with vertices at (plus or minus 4, 0) and (0, plus or minus 4), its first-quadrant quarter highlighted under the curve y = (2 - root x)^2 through (1,1), inside the dashed square |x| + |y| = 4."
+ },
+ "ED2-18": {
+  "alt": "The parabola y = x^2 with a chord PQ whose tangents at P and Q meet at a right angle, the chord passing through the focus (0, 1/4), and the dashed horizontal chord from (-1/2, 1/4) to (1/2, 1/4).",
+  "refers": "In the figure, the dashed chord is the shortest one, with p = 1/2 and q = -1/2."
+ },
+ "ED2-19": {
+  "alt": "For the example k = -8, the graph of y = |x^4 - 8x^2 + 8| with local maxima at (-2,8), (0,8) and (2,8), and the dashed parts of x^4 - 8x^2 + 8 below the axis with minima at (-2,-8) and (2,-8) that are reflected upwards.",
+  "refers": "The figure shows the case k = -8, which lies in the range found."
+ },
+ "ED2-21": {
+  "alt": "The curve y = x^3 for 0 <= x <= 1 with the shaded triangles T1, T2, T3 under it: each has vertex A_n on the curve, B_n where the tangent at A_n meets the x-axis, and C_n directly below A_n, with B1 = C2 and B2 = C3."
+ },
+ "ED2-27": {
+  "alt": "The square with vertices (plus or minus 4, plus or minus 4) with its diagonals dashed and the region R closer to the centre than to every side shaded, bounded by four parabolic arcs meeting the diagonals at (h,h) and its reflections; the eighth of R between the x-axis and the diagonal y = x is highlighted."
+ },
+ "ED2-3": {
+  "alt": "The curve y = root x with the tangent and normal at P(16,4) meeting the x-axis at T(-16,0) and N(16.5,0); the thin triangle PTN with its right angle at P is shaded, drawn to true scale."
+ },
+ "ED2-7": {
+  "alt": "The parabola y = x^2/4 and the line y = -1, with the circles centred at (0,0), (2,1) and (-2,1) each touching y = -1 and all passing through the point (0,1)."
+ },
+ "ED2-8": {
+  "alt": "The ball's path from A(2,3) to the y-axis at (0,13/7), then to the x-axis at (13/4,0), then to B(5,1), with the reflected points (5,-1) and B''(-5,-1) and the dashed unfolded straight path to B''."
+ },
+ "ED2-9": {
+  "alt": "An equilateral triangle of side 6 with a 60 degree angle marked, and the curve of constant width formed by three arcs, each centred at the opposite vertex; the triangle is shaded blue and the three circular segments orange."
+ }
+}

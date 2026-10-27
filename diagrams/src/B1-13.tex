@@ -1,0 +1,17 @@
+\begin{tikzpicture}[scale=0.72]
+\tkzDefPoints{0/0/O, 3/1/P, -3/-4/X, 3/-4/Y, 0/-4/M}
+\draw[thick] (O) circle (5);
+\draw[key,dashed] (O) circle (4);
+\tkzDrawSegments(X,Y)
+\tkzDrawSegments[aux](O,M O,X)
+\tkzDrawSegments[key](O,P)
+\tkzMarkRightAngle[size=0.35](O,M,Y)
+\tkzLabelSegment[right](O,M){$4$}
+\tkzLabelSegment[above left](O,X){$5$}
+\tkzLabelSegment[below](M,Y){$3$}
+\tkzLabelSegment[above left,pos=0.6](O,P){$\sqrt{10}$}
+\tkzDrawPoints(O,P)
+\tkzLabelPoint[above left](O){$O$}
+\tkzLabelPoint[below](P){$P(3,1)$}
+\node[right] at (3.6,4.0) {$x^2+y^2=25$};
+\end{tikzpicture}

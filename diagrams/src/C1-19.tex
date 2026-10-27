@@ -1,0 +1,12 @@
+\begin{tikzpicture}[x=1.5cm,y=0.45cm]
+\fill[fillkey] plot[domain=-2:1,samples=100,smooth] (\x,{\x*\x*\x}) -- cycle;
+\draw[->] (-2.8,0) -- (2,0) node[right] {$x$};
+\draw[->] (0,-9.5) -- (0,4.5) node[above] {$y$};
+\draw[thick] plot[domain=-2.15:1.6,samples=120,smooth] (\x,{\x*\x*\x});
+\draw[key] (-2.5,-9.5) -- (2,4) node[right] {$y=3x-2$};
+\fill (1,1) circle (1.6pt) (-2,-8) circle (1.6pt);
+\node[left] at (1,1.4) {$P(1,1)$};
+\node[right] at (-2,-8) {$Q(-2,-8)$};
+\node[below left] at (0,0) {$O$};
+\node[left] at (1.55,3.7) {$y=x^3$};
+\end{tikzpicture}

@@ -1,0 +1,17 @@
+\begin{tikzpicture}[scale=0.55]
+\tkzDefPoints{0/0/B, 12/0/C, 4.5/8/A, 2.662883/4.734014/P, 7.561862/4.734014/Q, 1.318019/2.343146/R, 9.803301/2.343146/S}
+\tkzFillPolygon[fillkey](A,P,Q)
+\tkzFillPolygon[fillalt](R,S,C,B)
+\tkzDrawPolygon(A,B,C)
+\tkzDrawSegments[key](P,Q R,S)
+\tkzLabelSegment[below](B,C){$12$}
+\tkzLabelSegment[above=1pt,pos=0.5](P,Q){\small$2\sqrt6$}
+\tkzLabelSegment[above=1pt,pos=0.5](R,S){\small$6\sqrt2$}
+\node at (4.55,6.35) {$1$};
+\node at (3.4,3.5) {$2$};
+\node at (6.3,1.0) {$3$};
+\tkzDrawPoints(A,B,C)
+\tkzLabelPoint[above](A){$A$}
+\tkzLabelPoint[below left](B){$B$}
+\tkzLabelPoint[below right](C){$C$}
+\end{tikzpicture}

@@ -1,0 +1,18 @@
+\begin{tikzpicture}[scale=1.15]
+\tkzDefPoints{1/2/A, 5/2/B, 3/4/K, 3/6.828427/C, 3/2/H}
+\draw[key] (5,2) arc (-45:225:2.828427);
+\draw[aux] (1,2) arc (225:315:2.828427);
+\tkzFillPolygon[fillkey](A,B,C)
+\tkzDrawPolygon(A,B,C)
+\tkzDrawSegments[aux](C,H K,B)
+\tkzMarkRightAngle[size=0.2](C,H,B)
+\tkzMarkAngle[size=0.6](A,C,B)
+\tkzLabelAngle[pos=0.85,fill=blue!12,inner sep=1pt](A,C,B){$45^\circ$}
+\tkzLabelSegment[right,pos=0.3](H,K){$2$}
+\tkzLabelSegment[below left,pos=0.62](K,B){$2\sqrt2$}
+\tkzLabelSegment[below](A,B){$4$}
+\tkzDrawPoints(A,B,C,K)
+\tkzLabelPoint[below left](A){$A(1,2)$}
+\tkzLabelPoint[below right](B){$B(5,2)$}
+\tkzLabelPoint[above](C){$C$}
+\end{tikzpicture}

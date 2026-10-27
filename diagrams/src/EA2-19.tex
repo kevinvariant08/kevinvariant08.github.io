@@ -1,0 +1,14 @@
+\begin{tikzpicture}[scale=0.42]
+\draw[->] (-1,0) -- (18,0) node[right] {$x$};
+\draw[->] (0,-1.5) -- (0,12.8) node[above] {$y$};
+\draw[thick] (-0.6,-0.8) -- (9.3,12.4) node[right] {$3y=4x$};
+\draw[aux] (0,0) -- (17.5,8.75) node[right] {bisector};
+\tkzDefPoints{5.8074176/2.9037088/C1, 11.1925824/5.5962912/C2, 8/1/P, 5.8074176/0/F1}
+\draw[key] (C1) circle (2.9037088);
+\draw[key] (C2) circle (5.5962912);
+\tkzDrawSegments[aux](C1,F1)
+\tkzLabelSegment[left](C1,F1){$r$}
+\tkzDrawPoints(C1,C2,P)
+\node[above left] at (C1) {$(2r,r)$};
+\draw[<-] (8.15,0.8) -- (9.6,-1.2) node[right] {$(8,1)$};
+\end{tikzpicture}

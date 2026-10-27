@@ -1,0 +1,18 @@
+\begin{tikzpicture}[scale=0.42]
+\tkzDefPoints{0/0/H, 8.660254/5/L, 8.660254/0/F, 3.761264/0/E1, 13.559244/0/E2}
+\draw (L) circle (7);
+\draw[->] (-0.5,0) -- (17,0) node[right] {course};
+\tkzDrawSegments(H,L)
+\tkzDrawSegments[key](E1,E2)
+\tkzDrawSegments[aux](L,F L,E2)
+\tkzMarkRightAngle[size=0.7](L,F,E2)
+\tkzMarkAngle[size=2.2](F,H,L)
+\tkzLabelAngle[pos=3](F,H,L){$30^\circ$}
+\tkzLabelSegment[above left=-1pt](H,L){$10$}
+\tkzLabelSegment[left](L,F){$5$}
+\tkzLabelSegment[above right=-2pt](L,E2){$7$}
+\tkzLabelSegment[below](F,E2){$2\sqrt6$}
+\tkzDrawPoints(H,L,E1,E2)
+\tkzLabelPoint[below left](H){$H$}
+\tkzLabelPoint[above](L){$L$}
+\end{tikzpicture}

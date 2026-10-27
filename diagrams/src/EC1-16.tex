@@ -1,0 +1,23 @@
+\begin{tikzpicture}[scale=0.78]
+\tkzDefPoint(0,0){V}
+\tkzDefPoint(5.1962,3.0000){X}
+\tkzDefPoint(-5.1962,3.0000){Y}
+\tkzDefPoint(3.0000,5.1962){A}
+\tkzDefPoint(-3.0000,5.1962){B}
+\fill[fillkey] (V) -- (A) -- (B) -- cycle;
+\draw (V) -- (X) arc (30:150:6) -- cycle;
+\tkzDrawSegments[aux](V,A V,B)
+\tkzDrawSegment[key](A,B)
+\tkzLabelSegment[below right=-1pt,pos=0.72](V,X){$6$}
+\tkzLabelSegment[below left=-1pt,pos=0.72](V,Y){$6$}
+\draw (0,0) ++(30:1.6) arc (30:150:1.6);
+\tkzMarkAngle[size=0.9](A,V,B)
+\tkzLabelAngle[pos=1.25](A,V,B){$60^\circ$}
+\node at (22:2.25) {$120^\circ$};
+\tkzLabelSegment[below](A,B){$6$}
+\node[above=4pt] at (90:6) {arc $=4\pi$};
+\tkzDrawPoints(V,A,B)
+\tkzLabelPoint[below](V){$V$}
+\tkzLabelPoint[above right](A){$A$}
+\tkzLabelPoint[above left](B){$B$}
+\end{tikzpicture}

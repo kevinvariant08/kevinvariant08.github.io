@@ -1,0 +1,16 @@
+\begin{tikzpicture}[scale=0.85]
+\tkzDefPoints{0/0/B, 8/0/C, 2.5/4.3301270/A, 3/1.7320508/I}
+\tkzDefPoints{3/0/P, 1.5/2.5980762/Q, 4.0714286/3.0929479/R}
+\tkzDrawCircle[key](I,P)
+\tkzDrawPolygon(A,B,C)
+\tkzDrawSegments[aux](I,A I,B I,C)
+\tkzDrawSegments[key](I,P I,Q I,R)
+\tkzMarkRightAngle[size=0.25](I,P,C)
+\tkzLabelSegment[right,pos=0.45](I,P){$r$}
+\tkzMarkAngle[size=0.9](C,B,A)
+\tkzLabelAngle[pos=1.2](C,B,A){$\theta$}
+\tkzLabelSegment[above left](B,A){$5$}
+\tkzLabelSegment[above right](A,C){$7$}
+\tkzLabelSegment[below](B,C){$8$}
+\tkzDrawPoints(I)
+\end{tikzpicture}

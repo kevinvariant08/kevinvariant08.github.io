@@ -1,0 +1,16 @@
+\begin{tikzpicture}[scale=0.85]
+\tkzDefPoints{0/0/O, 6/0/A, 8/4/B, 2/4/C, 6.6667/1.3333/M, 5/1/P}
+\draw[aux] (0,0) rectangle (5,4);
+\tkzFillPolygon[fillkey](O,P,C)
+\tkzDrawPolygon(O,A,B,C)
+\tkzDrawSegments(A,C)
+\tkzDrawSegments[key](O,M)
+\tkzDrawPolygon[key](O,P,C)
+\tkzDrawPoints(O,A,B,C,M,P)
+\tkzLabelPoint[below left](O){$O(0,0)$}
+\tkzLabelPoint[below right](A){$A(6,0)$}
+\tkzLabelPoint[above right](B){$B(8,4)$}
+\tkzLabelPoint[above left](C){$C(2,4)$}
+\tkzLabelPoint[right](M){$M$}
+\node[above right,yshift=1pt] at (P) {$P(5,1)$};
+\end{tikzpicture}

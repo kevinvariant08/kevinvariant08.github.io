@@ -1,0 +1,21 @@
+\begin{tikzpicture}[scale=0.6]
+\fill[fillalt] (0,0) rectangle (3,3);
+\fill[fillalt] (7,0) rectangle (10,3);
+\fill[fillalt] (0,7) rectangle (3,10);
+\fill[fillalt] (7,7) rectangle (10,10);
+\draw (0,0) rectangle (10,10);
+\draw[key] (3,0) -- (3,3) -- (0,3);
+\draw[key] (7,0) -- (7,3) -- (10,3);
+\draw[key] (0,7) -- (3,7) -- (3,10);
+\draw[key] (10,7) -- (7,7) -- (7,10);
+\draw[aux] (3,3) rectangle (7,7);
+\node at (5,5) {central cube};
+\draw[decorate,decoration={brace,mirror,amplitude=4pt}] (0,-0.25) -- (3,-0.25) node[midway,below=4pt] {$3$};
+\draw[decorate,decoration={brace,mirror,amplitude=4pt}] (3,-0.25) -- (7,-0.25) node[midway,below=4pt] {$4$};
+\draw[decorate,decoration={brace,mirror,amplitude=4pt}] (7,-0.25) -- (10,-0.25) node[midway,below=4pt] {$3$};
+\draw[decorate,decoration={brace,amplitude=4pt}] (-0.25,0) -- (-0.25,3) node[midway,left=4pt] {$3$};
+\draw[decorate,decoration={brace,amplitude=4pt}] (-0.25,3) -- (-0.25,7) node[midway,left=4pt] {$4$};
+\draw[decorate,decoration={brace,amplitude=4pt}] (-0.25,7) -- (-0.25,10) node[midway,left=4pt] {$3$};
+\node at (5,1.5) {tunnel};
+\node at (8.5,5) [rotate=90] {tunnel};
+\end{tikzpicture}

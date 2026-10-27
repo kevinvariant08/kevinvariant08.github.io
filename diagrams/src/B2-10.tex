@@ -1,0 +1,24 @@
+\begin{tikzpicture}[scale=0.78]
+\tkzDefPoints{0/0/A, 1.2/2/B, 4.5/0/C, 3.3/-2/D}
+\tkzDrawSegments[aux](A,C)
+\tkzDrawPolygon[key](A,B,C,D)
+\tkzMarkSegments[mark=|](A,B C,D)
+\tkzMarkSegments[mark=||](B,C A,D)
+\tkzDrawPoints(A,B,C,D)
+\tkzLabelPoint[left](A){$A$}
+\tkzLabelPoint[above](B){$B$}
+\tkzLabelPoint[right](C){$C$}
+\tkzLabelPoint[below](D){$D$}
+\begin{scope}[xshift=6.5cm]
+\tkzDefPoints{0/0/A, 1.2/2/B, 4.5/0/C, 3.3/2/D}
+\tkzDrawSegments[aux](A,C)
+\tkzDrawPolygon[key](A,B,C,D)
+\tkzMarkSegments[mark=|](A,B C,D)
+\tkzMarkSegments[mark=||](B,C A,D)
+\tkzDrawPoints(A,B,C,D)
+\tkzLabelPoint[left](A){$A$}
+\tkzLabelPoint[above](B){$B$}
+\tkzLabelPoint[right](C){$C$}
+\tkzLabelPoint[above](D){$D$}
+\end{scope}
+\end{tikzpicture}

@@ -1,0 +1,22 @@
+\begin{tikzpicture}[scale=1.15]
+% orthographic view of the removed corner: O is the corner of the block, edges p, q, r mutually perpendicular
+\tkzDefPoints{0/0/O, -3.6596/1.0486/P, 1.3307/0.9106/Q, 0/-4.911/R}
+\draw[aux] (P) -- ($(O)!1.25!(P)$);
+\draw[aux] (Q) -- ($(O)!1.5!(Q)$);
+\draw[aux] (R) -- ($(O)!1.15!(R)$);
+\fill[fillkey] (P) -- (O) -- (R) -- cycle;
+\fill[fillkey] (Q) -- (O) -- (R) -- cycle;
+\fill[fillalt] (P) -- (O) -- (Q) -- cycle;
+\tkzDrawSegments(O,P O,R O,Q)
+\tkzDrawPolygon[key](P,Q,R)
+\draw (-0.2884,0.0826) -- ++(0.2476,0.1694) -- (0.2476,0.1694);
+\draw (-0.2884,0.0826) -- ++(0,-0.3) -- (0,-0.3);
+\draw (0.2476,0.1694) -- ++(0,-0.3) -- (0,-0.3);
+\tkzLabelSegment[below](O,P){$p$}
+\tkzLabelSegment[below right=-1pt](O,Q){$q$}
+\tkzLabelSegment[right](O,R){$r$}
+\tkzLabelSegment[above](P,Q){$5$}
+\tkzLabelSegment[right](Q,R){$6$}
+\tkzLabelSegment[below left](P,R){$7$}
+\tkzDrawPoints(O,P,Q,R)
+\end{tikzpicture}

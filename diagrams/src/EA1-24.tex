@@ -1,0 +1,21 @@
+\begin{tikzpicture}[scale=0.55]
+\tkzDefPoints{0/0/B, 14/0/C, 5/12/A, 5/0/D, 6.5/0/E, 7/0/M}
+\tkzFillPolygon[fillkey](A,E,M)
+\tkzDrawPolygon(A,B,C)
+\tkzDrawSegments[aux](A,D)
+\tkzDrawSegments[key](A,E A,M)
+\tkzMarkRightAngle[size=0.5](A,D,C)
+\tkzMarkAngle[size=1.6,mark=|](B,A,E)
+\tkzMarkAngle[size=1.6,mark=|](E,A,C)
+\tkzLabelSegment[above left](B,A){$13$}
+\tkzLabelSegment[above right](A,C){$15$}
+\tkzLabelSegment[left,pos=0.4](A,D){$12$}
+\draw[|<->|] (0,-1.4) -- (14,-1.4) node[midway,fill=white] {$14$};
+\tkzDrawPoints(A,B,C,D,E,M)
+\tkzLabelPoints[above](A)
+\tkzLabelPoints[below left](B)
+\tkzLabelPoints[below right](C)
+\tkzLabelPoints[below](D)
+\tkzLabelPoints[below left=-1pt](E)
+\tkzLabelPoints[below right=-1pt](M)
+\end{tikzpicture}

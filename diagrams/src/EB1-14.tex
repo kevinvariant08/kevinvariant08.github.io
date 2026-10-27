@@ -1,0 +1,30 @@
+\begin{tikzpicture}
+% half axial section of the completed cone
+\begin{scope}[scale=0.3]
+\tkzDefPoints{0/7.5/V, 0/0/O, 10/0/P, 0/3/Q, 6/3/R}
+\tkzFillPolygon[fillkey](O,P,R,Q)
+\tkzDrawSegments[aux](V,Q V,R)
+\tkzDrawSegments[key](P,R)
+\tkzDrawSegments(O,P Q,R O,Q)
+\tkzMarkRightAngle[size=0.9](P,O,Q)
+\tkzLabelSegment[below](O,P){$10$}
+\tkzLabelSegment[above=-1pt,pos=0.4](Q,R){$6$}
+\tkzLabelSegment[left](O,Q){$3$}
+\tkzLabelSegment[right](P,R){$5$}
+\tkzLabelSegment[above right=-1pt](V,R){$7.5$}
+\end{scope}
+% the annular sector
+\begin{scope}[xshift=7.2cm,yshift=1.1cm,scale=0.2]
+\fill[fillkey] (36:12.5) arc[start angle=36,end angle=324,radius=12.5] -- (324:7.5) arc[start angle=324,end angle=36,radius=7.5] -- cycle;
+\draw[key] (36:12.5) arc[start angle=36,end angle=324,radius=12.5];
+\draw[key] (36:7.5) arc[start angle=36,end angle=324,radius=7.5];
+\draw[key] (36:7.5) -- (36:12.5) (324:7.5) -- (324:12.5);
+\draw[aux] (0,0) -- (36:7.5) (0,0) -- (324:7.5);
+\draw (36:1.4) arc[start angle=36,end angle=324,radius=1.4];
+\node at (180:3.4) {$288^\circ$};
+\fill (0,0) circle (1.6pt);
+\draw[decorate,decoration={brace,amplitude=5pt,raise=3pt}] (0,0) -- (324:12.5);
+\node at ($(36:4.4)+(-54:1.3)$) {$7.5$};
+\node at ($(324:6.25)+(54:2.6)$) {$12.5$};
+\end{scope}
+\end{tikzpicture}

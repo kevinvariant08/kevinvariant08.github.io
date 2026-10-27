@@ -1,0 +1,21 @@
+\begin{tikzpicture}[scale=0.62]
+\draw[->] (-2.6,0) -- (9.2,0) node[right] {$x$};
+\draw[->] (0,-1.6) -- (0,10.2) node[above] {$y$};
+\tkzDefPoints{0/0/O, 3/4/K, 0/8/P, 7.68/2.24/Q, 0/4/F, 3.84/1.12/G}
+\draw[thick] (K) circle (5);
+\draw[key] (0,0) -- (0,9.6);
+\draw[key] (-1.6,-0.4667) -- (9.0,2.625);
+\tkzDrawSegments[aux](K,F K,G)
+\tkzMarkRightAngle[size=0.35](K,F,P)
+\tkzMarkRightAngle[size=0.35](K,G,Q)
+\tkzLabelSegment[above](K,F){$3$}
+\tkzLabelSegment[right](K,G){$3$}
+\tkzLabelSegment[left,pos=0.3](O,P){$8$}
+\tkzDrawPoints(O,K,P,Q)
+\tkzLabelPoint[below left](O){$O$}
+\tkzLabelPoint[right](K){$(3,4)$}
+\tkzLabelPoint[left](P){$(0,8)$}
+\tkzLabelPoint[below right](Q){$P$}
+\node[right] at (9.0,2.625) {$y=\tfrac{7}{24}x$};
+\node[left] at (0,9.6) {$x=0$};
+\end{tikzpicture}

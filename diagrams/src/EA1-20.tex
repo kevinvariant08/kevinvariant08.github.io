@@ -1,0 +1,22 @@
+\begin{tikzpicture}[scale=0.3]
+% vertex up, water 6 deep
+\fill[fillkey] (-5,0) -- (-2.5,6) arc (180:360:2.5 and 0.3) -- (5,0) arc (0:-180:5 and 0.6) -- cycle;
+\draw[key] (0,6) ellipse (2.5 and 0.3);
+\draw (-5,0) -- (0,12) -- (5,0);
+\draw (5,0) arc (0:-180:5 and 0.6);
+\draw[dashed] (5,0) arc (0:180:5 and 0.6);
+\draw[|<->|] (-7,0) -- (-7,12) node[midway,left] {$12$};
+\draw[|<->|] (6.8,0) -- (6.8,6) node[midway,right] {$6$};
+\draw[|<->|] (6.8,6) -- (6.8,12) node[midway,right] {$6$};
+\node at (0,2.8) {water};
+\node at (0,8.6) {air};
+% vertex down, water d deep
+\begin{scope}[xshift=19cm]
+\fill[fillkey] (0,0) -- (-4.7825,11.4776) arc (180:360:4.7825 and 0.574) -- cycle;
+\draw (-5,12) -- (0,0) -- (5,12);
+\draw (0,12) ellipse (5 and 0.6);
+\draw[key] (0,11.4776) ellipse (4.7825 and 0.574);
+\draw[|<->|] (6.8,0) -- (6.8,11.4776) node[midway,right] {$d$};
+\node at (0,6) {water};
+\end{scope}
+\end{tikzpicture}

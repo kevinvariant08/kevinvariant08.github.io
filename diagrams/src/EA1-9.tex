@@ -1,0 +1,18 @@
+\begin{tikzpicture}[scale=0.3]
+\tkzDefPoints{0/15/A, 0/0/B, 20/0/T, 7.2/9.6/C, 0/7.5/O, 0/9.6/H}
+\tkzDrawCircle[black](O,A)
+\draw (-2,0) -- (22,0);
+\tkzDrawSegments(A,B A,T B,C)
+\tkzDrawSegments[key](C,H)
+\tkzMarkRightAngle[size=0.9](A,B,T)
+\tkzMarkRightAngle[size=0.9](A,C,B)
+\tkzMarkRightAngle[size=0.9](C,H,A)
+\tkzLabelSegment[above right](A,C){$9$}
+\tkzLabelSegment[above right](C,T){$16$}
+\tkzLabelSegment[above](H,C){$h$}
+\tkzDrawPoints(A,B,C,T)
+\tkzLabelPoints[above left](A)
+\tkzLabelPoints[below left](B)
+\tkzLabelPoints[below](T)
+\tkzLabelPoints[above right](C)
+\end{tikzpicture}

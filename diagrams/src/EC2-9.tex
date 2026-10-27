@@ -1,0 +1,14 @@
+\begin{tikzpicture}[scale=0.6]
+\tkzDefPoints{3.0000/0.0000/V0, 1.5000/2.5981/V1, -1.5000/2.5981/V2, -3.0000/0.0000/V3, -1.5000/-2.5981/V4, 1.5000/-2.5981/V5}
+\tkzDefPoints{4.7321/-1.0000/X1, 4.7321/1.0000/X2, 5/0/W1, 0/4.5981/W2, 0/2.5981/T2}
+\draw[aux] (4.7321,-1.0000) arc (-30:30:2) -- (3.2321,3.5981) arc (30:90:2) -- (-1.5000,4.5981) arc (90:150:2) -- (-4.7321,1.0000) arc (150:210:2) -- (-3.2321,-3.5981) arc (210:270:2) -- (1.5000,-4.5981) arc (270:330:2) -- cycle;
+\tkzDrawPolygon[fill=black!6](V0,V1,V2,V3,V4,V5)
+\draw[key] (W1) circle (2);
+\draw[key] (W2) circle (2);
+\tkzDrawSegments(V0,X1 V0,X2 W2,T2)
+\tkzMarkAngle[size=0.8](X1,V0,X2)
+\tkzLabelAngle[pos=1.35](X1,V0,X2){$\pi/3$}
+\tkzLabelSegment[right](W2,T2){$2$}
+\tkzLabelSegment[below](V3,V4){$3$}
+\tkzDrawPoints(V0,W2,T2,X1,X2)
+\end{tikzpicture}

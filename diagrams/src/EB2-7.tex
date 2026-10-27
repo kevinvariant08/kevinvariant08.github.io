@@ -1,0 +1,17 @@
+\begin{tikzpicture}[scale=0.55]
+\draw[->] (-3,0) -- (10,0) node[right] {$x$};
+\draw[->] (0,-8) -- (0,4.2) node[above] {$y$};
+\tkzDefPoints{3/-2/C, 6.577709/-3.788854/F, 5.236068/-6.472136/A, 7.919350/-1.105573/B}
+\draw (C) circle (5);
+\draw (4.85,-7.2433) -- (8.75,0.5567) node[above] {$y=2x+c$};
+\tkzDrawSegments[key](A,B)
+\tkzDrawSegments[aux](C,F C,B)
+\tkzMarkRightAngle[size=0.5](C,F,B)
+\tkzLabelSegment[below left=-1pt](C,F){$d$}
+\tkzLabelSegment[above=1pt,pos=0.5](C,B){$5$}
+\tkzLabelSegment[right=1pt,pos=0.5](F,B){$3$}
+\tkzDrawPoints(C,A,B)
+\tkzLabelPoint[left](C){$(3,-2)$}
+\tkzLabelPoint[right](A){$A$}
+\tkzLabelPoint[above left=0pt](B){$B$}
+\end{tikzpicture}

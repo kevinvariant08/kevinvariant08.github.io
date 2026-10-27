@@ -1,0 +1,19 @@
+\begin{tikzpicture}[scale=0.36]
+  \begin{scope}
+    \clip (-11.5,-15.5) rectangle (6.5,7.5);
+    \fill[fillkey] (0,0) -- (4,0) -- (0,6) -- cycle;
+    \fill[fillalt] (0,0) -- (-9.6569,0) -- (0,2.4853) -- cycle;
+    \fill[fillalt] (0,0) -- (1.6569,0) -- (0,-14.4853) -- cycle;
+    \draw[key] (-1,7.5) -- (5.6667,-2.5);
+    \draw[key] (-11.5,-0.4744) -- (6.5,4.1581);
+    \draw[key] (-0.1161,-15.5) -- (2.5147,7.5);
+  \end{scope}
+  \draw[->] (-11.5,0) -- (6.8,0) node[right] {$x$};
+  \draw[->] (0,-15.5) -- (0,7.8) node[above] {$y$};
+  \tkzDefPoint(2,3){P}
+  \tkzDrawPoints(P)
+  \node (L) at (3.7,4.7) {$(2,3)$}; \draw[thin] (L.south west) ++(0.2,0.1) -- (2.2,3.25);
+  \node[below left] at (4.05,0) {$4$};
+  \node[left] at (0,6) {$6$};
+  \node[below left] at (0,0) {$O$};
+\end{tikzpicture}

@@ -1,0 +1,22 @@
+\begin{tikzpicture}[scale=0.55]
+\tkzDefPoints{0/0/A, 12/0/B, 4.3923/7.6077/L, 4.3923/0/H, 0/9.5/NA, 12/9.5/NB}
+\draw[aux,->] (A) -- (NA) node[above] {N};
+\draw[aux,->] (B) -- (NB) node[above] {N};
+\tkzDrawSegments(A,B)
+\tkzDrawSegments(A,L B,L)
+\tkzDrawSegments[key](L,H)
+\tkzMarkRightAngle[size=0.6](L,H,B)
+\tkzMarkAngle[size=1.6](B,A,L)
+\tkzLabelAngle[pos=2.2](B,A,L){$60^\circ$}
+\tkzMarkAngle[size=2.6](L,A,NA)
+\tkzLabelAngle[pos=3.2](L,A,NA){$30^\circ$}
+\tkzMarkAngle[size=1.8](L,B,A)
+\tkzLabelAngle[pos=2.5](L,B,A){$45^\circ$}
+\tkzLabelSegment[right](L,H){$h$}
+\draw[decorate,decoration={brace,mirror,amplitude=5pt}] (0,-1.0) -- (12,-1.0) node[midway,below=5pt] {$12$ km};
+\tkzDrawPoints(A,B,L,H)
+\tkzLabelPoint[below left](A){$A$}
+\tkzLabelPoint[below right](B){$B$}
+\tkzLabelPoint[above](L){$L$}
+\tkzLabelPoint[below right](H){$H$}
+\end{tikzpicture}

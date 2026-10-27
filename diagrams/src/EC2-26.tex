@@ -1,0 +1,19 @@
+\begin{tikzpicture}[scale=0.8]
+\draw[->] (-2.8,0) -- (8,0) node[right] {$x$};
+\draw[->] (0,-2.8) -- (0,6) node[above] {$y$};
+\tkzDefPoints{0/0/O, 6/2/P, 0.0886/2.2343/A, 1.4114/-1.7343/B, 0.75/0.25/M, 0.5/1/Q, 0.25/0.5/S}
+\draw (O) circle (2.2361);
+\draw (-0.6,5.3) -- (7.6,1.2) node[above right] {$x+2y=10$};
+\tkzDrawSegments(P,A P,B)
+\tkzDrawSegment[aux](O,P)
+\tkzDrawSegment[key](A,B)
+\draw[key] (S) circle (0.5590);
+\tkzMarkRightAngle[size=0.14](O,M,Q)
+\tkzDrawPoints(O,P,A,B,M,Q)
+\tkzLabelPoint[below left](O){$O$}
+\tkzLabelPoint[above](P){$P$}
+\tkzLabelPoint[above right](A){$A$}
+\tkzLabelPoint[below right](B){$B$}
+\tkzLabelPoint[below right](M){$M$}
+\tkzLabelPoint[above right](Q){$Q$}
+\end{tikzpicture}

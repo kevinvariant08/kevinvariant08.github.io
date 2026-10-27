@@ -1,0 +1,15 @@
+\begin{tikzpicture}[scale=1.55]
+\tkzDefPoints{0/0/A, 4/0/B, 0/4/C, 3/1/D, 0/3/E, 1/0/F}
+\tkzDefPoints{2.7692/0.9231/X, 0.3077/2.7692/Y, 0.9231/0.3077/Z}
+\tkzFillPolygon[fillkey](X,Y,Z)
+\tkzDrawPolygon(A,B,C)
+\tkzDrawSegments(A,D B,E C,F)
+\tkzDrawPolygon[key](X,Y,Z)
+\tkzDrawPoints(A,B,C,D,E,F)
+\tkzLabelPoint[below left](A){$A(0,0)$}
+\tkzLabelPoint[below](B){$B(4,0)$}
+\tkzLabelPoint[left](C){$C(0,4)$}
+\tkzLabelPoint[above right](D){$D(3,1)$}
+\tkzLabelPoint[left](E){$E(0,3)$}
+\tkzLabelPoint[below](F){$F(1,0)$}
+\end{tikzpicture}

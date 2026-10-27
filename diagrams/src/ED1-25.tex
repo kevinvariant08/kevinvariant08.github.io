@@ -1,0 +1,18 @@
+\begin{tikzpicture}[scale=6]
+  \useasboundingbox (-0.72,-0.72) rectangle (0.72,0.72);
+  \fill[fillkey] (-0.5,0.2887) -- (-0.5,-0.134) -- (-0.2887,-0.5) -- (0.134,-0.5) -- (0.5,-0.2887) -- (0.5,0.134) -- (0.2887,0.5) -- (-0.134,0.5) -- cycle;
+  \fill[fillalt] (0.134,-0.5) -- (0.5,-0.5) -- (0.5,-0.2887) -- cycle;
+  \draw[thick] (-0.5,-0.5) rectangle (0.5,0.5);
+  \draw[key] (-0.183,-0.683) -- (0.683,-0.183) -- (0.183,0.683) -- (-0.683,0.183) -- cycle;
+  \tkzDefPoint(0.134,-0.5){U}
+  \tkzDefPoint(0.5,-0.5){V}
+  \tkzDefPoint(0.5,-0.2887){W}
+  \tkzMarkRightAngle[size=0.05](U,V,W)
+  \tkzMarkAngle[size=0.12](V,U,W)
+  \tkzLabelAngle[pos=0.17](V,U,W){\footnotesize$30^\circ$}
+  \tkzDefPoint(-0.2887,-0.5){X}
+  \tkzDrawPoints(X,U)
+  \node[below] at (-0.394,-0.51) {$c/2$};
+  \node[below] at (-0.077,-0.5) {$c$};
+  \node[below] at (0.317,-0.51) {$\sqrt3\,c/2$};
+\end{tikzpicture}

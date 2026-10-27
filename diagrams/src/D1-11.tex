@@ -1,0 +1,12 @@
+\begin{tikzpicture}[x=1.8cm,y=0.6cm]
+\draw[->] (-0.8,0) -- (3.5,0) node[right] {$x$};
+\draw[->] (0,-2.6) -- (0,7.6) node[above] {$y$};
+\draw[thick] plot[domain=-0.62:3.12,samples=120,smooth] (\x,{\x*(\x-1)*(\x-2)});
+\draw[key] (-0.7,-1.4) -- (3.45,6.9) node[right] {$m=2$};
+\draw[key] (-0.7,0.175) -- (3.45,-0.8625) node[right] {$m=-\tfrac14$};
+\foreach \t in {1,2} \draw (\t,0.12) -- (\t,-0.12) node[below] {$\t$};
+\fill (0,0) circle (1.6pt) (1.5,-0.375) circle (1.6pt) (3,6) circle (1.6pt);
+\node[below right] at (0,0) {$O$};
+\node[below right] at (3,6) {$(3,6)$};
+\node at (2.6,-2.0) {$y=x^3-3x^2+2x$};
+\end{tikzpicture}

@@ -1,0 +1,14 @@
+\begin{tikzpicture}[xscale=0.95,yscale=0.5]
+\draw[->] (-1.6,0) -- (6.8,0) node[right] {$x$};
+\draw[->] (0,-7.6) -- (0,5) node[above] {$y$};
+\draw[aux] (-1.6,-4) -- (6.6,-4) node[right,black] {$y=-4$};
+\draw[key] plot[domain=-1.2:0,samples=150,smooth] (\x,{pow(abs(\x),2/3)*(\x-5)});
+\draw[key] plot[domain=0:6.3,samples=200,smooth] (\x,{pow(abs(\x),2/3)*(\x-5)});
+\tkzDefPoint(-0.603169,-4){R1}\tkzDefPoint(1,-4){R2}\tkzDefPoint(3.131034,-4){R3}
+\tkzDefPoint(2,-4.762203){Mn}\tkzDefPoint(0,0){Z}\tkzDefPoint(5,0){Fv}
+\tkzDrawPoints(R1,R2,R3,Mn,Z,Fv)
+\node[below] at (2,-4.85) {$\bigl(2,\,-3\cdot2^{2/3}\bigr)$};
+\node[above left] at (0,0) {$0$};
+\node[above left] at (5,0) {$5$};
+\node[right] at (6.3,4.43) {$y=f(x)$};
+\end{tikzpicture}

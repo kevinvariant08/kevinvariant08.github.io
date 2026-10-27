@@ -1,0 +1,11 @@
+\begin{tikzpicture}[scale=2.2]
+\tkzDefPoints{0/0/V, 1.5/0/U, -1.25/2.165064/W}
+\tkzFillPolygon[fillkey](V,U,W)
+\tkzDrawPolygon[key](V,U,W)
+\tkzMarkAngle[size=0.25](U,V,W)
+\tkzLabelAngle[pos=0.45](U,V,W){$120^\circ$}
+\tkzLabelSegment[below](V,U){$x$}
+\tkzLabelSegment[left](V,W){$x+1$}
+\tkzLabelSegment[above right](U,W){$x+2$}
+\tkzDrawPoints(V,U,W)
+\end{tikzpicture}

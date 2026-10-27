@@ -1,0 +1,22 @@
+\begin{tikzpicture}[scale=0.27]
+\tkzDefPoint(0,0){O}
+\tkzDefPoint(-7.4018,6.7241){P1}
+\tkzDefPoint(-14.8035,13.4482){P2}
+\tkzDefPoint(7.4018,6.7241){Q1}
+\tkzDefPoint(14.8035,13.4482){Q2}
+\fill[fillkey] (Q1) -- (Q2) arc (42.2535:137.7465:20) -- (P1) arc (137.7465:42.2535:10) -- cycle;
+\tkzDrawSegments[aux](O,P1 O,Q1)
+\draw[key] (Q2) arc (42.2535:137.7465:20);
+\draw[key] (Q1) arc (42.2535:137.7465:10);
+\tkzDrawSegments(P1,P2 Q1,Q2)
+\tkzMarkAngle[size=2.2](Q1,O,P1)
+\tkzLabelAngle[pos=3.1](Q1,O,P1){$\theta$}
+\tkzLabelSegment[below left=-1pt](O,P1){$r$}
+\tkzLabelSegment[below left=-1pt](P1,P2){$w$}
+\tkzLabelSegment[above left=-1pt](Q1,Q2){$w$}
+\draw[decorate,decoration={brace,amplitude=5pt,mirror}] ($(O)!0.6cm!-90:(Q2)$) -- ($(Q2)!0.6cm!90:(O)$) node[midway,below right=3pt] {$R$};
+\node[above] at (90:20) {$R\theta$};
+\node[below] at (90:10) {$r\theta$};
+\tkzDrawPoints(O)
+\tkzLabelPoint[below](O){$O$}
+\end{tikzpicture}

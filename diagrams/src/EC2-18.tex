@@ -1,0 +1,14 @@
+\begin{tikzpicture}[scale=0.55]
+\draw[->] (-3.8,0) -- (10.6,0) node[right] {$x$};
+\draw[->] (0,-8.8) -- (0,3.8) node[above] {$y$};
+\tkzDefPoints{0/0/O, 2.2911/1.9367/A, -0.9065/-2.8598/B, 4.5/-3/M}
+\draw (0,0) circle (3);
+\draw (3,-2) circle (4);
+\draw[key] (M) circle (5.4083);
+\tkzDrawPoints(O,A,B,M)
+\tkzLabelPoint[above left](O){$O$}
+\tkzLabelPoint[above left](A){$A$}
+\tkzLabelPoint[below left](B){$B$}
+\tkzLabelPoint[right](M){$\left(\tfrac92,-3\right)$}
+\node[right,text=blue!55!black] at (6.3,3.0) {$x^2+y^2-9x+6y=0$};
+\end{tikzpicture}

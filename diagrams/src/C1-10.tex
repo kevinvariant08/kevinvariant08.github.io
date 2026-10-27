@@ -1,0 +1,21 @@
+\begin{tikzpicture}[scale=0.95]
+\draw[->] (-0.6,0) -- (7,0) node[right] {$x$};
+\draw[->] (0,-0.6) -- (0,6.4) node[above] {$y$};
+\tkzDefPoints{0/0/O, 4/3/C, 2.2602/3.9864/T, 4.4598/1.0536/S}
+\draw[thick] (C) circle (2);
+\draw[key] (O) -- ($(O)!1.32!(T)$);
+\draw[key] (O) -- ($(O)!1.38!(S)$);
+\tkzDrawSegments(O,C)
+\tkzDrawSegments[aux](C,T C,S)
+\tkzMarkRightAngle[size=0.25](C,T,O)
+\tkzMarkRightAngle[size=0.25](C,S,O)
+\tkzLabelSegment[above left](C,T){$2$}
+\tkzLabelSegment[above left,pos=0.72](O,C){$5$}
+\tkzMarkAngle[size=1.0](C,O,T)
+\tkzLabelAngle[pos=1.3](C,O,T){$\alpha$}
+\tkzMarkAngle[size=2.0](S,O,T)
+\node at (2.1,0.75) {$\theta$};
+\tkzDrawPoints(O,C,T,S)
+\tkzLabelPoint[below left](O){$O$}
+\tkzLabelPoint[right](C){$C(4,3)$}
+\end{tikzpicture}
