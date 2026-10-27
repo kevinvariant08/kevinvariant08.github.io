@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Compile solution diagrams. Each diagrams/src/<ID>.tex holds one tikzpicture (tkz-euclide).
+"""Compile diagrams. Each diagrams/src/<ID>.tex holds one tikzpicture (tkz-euclide, circuitikz or pgfplots).
 Writes diagrams/<ID>.pdf (for the PDF solutions) and diagrams/<ID>.svg (for the website).
 
     python tools/build-diagrams.py                 every diagram
@@ -12,6 +12,8 @@ import os, sys, subprocess, tempfile, shutil
 PRE = r"""\documentclass[border=6pt]{standalone}
 \usepackage{amsmath,amssymb}
 \usepackage{tkz-euclide}
+\usepackage[european,straightvoltages]{circuitikz}
+\usepackage{pgfplots}\pgfplotsset{compat=1.16}
 \usetikzlibrary{arrows.meta,calc,patterns,decorations.pathreplacing,angles,quotes}
 \tikzset{every picture/.style={line cap=round,line join=round,font=\small},
   key/.style={draw=blue!55!black,line width=0.9pt},
