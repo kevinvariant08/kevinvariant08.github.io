@@ -1,0 +1,16 @@
+\begin{tikzpicture}[scale=0.62]
+\fill[fillkey] (-4.6,0) rectangle (4.6,-7);
+\fill[white] (-0.8,-3) rectangle (0.8,-5);
+\fill[fillkey] (-0.8,-5) rectangle (0.8,-6);
+\draw[line width=0.9pt] (-4.6,0) -- (4.6,0);
+\node[font=\scriptsize,anchor=south west] at (-4.6,0.05) {lake surface, $100\text{ kPa}$};
+\draw[line width=1.6pt] (-0.8,-6) -- (-0.8,-3) -- (0.8,-3) -- (0.8,-6);
+\draw[line width=0.6pt] (-0.8,-5) -- (0.8,-5);
+\node[font=\scriptsize,align=center] at (0,-4) {air\\$150\text{ kPa}$};
+\foreach \d in {3,5,6} {\draw[aux] (0.9,-\d) -- (2.6,-\d); \node[font=\scriptsize,anchor=west] at (2.65,-\d) {$\d\text{ m}$};}
+\draw[{Stealth[length=1.6mm]}-{Stealth[length=1.6mm]}] (-1.4,-5) -- (-1.4,-6);
+\node[font=\scriptsize,anchor=east] at (-1.5,-5.5) {$1.0\text{ m}$};
+\draw[{Stealth[length=1.6mm]}-{Stealth[length=1.6mm]}] (-3.3,-3) -- (-3.3,-6);
+\node[font=\scriptsize,anchor=east] at (-3.4,-4.5) {$3.0\text{ m}$};
+\node[font=\scriptsize,anchor=north] at (0,-6.1) {$160\text{ kPa}$};
+\end{tikzpicture}

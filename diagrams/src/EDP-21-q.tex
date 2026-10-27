@@ -1,0 +1,7 @@
+\begin{tikzpicture}
+\begin{axis}[width=8cm,height=5cm,axis lines=left,xmin=0,xmax=1300,ymin=0,ymax=2,
+ xtick={0,300,600,900,1200},ytick={0,0.5,1,1.5,2},yticklabels={0,0.5,1.0,1.5,2.0},xlabel={position $x$ / m},ylabel={$1/v$ / s\,m$^{-1}$},
+ grid=major,grid style={black!12},scaled x ticks=false,/pgf/number format/1000 sep={}]
+\addplot[key,line width=1.3pt] coordinates {(0,0.5) (300,1.5) (900,1.5) (1200,0.5)};
+\end{axis}
+\end{tikzpicture}

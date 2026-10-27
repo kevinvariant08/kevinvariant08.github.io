@@ -1,0 +1,8 @@
+\begin{tikzpicture}
+\draw (0,0) to[battery1] (0,3) to[lamp,l=$P$] (3.4,3) -- (5.8,3);
+\draw (3.4,3) to[lamp,l=$Q$] (3.4,0);
+\draw (5.8,3) to[lamp,l=$R$] (5.8,0);
+\draw (5.8,0) -- (0,0);
+\draw (3.4,2.55) -- (2.3,2.55) to[nos,l_=$S$] (2.3,0.45) -- (3.4,0.45);
+\fill (3.4,3) circle (1.6pt) (3.4,0) circle (1.6pt) (3.4,2.55) circle (1.6pt) (3.4,0.45) circle (1.6pt);
+\end{tikzpicture}

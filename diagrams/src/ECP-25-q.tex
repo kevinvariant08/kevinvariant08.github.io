@@ -1,0 +1,8 @@
+\begin{tikzpicture}
+\begin{axis}[width=7.2cm,height=5.6cm,axis lines=left,xmin=0,xmax=3.0,ymin=0,ymax=10,
+ xtick={0,0.5,...,3.0},ytick={0,1,...,10},grid=both,grid style={black!15},
+ xlabel={$I$ / A},ylabel={$P$ / W},xticklabel style={/pgf/number format/fixed},
+ tick label style={font=\footnotesize},label style={font=\small}]
+\addplot[key,line width=1.1pt,domain=0:2.5,samples=60]{6*x-x^2};
+\end{axis}
+\end{tikzpicture}

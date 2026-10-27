@@ -1,0 +1,19 @@
+\begin{tikzpicture}[scale=0.85]
+% field region (0.80 m) shaded, rails 4.0 cm apart (not to scale across)
+\fill[fillkey] (1.5,-0.25) rectangle (6.5,1.65);
+\foreach \x in {1.9,2.7,...,6.3} \foreach \y in {0.45,0.95} {\fill[blue!55!black] (\x,\y) circle (0.9pt); \draw[blue!55!black] (\x,\y) circle (2.6pt);}
+\draw[line width=1.6pt] (0,0) -- (6.5,0);
+\draw[line width=1.6pt] (0,1.4) -- (6.5,1.4);
+\draw[line width=3pt] (1.7,-0.2) -- (1.7,1.6);
+\node[above,font=\footnotesize] at (1.7,1.6) {rod};
+\draw[fill=white] (-1.25,0.35) rectangle (-0.1,1.05); \node[font=\footnotesize] at (-0.675,0.7) {supply};
+\draw (-0.1,0.95) -- (0,0.95) -- (0,1.4); \draw (-0.1,0.45) -- (0,0.45) -- (0,0);
+\draw[|<->|] (1.5,-0.75) -- (6.5,-0.75) node[midway,below,font=\footnotesize] {$0.80\text{ m}$ (field region)};
+\draw[|<->|] (7.0,0) -- (7.0,1.4) node[midway,right,font=\footnotesize] {$4.0\text{ cm}$};
+\node[font=\footnotesize,align=center] at (4.0,2.25) {$B = 0.50\text{ T}$, vertically upwards\\(out of the page)};
+\begin{scope}[shift={(-0.6,2.4)}]
+\draw[-{Stealth}] (0,0) -- (0,0.6) node[above,font=\footnotesize] {N};
+\draw[-{Stealth}] (0,0) -- (0.6,0) node[right,font=\footnotesize] {E};
+\end{scope}
+\node[font=\footnotesize] at (4.0,-1.55) {view from above};
+\end{tikzpicture}

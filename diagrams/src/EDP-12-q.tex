@@ -1,0 +1,22 @@
+\begin{tikzpicture}
+\begin{axis}[width=8.4cm,height=5cm,xmin=0,xmax=0.88,ymin=-2.9,ymax=2.9,
+ axis lines=middle,xtick={0.2,0.4,0.6,0.8},xticklabels={},ytick={-2,2},
+ xlabel={$x$ / m},ylabel={$s$ / mm},
+ xlabel style={anchor=west},ylabel style={anchor=south},
+ tick label style={font=\scriptsize},label style={font=\small}]
+\addplot[key,line width=1.1pt,domain=0:0.8,samples=120] {2*sin(450*x)};
+\addplot[only marks,mark=*,mark size=1.6pt] coordinates {(0.1,1.4142) (0.2,2) (0.3,1.4142) (0.4,0) (0.5,-1.4142) (0.6,-2) (0.7,-1.4142) (0.8,0)};
+\node[font=\small,anchor=south east] at (axis cs:0.1,1.45) {A};
+\node[font=\small,anchor=south] at (axis cs:0.2,2.05) {B};
+\node[font=\small,anchor=south west] at (axis cs:0.3,1.45) {C};
+\node[font=\small,anchor=south west] at (axis cs:0.4,0.1) {D};
+\node[font=\small,anchor=north east] at (axis cs:0.5,-1.45) {E};
+\node[font=\small,anchor=north] at (axis cs:0.6,-2.05) {F};
+\node[font=\small,anchor=north west] at (axis cs:0.7,-1.45) {G};
+\node[font=\small,anchor=south east] at (axis cs:0.8,0.1) {H};
+\node[font=\scriptsize,anchor=north] at (axis cs:0.2,-0.1) {$0.2$};
+\node[font=\scriptsize,anchor=north east] at (axis cs:0.4,-0.1) {$0.4$};
+\node[font=\scriptsize,anchor=south] at (axis cs:0.6,0.1) {$0.6$};
+\node[font=\scriptsize,anchor=north west] at (axis cs:0.8,-0.1) {$0.8$};
+\end{axis}
+\end{tikzpicture}

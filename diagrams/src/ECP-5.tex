@@ -1,0 +1,24 @@
+\begin{tikzpicture}
+\draw[aux] (-1.4,0) -- (6.8,0);
+\draw[aux] (0,0) circle (0.6); \draw[aux] (3,0) circle (0.6);
+\draw[-{Stealth}] (0,0) ++(65:0.6) arc (65:115:0.6);
+\draw[-{Stealth}] (3,0) ++(115:0.6) arc (115:65:0.6);
+\draw[fill=white] (0,0) circle (0.24); \fill (0,0) circle (0.06);
+\draw[fill=white] (3,0) circle (0.24);
+\draw (3,0) ++(-0.17,-0.17) -- ++(0.34,0.34) ++(0,-0.34) -- ++(-0.34,0.34);
+\node at (-0.75,-0.55) {$X$};
+\node at (2.25,-0.55) {$Y$};
+\node[font=\footnotesize] at (1.5,-0.3) {$M$};
+\fill (1.50,0) circle (1.4pt);
+\draw[key,-{Stealth}] (1.43,0) -- (1.43,1.600);
+\draw[-{Stealth},line width=0.9pt] (1.57,0) -- (1.57,0.533);
+\fill (4.00,0) circle (1.4pt);
+\draw[key,-{Stealth}] (3.93,0) -- (3.93,0.600);
+\draw[-{Stealth},line width=0.9pt] (4.07,0) -- (4.07,-0.800);
+\fill (6.00,0) circle (1.4pt);
+\draw[key,-{Stealth}] (5.93,0) -- (5.93,0.400);
+\draw[-{Stealth},line width=0.9pt] (6.07,0) -- (6.07,-0.267);
+\draw[key,-{Stealth}] (-1.2,-1.4) -- (-0.7,-1.4) node[right,black,font=\footnotesize] {field due to $X$};
+\draw[-{Stealth},line width=0.9pt] (2.6,-1.4) -- (3.1,-1.4) node[right,font=\footnotesize] {field due to $Y$};
+\node[font=\footnotesize,align=center] at (5.0,1.5) {beyond $Y$: opposite,\\ $Y$ wins near, $X$ wins far};
+\end{tikzpicture}

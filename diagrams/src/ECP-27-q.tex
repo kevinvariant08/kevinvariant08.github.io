@@ -1,0 +1,28 @@
+\begin{tikzpicture}
+% vessel
+\draw[line width=1pt,fillkey] (0,0) rectangle (2.2,2.2);
+\node[font=\small,align=center] at (1.1,1.1) {vessel\\$2.0$ litres};
+% pipe to inlet valve
+\draw[line width=0.9pt] (2.2,1.2) -- (3.2,1.2);
+\draw[line width=0.9pt] (2.2,1.0) -- (3.2,1.0);
+% cylinder
+\draw[line width=1pt] (3.6,1.5) -- (7.6,1.5);
+\draw[line width=1pt] (3.6,0.7) -- (7.6,0.7);
+\draw[line width=1pt] (3.6,0.7) -- (3.6,1.0); \draw[line width=1pt] (3.6,1.2) -- (3.6,1.5);
+% inlet valve (flap)
+\draw[line width=0.9pt] (3.2,1.0) -- (3.6,1.0); \draw[line width=0.9pt] (3.2,1.2) -- (3.6,1.2);
+\fill[fillalt] (3.62,1.1) circle (0.13); \draw (3.62,1.1) circle (0.13);
+\node[font=\scriptsize,anchor=north] at (3.3,0.65) {inlet valve};
+% outlet valve on top near head
+\draw[line width=0.9pt] (3.95,1.5) -- (3.95,2.2); \draw[line width=0.9pt] (4.15,1.5) -- (4.15,2.2);
+\fill[fillalt] (4.05,1.62) circle (0.13); \draw (4.05,1.62) circle (0.13);
+\draw[-{Stealth[length=2mm]}] (4.05,2.25) -- (4.05,2.7);
+\node[font=\scriptsize,anchor=south] at (4.05,2.7) {outlet valve, to atmosphere};
+% piston and rod
+\fill[black!25] (5.6,0.72) rectangle (5.85,1.48); \draw (5.6,0.72) rectangle (5.85,1.48);
+\draw[line width=1.5pt] (5.85,1.1) -- (8.4,1.1);
+\draw[line width=2pt] (8.4,0.8) -- (8.4,1.4);
+\node[font=\scriptsize,anchor=north] at (5.72,0.65) {piston};
+\draw[{Stealth[length=1.8mm]}-{Stealth[length=1.8mm]}] (6.2,1.75) -- (7.4,1.75);
+\node[font=\scriptsize,anchor=south] at (6.8,1.78) {strokes};
+\end{tikzpicture}

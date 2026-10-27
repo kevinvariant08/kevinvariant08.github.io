@@ -1,0 +1,12 @@
+\begin{tikzpicture}[font=\footnotesize]
+\node[draw,minimum width=1.3cm,minimum height=1.1cm,align=center] (S) at (0,0) {$10\text{ kV}$\\supply};
+\node[draw,fillkey,minimum width=1.6cm,minimum height=1.1cm,align=center] (U) at (2.35,0) {step-up\\$1000:2000$};
+\node[draw,fillkey,minimum width=1.6cm,minimum height=1.1cm,align=center] (D) at (6.45,0) {step-down};
+\node[draw,minimum width=1.3cm,minimum height=1.1cm,align=center] (T) at (8.7,0) {town\\$1.8\text{ MW}$};
+\draw ([yshift=3mm]S.east) -- ([yshift=3mm]U.west); \draw ([yshift=-3mm]S.east) -- ([yshift=-3mm]U.west);
+\draw ([yshift=3mm]D.east) -- ([yshift=3mm]T.west); \draw ([yshift=-3mm]D.east) -- ([yshift=-3mm]T.west);
+\draw[line width=1.1pt] ([yshift=3mm]U.east) -- ([yshift=3mm]D.west);
+\draw[line width=1.1pt] ([yshift=-3mm]U.east) -- ([yshift=-3mm]D.west);
+\node[above] at (4.4,0.35) {overhead line};
+\node[below] at (4.4,-0.35) {loss $0.20\text{ MW}$};
+\end{tikzpicture}

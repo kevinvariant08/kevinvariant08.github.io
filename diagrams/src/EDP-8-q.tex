@@ -1,0 +1,19 @@
+\begin{tikzpicture}
+\draw[line width=0.9pt,fillalt] (-0.6,-0.4) rectangle (0,0.4);
+\node[font=\scriptsize,anchor=north] at (-0.3,-0.45) {source};
+\draw[aux] (0.5,-0.7) -- (0.5,0.7);
+\node[font=\scriptsize,anchor=south,align=center] at (0.5,0.75) {paper\\(experiment 1)};
+\draw[aux] (0,0) -- (7,0);
+\draw[-{Stealth[length=2mm]},key] (0,0) -- (1.6,0);
+\draw[line width=2pt] (2,0.8) -- (4.6,0.8);
+\draw[line width=2pt] (2,-0.8) -- (4.6,-0.8);
+\node[font=\small,anchor=south] at (3.3,0.85) {$+$};
+\node[font=\small,anchor=north] at (3.3,-0.85) {$-$};
+\draw[line width=1.2pt] (7,-1.9) -- (7,1.9);
+\node[font=\scriptsize,anchor=south] at (7,1.95) {screen};
+\foreach \yy/\l in {1.45/P,0.45/Q,0/R,-0.45/S,-1.45/T} {
+  \draw (6.85,\yy) -- (7.15,\yy);
+  \node[font=\small,anchor=west] at (7.2,\yy) {$\text{\l}$};
+}
+\node[font=\scriptsize] at (3.3,-1.6) {vacuum};
+\end{tikzpicture}

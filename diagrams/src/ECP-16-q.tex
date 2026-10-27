@@ -1,0 +1,12 @@
+\begin{tikzpicture}
+\begin{axis}[width=8cm,height=5.2cm,axis lines=left,xmin=0,xmax=10.6,ymin=40,ymax=80,
+ xtick={0,2,4,6,8,10},ytick={40,52,60,72,80},xlabel={time $t$ / s},ylabel={reading / kg},
+ ymajorgrids,grid style={black!12},clip=false]
+\addplot[key,line width=1.3pt] coordinates {(0,72) (2,72)};
+\addplot[key,line width=1.3pt] coordinates {(2,60) (8,60)};
+\addplot[key,line width=1.3pt] coordinates {(8,52) (9.2,52)};
+\addplot[key,line width=1.3pt,dotted] coordinates {(9.2,52) (10.4,52)};
+\addplot[aux] coordinates {(2,72) (2,60)};
+\addplot[aux] coordinates {(8,60) (8,52)};
+\end{axis}
+\end{tikzpicture}

@@ -1,0 +1,16 @@
+\begin{tikzpicture}[scale=0.062]
+% mirrors with hatching on the back
+\draw[line width=1.4pt] (0,0) -- (125,0);
+\draw[line width=1.4pt] (0,0) -- ({125*cos(25)},{125*sin(25)});
+\foreach \t in {6,14,...,122} { \draw[black!50] (\t,0) -- (\t-3,-3.5); }
+\foreach \t in {6,14,...,122} { \draw[black!50] ({\t*cos(25)},{\t*sin(25)}) -- ({\t*cos(25)-3*sin(25)+0.5},{\t*sin(25)+3.6*cos(25)}); }
+\fill (0,0) circle (25pt);
+\node[anchor=east,font=\small] at (-2,0) {O};
+\draw (16,0) arc (0:25:16);
+\node[font=\scriptsize] at (24,4.8) {$25^\circ$};
+\draw[key,line width=1pt,-{Stealth[length=2.4mm]}] (140,30) -- (92,30);
+\node[font=\scriptsize,anchor=south] at (128,31) {beam};
+\draw[{Stealth[length=1.6mm]}-{Stealth[length=1.6mm]}] (135,0) -- (135,30);
+\draw[aux,line width=0.4pt] (125,0) -- (138,0);
+\node[font=\scriptsize,anchor=west] at (136,15) {$30\text{ cm}$};
+\end{tikzpicture}

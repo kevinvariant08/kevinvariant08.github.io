@@ -1,0 +1,13 @@
+\begin{tikzpicture}
+\begin{axis}[width=8cm,height=5.2cm,axis lines=left,xmin=0,xmax=23,ymin=0,ymax=46,
+ xtick={0,10,20},ytick={0,20,40},xlabel={time $t$ / s},ylabel={speed / m\,s$^{-1}$},clip=false]
+\fill[fillalt] (axis cs:0,0) -- (axis cs:0,20) -- (axis cs:10,20) -- cycle;
+\fill[fillkey] (axis cs:10,20) -- (axis cs:20,20) -- (axis cs:20,40) -- cycle;
+\addplot[key,line width=1.2pt] coordinates {(0,20) (21,20)};
+\addplot[key,line width=1.2pt,dashed] coordinates {(0,0) (21,42)};
+\node[font=\footnotesize,anchor=west] at (axis cs:21,20) {lorry};
+\node[font=\footnotesize,anchor=west] at (axis cs:21,42) {van};
+\node[font=\footnotesize] at (axis cs:3.2,14) {$100\text{ m}$};
+\node[font=\footnotesize] at (axis cs:16.8,26) {$100\text{ m}$};
+\end{axis}
+\end{tikzpicture}

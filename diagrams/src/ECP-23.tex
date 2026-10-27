@@ -1,0 +1,12 @@
+\begin{tikzpicture}
+\begin{axis}[width=8cm,height=5.2cm,axis lines=left,xmin=0,xmax=66,ymin=0,ymax=48,
+ xtick={0,16.25,40,60},xticklabels={0,16.25,40,60},ytick={0,20,40},xlabel={distance $s$ / m},ylabel={$a$ / m\,s$^{-2}$},clip=false]
+\addplot[draw=none,fillkey] coordinates {(16.25,0) (16.25,40) (40,40) (60,0)} \closedcycle;
+\addplot[draw=none,fillalt] coordinates {(0,0) (10,40) (16.25,40) (16.25,0)} \closedcycle;
+\addplot[key,line width=1.3pt] coordinates {(0,0) (10,40) (40,40) (60,0)};
+\addplot[aux] coordinates {(16.25,0) (16.25,40)};
+\node[align=center,font=\footnotesize] at (axis cs:9.5,15) {$450$};
+\node[align=center,font=\footnotesize] at (axis cs:35,18) {$1350$};
+\node[font=\footnotesize,anchor=south] at (axis cs:33,44) {total area $1800\text{ m}^2\,\text{s}^{-2}=\tfrac12v^2$};
+\end{axis}
+\end{tikzpicture}

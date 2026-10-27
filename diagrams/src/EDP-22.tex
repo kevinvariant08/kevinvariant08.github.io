@@ -1,0 +1,12 @@
+\begin{tikzpicture}
+\draw[key,line width=1.6pt] (0,0) circle (1.30);
+\draw[aux] (0,0) -- (-1.300,0.000); \draw[aux] (0,0) -- (0.000,1.300);
+\fill (0,0) circle (1.2pt);
+\draw (-1.300,0.000) -- (-2.3,0.000) -- (-2.3,2.60) to[battery1,l=$12\text{ V}$] (0,2.60) to[R,l=$2.0\,\Omega$] (2.3,2.60) -- (2.3,1.300) -- (0.000,1.300);
+\fill (-1.300,0.000) circle (2pt) node[below left,font=\footnotesize] {$X$};
+\fill (0.000,1.300) circle (2pt); \node[font=\footnotesize] at (0.300,1.000) {$Y$};
+\node[font=\footnotesize,blue!55!black,anchor=south,align=center] at (128:1.4) {$4\,\Omega$\\$1.8\text{ A}$};
+\node[font=\footnotesize,blue!55!black,align=center] at (0,-1.65) {$12\,\Omega$, $0.6\text{ A}$};
+
+\node[font=\footnotesize] at (0,-2.25) {p.d. across loop $7.2\text{ V}$};
+\end{tikzpicture}

@@ -1,0 +1,7 @@
+\begin{tikzpicture}
+\draw (0,0) to[battery1,l=$12\text{ V}$] (0,3) to[R,l=$6.0\text{ k}\Omega$] (3.2,3) -- (5.2,3);
+\draw (3.2,3) to[phR,l_=LDR] (3.2,0);
+\draw (5.2,3) to[rmeter,t=V] (5.2,0);
+\draw (5.2,0) -- (0,0);
+\fill (3.2,3) circle (1.6pt) (3.2,0) circle (1.6pt);
+\end{tikzpicture}

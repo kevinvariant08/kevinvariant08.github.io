@@ -1,0 +1,13 @@
+\begin{tikzpicture}
+\draw (0,0) to[battery1,l=$12\text{ V}$] (0,3) to[R,l=$4.0\,\Omega$,a={$8.0\text{ V}$}] (3.2,3) -- (5.4,3);
+\draw (3.2,3) to[lamp] (3.2,0);
+\draw (5.4,3) to[lamp] (5.4,0);
+\draw (5.4,0) -- (0,0);
+\fill (3.2,3) circle (1.6pt) (3.2,0) circle (1.6pt);
+\draw[key,-{Stealth}] (2.25,3.0) -- (2.95,3.0);
+\node[blue!55!black,font=\footnotesize] at (2.6,3.3) {$2.0\text{ A}$};
+\draw[key,-{Stealth}] (3.2,2.35) -- (3.2,1.95);
+\draw[key,-{Stealth}] (5.4,2.35) -- (5.4,1.95);
+\node[blue!55!black,font=\footnotesize,align=left,anchor=west] at (3.65,1.5) {$1.0\text{ A}$\\$4.0\text{ V}$};
+\node[blue!55!black,font=\footnotesize,align=left,anchor=west] at (5.85,1.5) {$1.0\text{ A}$\\$4.0\text{ V}$};
+\end{tikzpicture}

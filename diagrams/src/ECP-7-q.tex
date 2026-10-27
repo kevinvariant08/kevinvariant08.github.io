@@ -1,0 +1,7 @@
+\begin{tikzpicture}
+\begin{axis}[width=7.5cm,height=5cm,axis lines=left,xmin=0,xmax=12,ymin=0,ymax=120,
+ xtick={0,2,4,6,8,10},ytick={0,20,40,60,80,100},xlabel={time $t$ / s},ylabel={distance between them / m},
+ grid=major,grid style={black!12}]
+\addplot[key,line width=1.3pt,domain=0:10,samples=60] {20*x-x^2};
+\end{axis}
+\end{tikzpicture}

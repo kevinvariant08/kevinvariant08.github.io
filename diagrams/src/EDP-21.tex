@@ -1,0 +1,11 @@
+\begin{tikzpicture}
+\begin{axis}[width=8cm,height=5cm,axis lines=left,xmin=0,xmax=1300,ymin=0,ymax=2,
+ xtick={0,300,900,1200},ytick={0,0.5,1.5},yticklabels={0,0.5,1.5},xlabel={position $x$ / m},ylabel={$1/v$ / s\,m$^{-1}$},scaled x ticks=false,/pgf/number format/1000 sep={},clip=false]
+\addplot[key,fillkey,line width=1.2pt] coordinates {(0,0.5) (300,1.5) (900,1.5) (1200,0.5)} \closedcycle;
+\addplot[aux] coordinates {(300,0) (300,1.5)};
+\addplot[aux] coordinates {(900,0) (900,1.5)};
+\node[font=\footnotesize] at (axis cs:150,0.45) {$300\text{ s}$};
+\node[font=\footnotesize] at (axis cs:600,0.75) {$900\text{ s}$};
+\node[font=\footnotesize] at (axis cs:1050,0.45) {$300\text{ s}$};
+\end{axis}
+\end{tikzpicture}

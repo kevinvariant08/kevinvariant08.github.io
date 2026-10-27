@@ -295,5 +295,122 @@
  },
  "ED2-9": {
   "alt": "An equilateral triangle of side 6 with a 60 degree angle marked, and the curve of constant width formed by three arcs, each centred at the opposite vertex; the triangle is shaded blue and the three circular segments orange."
+ },
+ "ECP-3": {
+  "alt": "Side view of the gymnast, the wall mirror and her image 2.0 m behind it, with rays from her eye through the mirror edges showing she sees from her feet up to 1.32 m."
+ },
+ "ECP-5-q": {
+  "alt": "Top view of a card with wire X, carrying 3 A upwards out of the page, and wire Y, carrying 1 A downwards into the page, 6 cm apart on a dashed line."
+ },
+ "ECP-5": {
+  "alt": "Field arrows due to each wire at the midpoint, where both point the same way, and at two points beyond Y, where they point opposite ways with Y's field stronger nearby and X's stronger further out."
+ },
+ "ECP-7-q": {
+  "alt": "Graph of the distance between the van and the lorry against time for the first 10 s: a curve rising from zero, flattening to a maximum of 100 m at t = 10 s."
+ },
+ "ECP-7": {
+  "alt": "Speed against time: the lorry is a horizontal line at 20 m/s and the van a line rising from zero through 20 m/s at 10 s to 40 m/s at 20 s; the two triangles between the lines each have area 100 m."
+ },
+ "ECP-9-q": {
+  "alt": "Circuit: a 12 V battery in series with a 4.0 ohm resistor and a pair of identical filament lamps connected in parallel."
+ },
+ "ECP-9": {
+  "alt": "The same circuit annotated with 2.0 A and 8.0 V for the resistor and 1.0 A and 4.0 V for each lamp."
+ },
+ "ECP-11-q": {
+  "alt": "Four circular crests around a moving dipper D, crowded 0.8 cm apart ahead of it and spread 3.2 cm apart behind it."
+ },
+ "ECP-12-q": {
+  "alt": "Top view of two parallel rails 4.0 cm apart joined to a supply at the west end, a rod across them at the west edge of a shaded 0.80 m field region, with the field of 0.50 T pointing out of the page."
+ },
+ "ECP-15-q": {
+  "alt": "Three equal springs hang side by side from a ceiling, their lower ends fixed to a short horizontal light rod; a fourth equal spring hangs from the middle of the rod and carries a 6.0 N weight."
+ },
+ "ECP-16-q": {
+  "alt": "Graph of scale reading in kilograms against time: 72 kg from 0 to 2 s, 60 kg from 2 s to 8 s, then 52 kg from 8 s, continuing beyond the graph as a dotted line."
+ },
+ "ECP-16": {
+  "alt": "Velocity against time graph for the lift: rising from 0 to 4 m/s over 2 s, constant until 8 s, falling to zero at 11 s; the shaded trapezium has area 34 m."
+ },
+ "ECP-17-q": {
+  "alt": "Graph of base pressure against volume poured in: straight segments joining (0, 0), (4, 2), (5, 4) and (7, 7.2), in litres and kilopascals."
+ },
+ "ECP-20-q": {
+  "alt": "Top view of a laser beam reflecting off one face of a spinning hexagonal mirror prism towards a drum."
+ },
+ "ECP-22-q": {
+  "alt": "Block diagram: a 10 kV supply feeds a step-up transformer with turns 1000 to 2000, an overhead line losing 0.20 MW, a step-down transformer and a town receiving 1.8 MW."
+ },
+ "ECP-23-q": {
+  "alt": "Graph of acceleration against distance: rising linearly from 0 to 40 m/s^2 over the first 10 m, constant at 40 m/s^2 until 40 m, then falling linearly to 0 at 60 m."
+ },
+ "ECP-23": {
+  "alt": "The acceleration against distance graph with the area up to 16.25 m shaded and labelled 450, the rest of the area labelled 1350, and a total area of 1800 equal to half v squared."
+ },
+ "ECP-24": {
+  "alt": "Two pulse timelines, one with pulses every 0.30 s and one every 0.40 s, both with an echo arriving at 1.0 s, 0.10 s and 0.20 s after the latest pulse."
+ },
+ "ECP-25-q": {
+  "alt": "Graph of power P in watts against current I in amps, a curve from the origin rising with decreasing slope through 5 W at 1 A and 8 W at 2 A, drawn up to 2.5 A."
+ },
+ "ECP-25": {
+  "alt": "The full parabola P = I(6 minus I), peaking at 9 W when I is 3 A and returning to zero at 6 A, with the 5 W level crossing it at 1 A and 5 A."
+ },
+ "ECP-27-q": {
+  "alt": "A vessel connected through an inlet valve to a pump cylinder with a piston, with an outlet valve to the atmosphere on the cylinder head."
+ },
+ "EDP-4-q": {
+  "alt": "Circuit: a battery in series with lamp P and a parallel pair of lamps Q and R, with switch S connected across the ends of lamp Q."
+ },
+ "EDP-5-q": {
+  "alt": "Trolley A of mass 0.50 kg and trolley B of mass 1.5 kg on a level track with a compressed spring between them; the track curves upwards at both ends."
+ },
+ "EDP-7-q": {
+  "alt": "A locomotive at the front, moving to the right, followed by wagon 1, wagon 2 and wagon 3, with coupling C1 behind the locomotive, C2 behind wagon 1 and C3 behind wagon 2."
+ },
+ "EDP-8-q": {
+  "alt": "A source and optional paper sheet, a beam passing between a positive upper plate and a negative lower plate, and a screen marked P, Q, R, S, T from top to bottom."
+ },
+ "EDP-9-q": {
+  "alt": "Front view of a U-shaped magnet with N and S poles standing on a top-pan balance, with the end of a clamped copper rod between the poles, not touching the magnet."
+ },
+ "EDP-11": {
+  "alt": "Velocity against time graph of the tram with the extra stop; shaded triangles between each speed change and the 20 m/s line show time losses of 10 s for each start and 5 s for each stop, plus a 30 s wait."
+ },
+ "EDP-12-q": {
+  "alt": "Sine-shaped graph of coil displacement s against position x over one wavelength of 0.8 m, with coils A to H at x = 0.1 to 0.8 m."
+ },
+ "EDP-13": {
+  "alt": "Diving bell with its top 3 m deep, the inside water surface 5 m deep and its open bottom 6 m deep, with air at 150 kPa inside."
+ },
+ "EDP-14-q": {
+  "alt": "Circuit: a 12 V battery in series with a 6.0 kilohm resistor and an LDR, with a voltmeter connected across the LDR."
+ },
+ "EDP-16-q": {
+  "alt": "Top: the trace for coil 1 alone, a positive pulse followed by a negative pulse. Below: six traces A to F, each with the same first pair of pulses followed by a second pair that differs in sign, height and width."
+ },
+ "EDP-19-q": {
+  "alt": "Graph of mass of liquid water against time: zero until 84 s, rising to 0.50 kg at 420 s, level until 840 s, then falling to 0.30 kg at 1740 s."
+ },
+ "EDP-21-q": {
+  "alt": "Graph of 1/v in seconds per metre against position x: rising linearly from 0.5 at x = 0 to 1.5 at x = 300 m, constant at 1.5 until 900 m, then falling linearly to 0.5 at 1200 m."
+ },
+ "EDP-21": {
+  "alt": "The 1/v against x graph with the area beneath shaded and split into three parts of 300 s, 900 s and 300 s."
+ },
+ "EDP-22-q": {
+  "alt": "A circular resistance-wire loop touched at points X and Y, with angle theta between the radii to them, connected through a 2.0 ohm resistor to a 12 V battery."
+ },
+ "EDP-22": {
+  "alt": "The loop with X and Y a quarter-turn apart: the short arc is 4 ohms carrying 1.8 A, the long arc is 12 ohms carrying 0.6 A, with 7.2 V across the loop."
+ },
+ "EDP-25-q": {
+  "alt": "Circuit: a square-wave supply in series with a sealed box between terminals P and Q and a 6.0 ohm resistor, beside a graph of the supply output switching between +12 V and -12 V every 10 ms."
+ },
+ "EDP-27-q": {
+  "alt": "Two plane mirrors meeting at O at an angle of 25 degrees, with a beam entering parallel to the lower mirror 30 cm from it."
+ },
+ "EDP-27": {
+  "alt": "Unfolded copies of the 25 degree gap around O, with the beam drawn as a straight line 30 cm from O crossing the lines at 25 to 175 degrees seven times."
  }
 }

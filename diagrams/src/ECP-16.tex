@@ -1,0 +1,7 @@
+\begin{tikzpicture}
+\begin{axis}[width=8cm,height=5cm,axis lines=left,xmin=0,xmax=12,ymin=0,ymax=5.2,
+ xtick={0,2,4,6,8,10,11},xticklabels={0,2,4,6,8,,11},ytick={0,1,2,3,4},xlabel={time $t$ / s},ylabel={upward velocity / m\,s$^{-1}$},clip=false]
+\addplot[key,fillkey,line width=1.2pt] coordinates {(0,0) (2,4) (8,4) (11,0)} \closedcycle;
+\node at (axis cs:5.5,2) {area $=\tfrac12(6+11)\times 4=34\text{ m}$};
+\end{axis}
+\end{tikzpicture}

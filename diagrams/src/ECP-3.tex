@@ -1,0 +1,32 @@
+\begin{tikzpicture}[x=1.45cm,y=2.4cm]
+% floor and wall
+\draw (-2.6,0) -- (2.7,0);
+\draw[black!60] (0,0) -- (0,2.0);
+\draw[key,line width=2.4pt] (0,0.70) -- (0,1.50);
+\node[font=\scriptsize,anchor=south] at (0,2.0) {wall};
+% person (visible part highlighted)
+\draw[key,line width=2pt] (2,0) -- (2,1.32);
+\draw[line width=2pt] (2,1.32) -- (2,1.80);
+\fill (2,1.68) circle (1.6pt);
+\node[font=\scriptsize,anchor=west] at (2.06,1.70) {eye, $1.68$};
+\node[font=\scriptsize,anchor=west] at (2.06,1.84) {$1.80$};
+\node[font=\scriptsize,anchor=west] at (2.06,1.30) {$1.32$};
+\node[font=\scriptsize,anchor=west,blue!55!black] at (2.06,0.62) {seen};
+% image
+\draw[aux,line width=1pt] (-2,0) -- (-2,1.80);
+\node[font=\scriptsize,anchor=east] at (-2.06,0.9) {image};
+% rays: real paths
+\draw[thin] (2,1.32) -- (0,1.50);
+\draw[thin] (0,1.50) -- (2,1.68);
+\draw[thin] (2,0) -- (0,0.84) -- (2,1.68);
+% virtual continuations
+\draw[aux] (0,1.50) -- (-2,1.32);
+\draw[aux] (0,0.84) -- (-2,0);
+% labels at mirror
+\node[font=\scriptsize,anchor=east] at (-0.05,1.55) {$1.50$};
+\node[font=\scriptsize,anchor=east] at (-0.05,0.86) {$0.84$};
+\node[font=\scriptsize,anchor=east] at (-0.05,0.66) {$0.70$};
+\node[font=\scriptsize,anchor=north] at (1,-0.02) {$2.0\text{ m}$};
+\node[font=\scriptsize,anchor=north] at (-1,-0.02) {$2.0\text{ m}$};
+\node[font=\scriptsize] at (0,-0.28) {heights in metres};
+\end{tikzpicture}
