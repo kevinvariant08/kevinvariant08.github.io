@@ -10,3 +10,4 @@ calibration/__pycache__/
 calibration/attempts*.json
 
 locked-upload/
+__pycache__/
