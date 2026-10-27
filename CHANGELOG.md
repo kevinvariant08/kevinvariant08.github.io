@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- 2026-10-27. ESAT mock Set B (Mathematics 1 rated 8.4, Mathematics 2 rated 8.3): much harder, wordier papers strictly within the ESAT specification, free in ESAT Drill and as watermarked PDFs.
 - 2026-10-25. Every PDF on the site carries a faint trefoil-knot watermark and a small Kevinvariant label (tools/watermark-pdfs.py). Locked Sets E to L are rebuilt with the watermark in encrypted bundles, ready to re-upload.
 - 2026-10-24. New ESAT section: an ESAT hub and ESAT Drill, with ESAT mock Set A (Mathematics 1 and Mathematics 2, 27 questions in 40 minutes each, free, with worked solutions and PDFs). The site now describes itself as Oxbridge admissions test (TMUA and ESAT) and olympiad preparation. New site icon: the trefoil knot.
 - 2026-10-23. TMUA mock Set L (Papers 1 and 2), locked from the start: unlock each paper with a challenge code or 4,000 coins. Both papers rate 8.3, the hardest in the collection.
