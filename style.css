@@ -273,3 +273,9 @@ mjx-assistive-mml{max-width:100%;max-height:100%}
 /* Solution diagrams (tkz-euclide, built by tools/build-diagrams.py). White card so the black linework reads in dark mode too. */
 .sol-fig{margin:.4rem 0 1rem;padding:.6rem .8rem;background:#fff;border:1px solid var(--line);border-radius:var(--r-md);display:block;width:fit-content;max-width:100%;box-sizing:border-box}
 .sol-fig img{display:block;max-width:min(100%,32rem);height:auto}
+/* installable app offer (site.js) */
+.site-foot .app-line{margin:.9rem 0 0;padding-top:.9rem;border-top:1px dashed var(--line);color:var(--ink-soft)}
+.site-foot .app-line b{color:var(--ink)}
+.linkish{font:inherit;color:var(--accent);background:none;border:0;padding:0;text-decoration:underline;cursor:pointer;min-height:auto}
+.install-tip{display:block;flex-basis:100%;font-size:.95rem;color:var(--ink-soft);margin-top:.2rem}
+[data-install][hidden]{display:none!important}

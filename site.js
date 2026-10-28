@@ -109,6 +109,43 @@
       return lib.then(function(){ return loadScript('account.js?v=20261023'); });
     }).catch(function(){});
   }
+  /* Installable app: service worker for offline use, plus an "Install app" offer where the browser supports it.
+     Any element with data-install on a page is shown and wired up too. */
+  function app(){
+    if(!document.querySelector('link[rel="manifest"]')){ var l=document.createElement('link'); l.rel='manifest'; l.href='/site.webmanifest?v=5'; document.head.appendChild(l); }
+    if('serviceWorker' in navigator && (location.protocol==='https:'||location.hostname==='localhost')){
+      window.addEventListener('load',function(){
+        var first=!navigator.serviceWorker.controller;
+        navigator.serviceWorker.register('/sw.js').then(function(){ return navigator.serviceWorker.ready; }).then(function(r){
+          if(!first||!r.active) return;
+          var urls=[location.href].concat((performance.getEntriesByType('resource')||[]).map(function(x){ return x.name; }));
+          r.active.postMessage({type:'cache-page',urls:urls});
+        }).catch(function(){});
+      });
+    }
+    var standalone=(window.matchMedia&&matchMedia('(display-mode: standalone)').matches)||navigator.standalone===true;
+    if(standalone) return;
+    var ios=/iphone|ipad|ipod/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+    var foot=document.querySelector('.site-foot'), line=null;
+    if(foot){ line=document.createElement('p'); line.className='app-line'; line.hidden=true; foot.appendChild(line); }
+    var deferred=null;
+    function offer(){
+      var targets=[].slice.call(document.querySelectorAll('[data-install]'));
+      if(line){ line.innerHTML='<b>Kevinvariant app:</b> install it for one-tap access and offline papers. '+(deferred?'<button type="button" class="linkish" data-install-btn>Install the app</button>':'On iPhone or iPad, tap Share, then <b>Add to Home Screen</b>.'); line.hidden=false; }
+      targets.forEach(function(t){ t.hidden=false; });
+      document.querySelectorAll('[data-install-btn],[data-install]').forEach(function(b){
+        if(b.dataset.wired) return; b.dataset.wired='1';
+        b.addEventListener('click',function(e){
+          if(deferred){ e.preventDefault(); deferred.prompt(); deferred.userChoice.finally(function(){ deferred=null; if(line) line.hidden=true; targets.forEach(function(t){ t.hidden=true; }); }); }
+          else if(ios){ e.preventDefault(); alertless(b); }
+        });
+      });
+    }
+    function alertless(b){ var n=b.nextElementSibling; if(n&&n.classList&&n.classList.contains('install-tip')) return; var t=document.createElement('span'); t.className='install-tip'; t.textContent='On iPhone or iPad: tap Share, then Add to Home Screen.'; b.insertAdjacentElement('afterend',t); }
+    window.addEventListener('beforeinstallprompt',function(e){ e.preventDefault(); deferred=e; offer(); });
+    window.addEventListener('appinstalled',function(){ deferred=null; if(line) line.hidden=true; document.querySelectorAll('[data-install]').forEach(function(t){ t.hidden=true; }); });
+    if(ios) offer();
+  }
   function init(){
     document.body.setAttribute('data-theme-v2','');
     var nav=document.getElementById('sitenav')||document.querySelector('body>nav');
@@ -117,6 +154,7 @@
     if(!document.querySelector('.site-foot')&&!document.body.hasAttribute('data-nofoot')){ var f=document.createElement('footer'); f.className='site-foot'; f.innerHTML=FOOT; document.body.appendChild(f); }
     loadAccounts(); loadRewards();
     loadScript('telemetry.js?v=20261024').catch(function(){});
+    app();
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init); else init();
 })();

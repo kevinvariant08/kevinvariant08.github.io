@@ -1,11 +1,26 @@
 {
+  "id": "/",
   "name": "Kevinvariant",
   "short_name": "Kevinvariant",
+  "description": "Oxbridge admissions test prep (TMUA and ESAT) and olympiad prep: original mock papers with worked solutions, timed drills and practice tools.",
+  "start_url": "/?source=app",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "lang": "en-GB",
+  "dir": "ltr",
+  "categories": ["education"],
+  "theme_color": "#F6F4EF",
+  "background_color": "#F6F4EF",
   "icons": [
-    { "src": "/icon-192.png?v=4", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
-    { "src": "/icon-512.png?v=4", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+    { "src": "/icon-192.png?v=4", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png?v=4", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-maskable-512.png?v=1", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ],
-  "theme_color": "#15173B",
-  "background_color": "#15173B",
-  "display": "standalone"
+  "shortcuts": [
+    { "name": "TMUA mocks", "short_name": "TMUA", "url": "/tmua.html?source=app", "icons": [{ "src": "/icon-192.png?v=4", "sizes": "192x192" }] },
+    { "name": "ESAT Drill", "short_name": "ESAT Drill", "url": "/esat-drill.html?source=app", "icons": [{ "src": "/icon-192.png?v=4", "sizes": "192x192" }] },
+    { "name": "TMUA Drill", "short_name": "Drill", "url": "/drill.html?source=app", "icons": [{ "src": "/icon-192.png?v=4", "sizes": "192x192" }] },
+    { "name": "Olympiad papers", "short_name": "Olympiad", "url": "/olympiad.html?source=app", "icons": [{ "src": "/icon-192.png?v=4", "sizes": "192x192" }] }
+  ]
 }
