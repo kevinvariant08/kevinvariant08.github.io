@@ -1,0 +1,18 @@
+\begin{tikzpicture}[scale=0.08]
+\fill[fillkey] (0,0) -- (20,0) -- (60,40) -- (60,60) -- (50,60) -- (0,10) -- cycle;
+\fill[fillalt] (0,10) -- (0,60) -- (50,60) -- cycle;
+\fill[fillalt] (20,0) -- (60,0) -- (60,40) -- cycle;
+\draw[thick] (0,0) rectangle (60,60);
+\draw[key] (0,10) -- (50,60);
+\draw[key] (20,0) -- (60,40);
+\node[left,font=\footnotesize] at (0,0) {$0$};
+\node[left,font=\footnotesize] at (0,10) {$10$};
+\node[left,font=\footnotesize] at (0,60) {$60$};
+\node[below,font=\footnotesize] at (20,0) {$20$};
+\node[below,font=\footnotesize] at (60,0) {$60$};
+\node[below,font=\small] at (30,-6) {$a$ (Ana)};
+\node[left,font=\small] at (-7,32) {$b$ (Ben)};
+\node[font=\footnotesize] at (16,44) {legs $50$};
+\node[font=\footnotesize] at (47,13) {legs $40$};
+\node[font=\footnotesize,rotate=45] at (30,30) {meet};
+\end{tikzpicture}

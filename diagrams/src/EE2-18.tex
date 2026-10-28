@@ -1,0 +1,15 @@
+\begin{tikzpicture}[scale=0.62]
+\fill[fillkey] (-2,0) -- (-2,2) -- (0,4) -- (4,4) -- (6,2) -- (6,0) -- (4,-2) -- (0,-2) -- cycle;
+\draw[->] (-3,0) -- (7,0) node[right] {$x$};
+\draw[->] (0,-3) -- (0,5) node[above] {$y$};
+\draw[key,thick] (-2,0) -- (-2,2) -- (0,4) -- (4,4) -- (6,2) -- (6,0) -- (4,-2) -- (0,-2) -- cycle;
+\draw[aux] (0,2) -- (4,2) -- (4,0);
+\draw[aux] (0,4) -- (0,-2) (4,4) -- (4,-2) (-2,0) -- (6,0) (-2,2) -- (6,2);
+\fill (0,0) circle (2pt) (4,2) circle (2pt);
+\node[below left] at (0,0) {$A$};
+\node[above right] at (4,2) {$B$};
+\node[above] at (-1,4.0) {\footnotesize $(0,4)$};
+\node[right] at (6,2.2) {\footnotesize $(6,2)$};
+\node[below left] at (-2,0) {\footnotesize $(-2,0)$};
+\node[below] at (4,-2) {\footnotesize $(4,-2)$};
+\end{tikzpicture}

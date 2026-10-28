@@ -1,0 +1,13 @@
+\begin{tikzpicture}[xscale=0.105,yscale=-0.9]
+% depth measured below the upstream surface, pressure in kPa
+\fill[fillkey] (0,0) -- (50,5) -- (30,5) -- (0,2) -- cycle;
+\draw[->] (0,0) -- (58,0) node[above=16pt,anchor=south east,font=\small] {gauge pressure / kPa};
+\draw[->] (0,0) -- (0,5.8) node[below,anchor=north west,font=\small] {depth below upstream surface / m};
+\foreach \p in {10,20,30,40,50} {\draw (\p,0) -- (\p,-0.12) node[above,font=\scriptsize] {$\p$};}
+\foreach \d in {1,2,3,4,5} {\draw (0,\d) -- (-1,\d) node[left,font=\scriptsize] {$\d$};}
+\draw[key,line width=1.1pt] (0,0) -- (50,5) node[right,font=\scriptsize] {upstream};
+\draw[key,line width=1.1pt,dashed] (0,2) -- (30,5) node[below,font=\scriptsize] {downstream};
+\draw[aux] (0,2) -- (20,2);
+\node[font=\scriptsize] at (6.5,1.45) {$20$};
+\node[font=\scriptsize,fill=white,inner sep=1pt] at (25,3.5) {$3\times20=60$};
+\end{tikzpicture}

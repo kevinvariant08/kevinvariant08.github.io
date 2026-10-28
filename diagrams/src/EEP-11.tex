@@ -1,0 +1,20 @@
+\begin{tikzpicture}
+\begin{scope}[x=1.2cm,y=0.45cm]
+\draw[->] (0,0) -- (6.4,0) node[right] {$x$ / m};
+\draw[->] (0,0) -- (0,5.2) node[above] {$y$ / cm};
+\draw (1,0) -- (1,-0.15) node[below,font=\scriptsize] {$1$};
+\draw (2,0) -- (2,-0.15) node[below,font=\scriptsize] {$2$};
+\draw (3,0) -- (3,-0.15) node[below,font=\scriptsize] {$3$};
+\draw (4,0) -- (4,-0.15) node[below,font=\scriptsize] {$4$};
+\draw (5,0) -- (5,-0.15) node[below,font=\scriptsize] {$5$};
+\draw (6,0) -- (6,-0.15) node[below,font=\scriptsize] {$6$};
+\node[below left,font=\scriptsize] at (0,0) {$0$};
+\draw (0,4) -- (-0.08,4) node[left,font=\scriptsize] {$4$};
+\draw[key,line width=1.1pt] (0,0) -- (1,0) -- (3,4) -- (4,0) -- (6,0);
+\fill (1,0) circle (1.6pt) (3,4) circle (1.6pt) (4,0) circle (1.6pt);
+\node[font=\scriptsize,align=center,above left] at (1.05,0.1) {tail\\passed at $2.0\text{ s}$};
+\node[font=\scriptsize,align=center,left] at (2.9,4.1) {peak, passed at $1.0\text{ s}$};
+\node[font=\scriptsize,align=center,above right] at (4.0,0.1) {front\\passed at $0.5\text{ s}$};
+\draw[->,>=Stealth,thick] (4.6,2.6) -- (5.6,2.6) node[midway,above,font=\scriptsize] {$2.0\text{ m s}^{-1}$};
+\end{scope}
+\end{tikzpicture}

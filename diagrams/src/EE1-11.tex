@@ -1,0 +1,15 @@
+\begin{tikzpicture}
+\tkzDefPoint(0,0){A}\tkzDefPoint(4.3723,0){B}\tkzDefPoint(4.3723,5.4641){C}\tkzDefPoint(0,5.4641){D}
+\tkzDefPoint(1.5,2){P}
+\tkzDefPoint(1.5,0){X1}\tkzDefPoint(1.5,5.4641){X2}\tkzDefPoint(0,2){Y1}\tkzDefPoint(4.3723,2){Y2}
+\tkzDrawPolygon[key](A,B,C,D)
+\tkzDrawSegments[aux](X1,X2 Y1,Y2)
+\tkzDrawSegments[blue!55!black](P,A P,B P,C P,D)
+\tkzDrawPoints(A,B,C,D,P)
+\tkzLabelPoints[below left](A)\tkzLabelPoints[below right](B)\tkzLabelPoints[above right](C)\tkzLabelPoints[above left](D)
+\tkzLabelPoint[above right](P){$P$}
+\node[font=\footnotesize,above] at (0.75,2) {$p$};
+\node[font=\footnotesize,above] at (2.95,2) {$r$};
+\node[font=\footnotesize,right] at (1.5,1.0) {$q$};
+\node[font=\footnotesize,right] at (1.5,4.4) {$s$};
+\end{tikzpicture}

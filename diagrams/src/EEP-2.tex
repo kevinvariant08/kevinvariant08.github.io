@@ -1,0 +1,13 @@
+\begin{tikzpicture}
+\begin{axis}[width=8cm,height=6.2cm,axis lines=left,xmin=0,xmax=6.6,ymin=0,ymax=1.08,
+  xlabel={$V/\text{V}$},ylabel={$I/\text{A}$},xtick={0,1,2,3,4,5,6},ytick={0,0.25,0.5,0.75,1},
+  yticklabels={$0$,$0.25$,$0.50$,$0.75$,$1.00$},
+  every axis x label/.style={at={(axis description cs:1,0)},anchor=north west},
+  every axis y label/.style={at={(axis description cs:0,1)},anchor=south east},
+  grid=major,grid style={black!12},clip=false]
+\addplot[key,domain=0:5.5,samples=80]{x/16+x^3/256} node[pos=1,anchor=south east]{$X$};
+\addplot[black,line width=0.8pt,domain=0:6.3]{x/8} node[pos=1,anchor=south west]{$Y$};
+\addplot[aux,domain=2.4:5.8]{0.5+(x-4)/4} node[pos=1,anchor=west]{tangent};
+\fill (axis cs:4,0.5) circle (1.6pt) node[anchor=south east]{$P$};
+\end{axis}
+\end{tikzpicture}

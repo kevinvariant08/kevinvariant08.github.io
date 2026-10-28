@@ -1,0 +1,15 @@
+\begin{tikzpicture}[scale=0.62]
+\fill[fillkey] (-5,0) rectangle (-0.15,5);
+\fill[fillkey] (0.15,0) rectangle (5,3);
+\draw[line width=0.6pt] (-5,5) -- (-0.15,5);
+\draw[line width=0.6pt] (0.15,3) -- (5,3);
+\fill[pattern=north east lines] (-5,-0.35) rectangle (5,0);
+\draw[line width=0.9pt] (-5,0) -- (5,0);
+\draw[line width=0.9pt,fill=black!25] (-0.15,0) rectangle (0.15,6.3);
+\draw[<->,>=Stealth] (-5.6,0) -- (-5.6,5) node[midway,left] {$5.0\text{ m}$};
+\draw[<->,>=Stealth] (5.6,0) -- (5.6,3) node[midway,right] {$3.0\text{ m}$};
+\node at (-2.6,2.5) {upstream};
+\node at (2.6,1.5) {downstream};
+\node[anchor=west] at (0.4,5.6) {gate};
+\draw (0.4,5.6) -- (0.15,5.6);
+\end{tikzpicture}

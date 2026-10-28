@@ -1,0 +1,12 @@
+\begin{tikzpicture}
+\begin{axis}[width=7.6cm,height=5.6cm,axis lines=left,xmin=0,xmax=3.6,ymin=0,ymax=36,
+  xlabel={$Q/\mu\text{C}$},ylabel={$V/\text{kV}$},xtick={0,1,2,3},ytick={0,10,20,30},
+  every axis x label/.style={at={(axis description cs:1,0)},anchor=north west},
+  every axis y label/.style={at={(axis description cs:0,1)},anchor=south east},clip=false]
+\addplot[fillkey,draw=none] coordinates {(1,0) (1,10) (3,30) (3,0)} -- cycle;
+\addplot[key,domain=0:3.4]{10*x};
+\draw[aux] (axis cs:0,30) -- (axis cs:3,30) -- (axis cs:3,0);
+\draw[aux] (axis cs:0,10) -- (axis cs:1,10) -- (axis cs:1,0);
+\node at (axis cs:2.15,9) {$40\text{ mJ}$};
+\end{axis}
+\end{tikzpicture}

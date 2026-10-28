@@ -1,0 +1,19 @@
+\begin{tikzpicture}
+\begin{axis}[width=9cm,height=5.4cm,xmin=0,xmax=28,ymin=0,ymax=35,y dir=reverse,
+ xtick={0,3,...,27},ytick={0,5,...,35},grid=major,grid style={black!12},
+ xlabel={time / min},ylabel={depth / m},
+ label style={font=\small},tick label style={font=\small}]
+\addplot[fill=blue!12,draw=none] coordinates {(0,0) (3,30) (18,30) (23,5) (26,5) (27,0)} \closedcycle;
+\addplot[key,line width=1.2pt] coordinates {(0,0) (3,30) (18,30) (23,5) (26,5) (27,0)};
+\draw[aux] (axis cs:3,0) -- (axis cs:3,30);
+\draw[aux] (axis cs:18,0) -- (axis cs:18,30);
+\draw[aux] (axis cs:23,0) -- (axis cs:23,5);
+\draw[aux] (axis cs:26,0) -- (axis cs:26,5);
+\node[font=\scriptsize] at (axis cs:2.15,12) {$45$};
+\node[font=\scriptsize] at (axis cs:10.5,15) {$450$};
+\node[font=\scriptsize] at (axis cs:20.2,11) {$87.5$};
+\node[font=\scriptsize] at (axis cs:24.5,2.6) {$15$};
+\node[font=\scriptsize,anchor=west] at (axis cs:26.2,9) {$2.5$};
+\draw[thin] (axis cs:26.6,1.8) -- (axis cs:26.9,8.2);
+\end{axis}
+\end{tikzpicture}

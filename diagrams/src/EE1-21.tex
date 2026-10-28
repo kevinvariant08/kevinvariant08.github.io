@@ -1,0 +1,17 @@
+\begin{tikzpicture}[scale=0.75]
+\tkzDefPoint(0,0){A}\tkzDefPoint(8,0){B}\tkzDefPoint(8,4){C}\tkzDefPoint(0,4){D}
+\tkzDefPoint(5,0){E}\tkzDefPoint(3,4){F}\tkzDefPoint(3.2,-2.4){B'}
+\tkzFillPolygon[fillkey](A,E,F,D)
+\tkzFillPolygon[fillalt](A,B',E)
+\tkzFillPolygon[blue!30](A,E,F)
+\tkzDrawPolygon[aux](E,B,C,F)
+\tkzDrawPolygon[key](A,E,F,D)
+\tkzDrawPolygon[key](A,B',E)
+\tkzDrawSegment[key,line width=1.2pt](E,F)
+\tkzDrawPoints(A,B,C,D,E,F,B')
+\tkzLabelPoints[left](A)\tkzLabelPoints[below right](B)\tkzLabelPoints[above right](C)\tkzLabelPoints[above left](D)
+\tkzLabelPoints[above right](E)\tkzLabelPoints[above](F)\tkzLabelPoints[below](B')
+\node[font=\footnotesize] at (2.6,1.3) {$EAF$};
+\node[font=\footnotesize,below] at (2.5,0) {$5$};
+\node[font=\footnotesize,right] at (8,2) {$4$};
+\end{tikzpicture}

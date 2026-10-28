@@ -1,0 +1,9 @@
+\begin{tikzpicture}[scale=0.7,transform shape]
+\draw (0,0) to[battery1,l=$16\text{ V}$] (0,3.2);
+\draw (0,3.2) to[R,l=$1\,\text{k}\Omega$] (2.4,3.2) to[R,l=$1\,\text{k}\Omega$] (4.8,3.2) to[R,l=$1\,\text{k}\Omega$] (7.2,3.2) to[R,l=$1\,\text{k}\Omega$] (9.6,3.2) -- (11.4,3.2);
+\foreach \x/\n in {2.4/A,4.8/B,7.2/C,9.6/D}{
+  \draw (\x,3.2) to[R,l_=$2\,\text{k}\Omega$,*-*] (\x,0);
+  \node[above] at (\x,3.25) {$\n$};}
+\draw (11.4,3.2) to[R,l_=$2\,\text{k}\Omega$] (11.4,0);
+\draw (0,0) -- (11.4,0);
+\end{tikzpicture}

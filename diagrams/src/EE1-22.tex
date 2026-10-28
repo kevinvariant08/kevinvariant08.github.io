@@ -1,0 +1,17 @@
+\begin{tikzpicture}
+\begin{axis}[width=8cm,height=8cm,axis lines=middle,xmin=-0.8,xmax=6.8,ymin=-1.8,ymax=8.8,
+  xtick={1,2,3,4,5,6},ytick={-1,1,2,...,8},tick label style={font=\scriptsize},
+  xlabel={$x$},ylabel={$y$},axis equal image]
+\fill[blue!12] (axis cs:0.0000,1.0000) -- (axis cs:0.0750,1.0534) -- (axis cs:0.1500,1.1096) -- (axis cs:0.2250,1.1688) -- (axis cs:0.3000,1.2311) -- (axis cs:0.3750,1.2968) -- (axis cs:0.4500,1.3660) -- (axis cs:0.5250,1.4389) -- (axis cs:0.6000,1.5157) -- (axis cs:0.6750,1.5966) -- (axis cs:0.7500,1.6818) -- (axis cs:0.8250,1.7715) -- (axis cs:0.9000,1.8661) -- (axis cs:0.9750,1.9656) -- (axis cs:1.0500,2.0705) -- (axis cs:1.1250,2.1810) -- (axis cs:1.2000,2.2974) -- (axis cs:1.2750,2.4200) -- (axis cs:1.3500,2.5491) -- (axis cs:1.4250,2.6851) -- (axis cs:1.5000,2.8284) -- (axis cs:1.5750,2.9794) -- (axis cs:1.6500,3.1383) -- (axis cs:1.7250,3.3058) -- (axis cs:1.8000,3.4822) -- (axis cs:1.8750,3.6680) -- (axis cs:1.9500,3.8637) -- (axis cs:2.0250,4.0699) -- (axis cs:2.1000,4.2871) -- (axis cs:2.1750,4.5159) -- (axis cs:2.2500,4.7568) -- (axis cs:2.3250,5.0107) -- (axis cs:2.4000,5.2780) -- (axis cs:2.4750,5.5597) -- (axis cs:2.5500,5.8563) -- (axis cs:2.6250,6.1688) -- (axis cs:2.7000,6.4980) -- (axis cs:2.7750,6.8448) -- (axis cs:2.8500,7.2100) -- (axis cs:2.9250,7.5947) -- (axis cs:3.0000,8.0000) -- (axis cs:6.0000,6.0000) -- (axis cs:5.9250,5.5947) -- (axis cs:5.8500,5.2100) -- (axis cs:5.7750,4.8448) -- (axis cs:5.7000,4.4980) -- (axis cs:5.6250,4.1688) -- (axis cs:5.5500,3.8563) -- (axis cs:5.4750,3.5597) -- (axis cs:5.4000,3.2780) -- (axis cs:5.3250,3.0107) -- (axis cs:5.2500,2.7568) -- (axis cs:5.1750,2.5159) -- (axis cs:5.1000,2.2871) -- (axis cs:5.0250,2.0699) -- (axis cs:4.9500,1.8637) -- (axis cs:4.8750,1.6680) -- (axis cs:4.8000,1.4822) -- (axis cs:4.7250,1.3058) -- (axis cs:4.6500,1.1383) -- (axis cs:4.5750,0.9794) -- (axis cs:4.5000,0.8284) -- (axis cs:4.4250,0.6851) -- (axis cs:4.3500,0.5491) -- (axis cs:4.2750,0.4200) -- (axis cs:4.2000,0.2974) -- (axis cs:4.1250,0.1810) -- (axis cs:4.0500,0.0705) -- (axis cs:3.9750,-0.0344) -- (axis cs:3.9000,-0.1339) -- (axis cs:3.8250,-0.2285) -- (axis cs:3.7500,-0.3182) -- (axis cs:3.6750,-0.4034) -- (axis cs:3.6000,-0.4843) -- (axis cs:3.5250,-0.5611) -- (axis cs:3.4500,-0.6340) -- (axis cs:3.3750,-0.7032) -- (axis cs:3.3000,-0.7689) -- (axis cs:3.2250,-0.8312) -- (axis cs:3.1500,-0.8904) -- (axis cs:3.0750,-0.9466) -- (axis cs:3.0000,-1.0000) -- cycle;
+\addplot[key,domain=0:3,samples=60] {2^x};
+\addplot[key,domain=3:6,samples=60] {2^(x-3)-2};
+\draw[key] (axis cs:3,8) -- (axis cs:6,6);
+\draw[key] (axis cs:0,1) -- (axis cs:3,-1);
+\draw[aux] (axis cs:0,1) -- (axis cs:3,8);
+\draw[aux] (axis cs:3,-1) -- (axis cs:6,6);
+\node[font=\footnotesize] at (axis cs:0.4,0.45) {$A$};
+\node[above,font=\footnotesize] at (axis cs:3,8) {$B$};
+\node[below,font=\footnotesize] at (axis cs:3,-1) {$A'$};
+\node[right,font=\footnotesize] at (axis cs:6,6) {$B'$};
+\end{axis}
+\end{tikzpicture}

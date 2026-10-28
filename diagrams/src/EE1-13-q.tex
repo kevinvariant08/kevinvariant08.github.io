@@ -1,0 +1,9 @@
+\begin{tikzpicture}
+\begin{axis}[width=8.5cm,height=5.8cm,xmin=0,xmax=31,ymin=0,ymax=6.6,
+  axis lines=left,xlabel={time (minutes)},ylabel={distance apart (km)},
+  xtick={0,6,...,30},minor xtick={0,2,...,30},ytick={0,1,...,6},minor ytick={0,0.5,...,6.5},
+  grid=both,major grid style={black!22},minor grid style={black!8},
+  tick label style={font=\footnotesize},label style={font=\small}]
+\addplot[key,thick] coordinates {(0,6)(12,0)(20,4)(30,3)};
+\end{axis}
+\end{tikzpicture}

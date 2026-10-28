@@ -1,0 +1,19 @@
+\begin{tikzpicture}[scale=0.8,transform shape]
+% experiment 1: series
+\node at (2.2,2.6) {Experiment 1};
+\draw (0,1) node[left]{$X$} to[R,l=$R_1$,o-*] (2.2,1) node[above=8pt]{} to[R,l=$R_2$,-o] (4.4,1) node[right]{$Z$};
+\node[below] at (2.2,0.95) {$Y$};
+\draw[aux,{Stealth}-{Stealth}] (0,0.1) -- (4.4,0.1) node[midway,below,text=black]{$230\text{ V}$};
+% experiment 2: parallel
+\begin{scope}[xshift=6.6cm]
+\node at (2.2,2.6) {Experiment 2};
+\draw (0,1.6) to[R,l=$R_1$] (3.4,1.6) -- (3.4,0.4);
+\draw (0,0.4) to[R,l_=$R_2$] (3.4,0.4);
+\draw (0,1.6) -- (0,0.4);
+\draw (0,1.6) node[left]{$X$} node[circ]{};
+\draw (0,0.4) node[left]{$Z$} node[circ]{};
+\draw (3.4,1.0) to[short,*-o] (4.4,1.0) node[right]{$Y$};
+\draw (0,1.0) to[short,*-o] (-0.9,1.0);
+\draw[aux,{Stealth}-{Stealth}] (-0.9,-0.3) -- (4.4,-0.3) node[midway,below,text=black]{$230\text{ V}$};
+\end{scope}
+\end{tikzpicture}

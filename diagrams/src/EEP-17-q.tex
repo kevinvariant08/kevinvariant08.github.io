@@ -1,0 +1,12 @@
+\begin{tikzpicture}
+\begin{axis}[width=8.6cm,height=6cm,xmin=0,xmax=25,ymin=0,ymax=24,
+ xtick={0,5,...,25},minor xtick={1,2,3,4,6,7,8,9,11,12,13,14,16,17,18,19,21,22,23,24},ytick={0,4,...,24},minor ytick={2,6,...,22},
+ grid=both,major grid style={black!25},minor grid style={black!10},
+ xlabel={distance from inner surface / cm},ylabel={temperature / $^\circ$C},axis lines=left,tick label style={font=\footnotesize},axis on top]
+\fill[fillalt] (axis cs:0,0) rectangle (axis cs:5,24);
+\fill[fillkey] (axis cs:5,0) rectangle (axis cs:25,24);
+\addplot[key,line width=1.2pt] coordinates {(0,20) (5,4) (25,0)};
+\node[font=\footnotesize,align=center,fill=white,inner sep=1pt] at (axis cs:2.5,21.8) {board};
+\node[font=\footnotesize,fill=white,inner sep=1pt] at (axis cs:15,21.8) {brick};
+\end{axis}
+\end{tikzpicture}

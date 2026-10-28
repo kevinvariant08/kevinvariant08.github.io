@@ -1,0 +1,14 @@
+\begin{tikzpicture}[scale=0.42]
+\tkzDefPoint(0,0){D}\tkzDefPoint(6,0){C}\tkzDefPoint(6,6){B}\tkzDefPoint(0,6){A}
+\tkzDefPoint(3,11.1962){E}\tkzDefPoint(3,5.1962){O}
+\draw[aux] (3,5.1962) circle (6);
+\tkzFillPolygon[fillkey](A,B,C,D)
+\tkzFillPolygon[fillalt](A,B,E)
+\tkzDrawPolygon[key](A,B,C,D)
+\tkzDrawPolygon[key](A,B,E)
+\tkzDrawSegments[blue!55!black,dashed](E,D E,C O,D O,C)
+\tkzDrawPoints(A,B,C,D,E,O)
+\tkzLabelPoints[below left](D)\tkzLabelPoints[below right](C)\tkzLabelPoints[right](B)\tkzLabelPoints[left](A)
+\tkzLabelPoints[above](E)\tkzLabelPoint[right](O){$O$}
+\node[font=\footnotesize,below] at (3,0) {$6$};
+\end{tikzpicture}

@@ -1,0 +1,9 @@
+\begin{tikzpicture}
+\begin{axis}[width=8.5cm,height=6.2cm,xmin=0,xmax=62,ymin=0,ymax=210,
+  axis lines=left,xlabel={$t$ (minutes)},ylabel={cumulative frequency},
+  xtick={0,10,15,20,35,60},ytick={0,24,54,90,150,200},
+  grid=major,grid style={black!15},tick label style={font=\footnotesize},
+  label style={font=\small}]
+\addplot[key,mark=*,mark size=1.6pt] coordinates {(0,0)(10,24)(15,54)(20,90)(35,150)(60,200)};
+\end{axis}
+\end{tikzpicture}

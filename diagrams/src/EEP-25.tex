@@ -1,0 +1,13 @@
+\begin{tikzpicture}
+\begin{axis}[width=8.6cm,height=4.6cm,axis lines=left,xmin=0,xmax=43,ymin=0,ymax=2.5,
+  xlabel={$t/\text{ms}$},ylabel={$I/\text{A}$},xtick={0,7.5,12.5,20,27.5,32.5,40},
+  xticklabels={$0$,$7.5$,$12.5$,$20$,$27.5$,$32.5$,$40$},ytick={0,1,2},
+  every axis x label/.style={at={(axis description cs:1,0)},anchor=north west},
+  every axis y label/.style={at={(axis description cs:0,1)},anchor=south east},
+  grid=major,grid style={black!12},xticklabel style={font=\footnotesize}]
+\addplot[fillkey,draw=none] coordinates {(7.5,0) (10,2) (12.5,0)} -- cycle;
+\addplot[fillkey,draw=none] coordinates {(27.5,0) (30,2) (32.5,0)} -- cycle;
+\addplot[key] coordinates {(0,0) (7.5,0) (10,2) (12.5,0) (27.5,0) (30,2) (32.5,0) (40,0)};
+\node[font=\footnotesize,align=center] at (axis cs:20,1.4) {each triangle:\\$\tfrac12\times 5\text{ ms}\times 2\text{ A}$\\$=5\text{ mC}$};
+\end{axis}
+\end{tikzpicture}

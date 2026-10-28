@@ -1,0 +1,15 @@
+\begin{tikzpicture}[scale=0.8]
+\tkzDefPoint(-2,0){T1}\tkzDefPoint(6,0){T2}\tkzDefPoint(2,6.9282){T3}
+\tkzDefPoint(0,0){P0}\tkzDefPoint(4,0){P1}\tkzDefPoint(5,1.7321){P2}\tkzDefPoint(3.5,4.3301){P3}\tkzDefPoint(0.5,4.3301){P4}\tkzDefPoint(-1,1.7321){P5}
+\tkzFillPolygon[fillalt](T1,P0,P5)\tkzFillPolygon[fillalt](P1,T2,P2)\tkzFillPolygon[fillalt](P3,T3,P4)
+\tkzFillPolygon[fillkey](P0,P1,P2,P3,P4,P5)
+\tkzDrawPolygon[aux](T1,T2,T3)
+\tkzDrawPolygon[key](P0,P1,P2,P3,P4,P5)
+\node[below,font=\footnotesize] at (2,0) {$a=4$};
+\node[right,font=\footnotesize] at (4.5,0.75) {$b=2$};
+\node[right,font=\footnotesize] at (4.3,3.1) {$c=3$};
+\node[above,font=\footnotesize] at (2,4.33) {$d=3$};
+\node[left,font=\footnotesize] at (-0.3,3.1) {$e$};
+\node[left,font=\footnotesize] at (-0.5,0.75) {$f$};
+\node[below,font=\footnotesize] at (2,-0.55) {side of big triangle $=8$};
+\end{tikzpicture}

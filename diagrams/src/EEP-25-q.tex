@@ -1,0 +1,16 @@
+\begin{tikzpicture}
+\begin{scope}[xshift=1.6cm,yshift=4.3cm,scale=0.85,transform shape]
+\draw (0,0) to[sV,l=generator] (0,2.2) to[D] (2.6,2.2) to[R,l=$3.0\,\Omega$] (5.2,2.2);
+\draw (5.2,2.2) to[battery1,l=$6.0\text{ V}$] (5.2,0);
+\draw (0,0) -- (5.2,0);
+\node[font=\footnotesize] at (-0.25,2.45) {$+$};
+\node[font=\footnotesize] at (4.85,1.4) {$+$};
+\end{scope}
+\begin{axis}[width=8.6cm,height=5cm,axis lines=middle,xmin=0,xmax=43,ymin=-14,ymax=15,
+  xlabel={$t/\text{ms}$},ylabel={$V/\text{V}$},xtick={10,20,30,40},ytick={-12,-6,6,12},
+  every axis x label/.style={at={(axis description cs:1,0.5)},anchor=west},
+  every axis y label/.style={at={(axis description cs:0,1)},anchor=south},
+  grid=major,grid style={black!12}]
+\addplot[key] coordinates {(0,-12) (10,12) (20,-12) (30,12) (40,-12)};
+\end{axis}
+\end{tikzpicture}

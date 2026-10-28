@@ -412,5 +412,155 @@
  },
  "EDP-27": {
   "alt": "Unfolded copies of the 25 degree gap around O, with the beam drawn as a straight line 30 cm from O crossing the lines at 25 to 175 degrees seven times."
+ },
+ "EE1-7-q": {
+  "alt": "A cumulative frequency polygon for 200 journey times through the points (0,0), (10,24), (15,54), (20,90), (35,150) and (60,200)."
+ },
+ "EE1-11": {
+  "alt": "A rectangle ABCD with an interior point P joined to all four corners, and dashed lines through P parallel to the sides splitting the distances into p, q, r and s."
+ },
+ "EE1-13-q": {
+  "alt": "Distance apart in km against time in minutes, falling in a straight line from 6 at time 0 to 0 at 12 minutes, rising to 4 at 20 minutes, then falling to 3 at 30 minutes."
+ },
+ "EE1-14": {
+  "alt": "A square ABCD with an equilateral triangle ABE on top, the circle through C, D and E with centre O, and the equilateral triangle DOC showing that the radius equals the side."
+ },
+ "EE1-15-q": {
+  "alt": "The graph of y = f(x) made of line segments joining (-4,-1), (-2,3), (0,1), (1,3), (3,-2) and (4,0) on a unit grid."
+ },
+ "EE1-16": {
+  "alt": "A 60 by 60 square of arrival times with the shaded band between the lines b = a + 10 and b = a - 20, and two unshaded corner triangles with legs 50 and 40."
+ },
+ "EE1-18": {
+  "alt": "An equiangular hexagon with sides 4, 2, 3, 3, 3, 2 shown as an equilateral triangle of side 8 with three small equilateral triangles of sides 2, 3 and 2 cut from its corners."
+ },
+ "EE1-21": {
+  "alt": "The folded rectangle: trapezium AEFD stays in place and the flap folds to the quadrilateral E B' A F, overlapping it in triangle EAF, with the original position of the flap dashed."
+ },
+ "EE1-22": {
+  "alt": "The arc of y = 2^x from A(0,1) to B(3,8) and its translate from A'(3,-1) to B'(6,6), with the region between them shaded and the chords AB and A'B' dashed to show the parallelogram."
+ },
+ "EE1-27": {
+  "alt": "A row of parabolic arches y = (x - 2m)^2 between odd integers, crossed by the line y = x/5 at x = 0, 0.2, about 1.46, about 2.74, 3.2, and touching the peak at x = 5."
+ },
+ "EEP-2-q": {
+  "alt": "Graph of current against p.d. for a thermistor X, a curve bending upwards, and a fixed resistor Y, a straight line through the origin, crossing at P where V is 4 V and I is 0.5 A."
+ },
+ "EEP-2": {
+  "alt": "The same current against p.d. graph with the tangent to curve X at P drawn dashed, visibly steeper than the line Y from the origin through P."
+ },
+ "EEP-5-q": {
+  "alt": "Graph of time to boil against mass of water: a straight line through crosses at (0.5 kg, 100 s), (1.0 kg, 180 s) and (1.5 kg, 260 s), drawn from 0.25 kg to 1.75 kg."
+ },
+ "EEP-5": {
+  "alt": "The kettle graph with the line extended back to an intercept of 20 s at zero mass, and a gradient triangle showing 160 s per 1.0 kg."
+ },
+ "EEP-6-q": {
+  "alt": "Cross-section of a canal lock gate standing on the floor, with water 5.0 m deep on the upstream side and 3.0 m deep on the downstream side."
+ },
+ "EEP-6": {
+  "alt": "Graph of gauge pressure against depth below the upstream surface: the upstream line rises from 0 to 50 kPa over 5 m, the downstream line from 0 at 2 m to 30 kPa at 5 m, and the shaded gap between them splits into a triangle of area 20 and a band of area 60."
+ },
+ "EEP-7-q": {
+  "alt": "A 16 V battery feeding a resistor ladder: four 1 kilohm resistors in series along the top through nodes A, B, C and D, a 2 kilohm resistor from each node down to the return wire, and a final 2 kilohm resistor at the right-hand end."
+ },
+ "EEP-7": {
+  "alt": "The ladder circuit annotated with node p.d.s of 8, 4, 2 and 1 V at A to D and currents of 8, 4, 2 and 1 mA in the top resistors, 4, 2, 1 and 0.5 mA in the vertical resistors and 0.5 mA in the end resistor."
+ },
+ "EEP-8-q": {
+  "alt": "Table: spring compression 2.0 cm gives greatest height 0.30 m; 4.0 cm gives 1.80 m; 6.0 cm is unknown."
+ },
+ "EEP-9-q": {
+  "alt": "Graph of power in the resistor against time from 0 to 40 ms, a smooth wave rising from zero to peaks of 8 W at 5, 15, 25 and 35 ms and falling to zero at 0, 10, 20, 30 and 40 ms."
+ },
+ "EEP-10-q": {
+  "alt": "Graph of cord force against distance: a straight line falling from 30 N at 0 m to 0 N at 6 m, then zero up to 10 m."
+ },
+ "EEP-10": {
+  "alt": "The cord force graph with a dashed friction line at 10 N; the triangle between the force line and the friction line up to x = 4 m is shaded and labelled 40 J."
+ },
+ "EEP-11-q": {
+  "alt": "Upper graph: displacement at the sensor against time, zero until 0.5 s, rising steeply to 4 cm at 1.0 s and falling steadily to zero at 2.0 s. Below, six graphs A to F of displacement against position from 0 to 6 m, each showing a triangular pulse in a different place or orientation."
+ },
+ "EEP-11": {
+  "alt": "The rope at t = 2.5 s: zero up to x = 1 m (the tail, which passed the sensor at 2.0 s), rising to a 4 cm peak at x = 3 m (passed at 1.0 s), then dropping steeply to zero at x = 4 m (the front, passed at 0.5 s)."
+ },
+ "EEP-12-q": {
+  "alt": "Graph of thrust against time: rising linearly from 0 to 8 N over the first 0.5 s, constant at 8 N until 1.5 s, then falling linearly to 0 at 2.0 s."
+ },
+ "EEP-12": {
+  "alt": "The thrust graph with a dashed weight line at 4.0 N; lift-off at 0.25 s; the region above the line is shaded as +5.0 N s and the small triangle below it after 1.75 s as -0.5 N s."
+ },
+ "EEP-13": {
+  "alt": "Graph of drum p.d. in kilovolts against charge in microcoulombs, a straight line through the origin; the trapezium under it between 1 and 3 microcoulombs, from 10 kV to 30 kV, is shaded and labelled 40 mJ."
+ },
+ "EEP-15-q": {
+  "alt": "Cooling curve of temperature against time: liquid wax cools from about 82 degrees C to 55 degrees C by 10 min, stays at 55 degrees C until 40 min, then the solid cools towards 32 degrees C at 55 min; dashed tangents pass through (0, 75) and (15, 45), and through (40, 55) and (50, 30)."
+ },
+ "EEP-16-q": {
+  "alt": "Perspective sketch of a horizontal rectangular duct 10 cm high and 4.0 cm deep, with a 30 cm section where the magnetic field B points into the page, an electrode on the top wall, a current I flowing downwards, and an arrow showing the flow to the right."
+ },
+ "EEP-17-q": {
+  "alt": "Temperature against distance through a wall: a steep straight line falls from 20 degrees C to 4 degrees C across a 5 cm insulating board, then a shallow line falls from 4 degrees C to 0 degrees C across 20 cm of brick."
+ },
+ "EEP-18": {
+  "alt": "Two circuits: in experiment 1 resistors R1 and R2 are in series from X through Y to Z across 230 V; in experiment 2 X and Z are joined so that R1 and R2 are in parallel between XZ and Y across 230 V."
+ },
+ "EEP-20-q": {
+  "alt": "Graph of spring extension against time: rising from 0 to 5 mm over 0 to 2 s, constant to 6 s, falling linearly to -5 mm at 10 s, rising back to 0 at 12 s, then zero to 14 s."
+ },
+ "EEP-20": {
+  "alt": "The extension graph with the positive region from 0 to 8 s shaded and labelled 30 mm s, and the negative triangle from 8 to 12 s shaded and labelled 10 mm s."
+ },
+ "EEP-21-q": {
+  "alt": "Depth against time for the dive, with depth increasing downwards: 0 to 30 m in the first 3 min, 30 m until 18 min, rising to 5 m at 23 min, 5 m until 26 min, and the surface at 27 min."
+ },
+ "EEP-21": {
+  "alt": "The dive profile with the area between the depth graph and the surface shaded and split into pieces of 45, 450, 87.5, 15 and 2.5 metre minutes."
+ },
+ "EEP-22-q": {
+  "alt": "An amplifier box containing a 40 V alternating source in series with an 800 ohm resistor, connected to the 2000-turn primary coil of a transformer whose 200-turn secondary coil is connected to an 8 ohm loudspeaker."
+ },
+ "EEP-25-q": {
+  "alt": "Circuit of a generator, an ideal diode, a 3.0 ohm resistor and a 6.0 V battery in series, with the diode pointing so that current flows from the generator's upper terminal into the battery's positive terminal; below it, a graph of the generator p.d. against time, a triangular wave between minus 12 V and plus 12 V with peaks at 10 ms and 30 ms and troughs at 0, 20 and 40 ms."
+ },
+ "EEP-25": {
+  "alt": "Graph of charging current against time, zero except for triangular pulses from 7.5 to 12.5 ms and from 27.5 to 32.5 ms that peak at 2 A, each shaded and labelled as 5 mC."
+ },
+ "EEP-26-q": {
+  "alt": "Velocity-time graph of two gliders: A starts at 0.8 m/s and B at 0; between 0 and about 16 ms A falls smoothly to -0.4 m/s and B rises smoothly to 0.4 m/s; the curves cross at 0.2 m/s at time t1, and the region between them from 0 to t1 is shaded."
+ },
+ "EEP-27": {
+  "alt": "Two snapshots of a sine wave one flash apart: the dashed later wave has really moved 3.69 wavelengths forward, but its nearest crest is 0.31 wavelengths behind the original crest, so the eye sees a small backward step."
+ },
+ "EE2-9-q": {
+  "alt": "Graph of y = f'(x): positive for x < -1, touching the x-axis at x = -1, positive again until crossing at x = 2, negative between 2 and 4, and positive after crossing at x = 4."
+ },
+ "EE2-10-q": {
+  "alt": "Graph of y = f(x) for 0 to 6: an arch above the x-axis from 0 to 2 enclosing area 5, then a shallower trough below the axis from 2 to 6 enclosing area 3."
+ },
+ "EE2-12": {
+  "alt": "The curve y = |x^2 - 2x| and the line y = x, meeting at x = 0, 1 and 3, with a small region of area 1/6 between 0 and 1 and a larger region of area 5/6 + 7/6 between 1 and 3 shaded."
+ },
+ "EE2-13": {
+  "alt": "The sine curve and the line y = x/8 for x between about -9.6 and 9.6, crossing at seven marked points: the origin and three on each side, two of them just before x = 8."
+ },
+ "EE2-15": {
+  "alt": "Four arches of y = f(x) on [-4,-2], [-2,0], [0,2] and [2,4], each twice as tall as the one to its left, shaded and labelled with areas 1/3, 2/3, 4/3 and 8/3."
+ },
+ "EE2-18": {
+  "alt": "The licensed region: an octagon formed by the rectangle with corners A(0,0) and B(4,2), strips of width 2 on each side, and right-angled triangular corners, with vertices (-2,0), (-2,2), (0,4), (4,4), (6,2), (6,0), (4,-2) and (0,-2)."
+ },
+ "EE2-19": {
+  "alt": "The circle x^2 + y^2 = 25 and the wall 3x + 4y = 10, at distance 2 from the centre O, with the parallel tangent lines at distances 3 and 7 from the wall touching the circle at (3,4) and (-3,-4)."
+ },
+ "EE2-20": {
+  "alt": "The curve y = x^3 + x and its translate two units to the right, with the region R between them and between the lines y = 1 and y = 7 shaded, and a horizontal segment of length 2 across R."
+ },
+ "EE2-25": {
+  "alt": "The curve y = x^2 and the line y = x/sqrt2 for 0 to 1, crossing at x = 1/sqrt2, with the gap regions on either side of the crossing shaded."
+ },
+ "EE2-26": {
+  "alt": "The curve y = sqrt x for 0 to 4 between the chord y = x/2 and the parallel tangent y = x/2 + 1/2 (dashed), with the middle line y = x/2 + 1/4, which is 1/4 from the curve at x = 0, 1 and 4."
  }
 }
