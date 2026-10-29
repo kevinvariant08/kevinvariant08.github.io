@@ -1,0 +1,14 @@
+\begin{tikzpicture}[scale=0.26]
+\draw[black!50,->] (-21,0) -- (7,0) node[right,font=\scriptsize]{$x$};
+\draw[black!50,->] (0,-6) -- (0,20) node[above,font=\scriptsize]{$y$};
+\fill[fillalt] (1,1) -- (2,4) -- (-4,16) -- cycle;
+\draw[key] (-9,6) circle (11.1803);
+\draw[black,line width=0.8pt,domain=-4.4:2.35,samples=80] plot (\x,{\x*\x});
+\draw[black!70] (1,1) -- (2,4) -- (-4,16) -- cycle;
+\draw[aux] (1,1) -- (-9,6);
+\fill (-9,6) circle (5pt); \node[font=\scriptsize,anchor=north] at (-9,5.4) {$(-9,6)$};
+\fill (1,1) circle (5pt); \node[font=\scriptsize,anchor=west] at (1.5,1.0) {$P(1,1)$};
+\fill (2,4) circle (5pt); \node[font=\scriptsize,anchor=west] at (2,4) {$Q(2,4)$};
+\fill (-4,16) circle (5pt); \node[font=\scriptsize,anchor=south east] at (-4,16) {$R(-4,16)$};
+\node[font=\scriptsize] at (-0.8,9) {$15$};
+\end{tikzpicture}

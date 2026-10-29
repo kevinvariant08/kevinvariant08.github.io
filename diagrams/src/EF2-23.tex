@@ -1,0 +1,15 @@
+\begin{tikzpicture}[xscale=1.5,yscale=0.62]
+\fill[fillkey] (0.5,-1.5) -- (-0.8229,0.6771) -- plot[domain=-0.8229:1.8229,samples=80,smooth] (\x,{\x*\x}) -- cycle;
+\draw[->] (-1.6,0) -- (2.7,0) node[right] {$x$};
+\draw[->] (0,-3.6) -- (0,5.6) node[above] {$y$};
+\draw[key,domain=-1.5:2.3,samples=120,smooth] plot (\x,{\x*\x});
+\draw[black!70] (-1.4,-3.4) -- (2.6,0.6) node[above right,font=\footnotesize] {$y=x-2$};
+\node[font=\footnotesize,blue!55!black,anchor=south] at (-1.5,2.4) {$y=x^2$};
+\draw[aux] (-1.1729,1.2531) -- (0.5,-1.5) -- (2.0729,4.2343);
+\draw[black] (-0.8229,0.6771) -- (0.5,-1.5) -- (1.8229,3.3229);
+\fill (0.5,-1.5) circle (1.6pt) node[below right] {$P\left(\tfrac12,-\tfrac32\right)$};
+\fill (-0.8229,0.6771) circle (1.4pt);
+\fill (1.8229,3.3229) circle (1.4pt);
+\node[left,font=\footnotesize] at (-0.8229,0.6771) {$x=a$};
+\node[right,font=\footnotesize] at (1.8229,3.3229) {$x=b$};
+\end{tikzpicture}

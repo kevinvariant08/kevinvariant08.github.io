@@ -1,0 +1,18 @@
+\begin{tikzpicture}[scale=0.06]
+\coordinate (AA) at (-60,0); \coordinate (BB) at (0,0); \coordinate (TT) at (-9.3750,74.4118);
+\draw[black!60,line width=1.2pt] (-72,0) -- (32,0);
+\node[font=\scriptsize,anchor=south west] at (-72,0.8) {road};
+\draw[key] (-60.0000,0) -- (-9.3750,74.4118);
+\draw[key] (0.0000,0) -- (-9.3750,74.4118);
+\draw[key] (20.0000,0) -- (-9.3750,74.4118);
+\fill (-60.0000,0) circle (1.6pt); \node[anchor=north,font=\footnotesize] at (-60.0000,-2) {$A$};
+\fill (0.0000,0) circle (1.6pt); \node[anchor=north,font=\footnotesize] at (0.0000,-2) {$B$};
+\fill (20.0000,0) circle (1.6pt); \node[anchor=north,font=\footnotesize] at (20.0000,-2) {$C$};
+\fill (-9.3750,74.4118) circle (1.6pt); \node[anchor=south,font=\footnotesize] at (-9.3750,75.9118) {$T$ (foot of mast)};
+\node[font=\scriptsize,anchor=north] at (-30,-6) {$60$};
+\node[font=\scriptsize,anchor=north] at (10,-6) {$20$};
+\node[font=\scriptsize,anchor=south east] at (-37.2188,33.4853) {$TA=\tfrac32h$};
+\node[font=\scriptsize,anchor=east] at (-4.2812,26.0441) {$TB=\tfrac54h$};
+\node[font=\scriptsize,anchor=west] at (12.6875,22.3235) {$TC=\tfrac43h$};
+\pic[draw,black!70,angle radius=0.45cm,font=\scriptsize,"$\theta$",angle eccentricity=1.5] {angle=TT--BB--AA};
+\end{tikzpicture}

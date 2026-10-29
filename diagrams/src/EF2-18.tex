@@ -1,0 +1,18 @@
+\begin{tikzpicture}[xscale=1.45,yscale=0.85]
+\draw[->] (-2.5,0) -- (2.6,0) node[right] {$x$};
+\draw[->] (0,-2.8) -- (0,3) node[above] {$y$};
+\draw[key,domain=-2.15:2.15,samples=150,smooth] plot (\x,{\x*\x*\x-3*\x});
+\draw[black!70] (-2.4,1) -- (2.4,1) node[right] {$y=k$};
+\draw[aux] (-2.4,2) -- (2.4,2);
+\draw[aux] (-2.4,-2) -- (2.4,-2);
+\node[font=\scriptsize,black!60,anchor=east] at (-2.4,2) {$2$};
+\node[font=\scriptsize,black!60,anchor=east] at (-2.4,-2) {$-2$};
+\fill (-1.5321,1) circle (1.5pt);
+\fill (-0.3473,1) circle (1.5pt);
+\fill (1.8794,1) circle (1.5pt);
+\node[below right,inner sep=1.5pt] at (-1.5321,1) {$a$};
+\node[below left,inner sep=1.5pt] at (-0.3473,1) {$b$};
+\node[below right,inner sep=1.5pt] at (1.8794,1) {$c$};
+\draw[decorate,decoration={brace,amplitude=4pt}] (-1.5321,1.3) -- (1.8794,1.3) node[midway,above=4pt,inner sep=1pt] {$D$};
+\fill (-1,2) circle (1.2pt); \fill (1,-2) circle (1.2pt);
+\end{tikzpicture}

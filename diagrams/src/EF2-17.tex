@@ -1,0 +1,15 @@
+\begin{tikzpicture}
+\begin{axis}[width=8.4cm,height=5.4cm,axis lines=left,xmin=0,xmax=10.6,ymin=0,ymax=37,
+  xtick={0,3,7,9,10},ytick={10,20,32},xlabel={$t$},ylabel={$Q$},
+  every axis x label/.style={at={(axis description cs:1,0)},anchor=west},
+  every axis y label/.style={at={(axis description cs:0,1)},anchor=south},
+  tick label style={font=\scriptsize},clip=false]
+\addplot[fillkey,draw=none,domain=3:9,samples=100] {(x-3)*(x-3)*(9-x)} \closedcycle;
+\addplot[key,domain=3:9,samples=100,smooth] {(x-3)*(x-3)*(9-x)};
+\addplot[key,domain=0:3] {0};
+\addplot[key,domain=9:10] {0};
+\draw[aux] (axis cs:7,0) -- (axis cs:7,32) -- (axis cs:0,32);
+\node[font=\footnotesize] at (axis cs:6.1,10) {area $108$};
+\node[font=\footnotesize,anchor=east,blue!55!black] at (axis cs:5.2,27) {$Q=(t-3)^2(9-t)$};
+\end{axis}
+\end{tikzpicture}

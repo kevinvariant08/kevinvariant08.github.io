@@ -1,0 +1,17 @@
+\begin{tikzpicture}[xscale=1.6,yscale=0.72]
+\draw[->] (-0.3,0) -- (4.4,0) node[right] {$x$};
+\draw[->] (0,-0.3) -- (0,7.4) node[above] {$y$};
+\draw[black,line width=1.4pt] (0,0) -- (0,6.75);
+\fill[orange!80!black] (0,6.75) circle (2.2pt) node[left=2pt] {$L$};
+\draw[key,domain=0:4,samples=150,smooth] plot (\x,{\x*\x*\x-6*\x*\x+9*\x});
+\draw[orange!80!black,line width=2.2pt,domain=1.5:3,samples=80,smooth] plot (\x,{\x*\x*\x-6*\x*\x+9*\x});
+\draw[aux] (0,6.75) -- (3,0);
+\fill (1.5,3.375) circle (1.5pt) node[above right] {$T\left(\tfrac32,\tfrac{27}{8}\right)$};
+\fill (3,0) circle (1.5pt);
+\node[below] at (3,0) {$3$};
+\node[below] at (1.5,0) {$\tfrac32$};
+\draw[black!40] (1.5,0) -- (1.5,0.12);
+\node[left,font=\scriptsize] at (0,6.75) {};
+\node[font=\footnotesize,orange!80!black,anchor=north] at (2.35,-0.55) {unlit};
+\node[font=\footnotesize,black!60,anchor=west] at (0.9,5.3) {$y=\tfrac{27}{4}-\tfrac94x$};
+\end{tikzpicture}

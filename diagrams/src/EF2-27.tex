@@ -1,0 +1,19 @@
+\begin{tikzpicture}
+\begin{axis}[width=8.2cm,height=5.6cm,axis lines=middle,xmin=-0.2,xmax=5.6,ymin=-2.3,ymax=3.9,
+  xtick={1,2,3,4,5},ytick={-1,1,2,3},xlabel={$a$},ylabel={$g(a)$},
+  every axis x label/.style={at={(axis description cs:1,0.37)},anchor=west},
+  every axis y label/.style={at={(axis description cs:0.03,1)},anchor=south},
+  tick label style={font=\scriptsize},clip=false]
+\addplot[key,domain=0:4,samples=120,smooth] {x*x-2*x^1.5};
+\addplot[key,domain=4:5] {x*x-6*x+8};
+\addplot[aux,domain=4:5,samples=40] {x*x-2*x^1.5};
+\fill (axis cs:2.25,-1.6875) circle (1.6pt);
+\fill (axis cs:5,3) circle (1.6pt);
+\node[anchor=north,font=\footnotesize] at (axis cs:2.25,-1.75) {$\left(\tfrac94,-\tfrac{27}{16}\right)$};
+\node[anchor=south east,font=\footnotesize] at (axis cs:5,3) {$(5,3)$};
+\node[anchor=west,font=\footnotesize,black!60] at (axis cs:5.02,2.5) {$25-10\sqrt5$};
+\node[font=\footnotesize,blue!55!black] at (axis cs:2.8,-0.9) {$b=\sqrt a$};
+\node[anchor=east,font=\footnotesize,blue!55!black] at (axis cs:4.15,1.6) {$b=2$};
+\draw[black!30] (axis cs:4,-0.25) -- (axis cs:4,0.25);
+\end{axis}
+\end{tikzpicture}

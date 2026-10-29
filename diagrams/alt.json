@@ -665,70 +665,52 @@
  "EFP-27": {
   "alt": "Three panels of velocities: after X bounces, X moves up at 4 while Y and Z move down at 4; after X hits Y, X is at rest and Y moves up at 8; after Y hits Z, X and Y are at rest and Z moves up at 12 metres per second."
  },
- "EFC-2-q": {
-  "alt": "Two panels plotting rate of hydrogen production against volume collected: the upper shows reference line P from 2 to zero at 480 cubic centimetres with lines Q (4 to 480), R (4 to 240), S (1 to 480) and T (1 to 960); the lower shows P with two low curves, U from 0.4 to zero at 480 and W from 0.4 to zero at 120."
+ "EF2-4": {
+  "alt": "The first eight isosceles right-angled triangles of the spiral around O, of areas 64, 32, 16 and so on, filling the eight 45 degree angles at O, with the later tiny triangles lying inside them."
  },
- "EFC-8": {
-  "alt": "Displayed formulae of two H-O-O-H molecules turning into two H-O-H molecules and one O=O, with the O-O and O=O bonds highlighted and a note that the O-H bonds broken and made cancel, giving minus 210 kJ per mole of oxygen."
+ "EF2-5": {
+  "alt": "The curve y = root x from 0 to 9 with the two trapezia under it shaded; the dividing point C is at x = 9/4, where the tangent is parallel to the chord AB."
  },
- "EFC-10-q": {
-  "alt": "Two bar charts of successive ionisation energies on a logarithmic scale: element X shows six bars with a large jump between the second and third, and element Y shows eight bars with a large jump between the sixth and seventh."
+ "EF2-11": {
+  "alt": "Plan view of the road with points A, B and C, 60 m and 20 m apart, joined to the foot T of the mast by lines of length 3h/2, 5h/4 and 4h/3, with the unknown angle theta at B."
  },
- "EFC-11-q": {
-  "alt": "Graph of amount in moles against time: nitrogen dioxide constant at 0.60 and dinitrogen tetroxide constant at 0.30 until time t1, after which nitrogen dioxide falls smoothly to about 0.48 and dinitrogen tetroxide rises smoothly to about 0.36, with no sudden jumps."
+ "EF2-12": {
+  "alt": "The parabola y = x squared and the circle with centre (-9, 6) that touches it at P(1, 1) and passes through Q(2, 4) and R(-4, 16), with triangle PQR shaded."
  },
- "EFC-12-q": {
-  "alt": "A two-dimensional paper chromatogram with a 1 cm grid: the origin at the bottom left, solvent 1 moving upwards to a front 8 cm from the origin, solvent 2 moving to the right to a front 6 cm from the origin, and four spots at (across, up) = (4.5, 2), (1.5, 4), (3, 6) and (4.5, 6) cm."
+ "EF2-13": {
+  "alt": "The quartic curve with the straight line y = -8x - 21 through its two points I and J where the gradient is stationary, meeting the curve again at P and Q."
  },
- "EFC-12": {
-  "alt": "The same chromatogram with open circles marking where each reference dye P to U would appear; the spots coincide with the circles for Q, R and S, and the spot at (3, 6) cm matches no reference dye and is labelled unknown."
+ "EF2-14": {
+  "alt": "The shortest route from A(-10, 0) to B(5, 5) round the pond: a tangent of length 5 root 3, an arc subtending 30 degrees, and a tangent of length 5."
  },
- "EFC-13-q": {
-  "alt": "Flow diagram: 20 cubic centimetres of X vapour plus 60 of oxygen are sparked, leaving 115 cubic centimetres of gas; after anhydrous calcium chloride 65 remain, after sodium hydroxide 25 remain, and after heated copper 10 remain."
+ "EF2-15": {
+  "alt": "The curve y = x^3 - (4/3)x with the tangent at P, of gradient -1/2, meeting the curve again at Q, and the tangent at Q, of gradient 2, at right angles to it."
  },
- "EFC-16-q": {
-  "alt": "Thermometric titration graph of temperature against volume of sodium hydroxide added: the temperature rises from 20 degrees along a curve and then falls slowly beyond neutralisation; the two curves extended as dashed lines meet at M, at 25.0 cubic centimetres and 33.5 degrees, while the highest measured point is about 32.4 degrees."
+ "EF2-17": {
+  "alt": "Graph of the queue length Q = (t-3)^2(9-t) from t = 3 to t = 9, peaking at 32 when t = 7, with the area under it shaded."
  },
- "EFC-17": {
-  "alt": "A number line of vanadium oxidation states from +2 to +5 showing 0.010 mol at +2 and 0.030 mol at +5, the mean +4.25 after mixing, an arrow to the mean +3.75 after the zinc supplies 0.020 mol of electrons, and a brace between +3 and +4 labelled 0.010 mol of V3+ and 0.030 mol of VO2+."
+ "EF2-18": {
+  "alt": "The cubic y = x^3 - 3x with a horizontal line y = k meeting it at a, b and c, and D marked as the distance from a to c."
  },
- "EFC-18-q": {
-  "alt": "Mass spectrum with peaks at m/z 10, 11, 20, 22 and 40 of relative heights 9, 1, 91, 9 and 40."
+ "EF2-19": {
+  "alt": "The band wiped by the vertical pantograph blade as its midpoint moves along a circular arc of radius 50 about O, with horizontal width 50 + 25 root 3."
  },
- "EFC-18": {
-  "alt": "The same mass spectrum with the m/z 20 peak split into 81 from neon-20 1+ ions and 10 from argon-40 2+ ions."
+ "EF2-20": {
+  "alt": "The ground profile with the light L at the top of the pole; the ray from L grazes the hill at T where x = 3/2 and reaches the ground at x = 3, and the unlit stretch between is highlighted."
  },
- "EFC-21-q": {
-  "alt": "Displayed formula of M: H, O, then a CH2 carbon, then two carbons joined by a double bond each carrying one H, then a carbon with a double-bonded O and an OH group."
+ "EF2-21": {
+  "alt": "The shaded region R in the (p, q)-plane between the curves q = plus or minus 2(-p/3)^(3/2) for p from -3 to 0, meeting in a cusp at the origin."
  },
- "EFC-21": {
-  "alt": "Repeat units of the two polymers: polymer A has two backbone carbons, one carrying H and CH2OH and the other carrying COOH and H; polymer B is O, CH2, CH=CH and C=O in a chain, joined to the next unit through an ester link."
+ "EF2-23": {
+  "alt": "The parabola y = x^2, the line y = x - 2 and the point P(1/2, -3/2) on it, with the two tangents from P and the region between them and the parabola shaded."
  },
- "EFC-22": {
-  "alt": "A bar of 0.030 mol of halide ions divided into 0.010 mol iodide and 0.010 mol bromide converted to chloride, losing 0.915 g and 0.445 g, and 0.010 mol bromide left unchanged."
+ "EF2-25": {
+  "alt": "The curve y = 3x - x^3 and its reflection x = 3y - y^3 in the line y = x, crossing at nine marked points, three on the line y = x and six off it."
  },
- "EFC-23-q": {
-  "alt": "Solubility curve of copper(II) sulfate from 0 to 100 degrees Celsius, rising smoothly from about 14 grams per 100 grams of water at 0 degrees through 20 at 20 degrees and 40 at 60 degrees to about 75 at 100 degrees."
+ "EF2-26": {
+  "alt": "The image region: the disc of radius 2 centred at (2, 0) with the disc of radius 2/3 centred at (10/3, 0) removed, both touching the line x = 4 at (4, 0)."
  },
- "EFC-24-q": {
-  "alt": "Graph of total volume of gas in cm3 against charge passed in coulombs: three straight segments from the origin to (1930, 240), then to (5790, 480), then to (7720, 840)."
- },
- "EFC-24": {
-  "alt": "The same graph annotated: the first segment is chlorine at the anode and copper at the cathode with slope one half, chloride used up at 1930 C; the second is oxygen and copper with slope one quarter, copper ions used up at 5790 C; the third is oxygen and hydrogen with slope three quarters."
- },
- "EFC-25-q": {
-  "alt": "Mass spectrum of nitrogen gas with peaks at m/z 28, 29 and 30 of relative heights 16, 8 and 1."
- },
- "EFC-25": {
-  "alt": "Number line of the fraction of nitrogen atoms that are nitrogen-15, marking the tissue at 0, the mixture at 0.2 and the spike at 0.6, with gaps 0.2 and 0.4 giving tissue to spike nitrogen 2 to 1."
- },
- "EFC-26-q": {
-  "alt": "Block diagram of an ammonia plant: fresh feed joins recycled gas and enters a reactor, then a condenser from which liquid ammonia leaves; the remaining gas splits into a purge stream and a recycle stream that returns to join the fresh feed."
- },
- "EFC-26": {
-  "alt": "The ammonia plant diagram with a dashed boundary drawn round the whole plant: 100 mol of nitrogen, 300 of hydrogen and 4.0 of argon enter each second; the purge carries out 4.0 argon, 5 nitrogen and 15 hydrogen, and 190 mol of ammonia leave as liquid, while the recycle stays inside the boundary."
- },
- "EFC-27": {
-  "alt": "Carbon skeletons of the eight alcohols C5H11OH, numbered 1 to 8 and grouped by longest chain of five, four and three carbons, and of the two acids C3H7COOH, butanoic acid and 2-methylpropanoic acid."
+ "EF2-27": {
+  "alt": "Graph of Bob's payment g(a): it dips to a minimum of -27/16 at a = 9/4, returns to 0 at a = 4 and then rises to 3 at a = 5; the dashed curve shows what would happen if b = root a were allowed beyond 2."
  }
 }

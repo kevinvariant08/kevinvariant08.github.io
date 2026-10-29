@@ -1,0 +1,13 @@
+\begin{tikzpicture}[scale=1.15]
+\fill[fillkey,domain=-3:0,samples=100,smooth] plot (\x,{2*((-\x)/3)^1.5}) -- plot[domain=0:-3] (\x,{-2*((-\x)/3)^1.5}) -- cycle;
+\draw[key,domain=-3:0,samples=100,smooth] plot (\x,{2*((-\x)/3)^1.5});
+\draw[key,domain=-3:0,samples=100,smooth] plot (\x,{-2*((-\x)/3)^1.5});
+\draw[->] (-3.6,0) -- (0.8,0) node[right] {$p$};
+\draw[->] (0,-2.5) -- (0,2.6) node[above] {$q$};
+\draw[black!70] (-3,-2) -- (-3,2);
+\node[below left,font=\scriptsize] at (-3,0) {$-3$};
+\node[left,font=\scriptsize] at (-3,2) {$2$};
+\node[left,font=\scriptsize] at (-3,-2) {$-2$};
+\node[font=\footnotesize] at (-1.9,0.35) {$R$};
+\node[font=\footnotesize,anchor=west,blue!55!black] at (-1.6,1.25) {$q=2\left(-\tfrac p3\right)^{3/2}$};
+\end{tikzpicture}

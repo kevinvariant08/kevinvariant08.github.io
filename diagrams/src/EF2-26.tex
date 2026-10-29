@@ -1,0 +1,15 @@
+\begin{tikzpicture}[scale=1.00]
+\fill[fillkey] (2,0) circle (2);
+\fill[white] ({10/3},0) circle ({2/3});
+\draw[key] (2,0) circle (2); \draw[key] ({10/3},0) circle ({2/3});
+\draw[black!50,->] (-0.6,0) -- (6.6,0) node[right,font=\scriptsize]{$x$};
+\draw[black!50,->] (0,-2.4) -- (0,2.6) node[above,font=\scriptsize]{$y$};
+\draw[aux] (4,-2.4) -- (4,2.4); \draw[aux] (5,0) circle (1);
+\fill (0,0) circle (1.5pt); \node[font=\scriptsize,anchor=north east] at (0,0) {$O$};
+\fill (4,0) circle (1.5pt); \node[font=\scriptsize,anchor=north west] at (4,-0.02) {$(4,0)$};
+\node[font=\scriptsize,anchor=north west] at (4,-1.9) {$x=4$};
+\node[font=\scriptsize] at (1.3,0.8) {$R'$};
+\node[font=\scriptsize,anchor=west] at (5.75,0.95) {$(x-5)^2+y^2=1$};
+\node[font=\scriptsize,anchor=north] at (2,-2.02) {image of $x=4$: radius $2$};
+\draw[black!60] ({10/3+0.25},0.6) -- (3.75,2.2) node[above left,font=\scriptsize,black] {radius $\tfrac23$};
+\end{tikzpicture}

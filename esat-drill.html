@@ -72,7 +72,7 @@
       <header class="hub-head">
         <span class="eyebrow">ESAT</span>
         <h1>ESAT Drill</h1>
-        <p class="lede">Sit an ESAT module (Mathematics 1, Mathematics 2, Physics or Chemistry) the way the real test runs it: 27 questions, 40 minutes, no calculator, nothing marked until you submit. Then go through every question with its worked solution.</p>
+        <p class="lede">Sit an ESAT module (Mathematics 1, Physics or Mathematics 2) the way the real test runs it: 27 questions, 40 minutes, no calculator, nothing marked until you submit. Then go through every question with its worked solution.</p>
       </header>
       <div class="modes">
         <div class="mode">
@@ -124,7 +124,7 @@
     </section>
   </main>
 
-  <script src="esat-questions.js?v=20261103"></script>
+  <script src="esat-questions.js?v=20261104"></script>
   <script>
   (function(){
     var Q=window.HU_ESAT||[], PAPERS=window.HU_ESAT_PAPERS||{}, TOPICS=window.HU_ESAT_TOPICS||{};
@@ -141,7 +141,7 @@
     function showBest(){ var b=store('kv_esat_best')||{}, p=sel.value; $('best').textContent=b[p]!=null?'Your best standard-time score on this paper: '+b[p]+' / '+PAPERS[p].questions+'.':''; }
     sel.addEventListener('change',showBest); showBest();
     var picked={};
-    var GROUP={units:'Mathematics 1',alg:'Mathematics 2',elec:'Physics',atoms:'Chemistry'};
+    var GROUP={units:'Mathematics 1',alg:'Mathematics 2',elec:'Physics'};
     Object.keys(TOPICS).forEach(function(t){
       if(GROUP[t]){ var g=document.createElement('span'); g.className='grp'; g.textContent=GROUP[t]; $('topics').appendChild(g); }
       var b=document.createElement('button'); b.type='button'; b.textContent=TOPICS[t]; b.setAttribute('aria-pressed','false');
@@ -276,6 +276,6 @@
     });
   })();
   </script>
-  <script src="site.js?v=20261103" defer></script>
+  <script src="site.js?v=20261104" defer></script>
 </body>
 </html>

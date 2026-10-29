@@ -1,0 +1,19 @@
+\begin{tikzpicture}
+\begin{axis}[width=8.6cm,height=6.6cm,axis lines=middle,xmin=-3.4,xmax=4.6,ymin=-72,ymax=22,
+  xtick={-3,-2,-1,1,2,3,4},ytick={-60,-40,-20,20},xlabel={$x$},ylabel={$y$},
+  every axis x label/.style={at={(axis description cs:1,0.77)},anchor=west},
+  every axis y label/.style={at={(axis description cs:0.43,1)},anchor=south},
+  tick label style={font=\scriptsize},clip=false]
+\addplot[key,domain=-3.15:4.25,samples=200,smooth] {x*x*x*x-2*x*x*x-12*x*x+5*x+1};
+\addplot[black!70,domain=-3.15:4.25] {-8*x-21};
+\fill (axis cs:-2.8541,1.8328) circle (1.6pt);
+\fill (axis cs:-1.0000,-13.0000) circle (1.6pt);
+\fill (axis cs:2.0000,-37.0000) circle (1.6pt);
+\fill (axis cs:3.8541,-51.8328) circle (1.6pt);
+\node[anchor=south west,inner sep=2pt] at (axis cs:-2.8541,1.8328) {$P$};
+\node[anchor=east,inner sep=2pt] at (axis cs:-1.12,-14) {$I$};
+\node[anchor=north east,inner sep=2pt] at (axis cs:2,-37) {$J$};
+\node[anchor=east,inner sep=2pt] at (axis cs:3.75,-58) {$Q$};
+\node[font=\footnotesize,black!70,anchor=west] at (axis cs:-3.3,-60) {$y=-8x-21$};
+\end{axis}
+\end{tikzpicture}
