@@ -1,0 +1,15 @@
+\begin{tikzpicture}
+\begin{axis}[width=8.4cm,height=5.8cm,xmin=0,xmax=5.2,ymin=0,ymax=15,
+ xtick={0,1,...,5},ytick={0,3,...,15},grid=major,major grid style={black!18},axis lines=left,
+ xlabel={time $t$ / s},ylabel={velocity / m s$^{-1}$},tick label style={font=\footnotesize},clip=false]
+\fill[fillkey] (axis cs:0,0) -- (axis cs:3,12) -- (axis cs:4,12) -- cycle;
+\addplot[key,thick] coordinates {(0,0) (3,12) (5,12)};
+\addplot[black,thick,dashed] coordinates {(0,0) (4,12) (5,12)};
+\node[font=\footnotesize] at (axis cs:0.8,9.5) {truck};
+\draw[black!60] (axis cs:0.95,8.9) -- (axis cs:1.55,6.4);
+\node[font=\footnotesize] at (axis cs:3.4,4.6) {crate};
+\draw[black!60] (axis cs:3.2,5.1) -- (axis cs:2.75,8.05);
+\node[font=\footnotesize,anchor=west] at (axis cs:4.1,8.2) {area $=6.0\text{ m}$};
+\draw[black!60] (axis cs:4.15,8.7) -- (axis cs:3.45,11.3);
+\end{axis}
+\end{tikzpicture}

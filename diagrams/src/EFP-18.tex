@@ -1,0 +1,22 @@
+\begin{tikzpicture}[>=Stealth]
+% scale 1 m = 1.5 cm; shift 0.30 m = 0.45 cm
+\node[font=\footnotesize,anchor=east] at (-0.2,0.6) {before};
+\draw[thick,fill=black!5,rounded corners=8pt] (0,0) rectangle (6.6,1.2);
+\draw[fillkey,draw=black] (0.3,0.6) circle (0.2);
+\draw[fillalt,draw=black] (6.3,0.6) circle (0.26);
+\node[font=\footnotesize] at (0.3,0.6) {$A$};
+\node[font=\footnotesize] at (6.3,0.6) {$B$};
+\begin{scope}[yshift=-2.2cm]
+\node[font=\footnotesize,anchor=east] at (-0.2,0.6) {after};
+\draw[thick,fill=black!5,rounded corners=8pt] (0.45,0) rectangle (7.05,1.2);
+\draw[fillalt,draw=black] (0.75,0.6) circle (0.26);
+\draw[fillkey,draw=black] (6.75,0.6) circle (0.2);
+\node[font=\footnotesize] at (0.75,0.6) {$B$};
+\node[font=\footnotesize] at (6.75,0.6) {$A$};
+\end{scope}
+\draw[aux] (0,0) -- (0,-1.4);
+\draw[aux] (0.45,-1.0) -- (0.45,-1.4);
+\draw[->,key] (0,-0.75) -- (0.45,-0.75);
+\node[font=\footnotesize,anchor=west] at (0.55,-0.6) {module moves $0.30\text{ m}$, the way $A$ went};
+\node[font=\footnotesize,align=left,anchor=west] at (7.4,-0.5) {$A$: $+4.30\text{ m}$\\ $B$: $-3.70\text{ m}$\\ module: $+0.30\text{ m}$};
+\end{tikzpicture}

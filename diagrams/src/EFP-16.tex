@@ -1,0 +1,14 @@
+\begin{tikzpicture}
+\begin{axis}[width=9cm,height=5.2cm,axis lines=left,xmin=0,xmax=17.5,ymin=-7.2,ymax=3.6,
+  xlabel={$t/\text{ms}$},ylabel={induced p.d.$/\text{V}$},xtick={0,2,...,16},ytick={-6,-4,-2,0,2},
+  every axis x label/.style={at={(axis description cs:1,0)},anchor=north west},
+  every axis y label/.style={at={(axis description cs:0,1)},anchor=south west},
+  grid=major,major grid style={black!12},clip=false]
+\addplot[key,fillkey] coordinates {(0,0) (0,2) (6,2) (6,0)} \closedcycle;
+\addplot[key,fillalt] coordinates {(10,0) (10,-6) (12,-6) (12,0)} \closedcycle;
+\draw[black] (axis cs:0,0) -- (axis cs:17.5,0);
+\addplot[key] coordinates {(0,2) (6,2) (6,0) (10,0) (10,-6) (12,-6) (12,0) (16,0)};
+\node[font=\footnotesize] at (axis cs:3,2.8) {$0.50\text{ W}$ for $6\text{ ms}$};
+\node[font=\footnotesize,anchor=west] at (axis cs:12.4,-4.5) {$4.5\text{ W}$ for $2\text{ ms}$};
+\end{axis}
+\end{tikzpicture}

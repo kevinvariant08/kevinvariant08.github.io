@@ -15,7 +15,7 @@
       {href:'interviews.html', name:'Mock interviews', note:'Twenty-five minutes, one problem'},
       {href:'unlock.html', name:'Unlock a paper', note:'Redeem a code for a locked set'}]},
     {label:'ESAT', sec:'esat', items:[
-      {href:'esat.html', name:'ESAT home', note:'Mathematics 1, Physics and Mathematics 2 mocks'},
+      {href:'esat.html', name:'ESAT home', note:'Maths, Physics and Chemistry mocks'},
       {href:'esat-drill.html', name:'ESAT Drill', note:'27 questions, 40 minutes, or practise by topic'}]},
     {label:'Olympiad', sec:'oly', items:[
       {href:'olympiad.html', name:'Olympiad home', note:'Mock papers, solutions and the HU Collection'},

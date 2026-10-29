@@ -1,0 +1,30 @@
+\begin{tikzpicture}
+\fill[fillkey,rounded corners=10pt] (-1.6,-1.5) rectangle (1.6,1.5);
+\draw[fill=white,line width=0.4pt,rotate around={-10:(-1.25,-1)}] (-1.42,-1.14) rectangle (-1.08,-0.86);
+\draw[fill=white,line width=0.4pt,rotate around={1:(-1.2,0.35)}] (-1.37,0.21) rectangle (-1.03,0.49);
+\draw[fill=white,line width=0.4pt,rotate around={-5:(0.6,-1.05)}] (0.43,-1.19) rectangle (0.77,-0.91);
+\draw[fill=white,line width=0.4pt,rotate around={4:(1.05,0.2)}] (0.88,0.06) rectangle (1.22,0.34);
+\draw[fill=white,line width=0.4pt,rotate around={5:(0.55,0.85)}] (0.38,0.71) rectangle (0.72,0.99);
+\draw[fill=white,line width=0.4pt,rotate around={-17:(-0.95,-0.4)}] (-1.12,-0.54) rectangle (-0.78,-0.26);
+\draw[fill=white,line width=0.4pt,rotate around={-19:(1.05,-0.45)}] (0.88,-0.59) rectangle (1.22,-0.31);
+\draw[fill=white,line width=0.4pt,rotate around={13:(-1.25,0.95)}] (-1.42,0.81) rectangle (-1.08,1.09);
+\draw[fill=white,line width=0.4pt,rotate around={-9:(0.15,-1.15)}] (-0.02,-1.29) rectangle (0.32,-1.01);
+\draw[line width=0.9pt,rounded corners=10pt] (-1.6,-1.5) rectangle (1.6,1.5);
+\fill[white] (-0.3,2.3) -- (-0.3,-0.2) arc[start angle=180,end angle=360,radius=0.3] -- (0.3,2.3) -- cycle;
+\draw[line width=0.8pt] (-0.3,2.3) -- (-0.3,-0.2) arc[start angle=180,end angle=360,radius=0.3] -- (0.3,2.3);
+\fill[white] (-0.33,1.43) rectangle (0.33,1.57);
+\fill[white] (1.55,-0.95) rectangle (1.65,-0.83);
+\fill[fillkey] (1.6,-0.95) rectangle (4.3,-0.83);
+\draw[line width=0.7pt] (1.6,-0.95) -- (5.6,-0.95);
+\draw[line width=0.7pt] (1.6,-0.83) -- (5.6,-0.83);
+\draw[line width=0.7pt] (4.3,-0.95) arc[start angle=-90,end angle=90,radius=0.06];
+\draw[line width=0.5pt] (2.4,-1.15) -- (5.4,-1.15);
+\foreach \x in {0,...,30} {\draw[line width=0.3pt] ({2.4+0.1*\x},-1.15) -- ({2.4+0.1*\x},-1.22);}
+\foreach \x in {0,5,...,30} {\draw[line width=0.4pt] ({2.4+0.1*\x},-1.15) -- ({2.4+0.1*\x},-1.29);}
+\node[below] at (3.9,-1.3) {scale};
+\draw[line width=0.4pt] (4.36,-0.8) -- (4.75,-0.25) node[above right,inner sep=1pt] {meniscus};
+\node[align=left,anchor=west] at (2.0,0.6) {horizontal tube,\\ area $5.0\text{ mm}^2$};
+\draw[line width=0.4pt] (2.3,0.25) -- (2.6,-0.8);
+\node[anchor=west] at (0.45,2.15) {test tube};
+\node[align=center,fill=white] at (0,-2.05) {ice and water at $0\,^\circ\text{C}$};
+\end{tikzpicture}

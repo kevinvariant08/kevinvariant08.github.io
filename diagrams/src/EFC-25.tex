@@ -1,0 +1,16 @@
+\begin{tikzpicture}
+\def\L{8}
+\draw[->] (0,0) -- (8.4,0);
+\foreach \v/\t in {0/0,0.2/0.2,0.4/0.4,0.6/0.6,0.8/0.8,1/1}{\draw (\v*\L,0.08) -- (\v*\L,-0.08) node[below,font=\footnotesize] {\t};}
+\node[font=\footnotesize,anchor=north] at (4,-0.55) {fraction of nitrogen atoms that are $^{15}\mathrm{N}$};
+\filldraw[key,fill=white] (0,0) circle (2.2pt);
+\filldraw[key,fillalt] (0.2*\L,0) circle (2.6pt);
+\filldraw[key,fill=blue!55!black] (0.6*\L,0) circle (2.2pt);
+\node[above,font=\footnotesize,text height=1.6ex,text depth=0.45ex] at (0,0.95) {tissue};
+\node[above,font=\footnotesize,text height=1.6ex,text depth=0.45ex] at (0.2*\L,0.95) {mixture};
+\node[above,font=\footnotesize,text height=1.6ex,text depth=0.45ex] at (0.6*\L,0.95) {spike};
+\draw[aux] (0,0.15) -- (0,0.95); \draw[aux] (0.2*\L,0.15) -- (0.2*\L,0.95); \draw[aux] (0.6*\L,0.15) -- (0.6*\L,0.95);
+\draw[decorate,decoration={brace,amplitude=4pt}] (0.02,0.3) -- (0.2*\L-0.04,0.3) node[midway,above=4pt,font=\footnotesize] {$0.2$};
+\draw[decorate,decoration={brace,amplitude=4pt}] (0.2*\L+0.04,0.3) -- (0.6*\L-0.02,0.3) node[midway,above=4pt,font=\footnotesize] {$0.4$};
+\node[font=\footnotesize,align=center] at (4,-1.45) {moles of tissue N : moles of spike N $= 0.4 : 0.2 = 2:1$};
+\end{tikzpicture}

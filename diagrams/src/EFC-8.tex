@@ -1,0 +1,19 @@
+\begin{tikzpicture}[every node/.style={inner sep=1.2pt},b/.style={shorten <=1pt,shorten >=1pt,line width=0.6pt}]
+\foreach \y in {0,-0.9} {
+  \node (h1) at (0,\y) {H}; \node (o1) at (0.75,\y) {O}; \node (o2) at (1.5,\y) {O}; \node (h2) at (2.25,\y) {H};
+  \draw[b] (h1) -- (o1); \draw[b] (o2) -- (h2);
+  \draw[b,key,line width=1.5pt] (o1) -- (o2);
+}
+\draw[-{Stealth[length=2.5mm]},thick] (2.7,-0.45) -- (3.6,-0.45);
+\foreach \y in {0,-0.9} {
+  \node (a) at (4.0,\y) {H}; \node (b) at (4.75,\y) {O}; \node (c) at (5.5,\y) {H};
+  \draw[b] (a) -- (b); \draw[b] (b) -- (c);
+}
+\node at (6.0,-0.45) {$+$};
+\node (p) at (6.5,-0.45) {O}; \node (q) at (7.25,-0.45) {O};
+\draw[key,line width=1.3pt,shorten <=1pt,shorten >=1pt] ([yshift=1.6pt]p.east) -- ([yshift=1.6pt]q.west);
+\draw[key,line width=1.3pt,shorten <=1pt,shorten >=1pt] ([yshift=-1.6pt]p.east) -- ([yshift=-1.6pt]q.west);
+\node[font=\footnotesize] at (1.12,-1.6) {break $2\times\mathrm{O{-}O}$, $4\times\mathrm{O{-}H}$};
+\node[font=\footnotesize] at (5.6,-1.6) {make $4\times\mathrm{O{-}H}$, $1\times\mathrm{O{=}O}$};
+\node[font=\footnotesize,blue!55!black,align=center] at (3.6,-2.35) {the $\mathrm{O{-}H}$ bonds broken and made cancel, so\\ $\Delta H = 2(144) - 498 = -210\text{ kJ}$ per mole of $\mathrm{O_2}$ formed};
+\end{tikzpicture}

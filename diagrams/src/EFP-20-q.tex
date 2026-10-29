@@ -1,0 +1,14 @@
+\begin{tikzpicture}[scale=0.8,transform shape]
+\begin{scope}
+\draw (0,0) to[battery1,l=$12.0\text{ V}$] (0,2) -- (0.4,2) to[R,l_=$X$] (2.2,2) to[R,l_=$Y$] (4.0,2) -- (4.4,2) -- (4.4,0) -- (0,0);
+\draw (0.4,2) -- (0.4,3.2) to[rmeter,t=V] (2.2,3.2) -- (2.2,2);
+\fill (0.4,2) circle (1.5pt) (2.2,2) circle (1.5pt);
+\node at (2.2,-0.6) {(a) reading $4.0\text{ V}$};
+\end{scope}
+\begin{scope}[xshift=6cm]
+\draw (0,0) to[battery1,l=$12.0\text{ V}$] (0,2) -- (0.4,2) to[R,l_=$X$] (2.2,2) to[R,l_=$Y$] (4.0,2) -- (4.4,2) -- (4.4,0) -- (0,0);
+\draw (2.2,2) -- (2.2,3.2) to[rmeter,t=V] (4.0,3.2) -- (4.0,2);
+\fill (2.2,2) circle (1.5pt) (4.0,2) circle (1.5pt);
+\node at (2.2,-0.6) {(b) reading $6.0\text{ V}$};
+\end{scope}
+\end{tikzpicture}

@@ -1,0 +1,22 @@
+\begin{tikzpicture}[>=Stealth]
+% ground
+\draw[black!60] (-0.6,0) -- (8.4,0);
+% wheels
+\draw[fill=black!15] (0.9,0.35) circle (0.35);
+\draw[fill=black!15] (6.6,0.35) circle (0.35);
+% load bed
+\draw[fill=black!8] (0,0.7) rectangle (5.6,0.95);
+% cab
+\draw[fill=black!8] (5.6,0.7) -- (5.6,2.3) -- (6.8,2.3) -- (7.5,1.5) -- (7.5,0.7) -- cycle;
+\draw (5.85,1.55) -- (5.85,2.1) -- (6.65,2.1) -- (7.15,1.55) -- cycle;
+% crate
+\draw[fillalt,draw=black] (2.4,0.95) rectangle (3.4,1.85);
+\node at (2.9,1.4) {crate};
+% d
+\draw[aux] (0,0.95) -- (0,2.4);
+\draw[aux] (2.4,1.85) -- (2.4,2.4);
+\draw[<->] (0,2.25) -- node[above] {$d$} (2.4,2.25);
+\node[font=\footnotesize,anchor=east] at (-0.1,0.82) {rear edge};
+% direction
+\draw[key,->] (6.2,3.0) -- (7.8,3.0) node[right] {motion};
+\end{tikzpicture}

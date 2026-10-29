@@ -1,0 +1,34 @@
+\begin{tikzpicture}
+\fill[fillkey] (0,0) rectangle (3.2,3.8);
+\draw[line width=0.7pt] (0,3.8) -- (3.2,3.8);
+\draw[line width=1.0pt] (0,4.6) -- (0,0) -- (3.2,0) -- (3.2,4.6);
+\draw[fillalt,line width=0.8pt] (-0.12,4.6) rectangle (3.32,5.05);
+% tube
+\fill[white] (1.8,2) rectangle (2,3.8);
+\draw[line width=0.8pt] (1.8,2) -- (1.8,5.6);
+\draw[line width=0.8pt] (2,2) -- (2,5.6);
+\fill[white] (1.8,4.6) rectangle (2,5.05);
+\draw[line width=0.8pt] (1.8,4.6) -- (1.8,5.05);
+\draw[line width=0.8pt] (2,4.6) -- (2,5.05);
+% bubbles
+\foreach \yy/\xx/\rr in {1.95/0.22/0.07,2.3/0.3/0.06,2.7/0.24/0.07,3.15/0.33/0.06,3.55/0.27/0.06} {\draw[fill=white,line width=0.4pt] ({1.9+\xx},\yy) circle (\rr);}
+% tap
+\draw[line width=0.8pt] (3.2,0.32) -- (3.82,0.32) -- (3.82,0.15);
+\draw[line width=0.8pt] (3.2,0.48) -- (3.98,0.48) -- (3.98,0.15);
+\fill[fillkey] (3.2,0.33) rectangle (3.82,0.47);
+\fill[fillkey] (3.82,0.15) rectangle (3.98,0.47);
+\draw[line width=0.8pt] (3.2,0.32) -- (3.82,0.32) -- (3.82,0.15);
+\draw[line width=0.8pt] (3.2,0.48) -- (3.98,0.48) -- (3.98,0.15);
+\fill[black] (3.45,0.62) rectangle (3.75,0.72);
+\draw[line width=0.7pt] (3.6,0.48) -- (3.6,0.62);
+% dimension
+\draw[aux] (2,2) -- (4.75,2);
+\draw[aux] (3.98,0.4) -- (4.75,0.4);
+\draw[<->,>=Stealth,line width=0.6pt] (4.6,0.4) -- (4.6,2) node[midway,right] {$20\text{ cm}$};
+\node[left] at (1.8,1.85) {$\text{T}$};
+\node[anchor=west] at (2.15,4.25) {air};
+\node at (0.85,1.4) {water};
+\node[anchor=south] at (1.9,5.6) {open tube};
+\draw[line width=0.4pt] (-0.12,5.05) -- (-0.45,5.4) node[above left,inner sep=1pt] {stopper};
+\node[anchor=north] at (3.75,0.1) {tap};
+\end{tikzpicture}

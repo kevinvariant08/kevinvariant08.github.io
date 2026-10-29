@@ -1,0 +1,22 @@
+\begin{tikzpicture}[>=Stealth]
+% scale: 1 N = 0.35 cm
+% ball P
+\draw[fillkey,draw=black] (0,0) circle (0.3);
+\node at (0,0) {$P$};
+\draw[key,->] (-0.15,-0.3) -- ++(0,-0.70) node[below,font=\footnotesize,xshift=-6pt] {$2.0\text{ N}$};
+\draw[key,->] (0.15,-0.3) -- ++(0,-2.10) node[below,font=\footnotesize,xshift=6pt] {$6.0\text{ N}$};
+\node[font=\footnotesize,align=center] at (-1.5,-0.9) {weight};
+\draw[aux] (-1.0,-0.9) -- (-0.2,-0.75);
+\node[font=\footnotesize,align=center] at (1.6,-1.5) {pull of\\ spring};
+\draw[aux] (1.05,-1.5) -- (0.2,-1.5);
+\node[font=\footnotesize] at (0,1.0) {just after release};
+\node[font=\footnotesize] at (0,0.6) {resultant $8.0\text{ N}$ down};
+% ball Q
+\begin{scope}[xshift=5cm]
+\draw[fillalt,draw=black] (0,0) circle (0.3);
+\node at (0,0) {$Q$};
+\draw[key,->] (0,0.3) -- ++(0,2.10) node[above,font=\footnotesize] {$6.0\text{ N}$ (spring)};
+\draw[key,->] (0,-0.3) -- ++(0,-2.10) node[below,font=\footnotesize] {$6.0\text{ N}$ (weight)};
+\node[font=\footnotesize,anchor=west] at (0.5,0) {resultant zero};
+\end{scope}
+\end{tikzpicture}

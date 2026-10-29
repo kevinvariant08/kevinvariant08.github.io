@@ -562,5 +562,173 @@
  },
  "EE2-26": {
   "alt": "The curve y = sqrt x for 0 to 4 between the chord y = x/2 and the parallel tangent y = x/2 + 1/2 (dashed), with the middle line y = x/2 + 1/4, which is 1/4 from the curve at x = 0, 1 and 4."
+ },
+ "EF1-8": {
+  "alt": "A clock face with chords joining 12 to 4, 1 to 5 and 2 to 11; the small shaded triangle they form has angles of 30, 45 and 105 degrees."
+ },
+ "EF1-13": {
+  "alt": "Vertical cross-section showing a large ball of radius 3 and the small ball of radius r touching on a table, with a right-angled triangle of sides 2 root 3, 3 minus r and hypotenuse 3 plus r joining their centres."
+ },
+ "EF1-14": {
+  "alt": "Triangle OAB with P on AB, Q the midpoint of OP, and the line from A through Q meeting OB at R."
+ },
+ "EF1-18": {
+  "alt": "The rug in its starting and finishing positions about the fixed corner O, with the swept region shaded: two triangles of area 6 and a quarter disc of radius 5 swept by the diagonal OC."
+ },
+ "EF1-22": {
+  "alt": "View from above of the square floor: the wire appears as one diagonal and the pipe as the corner K, which is 3 root 2 from the diagonal."
+ },
+ "EF1-25": {
+  "alt": "The parabola y equals x squared and the line y equals x minus 4, with the two squares of areas 18 and 50 that have two vertices on each."
+ },
+ "EFP-2": {
+  "alt": "Free-body diagrams just after release: ball P has a 2.0 N weight and a 6.0 N spring pull, both downwards; ball Q has a 6.0 N spring pull upwards and a 6.0 N weight downwards."
+ },
+ "EFP-3-q": {
+  "alt": "Upper oscilloscope screen, a 10 by 10 grid, showing a sine wave with a period of 4 divisions and an amplitude of 2 divisions. Below, six screens with the same grid: Graph A period 1 and amplitude 1 division; Graph B period 4 and amplitude 1; Graph C period 8 and amplitude 4; Graph D period 4 and amplitude 4; Graph E period 1 and amplitude 4; Graph F period 4 and amplitude 2."
+ },
+ "EFP-4-q": {
+  "alt": "Temperature of the water against time over 216 s: a sawtooth that rises from 59.8 to 60.2 degrees Celsius in 24 s and falls back to 59.8 degrees in the next 48 s, repeated three times."
+ },
+ "EFP-5-q": {
+  "alt": "A sealed vessel full of ice and water at 0 degrees Celsius, with an empty test tube projecting down into it from the top, and a narrow horizontal tube of area 5.0 square millimetres leading out of the side; water fills this tube up to a meniscus beside a scale."
+ },
+ "EFP-9-q": {
+  "alt": "Graph of the frequency of the bat call against time: a straight line falling from 80 kHz at 0 ms to 30 kHz at 5.0 ms."
+ },
+ "EFP-9": {
+  "alt": "Graph of the frequency heard against time: nothing is heard from 0 to 1.5 ms; then the heard frequency falls in a straight line from 20 kHz at 1.5 ms to zero at 3.5 ms, when the call is at 45 kHz, and rises in a straight line to 15 kHz at 5.0 ms."
+ },
+ "EFP-10-q": {
+  "alt": "Two vertical metal plates, the left one positive and the right one negative, with a conducting ball hanging between them on an insulating thread; the plates are joined through an ammeter and a 4.0 kV supply."
+ },
+ "EFP-11-q": {
+  "alt": "A truck facing right with a crate on its flat load bed, a distance d in front of the open rear edge."
+ },
+ "EFP-11": {
+  "alt": "Velocity-time graphs: the truck rises from 0 to 12 m/s by 3 s and then stays at 12 m/s; the crate rises from 0 to 12 m/s by 4 s; the shaded triangle between them has area 6.0 m."
+ },
+ "EFP-13-q": {
+  "alt": "A rigid bottle partly filled with water, sealed by a stopper through which an open vertical tube passes down into the water; its lower end T is below the water surface, with bubbles rising from it, and a tap near the bottom of the bottle is 20 cm below T."
+ },
+ "EFP-14": {
+  "alt": "Detector reading against time over 72 hours: a sawtooth starting at the background of 50 counts per minute, jumping at each batch and decaying between batches; the peaks are 650, 800, 837.5 and about 847 counts per minute, approaching a dashed line at 850, and the troughs approach 250."
+ },
+ "EFP-16-q": {
+  "alt": "Graph of current I against time t: I rises steadily from 0 to 3 A between 0 and 6 ms, stays at 3 A until 10 ms, falls steadily to zero at 12 ms and stays at zero until 16 ms, and the pattern repeats."
+ },
+ "EFP-16": {
+  "alt": "Graph of induced p.d. against time over one 16 ms cycle: 2 V from 0 to 6 ms, zero from 6 to 10 ms, minus 6 V from 10 to 12 ms, zero from 12 to 16 ms, with the powers 0.50 W and 4.5 W marked."
+ },
+ "EFP-17-q": {
+  "alt": "Power against time: rising linearly from 0 to 28.8 kW at 1 s, dropping to 24.0 kW and staying constant until 6 s, then dropping to 19.2 kW and falling linearly to zero at 7 s."
+ },
+ "EFP-18-q": {
+  "alt": "A module of mass 280 kg with astronaut A of mass 45 kg at the left end and astronaut B of mass 75 kg at the right end, 4.0 m apart along a rail on its axis."
+ },
+ "EFP-18": {
+  "alt": "Before and after the swap: the module has shifted 0.30 m in the direction A moved, with B now at the left end and A at the right end."
+ },
+ "EFP-20-q": {
+  "alt": "Two copies of a circuit with a 12.0 V battery and resistors X and Y in series: in (a) the voltmeter is connected across X and reads 4.0 V; in (b) it is connected across Y and reads 6.0 V."
+ },
+ "EFP-21-q": {
+  "alt": "A vertical lightning channel of height H rising from point G on flat ground, with microphones A and B on the ground on the same side of G, B further away than A."
+ },
+ "EFP-21": {
+  "alt": "The same scene with distances in seconds of sound travel: the channel is 4, G to A is 3, A to B is 4.5, the top of the channel to A is 5 and to B is 8.5."
+ },
+ "EFP-22-q": {
+  "alt": "Two drawings of the same cylinder, 1.0 m long: open end up, with a 30 cm air column at the closed bottom end below the piston; open end down, with a 50 cm air column at the closed top end above the piston."
+ },
+ "EFP-22": {
+  "alt": "Free-body diagrams of the piston in three cases. Open end up at rest: air force pA upwards, atmospheric force p0 A and weight mg downwards. Open end down at rest: p0 A upwards, pA and mg downwards. Open end down in the lift accelerating upwards at half g: the same three forces, with an upward resultant of half mg."
+ },
+ "EFP-23-q": {
+  "alt": "A single coil on an iron core with end terminals A and C and a tapping B; a 200 V supply is connected between A and B, with 500 turns between A and B and 100 turns between B and C, and a heater is connected between A and C."
+ },
+ "EFP-23": {
+  "alt": "The booster circuit with currents marked: 12 A from the supply into B, 10 A up through section BC and the heater, and 2 A down through section AB back to A."
+ },
+ "EFP-24-q": {
+  "alt": "A launcher fires a dart to the right towards a 160 g foam block on a frictionless air table, the block sliding left towards the launcher at 3.0 m/s."
+ },
+ "EFP-26-q": {
+  "alt": "Three resistors R1, R2 and R3 in a chain along the bottom, with terminals T0, T1, T2 and T3 at the left end, the two joins and the right end; a meter of resistance 90 ohms is connected across the whole chain."
+ },
+ "EFP-26": {
+  "alt": "General range connection: current I enters at a range terminal and splits into a shunt S carrying I minus 1.0 mA and a path of resistance R minus S in series with the 90 ohm meter carrying 1.0 mA, rejoining at T0."
+ },
+ "EFP-27-q": {
+  "alt": "A vertical stack of three balls, X of 0.60 kg at the bottom, Y of 0.20 kg in the middle and Z of 0.10 kg on top, with the bottom of the stack 0.80 m above the floor."
+ },
+ "EFP-27": {
+  "alt": "Three panels of velocities: after X bounces, X moves up at 4 while Y and Z move down at 4; after X hits Y, X is at rest and Y moves up at 8; after Y hits Z, X and Y are at rest and Z moves up at 12 metres per second."
+ },
+ "EFC-2-q": {
+  "alt": "Two panels plotting rate of hydrogen production against volume collected: the upper shows reference line P from 2 to zero at 480 cubic centimetres with lines Q (4 to 480), R (4 to 240), S (1 to 480) and T (1 to 960); the lower shows P with two low curves, U from 0.4 to zero at 480 and W from 0.4 to zero at 120."
+ },
+ "EFC-8": {
+  "alt": "Displayed formulae of two H-O-O-H molecules turning into two H-O-H molecules and one O=O, with the O-O and O=O bonds highlighted and a note that the O-H bonds broken and made cancel, giving minus 210 kJ per mole of oxygen."
+ },
+ "EFC-10-q": {
+  "alt": "Two bar charts of successive ionisation energies on a logarithmic scale: element X shows six bars with a large jump between the second and third, and element Y shows eight bars with a large jump between the sixth and seventh."
+ },
+ "EFC-11-q": {
+  "alt": "Graph of amount in moles against time: nitrogen dioxide constant at 0.60 and dinitrogen tetroxide constant at 0.30 until time t1, after which nitrogen dioxide falls smoothly to about 0.48 and dinitrogen tetroxide rises smoothly to about 0.36, with no sudden jumps."
+ },
+ "EFC-12-q": {
+  "alt": "A two-dimensional paper chromatogram with a 1 cm grid: the origin at the bottom left, solvent 1 moving upwards to a front 8 cm from the origin, solvent 2 moving to the right to a front 6 cm from the origin, and four spots at (across, up) = (4.5, 2), (1.5, 4), (3, 6) and (4.5, 6) cm."
+ },
+ "EFC-12": {
+  "alt": "The same chromatogram with open circles marking where each reference dye P to U would appear; the spots coincide with the circles for Q, R and S, and the spot at (3, 6) cm matches no reference dye and is labelled unknown."
+ },
+ "EFC-13-q": {
+  "alt": "Flow diagram: 20 cubic centimetres of X vapour plus 60 of oxygen are sparked, leaving 115 cubic centimetres of gas; after anhydrous calcium chloride 65 remain, after sodium hydroxide 25 remain, and after heated copper 10 remain."
+ },
+ "EFC-16-q": {
+  "alt": "Thermometric titration graph of temperature against volume of sodium hydroxide added: the temperature rises from 20 degrees along a curve and then falls slowly beyond neutralisation; the two curves extended as dashed lines meet at M, at 25.0 cubic centimetres and 33.5 degrees, while the highest measured point is about 32.4 degrees."
+ },
+ "EFC-17": {
+  "alt": "A number line of vanadium oxidation states from +2 to +5 showing 0.010 mol at +2 and 0.030 mol at +5, the mean +4.25 after mixing, an arrow to the mean +3.75 after the zinc supplies 0.020 mol of electrons, and a brace between +3 and +4 labelled 0.010 mol of V3+ and 0.030 mol of VO2+."
+ },
+ "EFC-18-q": {
+  "alt": "Mass spectrum with peaks at m/z 10, 11, 20, 22 and 40 of relative heights 9, 1, 91, 9 and 40."
+ },
+ "EFC-18": {
+  "alt": "The same mass spectrum with the m/z 20 peak split into 81 from neon-20 1+ ions and 10 from argon-40 2+ ions."
+ },
+ "EFC-21-q": {
+  "alt": "Displayed formula of M: H, O, then a CH2 carbon, then two carbons joined by a double bond each carrying one H, then a carbon with a double-bonded O and an OH group."
+ },
+ "EFC-21": {
+  "alt": "Repeat units of the two polymers: polymer A has two backbone carbons, one carrying H and CH2OH and the other carrying COOH and H; polymer B is O, CH2, CH=CH and C=O in a chain, joined to the next unit through an ester link."
+ },
+ "EFC-22": {
+  "alt": "A bar of 0.030 mol of halide ions divided into 0.010 mol iodide and 0.010 mol bromide converted to chloride, losing 0.915 g and 0.445 g, and 0.010 mol bromide left unchanged."
+ },
+ "EFC-23-q": {
+  "alt": "Solubility curve of copper(II) sulfate from 0 to 100 degrees Celsius, rising smoothly from about 14 grams per 100 grams of water at 0 degrees through 20 at 20 degrees and 40 at 60 degrees to about 75 at 100 degrees."
+ },
+ "EFC-24-q": {
+  "alt": "Graph of total volume of gas in cm3 against charge passed in coulombs: three straight segments from the origin to (1930, 240), then to (5790, 480), then to (7720, 840)."
+ },
+ "EFC-24": {
+  "alt": "The same graph annotated: the first segment is chlorine at the anode and copper at the cathode with slope one half, chloride used up at 1930 C; the second is oxygen and copper with slope one quarter, copper ions used up at 5790 C; the third is oxygen and hydrogen with slope three quarters."
+ },
+ "EFC-25-q": {
+  "alt": "Mass spectrum of nitrogen gas with peaks at m/z 28, 29 and 30 of relative heights 16, 8 and 1."
+ },
+ "EFC-25": {
+  "alt": "Number line of the fraction of nitrogen atoms that are nitrogen-15, marking the tissue at 0, the mixture at 0.2 and the spike at 0.6, with gaps 0.2 and 0.4 giving tissue to spike nitrogen 2 to 1."
+ },
+ "EFC-26-q": {
+  "alt": "Block diagram of an ammonia plant: fresh feed joins recycled gas and enters a reactor, then a condenser from which liquid ammonia leaves; the remaining gas splits into a purge stream and a recycle stream that returns to join the fresh feed."
+ },
+ "EFC-26": {
+  "alt": "The ammonia plant diagram with a dashed boundary drawn round the whole plant: 100 mol of nitrogen, 300 of hydrogen and 4.0 of argon enter each second; the purge carries out 4.0 argon, 5 nitrogen and 15 hydrogen, and 190 mol of ammonia leave as liquid, while the recycle stays inside the boundary."
+ },
+ "EFC-27": {
+  "alt": "Carbon skeletons of the eight alcohols C5H11OH, numbered 1 to 8 and grouped by longest chain of five, four and three carbons, and of the two acids C3H7COOH, butanoic acid and 2-methylpropanoic acid."
  }
 }

@@ -1,0 +1,17 @@
+\begin{tikzpicture}[scale=0.9,transform shape]
+\draw (0,0) to[cute inductor] (0,3.0) to[cute inductor] (0,4.4);
+\draw[line width=0.9pt] (0.62,0.15) -- (0.62,4.25) (0.78,0.15) -- (0.78,4.25);
+\fill (0,0) circle (1.6pt) (0,3.0) circle (1.6pt) (0,4.4) circle (1.6pt);
+\node[left] at (-0.1,-0.15) {A};
+\node[below left] at (-0.05,2.95) {B};
+\node[left] at (-0.1,4.55) {C};
+\draw (0,0) -- (-2.6,0) to[sV,l=$200\text{ V}$] (-2.6,3.0) -- (0,3.0);
+\draw (0,0) -- (2.6,0) to[R,l_=heater] (2.6,4.4) -- (0,4.4);
+\draw[key,-{Stealth}] (-2.2,3.25) -- (-1.3,3.25) node[midway,above] {$12\text{ A}$};
+\draw[key,-{Stealth}] (1.1,4.65) -- (2.0,4.65) node[midway,above] {$10\text{ A}$};
+\draw[key,-{Stealth}] (-1.3,-0.3) -- (-2.2,-0.3) node[midway,below] {$12\text{ A}$};
+\draw[key,-{Stealth}] (2.0,-0.3) -- (1.1,-0.3) node[midway,below] {$10\text{ A}$};
+\draw[key,-{Stealth}] (-0.5,2.0) -- (-0.5,1.0) node[midway,left] {$2\text{ A}$};
+\draw[key,-{Stealth}] (-0.5,3.35) -- (-0.5,4.05) node[midway,left] {$10\text{ A}$};
+\node[right,font=\footnotesize] at (2.85,1.5) {$240\text{ V}$};
+\end{tikzpicture}

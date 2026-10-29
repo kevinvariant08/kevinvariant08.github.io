@@ -1,0 +1,31 @@
+\begin{tikzpicture}
+\pgfplotsset{cqone/.style={width=9cm,axis lines=left,xmin=0,xmax=1050,ymin=0,
+  xlabel={$V/\text{cm}^3$},ylabel={rate$/\text{cm}^3\,\text{s}^{-1}$},
+  xtick={0,240,480,720,960},
+  every axis x label/.style={at={(axis description cs:1,0)},anchor=north west},
+  every axis y label/.style={at={(axis description cs:0,1)},anchor=south west},
+  grid=major,major grid style={black!12},clip=false}}
+\begin{axis}[cqone,height=6.2cm,ymax=4.6,ytick={0,1,2,3,4}]
+\addplot[key,domain=0:480] {2*(1-x/480)};
+\addplot[black,thick,domain=0:480] {4*(1-x/480)};
+\addplot[black,thick,domain=0:240] {4*(1-x/240)};
+\addplot[black,thick,domain=0:480] {1*(1-x/480)};
+\addplot[black,thick,domain=0:960] {1*(1-x/960)};
+\node[blue!55!black,fill=white,inner sep=1pt] at (axis cs:60,1.75) {P};
+\node[fill=white,inner sep=1pt] at (axis cs:100,2.333) {R};
+\node[fill=white,inner sep=1pt] at (axis cs:330,1.25) {Q};
+\node[fill=white,inner sep=1pt] at (axis cs:720,0.25) {T};
+\node[below=1pt,inner sep=1pt] at (axis cs:130,0.729) {S};
+\node[anchor=north east,font=\small\bfseries] at (rel axis cs:1,1) {curves P to T};
+\end{axis}
+\begin{axis}[cqone,at={(0,-5.0cm)},height=4.4cm,ymax=2.3,ytick={0,0.5,1,1.5,2},
+  yticklabels={0,0.5,1,1.5,2}]
+\addplot[key,domain=0:480] {2*(1-x/480)};
+\addplot[black,thick,domain=0:480,samples=160] {0.4*sqrt(max(0,1-x/480))};
+\addplot[black,thick,domain=0:120,samples=100] {0.4*sqrt(max(0,1-x/120))};
+\node[blue!55!black,fill=white,inner sep=1pt] at (axis cs:240,1.0) {P};
+\draw (axis cs:330,0.2245) -- (axis cs:370,0.55) node[above,inner sep=1pt] {U};
+\node[inner sep=1pt] at (axis cs:152,0.15) {W};
+\node[anchor=north east,font=\small\bfseries] at (rel axis cs:1,1) {curves P, U and W};
+\end{axis}
+\end{tikzpicture}

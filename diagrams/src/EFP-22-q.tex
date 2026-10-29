@@ -1,0 +1,15 @@
+\begin{tikzpicture}
+\fill[fillkey] (0,0) rectangle (0.9,1.5);
+\draw[fill=black!35,line width=0.6pt] (0,1.5) rectangle (0.9,1.75);
+\draw[line width=1.0pt] (0,5) -- (0,0) -- (0.9,0) -- (0.9,5);
+\draw[<->,>=Stealth,line width=0.6pt] (-0.2,0) -- (-0.2,1.5) node[midway,left] {$30\text{ cm}$};
+\node at (0.45,0.75) {air};
+\node[below] at (0.45,-0.1) {open end up};
+\fill[fillkey] (3.4,2.5) rectangle (4.3,5);
+\draw[fill=black!35,line width=0.6pt] (3.4,2.25) rectangle (4.3,2.5);
+\draw[line width=1.0pt] (3.4,0) -- (3.4,5) -- (4.3,5) -- (4.3,0);
+\draw[<->,>=Stealth,line width=0.6pt] (4.5,2.5) -- (4.5,5) node[midway,right] {$50\text{ cm}$};
+\node at (3.85,3.75) {air};
+\node[below] at (3.85,-0.1) {open end down};
+\draw[line width=0.4pt] (0.9,1.62) -- (1.8,2.1) node[right,inner sep=1pt] {piston};
+\end{tikzpicture}

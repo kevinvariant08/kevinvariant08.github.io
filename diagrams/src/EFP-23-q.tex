@@ -1,0 +1,13 @@
+\begin{tikzpicture}[scale=0.9,transform shape]
+\draw (0,0) to[cute inductor] (0,3.0) to[cute inductor] (0,4.4);
+\draw[line width=0.9pt] (0.62,0.15) -- (0.62,4.25) (0.78,0.15) -- (0.78,4.25);
+\fill (0,0) circle (1.6pt) (0,3.0) circle (1.6pt) (0,4.4) circle (1.6pt);
+\node[left] at (-0.1,-0.15) {A};
+\node[below left] at (-0.05,2.95) {B};
+\node[left] at (-0.1,4.55) {C};
+\draw (0,0) -- (-2.6,0) to[sV,l=$200\text{ V}$] (-2.6,3.0) -- (0,3.0);
+\draw (0,0) -- (2.6,0) to[R,l_=heater] (2.6,4.4) -- (0,4.4);
+\node[right,font=\footnotesize,align=left] at (0.9,1.5) {$500$\\turns};
+\node[right,font=\footnotesize,align=left] at (0.9,3.7) {$100$\\turns};
+\node[font=\footnotesize] at (0.7,-0.35) {core};
+\end{tikzpicture}

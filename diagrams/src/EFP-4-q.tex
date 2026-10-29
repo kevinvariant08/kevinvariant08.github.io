@@ -1,0 +1,9 @@
+\begin{tikzpicture}
+\begin{axis}[width=8.6cm,height=5.4cm,xmin=0,xmax=228,ymin=59.7,ymax=60.3,
+ xtick={0,24,...,216},ytick={59.7,59.8,59.9,60.0,60.1,60.2,60.3},
+ yticklabel style={/pgf/number format/fixed,/pgf/number format/precision=1,/pgf/number format/fixed zerofill},
+ grid=major,major grid style={black!18},axis lines=left,
+ xlabel={time / s},ylabel={temperature / $^\circ$C},tick label style={font=\footnotesize},label style={font=\small}]
+\addplot[key,thick] coordinates {(0,59.8) (24,60.2) (72,59.8) (96,60.2) (144,59.8) (168,60.2) (216,59.8)};
+\end{axis}
+\end{tikzpicture}

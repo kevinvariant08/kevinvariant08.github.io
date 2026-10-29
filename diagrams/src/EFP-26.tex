@@ -1,0 +1,12 @@
+\begin{tikzpicture}[scale=0.85,transform shape]
+\draw (0,0) -- (0,1.2) to[R,l=$R - S$] (2.8,1.2) to[rmeter,t=G,l=$90\,\Omega$] (5.4,1.2) -- (5.4,0);
+\draw (0,0) -- (0,-1.2) to[R,l_=$S$] (5.4,-1.2) -- (5.4,0);
+\fill (0,0) circle (1.6pt) (5.4,0) circle (1.6pt);
+\draw (-1.4,0) node[ocirc] {} -- (0,0);
+\draw (5.4,0) -- (6.8,0) node[ocirc] {};
+\node[above] at (-1.4,0.1) {range terminal};
+\node[above] at (6.8,0.1) {$T_0$};
+\draw[key,-{Stealth}] (-1.2,-0.3) -- (-0.3,-0.3) node[midway,below] {$I$};
+\draw[key,-{Stealth}] (1.0,1.95) -- (2.0,1.95) node[midway,above] {$1.0\text{ mA}$};
+\draw[key,-{Stealth}] (2.2,-1.95) -- (3.2,-1.95) node[midway,below] {$I - 1.0\text{ mA}$};
+\end{tikzpicture}

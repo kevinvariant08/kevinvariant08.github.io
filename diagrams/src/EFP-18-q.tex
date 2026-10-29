@@ -1,0 +1,16 @@
+\begin{tikzpicture}[>=Stealth]
+% scale 1 m = 1.5 cm; module 4.4 m long
+\draw[thick,fill=black!5,rounded corners=10pt] (0,0) rectangle (6.6,1.6);
+\draw[black!50] (0.15,0.8) -- (6.45,0.8);
+\node[font=\footnotesize,anchor=south] at (3.3,0.83) {rail};
+\draw[fillkey,draw=black] (0.3,0.8) circle (0.2);
+\draw[fillalt,draw=black] (6.3,0.8) circle (0.26);
+\node[anchor=north,font=\small] at (0.3,0.55) {$A$};
+\node[anchor=north,font=\small] at (6.3,0.5) {$B$};
+\draw[aux] (0.3,1.0) -- (0.3,2.2);
+\draw[aux] (6.3,1.06) -- (6.3,2.2);
+\draw[<->] (0.3,2.05) -- node[above] {$4.0\text{ m}$} (6.3,2.05);
+\node[font=\footnotesize] at (3.3,-0.35) {module, $280\text{ kg}$};
+\node[font=\footnotesize,anchor=east] at (-0.1,0.8) {$45\text{ kg}$};
+\node[font=\footnotesize,anchor=west] at (6.7,0.8) {$75\text{ kg}$};
+\end{tikzpicture}

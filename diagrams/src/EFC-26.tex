@@ -1,0 +1,21 @@
+\begin{tikzpicture}[x=0.88cm,box/.style={draw,thick,fillkey,minimum width=1.75cm,minimum height=0.9cm,align=center,font=\small},
+  ar/.style={-{Stealth[length=2.2mm]},thick}, jn/.style={circle,fill,inner sep=1.4pt}, fl/.style={font=\footnotesize,align=center}]
+\node[jn] (m) at (1.6,0) {};
+\node[box] (r) at (3.4,0) {reactor};
+\node[box] (c) at (5.9,0) {condenser};
+\node[jn] (s) at (7.6,0) {};
+\draw[ar] (-0.6,0) -- (m);
+\node[fl,anchor=east] at (-0.65,0) {$100\ \mathrm{N_2}$\\ $300\ \mathrm{H_2}$\\ $4.0\ \mathrm{Ar}$};
+\draw[ar] (m) -- (r);
+\draw[ar] (r) -- (c);
+\draw[thick] (c) -- (s);
+\draw[ar] (s) -- (9.1,0);
+\node[fl,anchor=west] at (9.15,0) {$4.0\ \mathrm{Ar}$\\ $5\ \mathrm{N_2}$\\ $15\ \mathrm{H_2}$};
+\draw[ar] (c.south) -- ++(0,-1.25);
+\node[fl,anchor=north] at (5.9,-1.75) {$190\ \mathrm{NH_3}$};
+\draw[ar] (s) -- (7.6,1.3) -- (1.6,1.3) -- (m);
+\node[above,font=\footnotesize] at (4.6,1.3) {recycle stays inside the boundary};
+\draw[aux,blue!55!black,line width=0.9pt] (0.7,-1.05) rectangle (8.3,2.0);
+\node[font=\footnotesize,blue!55!black,anchor=north west] at (0.75,-0.25) {boundary};
+\node[font=\footnotesize,anchor=south] at (4.6,-2.75) {all amounts in mol per second};
+\end{tikzpicture}

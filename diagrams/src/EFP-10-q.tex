@@ -1,0 +1,20 @@
+\begin{tikzpicture}
+% plates
+\fill[fillalt,draw=black] (1.85,0) rectangle (2.05,3.0);
+\fill[fillalt,draw=black] (4.55,0) rectangle (4.75,3.0);
+\node[above] at (1.95,3.05) {\large$+$};
+\node[above] at (4.65,3.05) {\large$-$};
+% support and thread
+\draw[line width=1pt] (2.6,3.9) -- (4.0,3.9);
+\fill[pattern=north east lines] (2.6,3.9) rectangle (4.0,4.1);
+\draw (3.3,3.9) -- (3.0,1.35);
+\fill[fillkey,draw=black] (2.979,1.17) circle (0.18);
+\node[right,font=\footnotesize,align=left] at (4.95,2.6) {metal\\plate};
+\node[right,font=\footnotesize] at (3.2,1.1) {ball};
+\draw[black!60] (3.24,3.4) -- (4.15,3.62);
+\node[right,font=\footnotesize] at (4.15,3.66) {insulating thread};
+% circuit
+\draw (1.95,0) -- (1.95,-1.2) to[rmeter,t=A] (3.1,-1.2) -- (3.25,-1.2);
+\draw (3.25,-1.2) to[battery1] (4.0,-1.2) -- (4.65,-1.2) -- (4.65,0);
+\node[below] at (3.62,-1.55) {$4.0\text{ kV}$ supply};
+\end{tikzpicture}

@@ -1,0 +1,28 @@
+\begin{tikzpicture}[>=Stealth]
+% velocity arrows: 0.15 cm per m/s; upward positive
+\def\panel#1#2#3#4#5{%
+ \begin{scope}[xshift=#1 cm]
+ \draw[thick] (-0.9,0) -- (0.9,0);
+ \draw[fillkey,draw=black] (0,0.5) circle (0.45);
+ \draw[fillalt,draw=black] (0,1.3) circle (0.3);
+ \draw[fill=black!12,draw=black] (0,1.85) circle (0.2);
+ \node[font=\footnotesize] at (0,0.5) {$X$};
+ \node[font=\scriptsize] at (0,1.3) {$Y$};
+ \node[font=\scriptsize] at (0,1.85) {$Z$};
+ \node[font=\footnotesize,align=center,anchor=north] at (0,-0.15) {#2};
+ #3 #4 #5
+ \end{scope}}
+\panel{0}{after $X$ bounces}
+ {\draw[key,->] (-0.6,0.5) -- ++(0,0.6); \node[font=\scriptsize,anchor=east] at (-0.62,0.8) {$4$};}
+ {\draw[key,->] (0.5,1.3) -- ++(0,-0.6); \node[font=\scriptsize,anchor=west] at (0.52,1.0) {$4$};}
+ {\draw[key,->] (0.35,2.35) -- ++(0,-0.6); \node[font=\scriptsize,anchor=west] at (0.37,2.05) {$4$};}
+\panel{3.2}{after $X$ hits $Y$}
+ {\node[font=\scriptsize,anchor=east] at (-0.55,0.5) {$0$};}
+ {\draw[key,->] (-0.5,1.0) -- ++(0,1.2); \node[font=\scriptsize,anchor=east] at (-0.52,1.6) {$8$};}
+ {\draw[key,->] (0.35,2.35) -- ++(0,-0.6); \node[font=\scriptsize,anchor=west] at (0.37,2.05) {$4$};}
+\panel{6.4}{after $Y$ hits $Z$}
+ {\node[font=\scriptsize,anchor=east] at (-0.55,0.5) {$0$};}
+ {\node[font=\scriptsize,anchor=east] at (-0.4,1.3) {$0$};}
+ {\draw[key,->] (0.35,1.85) -- ++(0,1.8); \node[font=\scriptsize,anchor=west] at (0.37,2.75) {$12$};}
+\node[font=\footnotesize] at (3.2,4.1) {speeds in m s$^{-1}$; arrows show direction};
+\end{tikzpicture}

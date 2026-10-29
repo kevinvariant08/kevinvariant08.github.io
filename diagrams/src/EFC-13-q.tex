@@ -1,0 +1,14 @@
+\begin{tikzpicture}[box/.style={draw,thick,fillkey,minimum width=4.7cm,minimum height=0.62cm,align=center},
+  ar/.style={-{Stealth[length=2.2mm]},thick}, vol/.style={anchor=west,font=\small}]
+\node[align=center] (s) at (0,0) {$20\text{ cm}^3$ of X vapour $+\ 60\text{ cm}^3$ of $\mathrm{O_2}$};
+\node[box] (b1) at (0,-1.3) {sparked: X burns completely};
+\node[box] (b2) at (0,-2.75) {anhydrous calcium chloride};
+\node[box] (b3) at (0,-4.2) {sodium hydroxide};
+\node[box] (b4) at (0,-5.65) {heated copper};
+\node (e) at (0,-6.95) {};
+\draw[ar] (s) -- (b1);
+\draw[ar] (b1) -- node[vol,xshift=2pt] {$115\text{ cm}^3$ of gas} (b2);
+\draw[ar] (b2) -- node[vol,xshift=2pt] {$65\text{ cm}^3$ of gas} (b3);
+\draw[ar] (b3) -- node[vol,xshift=2pt] {$25\text{ cm}^3$ of gas} (b4);
+\draw[ar] (b4) -- node[vol,xshift=2pt] {$10\text{ cm}^3$ of gas} (0,-6.9);
+\end{tikzpicture}

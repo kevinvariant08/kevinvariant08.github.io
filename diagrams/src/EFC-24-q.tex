@@ -1,0 +1,10 @@
+\begin{tikzpicture}
+\begin{axis}[width=8.6cm,height=6.2cm,xmin=0,xmax=9000,ymin=0,ymax=1000,axis lines=left,
+  xtick={1930,5790,7720},xticklabels={$1930$,$5790$,$7720$},ytick={240,480,840},yticklabels={$240$,$480$,$840$},
+  xlabel={charge passed / C},ylabel={total volume of gas / cm$^3$},tick label style={font=\footnotesize},label style={font=\small},clip=false]
+\draw[aux] (axis cs:1930,0) -- (axis cs:1930,240) -- (axis cs:0,240);
+\draw[aux] (axis cs:5790,0) -- (axis cs:5790,480) -- (axis cs:0,480);
+\draw[aux] (axis cs:7720,0) -- (axis cs:7720,840) -- (axis cs:0,840);
+\draw[key,line width=1.3pt] (axis cs:0,0) -- (axis cs:1930,240) -- (axis cs:5790,480) -- (axis cs:7720,840);
+\end{axis}
+\end{tikzpicture}

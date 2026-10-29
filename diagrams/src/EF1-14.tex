@@ -1,0 +1,20 @@
+\begin{tikzpicture}[scale=0.85]
+\coordinate (O) at (0.0000,0.0000);
+\coordinate (A) at (7.0000,0.0000);
+\coordinate (B) at (2.4000,5.0000);
+\coordinate (P) at (3.9333,3.3333);
+\coordinate (Q) at (1.9667,1.6667);
+\coordinate (R) at (0.9600,2.0000);
+\draw[key] (O) -- (A) -- (B) -- cycle;
+\draw[aux] (O) -- (P);
+\draw[black!70,line width=0.7pt] (A) -- (R);
+\foreach \p in {O,A,B,P,Q,R} \fill (\p) circle (1.6pt);
+\node[below left] at (O) {$O$};
+\node[below right] at (A) {$A$};
+\node[above] at (B) {$B$};
+\node[above right] at (P) {$P$};
+\node[below=2pt] at (Q) {$Q$};
+\node[left] at (R) {$R$};
+\node[below,font=\footnotesize] at (3.5,0) {$\mathbf a$};
+\node[left,font=\footnotesize] at (1.0,2.6) {$\mathbf b$};
+\end{tikzpicture}
