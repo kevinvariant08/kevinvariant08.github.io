@@ -78,7 +78,7 @@ def grid(ans):
 
 def build(kind, paper, out, figs, path=None, date=None):
     qs = load(kind, paper, path); s, n = paper[-2], paper[-1]
-    mod = 'Physics' if n == 'P' else 'Mathematics ' + n
+    mod = {'P': 'Physics', 'C': 'Chemistry', 'B': 'Biology'}.get(n, 'Mathematics ' + n)
     title = ('ESAT Mock Set %s: %s' % (s, mod)) if kind == 'ESAT' else ('TMUA Mock Set %s Paper %s' % (s, n))
     body = PRE % {'head': title + ' Solutions'}
     body += '\\begin{center}{\\Large\\bfseries HU Collection}\\\\[4pt]{\\LARGE\\bfseries %s}\\\\[4pt]{\\large Worked Solutions}\\\\[6pt]Kevin Hu%s\\end{center}\n\\subsection*{Answer key}\n' % (title, (' \\quad ' + date) if date else '')
@@ -104,5 +104,5 @@ if __name__ == '__main__':
     kind, paper = a[0].upper(), a[1]
     opt = lambda k, d=None: a[a.index(k) + 1] if k in a else d
     default = ('HU_Collection_ESAT_Set%s_Maths%s_Solutions.pdf' if kind == 'ESAT' else 'HU_Collection_TMUA_Set%s_Paper%s_Solutions.pdf') % (paper[-2], paper[-1])
-    if kind == 'ESAT' and paper[-1] == 'P': default = 'HU_Collection_ESAT_Set%s_Physics_Solutions.pdf' % paper[-2]
+    if kind == 'ESAT' and paper[-1] in 'PCB': default = 'HU_Collection_ESAT_Set%s_%s_Solutions.pdf' % (paper[-2], {'P': 'Physics', 'C': 'Chemistry', 'B': 'Biology'}[paper[-1]])
     build(kind, paper, opt('--out', os.path.join(ROOT, default)), opt('--figs', os.path.join(ROOT, 'diagrams')), opt('--json'), opt('--date'))

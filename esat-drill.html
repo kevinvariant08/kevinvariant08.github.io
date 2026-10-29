@@ -141,7 +141,7 @@
     function showBest(){ var b=store('kv_esat_best')||{}, p=sel.value; $('best').textContent=b[p]!=null?'Your best standard-time score on this paper: '+b[p]+' / '+PAPERS[p].questions+'.':''; }
     sel.addEventListener('change',showBest); showBest();
     var picked={};
-    var GROUP={units:'Mathematics 1',alg:'Mathematics 2',elec:'Physics'};
+    var GROUP={units:'Mathematics 1',alg:'Mathematics 2',elec:'Physics',atoms:'Chemistry'};
     Object.keys(TOPICS).forEach(function(t){
       if(GROUP[t]){ var g=document.createElement('span'); g.className='grp'; g.textContent=GROUP[t]; $('topics').appendChild(g); }
       var b=document.createElement('button'); b.type='button'; b.textContent=TOPICS[t]; b.setAttribute('aria-pressed','false');
