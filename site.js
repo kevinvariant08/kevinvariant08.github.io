@@ -27,7 +27,7 @@
       {href:'arena.html', name:'Arena', note:'Race a bot to the right answer'},
       {href:'duel.html', name:'Friend duel', note:'Five questions; your friend races your ghost'},
       {href:'qotw.html', name:'Problem of the week', note:'Discussion unlocks when you answer'},
-      {href:'/mathwars/', name:'MathWars', note:'Ranked contest problems, 8 kyu to IMO'},
+      {href:'/kyuclid/', name:'Kyuclid', note:'Ranked contest problems, 8 kyu to IMO'},
       {href:'rewards.html', name:'Rewards', note:'Levels, badges, quests and the daily challenge'},
       {href:'shop.html', name:'Shop', note:'Spend coins on titles, themes and papers'},
       {href:'games.html', name:'Labs', note:'Maths minigames from the Shop'},
@@ -38,7 +38,7 @@
     +'<div><b>TMUA</b><a href="tmua.html">Mock sets</a><a href="smart.html">Smart Practice</a><a href="drill.html">Drill</a><a href="bank.html">Question bank</a><a href="techniques.html">Technique index</a></div>'
     +'<div><b>ESAT</b><a href="esat.html">Mock papers</a><a href="esat-drill.html">ESAT Drill</a></div>'
     +'<div><b>Olympiad</b><a href="olympiad.html">Papers and solutions</a><a href="geometry.html">Geometry Lab</a><a href="sandbox.html">Conjecture sandbox</a><a href="marker.html">Proof marker</a></div>'
-    +'<div><b>Practise and compete</b><a href="arena.html">Arena</a><a href="qotw.html">Problem of the week</a><a href="/mathwars/">MathWars</a><a href="rewards.html">Rewards</a><a href="progress.html">My progress</a></div>'
+    +'<div><b>Practise and compete</b><a href="arena.html">Arena</a><a href="qotw.html">Problem of the week</a><a href="/kyuclid/">Kyuclid</a><a href="rewards.html">Rewards</a><a href="progress.html">My progress</a></div>'
     +'<div><b>About</b><a href="how-it-works.html">How it works</a><a href="how-it-works.html#difficulty">Difficulty scale</a><a href="how-it-works.html#access">Free and locked papers</a><a href="book.html">Beyond the Incenter</a><a href="privacy.html">Privacy</a></div>'
     +'</div><p>Kevinvariant: Oxbridge admissions test (TMUA and ESAT) and olympiad preparation. Scores and progress stay in your browser unless you sign in to sync them, or choose to share answers anonymously (<a href="privacy.html">privacy note</a>).</p>';
   var here=(location.pathname.split('/').pop()||'index.html').toLowerCase();
