@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pathways | Kevinvariant</title>
+  <meta name="description" content="A free, structured route through competition maths, from the JMC and AMC 8 to BMO, AIME and beyond: short lessons, original practice and graded ladders of real past problems.">
+  <link rel="icon" href="/favicon.ico?v=4" sizes="32x32">
+  <link rel="icon" href="/favicon.svg?v=4" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=4">
+  <link rel="manifest" href="/site.webmanifest?v=5">
+  <meta name="theme-color" content="#F6F4EF">
+  <link rel="stylesheet" href="style.css?v=20261106b">
+  <script>try{if(localStorage.getItem('kv_mode')==='dark')document.documentElement.setAttribute('data-mode','dark')}catch(e){}</script>
+</head>
+<body data-theme-v2>
+  <nav id="sitenav"><div class="nav-links"><a href="index.html">Home</a> <a href="pathways.html">Pathways</a> <a href="calendar.html">Calendar</a> <a href="admissions.html">Admissions</a></div></nav>
+
+  <main class="page pw" data-sec="path">
+    <header class="hub-head">
+      <span class="eyebrow">Pathways</span>
+      <h1>Competition maths, one step at a time</h1>
+      <p class="lede">Five levels, from your first Mathematical Challenge to BMO and AIME. Each unit teaches one idea properly, gives you original practice with full solutions, then sends you up a graded ladder of real past problems. Free, and your progress saves as you go.</p>
+    </header>
+
+    <section class="pw-start" id="start" aria-labelledby="start-h">
+      <h2 id="start-h">Where should I start?</h2>
+      <p class="sub-intro">Pick the next competition you are preparing for. If it already feels comfortable, start one level higher.</p>
+      <div class="pw-pick" id="pick" role="group" aria-label="Your next competition"></div>
+      <p class="pw-pick-note" id="pickNote" hidden></p>
+    </section>
+
+    <section aria-labelledby="levels-h">
+      <h2 id="levels-h">The levels</h2>
+      <p class="sub-intro">Units within a level can be taken in any order, though each lists what it builds on. Strategy units are worth doing just before the contest.</p>
+      <div id="levels"></div>
+    </section>
+
+    <section aria-labelledby="how-h">
+      <h2 id="how-h">How a unit works</h2>
+      <div class="pw-how">
+        <div><b>1. Learn</b><span>A short lesson that teaches the idea from scratch, with worked examples that show how you would find the solution, not just the answer.</span></div>
+        <div><b>2. Practise</b><span>Six original problems from warm-up to hard, each with a hint and a full solution. Mark each one as got it or not yet.</span></div>
+        <div><b>3. Climb</b><span>A ladder of real past problems from UKMT and MAA papers, easiest first, so you know exactly which past questions to do and in what order.</span></div>
+      </div>
+      <p class="sub-intro" style="margin-top:1rem">Signed in? Your progress syncs across devices. Not signed in? It stays in this browser. <a href="calendar.html">See every competition date in the calendar.</a></p>
+    </section>
+  </main>
+
+  <script src="path.js?v=20261106b"></script>
+  <script src="pathways-data.js?v=20261106b"></script>
+  <script>
+  (function(){
+    var D=window.KV_PATH, P=window.KV_PROGRESS;
+    function esc(t){ return String(t).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+    var PICK=[['JMC or AMC 8',1],['IMC, Kangaroo or AMC 10',2],['SMC, Senior Kangaroo or AMC 12',3],['BMO1, MOG or AIME',4],['BMO2, USAMO or beyond',5]];
+    var pick=document.getElementById('pick'), note=document.getElementById('pickNote');
+    function paintPick(){ var lv=P.level(); pick.querySelectorAll('button').forEach(function(b){ b.setAttribute('aria-pressed',String(+b.dataset.l===lv)); });
+      if(lv){ var L=D.levels[lv-1]; note.hidden=false; note.innerHTML='Start with <a href="#level-'+lv+'">Level '+lv+': '+esc(L.name)+'</a>.'+(L.ready?'':' Its lessons are on the way; meanwhile, start with the level below or its resources.'); } }
+    PICK.forEach(function(p){ var b=document.createElement('button'); b.type='button'; b.dataset.l=p[1]; b.textContent=p[0];
+      b.addEventListener('click',function(){ P.setLevel(p[1]); paintPick(); paint(); var el=document.getElementById('level-'+p[1]); if(el) el.scrollIntoView({behavior:'smooth',block:'start'}); });
+      pick.appendChild(b); });
+
+    function unitTile(u){
+      if(u.status!=='ready') return '<div class="pw-unit soon"><span class="pw-strand">'+esc(D.strands[u.strand])+'</span><b>'+esc(u.title)+'</b><span class="pw-st">Coming soon</span></div>';
+      var s=P.score(u.id,u.np,u.nl), st=s>=1?'Done':P.started(u.id)?Math.round(s*100)+'% done':'Start';
+      return '<a class="pw-unit'+(s>=1?' done':'')+'" href="unit.html?u='+u.id+'"><span class="pw-strand">'+esc(D.strands[u.strand])+'</span><b>'+esc(u.title)+'</b><span class="pw-blurb">'+esc(u.blurb)+'</span>'
+        +'<span class="pw-meta"><span>About '+Math.round(u.minutes/15)*15+' min</span><span class="pw-st'+(s>=1?' ok':'')+'">'+st+'</span></span>'
+        +'<span class="pw-bar" aria-hidden="true"><i style="width:'+Math.round(s*100)+'%"></i></span></a>';
+    }
+    function paint(){
+      var lv=P.level(), h='';
+      D.levels.forEach(function(L){
+        var ready=L.units.filter(function(u){ return u.status==='ready'; }), done=ready.filter(function(u){ return P.score(u.id,u.np,u.nl)>=1; }).length;
+        h+='<section class="pw-level'+(lv===L.n?' mine':'')+'" id="level-'+L.n+'" aria-labelledby="lh-'+L.n+'">'
+          +'<div class="pw-lhead"><span class="pw-num">'+L.n+'</span><div><h3 id="lh-'+L.n+'">'+esc(L.name)+(lv===L.n?' <span class="chip">Your level</span>':'')+'</h3>'
+          +'<p>'+esc(L.blurb)+'</p><div class="chips">'+L.uk.map(function(c){return '<span class="chip">UK: '+esc(c)+'</span>';}).join('')+L.us.map(function(c){return '<span class="chip">US: '+esc(c)+'</span>';}).join('')+'</div></div>'
+          +(ready.length?'<div class="pw-prog"><b>'+done+'/'+ready.length+'</b><span>units done</span></div>':'')+'</div>'
+          +'<div class="pw-units">'+L.units.map(unitTile).join('')+'</div>'
+          +(L.resources&&L.resources.length?'<p class="pw-res"><span>Also for this level:</span> '+L.resources.map(function(r){ return '<a href="'+esc(r.href)+'"'+(/\.pdf/.test(r.href)?' target="_blank" rel="noopener"':'')+'>'+esc(r.name)+'</a>'; }).join(' · ')+'</p>':'')
+          +'</section>';
+      });
+      document.getElementById('levels').innerHTML=h;
+    }
+    paintPick(); paint();
+    window.addEventListener('kv-path',function(){ paint(); });
+  })();
+  </script>
+  <script src="site.js?v=20261106b" defer></script>
+</body>
+</html>

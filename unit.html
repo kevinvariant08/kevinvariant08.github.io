@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Unit | Kevinvariant Pathways</title>
+  <meta name="description" content="A Kevinvariant Pathways unit: a lesson, six original practice problems with full solutions, and a graded ladder of real past contest problems.">
+  <link rel="icon" href="/favicon.ico?v=4" sizes="32x32">
+  <link rel="icon" href="/favicon.svg?v=4" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=4">
+  <link rel="manifest" href="/site.webmanifest?v=5">
+  <meta name="theme-color" content="#F6F4EF">
+  <link rel="stylesheet" href="style.css?v=20261106b">
+  <script>try{if(localStorage.getItem('kv_mode')==='dark')document.documentElement.setAttribute('data-mode','dark')}catch(e){}</script>
+  <script>window.MathJax={tex:{inlineMath:[['$','$']],displayMath:[['\\[','\\]']],processEscapes:true},options:{skipHtmlTags:['script','noscript','style','textarea','pre']}};</script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js" async></script>
+</head>
+<body data-theme-v2>
+  <nav id="sitenav"><div class="nav-links"><a href="index.html">Home</a> <a href="pathways.html">Pathways</a> <a href="calendar.html">Calendar</a> <a href="admissions.html">Admissions</a></div></nav>
+
+  <main class="page pw unit" data-sec="path" id="main">
+    <p class="pw-crumbs" id="crumbs"><a href="pathways.html">Pathways</a></p>
+    <div id="unit"><p>Loading the unit…</p></div>
+  </main>
+
+  <script src="path.js?v=20261106b"></script>
+  <script src="pathways-data.js?v=20261106b"></script>
+  <script>
+  (function(){
+    var D=window.KV_PATH, P=window.KV_PROGRESS, root=document.getElementById('unit');
+    var id=(new URLSearchParams(location.search).get('u')||'').toUpperCase();
+    function esc(t){ return String(t).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+    function stars(n){ return '<span class="pw-stars" aria-label="'+n+' out of 4 difficulty">'+'★'.repeat(n)+'<span>'+'★'.repeat(4-n)+'</span></span>'; }
+    function fitWide(){ document.querySelectorAll('main mjx-container:not([display])').forEach(function(c){ var p=c.parentElement.closest('p,li,div,section,figure,td'); if(!p||!p.clientWidth) return; var w=c.classList.contains('mj-wide')?c.scrollWidth:c.getBoundingClientRect().width; c.classList.toggle('mj-wide', w>p.clientWidth-4); }); }
+    function typeset(el){ if(window.MathJax&&MathJax.typesetPromise) MathJax.typesetPromise([el]).then(fitWide).catch(function(){}); else setTimeout(function(){ typeset(el); },300); }
+    var fitT; function fitSoon(){ clearTimeout(fitT); fitT=setTimeout(fitWide,80); }
+    window.addEventListener('resize',fitSoon); document.addEventListener('click',fitSoon); document.addEventListener('toggle',fitSoon,true);
+    var meta=null, L=null;
+    D.levels.forEach(function(lv){ lv.units.forEach(function(u){ if(u.id===id){ meta=u; L=lv; } }); });
+    if(!meta||meta.status!=='ready'){ root.innerHTML='<h1>Unit not found</h1><p>That unit isn\u2019t available yet. <a href="pathways.html">Back to Pathways</a>.</p>'; return; }
+    document.title=meta.title+' | Kevinvariant Pathways';
+    document.getElementById('crumbs').innerHTML='<a href="pathways.html">Pathways</a> <span>›</span> <a href="pathways.html#level-'+L.n+'">Level '+L.n+': '+esc(L.name)+'</a> <span>›</span> '+esc(D.strands[meta.strand]);
+    var ready=L.units.filter(function(u){ return u.status==='ready'; }), k=ready.indexOf(meta), prev=ready[k-1], next=ready[k+1];
+    var byId={}; D.levels.forEach(function(lv){ lv.units.forEach(function(u){ byId[u.id]=u; }); });
+
+    fetch('units/'+id+'.json?v='+D.version).then(function(r){ if(!r.ok) throw 0; return r.json(); }).then(render).catch(function(){
+      root.innerHTML='<h1>'+esc(meta.title)+'</h1><p>This unit couldn\u2019t load. Check your connection and refresh.</p>'; });
+
+    function render(U){
+      var pre=(U.prereqs||[]).map(function(p){ var m=byId[p]; return m?(m.status==='ready'?'<a href="unit.html?u='+p+'">'+esc(m.title)+'</a>':esc(m.title)):''; }).filter(Boolean);
+      var h='<header class="pw-uhead">'
+        +'<span class="eyebrow">Level '+L.n+' · '+esc(L.name)+' · '+esc(D.strands[U.strand])+'</span>'
+        +'<h1>'+esc(U.title)+'</h1><p class="lede">'+esc(U.blurb)+'</p>'
+        +'<div class="chips"><span class="chip">About '+Math.round(U.minutes/15)*15+' minutes</span>'+(U.contests||[]).map(function(c){return '<span class="chip">'+esc(c)+'</span>';}).join('')+(U.pdf?'<a class="chip" href="'+U.pdf+'" target="_blank" rel="noopener">Printable handout (PDF)</a>':'')+'</div>'
+        +'<div class="pw-goals"><div><b>By the end you can</b><ul>'+U.outcomes.map(function(o){return '<li>'+esc(o)+'</li>';}).join('')+'</ul></div>'
+        +(pre.length?'<div><b>Builds on</b><p>'+pre.join(', ')+'</p></div>':'')+'</div>'
+        +'<div class="pw-track" id="track"></div>'
+        +'<ul class="jump"><li><a href="#lesson">1. Lesson</a></li><li><a href="#practice">2. Practice</a></li><li><a href="#ladder">3. Contest ladder</a></li></ul></header>';
+      h+='<section id="lesson" class="pw-lesson" aria-label="Lesson">'+U.lesson
+        +'<p class="pw-readbtn"><button type="button" class="btn" id="readBtn"></button></p></section>';
+      h+='<section id="practice" aria-labelledby="ph"><h2 id="ph">Practice</h2><p class="sub-intro">Try each problem properly before opening the hint, and the hint before the solution. Then mark it honestly: problems marked \u201cnot yet\u201d are worth another go in a few days.</p><ol class="pw-probs">';
+      U.practice.forEach(function(q,i){
+        h+='<li class="pw-prob" data-i="'+i+'"><div class="pw-ptop"><b>Problem '+(i+1)+'</b>'+stars(q.stars)+'</div><div class="pw-q">'+q.q+'</div>'
+          +'<div class="pw-pbtns"><button type="button" class="btn secondary" data-a="hint">Hint</button><button type="button" class="btn secondary" data-a="sol">Solution</button>'
+          +'<span class="pw-mark"><button type="button" data-m="got">Got it</button><button type="button" data-m="not">Not yet</button></span></div>'
+          +'<div class="pw-hint" hidden><b>Hint.</b> '+q.hint+'</div>'
+          +'<div class="pw-sol" hidden>'+(q.ans?'<p class="pw-ans"><b>Answer:</b> '+q.ans+'</p>':'')+q.sol+'</div></li>';
+      });
+      h+='</ol></section>';
+      h+='<section id="ladder" aria-labelledby="lh"><h2 id="lh">Contest ladder</h2><p class="sub-intro">Real past problems that use this unit\u2019s idea, easiest first. They open on the official paper or the AoPS wiki in a new tab. Tick each one off when you have solved it, and only open the idea if you are stuck.</p><ol class="pw-lad">';
+      U.ladder.forEach(function(x,i){
+        h+='<li data-i="'+i+'"><label class="pw-tick"><input type="checkbox"><span class="visually-hidden">Solved</span></label>'
+          +'<div><a href="'+esc(x.url)+'" target="_blank" rel="noopener">'+esc(x.src)+'</a> '+stars(x.stars)
+          +'<details><summary>Idea</summary><span>'+esc(x.note)+'</span></details></div></li>';
+      });
+      h+='</ol></section>';
+      h+='<section class="pw-finish" aria-label="Finish"><button type="button" class="btn" id="doneBtn"></button>'
+        +'<nav class="pw-next" aria-label="Units">'+(prev?'<a href="unit.html?u='+prev.id+'">← '+esc(prev.title)+'</a>':'<span></span>')+'<a href="pathways.html#level-'+L.n+'">All Level '+L.n+' units</a>'+(next?'<a href="unit.html?u='+next.id+'">'+esc(next.title)+' →</a>':'<span></span>')+'</nav></section>';
+      root.innerHTML=h;
+
+      root.querySelectorAll('.pw-prob').forEach(function(li){
+        var i=li.dataset.i;
+        li.querySelector('[data-a="hint"]').addEventListener('click',function(){ var e=li.querySelector('.pw-hint'); e.hidden=!e.hidden; this.setAttribute('aria-expanded',String(!e.hidden)); });
+        li.querySelector('[data-a="sol"]').addEventListener('click',function(){ var e=li.querySelector('.pw-sol'); e.hidden=!e.hidden; this.setAttribute('aria-expanded',String(!e.hidden)); });
+        li.querySelectorAll('[data-m]').forEach(function(b){ b.addEventListener('click',function(){ var cur=P.unit(id).ps[i]; P.markPractice(id,i,cur===b.dataset.m?null:b.dataset.m); paintState(); }); });
+      });
+      root.querySelectorAll('.pw-lad li').forEach(function(li){ li.querySelector('input').addEventListener('change',function(){ P.markLadder(id,li.dataset.i,this.checked); paintState(); }); });
+      document.getElementById('readBtn').addEventListener('click',function(){ P.markRead(id,!P.unit(id).read); paintState(); });
+      document.getElementById('doneBtn').addEventListener('click',function(){ P.markDone(id,!P.unit(id).done); paintState(); });
+      paintState(); typeset(root);
+      if(location.hash){ var t=document.querySelector(location.hash); if(t) setTimeout(function(){ t.scrollIntoView(); },400); }
+
+      function paintState(){
+        var u=P.unit(id), got=0, not=0;
+        root.querySelectorAll('.pw-prob').forEach(function(li){ var v=u.ps[li.dataset.i]; if(v==='got') got++; if(v==='not') not++;
+          li.querySelectorAll('[data-m]').forEach(function(b){ b.setAttribute('aria-pressed',String(v===b.dataset.m)); }); li.classList.toggle('got',v==='got'); });
+        var lad=0; root.querySelectorAll('.pw-lad li').forEach(function(li){ var on=!!u.lad[li.dataset.i]; li.querySelector('input').checked=on; li.classList.toggle('ok',on); if(on) lad++; });
+        document.getElementById('readBtn').textContent=u.read?'Lesson read ✓ (undo)':'I\u2019ve read the lesson';
+        document.getElementById('doneBtn').textContent=u.done?'Unit complete ✓ (undo)':'Mark this unit complete';
+        document.getElementById('track').innerHTML='<span class="'+(u.read?'ok':'')+'">Lesson '+(u.read?'read':'not read')+'</span><span class="'+(got===6?'ok':'')+'">Practice '+got+'/'+U.practice.length+(not?' ('+not+' not yet)':'')+'</span><span class="'+(lad===U.ladder.length?'ok':'')+'">Ladder '+lad+'/'+U.ladder.length+'</span>'+(u.done?'<span class="ok">Complete</span>':'');
+      }
+    }
+  })();
+  </script>
+  <script src="site.js?v=20261106b" defer></script>
+</body>
+</html>

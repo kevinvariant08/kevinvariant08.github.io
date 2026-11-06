@@ -47,7 +47,7 @@
   }
 
   /* ---------------------------------------------------------- progress sync */
-  var KEYS=['hu_drill_log','hu_drill_attempts','hu_iv_hist','hu_scores','hu_arena','hu_ladder_best','hu_rewards','hu_duels','hu_qotw','hu_review','hu_traps'];
+  var KEYS=['hu_drill_log','hu_drill_attempts','hu_iv_hist','hu_scores','hu_arena','hu_ladder_best','hu_rewards','hu_duels','hu_qotw','hu_review','hu_traps','kv_path'];
   function readLocal(){ var o={}; KEYS.forEach(function(k){ try{ var v=localStorage.getItem(k); if(v!=null) o[k]=JSON.parse(v); }catch(e){} }); return o; }
   function writeLocal(o){ KEYS.forEach(function(k){ if(o[k]!==undefined){ try{ localStorage.setItem(k,JSON.stringify(o[k])); }catch(e){} } }); }
   function unionBy(a,b,keyFn,cap,sortFn){ var seen={}, out=[]; (a||[]).concat(b||[]).forEach(function(x){ var k=keyFn(x); if(!seen[k]){ seen[k]=1; out.push(x); } }); if(sortFn) out.sort(sortFn); return cap?out.slice(-cap):out; }
@@ -79,6 +79,12 @@
     if(L.hu_review||C.hu_review) o.hu_review={items:items,upto:Math.max(lv.upto||0,cv.upto||0)};
     // trap clears are one-off events keyed by week and trap, so a union counts each once
     if(L.hu_traps||C.hu_traps) o.hu_traps={clears:Object.assign({},(C.hu_traps||{}).clears||{},(L.hu_traps||{}).clears||{})};
+    // Pathways: per unit, keep anything either device has finished (read, ladder ticks, practice marks, done)
+    if(L.kv_path||C.kv_path){ var lp=L.kv_path||{}, cp=C.kv_path||{}, pu={};
+      [cp.u||{},lp.u||{}].forEach(function(src){ Object.keys(src).forEach(function(id){ var a=pu[id]||{ps:{},lad:{}}, b=src[id]||{};
+        if(b.read) a.read=Math.max(a.read||0,b.read); if(b.done) a.done=Math.max(a.done||0,b.done);
+        Object.assign(a.lad,b.lad||{}); Object.keys(b.ps||{}).forEach(function(k){ if(a.ps[k]!=='got') a.ps[k]=b.ps[k]; }); pu[id]=a; }); });
+      o.kv_path={level:lp.level||cp.level||null,u:pu}; }
     return o;
   }
   var lastPushed='', syncing=false, lastSync=null;

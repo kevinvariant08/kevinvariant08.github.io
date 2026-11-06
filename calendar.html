@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Maths competition calendar | Kevinvariant</title>
+  <meta name="description" content="Every maths competition and admissions test date for the year in one place: UKMT challenges and olympiads, AMC and AIME, BMO, international contests, TMUA and STEP, with entry deadlines and what to prepare.">
+  <link rel="icon" href="/favicon.ico?v=4" sizes="32x32">
+  <link rel="icon" href="/favicon.svg?v=4" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=4">
+  <link rel="manifest" href="/site.webmanifest?v=5">
+  <meta name="theme-color" content="#F6F4EF">
+  <link rel="stylesheet" href="style.css?v=20261106b">
+  <script>try{if(localStorage.getItem('kv_mode')==='dark')document.documentElement.setAttribute('data-mode','dark')}catch(e){}</script>
+</head>
+<body data-theme-v2>
+  <nav id="sitenav"><div class="nav-links"><a href="index.html">Home</a> <a href="pathways.html">Pathways</a> <a href="calendar.html">Calendar</a> <a href="admissions.html">Admissions</a></div></nav>
+
+  <main class="page" data-sec="cal">
+    <header class="hub-head">
+      <span class="eyebrow">Calendar</span>
+      <h1>Maths competition calendar</h1>
+      <p class="lede">Every major maths competition and admissions test this school year, with dates, entry deadlines, who can sit it, and which Pathways level prepares you for it. Most competitions are entered through your school, so tell your maths teacher early.</p>
+    </header>
+
+    <section aria-labelledby="next-h">
+      <h2 id="next-h">Coming up</h2>
+      <div class="cal-next" id="next"></div>
+    </section>
+
+    <section aria-labelledby="all-h">
+      <h2 id="all-h">All dates</h2>
+      <div class="cal-filters">
+        <div class="pw-filter" id="fRegion" role="group" aria-label="Region"><span>Region</span></div>
+        <div class="pw-filter" id="fLevel" role="group" aria-label="Level"><span>Level</span></div>
+        <div class="pw-filter" id="fPast" role="group" aria-label="Past events"><span>Show</span></div>
+      </div>
+      <div id="list"></div>
+      <p class="sub-intro" id="stamp" style="margin-top:1.6rem;font-size:.9rem"></p>
+    </section>
+  </main>
+
+  <script src="path.js?v=20261106b"></script>
+  <script src="calendar-data.js?v=20261106b"></script>
+  <script>
+  (function(){
+    var C=window.KV_CAL, E=C.events, LV=['','Foundations','Intermediate','Senior','Olympiad','Advanced'];
+    var MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'], MONL=['January','February','March','April','May','June','July','August','September','October','November','December'];
+    function esc(t){ return String(t==null?'':t).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+    function d(s){ if(!s) return null; var p=s.split('-'); return new Date(+p[0],+p[1]-1,+p[2]); }
+    var today=new Date(); today.setHours(0,0,0,0);
+    function days(x){ return Math.round((x-today)/864e5); }
+    function rel(n){ return n===0?'today':n===1?'tomorrow':n>0?'in '+n+' days':Math.abs(n)+' days ago'; }
+    function fmt(s){ var x=d(s); return x?x.getDate()+' '+MON[x.getMonth()]+' '+x.getFullYear():''; }
+    function range(e){ if(!e.date_start) return 'Date to be confirmed'; var a=fmt(e.date_start); return e.date_end&&e.date_end!==e.date_start?(e.date_status==='window'?'Window ':'')+a+' to '+fmt(e.date_end):a; }
+    var state={region:'All',level:0,past:false};
+    try{ var lv=window.KV_PROGRESS&&KV_PROGRESS.level(); if(lv) state.level=lv; }catch(e){}
+    function group(id,opts,key){ var g=document.getElementById(id); opts.forEach(function(o){ var b=document.createElement('button'); b.type='button'; b.textContent=o[0]; b.dataset.v=o[1];
+      b.addEventListener('click',function(){ state[key]=o[1]; paint(); }); g.appendChild(b); }); }
+    group('fRegion',[['All','All'],['UK','UK'],['US','US'],['International','International'],['Admissions tests','Admissions']],'region');
+    group('fLevel',[['All',0],['1',1],['2',2],['3',3],['4',4],['5',5]],'level');
+    group('fPast',[['Upcoming only',false],['Include past',true]],'past');
+    function endOf(e){ return d(e.date_end||e.date_start); }
+    function ics(e){
+      var s=d(e.date_start), en=endOf(e); if(!s) return; en=new Date(en.getTime()+864e5);
+      function f(x){ return x.getFullYear()+String(x.getMonth()+1).padStart(2,'0')+String(x.getDate()).padStart(2,'0'); }
+      var txt=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Kevinvariant//Calendar//EN','BEGIN:VEVENT','UID:'+e.id+'@kevinvariant','DTSTAMP:'+f(new Date())+'T000000Z','DTSTART;VALUE=DATE:'+f(s),'DTEND;VALUE=DATE:'+f(en),
+        'SUMMARY:'+e.name.replace(/[,;]/g,' '),'DESCRIPTION:'+(e.notes||'').replace(/[,;\n]/g,' ')+' '+(e.official_url||''),'END:VEVENT','END:VCALENDAR'].join('\r\n');
+      var a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([txt],{type:'text/calendar'})); a.download=e.id+'.ics'; document.body.appendChild(a); a.click(); setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); },500);
+    }
+    function match(e){ return (state.region==='All'||e.region===state.region)&&(!state.level||(e.level||[]).indexOf(state.level)>=0); }
+    function card(e){
+      var s=d(e.date_start), past=s&&endOf(e)<today, dl=d(e.entry_deadline), dld=dl?days(dl):null;
+      var lv=(e.level||[]).filter(function(n){ return n>=1&&n<=5; });
+      var prep=lv.length?'<a href="pathways.html#level-'+lv[0]+'">Prepare: Level '+lv[0]+' '+LV[lv[0]]+'</a>':'';
+      if(e.region==='Admissions') prep='<a href="admissions.html">Prepare: Admissions</a>';
+      return '<article class="cal-ev'+(past?' past':'')+'" id="'+esc(e.id)+'"><div class="cal-date">'+(s?'<b>'+s.getDate()+'</b><span>'+MON[s.getMonth()]+'</span>':'<b>?</b><span>TBC</span>')+'</div><div>'
+        +'<h4>'+esc(e.name)+'</h4>'
+        +'<div class="chips"><span class="chip">'+esc(e.organiser)+'</span>'+lv.map(function(n){return '<span class="chip">Level '+n+'</span>';}).join('')
+        +(e.date_status==='estimated'?'<span class="chip est">Estimated date</span>':e.date_status==='reported'?'<span class="chip est">Reported date: confirm with organiser</span>':'')+(past?'<span class="chip done">Done</span>':(s?(s<=today?'<span class="chip">On now, until '+fmt(e.date_end||e.date_start)+'</span>':'<span class="chip">'+rel(days(s))+'</span>'):''))+'</div>'
+        +'<p><b>'+esc(range(e))+'.</b> '+esc(e.format||'')+'</p>'
+        +(e.eligibility?'<p>'+esc(e.eligibility)+'</p>':'')
+        +(e.how_to_enter?'<p>'+esc(e.how_to_enter)+'</p>':'')
+        +(dl&&!past?'<p class="'+(dld>=0&&dld<=30?'cal-dl':'')+'">Entry deadline: '+fmt(e.entry_deadline)+(dld>=0?' ('+rel(dld)+')':' (passed)')+(e.deadline_note?'. '+esc(e.deadline_note):'')+'</p>':'')
+        +(e.notes?'<p>'+esc(e.notes)+'</p>':'')
+        +'<div class="cal-links">'+(e.official_url?'<a href="'+esc(e.official_url)+'" target="_blank" rel="noopener">Official page</a>':'')+prep+(s&&!past?'<button type="button" class="linkish" data-ics="'+esc(e.id)+'">Add to my calendar</button>':'')+'</div>'
+        +'</div></article>';
+    }
+    function paint(){
+      ['fRegion','fLevel','fPast'].forEach(function(id,i){ var key=['region','level','past'][i]; document.getElementById(id).querySelectorAll('button').forEach(function(b){ b.setAttribute('aria-pressed',String(String(state[key])===b.dataset.v)); }); });
+      var list=E.filter(match).filter(function(e){ return state.past||!e.date_start||endOf(e)>=today; })
+        .sort(function(a,b){ return (a.date_start||'9999').localeCompare(b.date_start||'9999'); });
+      var h='', cur='';
+      list.forEach(function(e){ var s=d(e.date_start), k=s?MONL[s.getMonth()]+' '+s.getFullYear():'Date to be confirmed';
+        if(k!==cur){ h+=(cur?'</section>':'')+'<section class="cal-month"><h3>'+k+'</h3>'; cur=k; } h+=card(e); });
+      document.getElementById('list').innerHTML=(h?h+'</section>':'<p>Nothing matches these filters.</p>');
+      document.querySelectorAll('[data-ics]').forEach(function(b){ b.addEventListener('click',function(){ ics(E.filter(function(e){ return e.id===b.dataset.ics; })[0]); }); });
+      var up=E.filter(match).filter(function(e){ return e.date_start&&endOf(e)>=today; }).map(function(e){
+          var dl=d(e.entry_deadline), st=d(e.date_start), when=dl&&dl>=today&&dl<st?{t:dl,k:'Entry deadline'}:st<today?{t:today,k:'On now, until '+fmt(e.date_end)}:{t:st,k:'Competition'}; return {e:e,t:when.t,k:when.k,on:st<today}; })
+        .sort(function(a,b){ return a.t-b.t; }).slice(0,3);
+      document.getElementById('next').innerHTML=up.map(function(x){ return '<a href="#'+esc(x.e.id)+'"><small>'+x.k+(x.on?'':' · '+rel(days(x.t)))+'</small><b>'+esc(x.e.name)+'</b><span>'+fmt(x.t.getFullYear()+'-'+(x.t.getMonth()+1)+'-'+x.t.getDate())+'</span></a>'; }).join('')||'<p>No upcoming dates match these filters.</p>';
+    }
+    document.getElementById('stamp').textContent='Dates checked against the organisers’ own pages on '+C.checked+'. Estimated dates are based on previous years and will be updated when the organiser publishes them; always confirm with the official page and your school.';
+    paint();
+  })();
+  </script>
+  <script src="site.js?v=20261106b" defer></script>
+</body>
+</html>

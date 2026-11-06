@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Kevinvariant | Oxbridge admissions test and olympiad prep</title>
-  <meta name="description" content="Oxbridge admissions test prep (TMUA and ESAT) and olympiad prep: original mock papers with full solutions, olympiad papers and solutions, timed drills, a rated question bank and interactive geometry.">
+  <title>Kevinvariant | Structured competition maths and maths admissions prep</title>
+  <meta name="description" content="Free, structured competition maths from the JMC and AMC 8 to BMO and AIME: short lessons, original practice and graded ladders of real past problems, a calendar of every maths competition, and TMUA, ESAT and interview preparation.">
   <link rel="icon" href="/favicon.ico?v=4" sizes="32x32">
   <link rel="icon" href="/favicon.svg?v=4" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=4">
   <link rel="manifest" href="/site.webmanifest?v=5">
   <meta name="theme-color" content="#F6F4EF">
-  <link rel="stylesheet" href="style.css?v=20261102">
+  <link rel="stylesheet" href="style.css?v=20261106b">
   <script>try{if(localStorage.getItem('kv_mode')==='dark')document.documentElement.setAttribute('data-mode','dark')}catch(e){}</script>
   <style>
     .hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:2.6rem;align-items:center;padding:3.2rem 0 1.4rem}
@@ -45,6 +45,14 @@
     .elsewhere{display:flex;flex-wrap:wrap;align-items:baseline;gap:.3rem 1rem;padding:1rem 0;border-top:1px solid var(--line-soft);color:var(--ink-soft);font-size:.95rem}
     .elsewhere b{color:var(--ink)}
     .lockline{color:var(--ink-faint);font-size:.9rem}
+    .home-ladder{display:grid;gap:.5rem;margin:1rem 0 1.2rem;max-width:52rem}
+    .home-ladder .hl{display:grid;grid-template-columns:auto 1fr auto;gap:1rem;align-items:center;padding:.7rem 1rem;border:1px solid var(--line-soft);border-radius:var(--r-md);background:var(--surface);color:var(--ink);text-decoration:none}
+    .home-ladder .hl:hover{border-color:var(--ink-faint)}
+    .home-ladder .hl.mine{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+    .home-ladder .hl b{display:block;font-family:var(--heading);font-size:1.08rem}
+    .home-ladder .hl small{display:block;color:var(--ink-soft);font-size:.88rem}
+    .home-ladder .hl em{font-style:normal;font-size:.85rem;color:var(--ink-faint);white-space:nowrap}
+    .home-ladder .pw-num{width:2.2rem;height:2.2rem;font-size:1.05rem}
   </style>
 </head>
 <body data-theme-v2>
@@ -53,15 +61,15 @@
   <main class="page">
     <section class="hero">
       <div>
-        <h1>Kevinvariant</h1>
-        <p class="lede">Oxbridge admissions test prep for the TMUA and ESAT, and olympiad prep: original papers with full solutions, and tools for practising them properly. A little every day adds up.</p>
+        <h1>Competition maths, with a plan</h1>
+        <p class="lede">Free, structured preparation from your first Mathematical Challenge to BMO and AIME. Short lessons that teach one idea properly, original practice with full solutions, and graded ladders of real UKMT and AMC past problems, so you always know what to do next.</p>
         <div class="cta">
-          <a class="btn" href="tmua.html">TMUA preparation</a>
-          <a class="btn secondary" href="esat.html">ESAT preparation</a>
-          <a class="btn secondary" href="olympiad.html">Olympiad preparation</a>
+          <a class="btn" href="pathways.html#start">Find your level</a>
+          <a class="btn secondary" href="calendar.html">Competition calendar</a>
+          <a class="btn secondary" href="admissions.html">Admissions prep</a>
           <a class="btn secondary" href="#" data-install hidden>Install the app</a>
         </div>
-        <p class="newhere">New here? <a href="how-it-works.html">How difficulty ratings and locked papers work</a>.</p>
+        <p class="newhere">No account needed. Sign in only if you want your progress on every device.</p>
       </div>
       <figure class="board" aria-label="A triangle with its incircle. Drag the vertices.">
         <span class="hint">Drag a vertex</span>
@@ -70,130 +78,50 @@
       </figure>
     </section>
 
+    <section aria-labelledby="ladder-h" id="ladder" data-sec="path">
+      <h2 id="ladder-h">Five levels, one ladder</h2>
+      <p class="sub-intro">Each level maps to the UK and US competitions it prepares you for. Pick yours and work through its units in any order.</p>
+      <div class="home-ladder" id="homeLadder"></div>
+      <p><a class="btn" href="pathways.html">See every unit</a></p>
+    </section>
+
+    <section aria-labelledby="soon-h" id="soon" data-sec="cal">
+      <h2 id="soon-h">Coming up</h2>
+      <p class="sub-intro">The next competition dates and entry deadlines. Most are entered through your school, so tell your maths teacher early.</p>
+      <div class="cal-next" id="homeCal"></div>
+      <p><a href="calendar.html">The full calendar, with every UKMT, AMC, BMO and admissions date</a></p>
+    </section>
+
     <section aria-labelledby="paths-h" id="paths">
-      <h2 id="paths-h">Choose your path</h2>
+      <h2 id="paths-h">Also on Kevinvariant</h2>
       <div class="cards">
         <article class="door" data-sec="tmua">
-          <h3><a class="go" href="tmua.html">TMUA</a></h3>
-          <p>Twelve sets of original mock papers with solutions, timed drills and a question bank rated by difficulty.</p>
+          <h3><a class="go" href="admissions.html">Admissions</a></h3>
+          <p>A step-by-step plan for the TMUA, ESAT and Oxbridge interviews, with original mock papers that are harder than the real thing.</p>
           <ul>
-            <li><a href="tmua.html#sets">All mock sets</a></li>
-            <li><a href="smart.html">Smart Practice</a></li>
-            <li><a href="drill.html">Drill</a></li>
-            <li><a href="bank.html">Question bank</a></li>
-            <li><a href="techniques.html">Technique index</a></li>
+            <li><a href="tmua.html">TMUA mock papers</a></li>
+            <li><a href="esat.html">ESAT mock papers</a></li>
+            <li><a href="interviews.html">Mock interviews</a></li>
           </ul>
         </article>
-        <article class="door" data-sec="esat">
-          <h3><a class="go" href="esat.html">ESAT</a></h3>
-          <p>Original Mathematics 1 and Mathematics 2 mocks: 27 questions in 40 minutes, no calculator, with worked solutions.</p>
-          <ul>
-            <li><a href="esat.html#sets">All ESAT mocks</a></li>
-            <li><a href="esat-drill.html">ESAT Drill</a></li>
-            <li><a href="esat.html#format">How the ESAT works</a></li>
-          </ul>
-        </article>
-        <article class="door" data-sec="oly">
-          <h3><a class="go" href="olympiad.html">Olympiad</a></h3>
-          <p>Original mock olympiad papers, written solutions to real competitions, and geometry you can drag.</p>
+        <article class="door" data-sec="path">
+          <h3><a class="go" href="olympiad.html">Olympiad library</a></h3>
+          <p>Original mock BMO and SMC papers, full solutions to real competitions, and the HU Collection problem sets.</p>
           <ul>
             <li><a href="olympiad.html#mocks">Mock papers</a></li>
             <li><a href="olympiad.html#solutions">Competition solutions</a></li>
-            <li><a href="olympiad.html#hu">The HU Collection</a></li>
             <li><a href="geometry.html">Geometry Lab</a></li>
           </ul>
         </article>
         <article class="door" data-sec="play">
-          <h3><a class="go" href="compete.html">Practise and compete</a></h3>
-          <p>Race a bot, duel a friend, take on the problem of the week, and earn levels, badges and coins.</p>
+          <h3><a class="go" href="compete.html">Extras</a></h3>
+          <p>Race a bot, duel a friend, the problem of the week, and ranked contest problems on Cevian.</p>
           <ul>
-            <li><a href="arena.html">Arena</a></li>
-            <li><a href="duel.html">Friend duel</a></li>
             <li><a href="qotw.html">Problem of the week</a></li>
             <li><a href="/cevian/">Cevian</a></li>
-            <li><a href="rewards.html">Rewards</a></li>
+            <li><a href="arena.html">Arena</a></li>
           </ul>
         </article>
-        <article class="door">
-          <h3><a class="go" href="how-it-works.html">How it works</a></h3>
-          <p>What the difficulty numbers mean, which papers are free, and how the newest sets are unlocked.</p>
-          <ul>
-            <li><a href="how-it-works.html#difficulty">Difficulty scale</a></li>
-            <li><a href="how-it-works.html#start">Where to start</a></li>
-            <li><a href="how-it-works.html#access">Free and locked papers</a></li>
-          </ul>
-        </article>
-      </div>
-    </section>
-
-    <section aria-labelledby="new-h" id="new">
-      <h2 id="new-h">New this term</h2>
-      <div class="cards">
-        <article class="pc" data-sec="esat">
-          <h3>ESAT mock Set F: Mathematics 1, Physics and Mathematics 2</h3>
-          <div class="chips"><a class="chip free" href="how-it-works.html#access">Free</a><span class="chip">ESAT</span><a class="chip" href="how-it-works.html#difficulty">Difficulty <b>8.0</b> to <b>8.4</b></a></div>
-          <p class="desc">The newest and hardest ESAT set: wordy, multi-step Physics and Mathematics 2, 27 questions in 40 minutes per module, with unfamiliar problems that need a new strategy on the spot and diagrams throughout. Set A is the warm-up and Set B the hardest.</p>
-          <div class="acts"><a class="btn" href="esat-drill.html?paper=EF2">Sit Mathematics 2</a><a class="btn secondary" href="esat-drill.html?paper=EFP">Sit Physics</a><a href="esat.html">ESAT page</a></div>
-        </article>
-        <article class="pc" data-sec="tmua">
-          <h3>Smart Practice: questions that fit your level</h3>
-          <div class="chips"><a class="chip free" href="how-it-works.html#access">Free</a><span class="chip">TMUA</span></div>
-          <p class="desc">Each question is chosen to suit your level as it changes. At the end you see an estimate of your level, your strongest and weakest topics, and what to practise next.</p>
-          <div class="acts"><a class="btn" href="smart.html">Start Smart Practice</a><a href="privacy.html">Privacy note</a></div>
-        </article>
-        <article class="pc" data-sec="tmua">
-          <h3>Confidence calibration</h3>
-          <div class="chips"><a class="chip free" href="how-it-works.html#access">Free</a><span class="chip">TMUA</span></div>
-          <p class="desc">TMUA has no negative marking, so knowing when you are guessing matters. Say Guess, Unsure or Sure before each answer is checked, and Progress shows whether your confidence matches your results.</p>
-          <div class="acts"><a class="btn" href="progress.html#confidence">See your calibration</a><a href="drill.html">Open Drill</a></div>
-        </article>
-        <article class="pc" data-sec="tmua">
-          <h3>Trap Map: the mistake behind each wrong answer</h3>
-          <div class="chips"><a class="chip free" href="how-it-works.html#access">Free</a><span class="chip">TMUA</span></div>
-          <p class="desc">When a wrong option in Drill, the question bank or Review comes from a common mistake, the site names that mistake. Your most frequent traps collect on the Progress page, each with a short drill to clear it.</p>
-          <div class="acts"><a class="btn" href="progress.html#traps">See your Trap Profile</a><a href="drill.html">Open Drill</a></div>
-        </article>
-        <article class="pc" data-sec="oly">
-          <h3>UKMT Senior Mathematical Challenge 2026: full solutions</h3>
-          <div class="chips"><a class="chip free" href="how-it-works.html#access">Free</a><span class="chip">Olympiad</span></div>
-          <p class="desc">Solutions to all 25 problems, with every diagram redrawn in tkz-euclide. No code or account needed.</p>
-          <div class="acts"><a class="btn" href="UKMT_SMC_2026_Solutions.pdf?v=fig1" target="_blank" rel="noopener">Read the solutions (PDF)</a></div>
-        </article>
-        <article class="pc" data-sec="tmua">
-          <h3>TMUA mock Set K</h3>
-          <div class="chips"><a class="chip locked" href="how-it-works.html#access" data-badge="K1">Locked</a><a class="chip" href="how-it-works.html#difficulty">Paper 1 <b>8.0</b></a><a class="chip" href="how-it-works.html#difficulty">Paper 2 <b>8.1</b></a></div>
-          <p class="desc">Heavy computation next to short questions that turn on a single idea, with olympiad techniques hidden inside AS content.</p>
-          <div class="acts"><a class="btn" href="tmua.html#set-k" data-lock="K1">See Set K</a><span class="lockline" data-lockline="K1">Win a code in an <a href="https://www.instagram.com/kevinvariant/" target="_blank" rel="noopener">Instagram challenge</a>, or use coins in the <a href="shop.html">Shop</a>.</span></div>
-        </article>
-        <article class="pc" data-sec="tmua">
-          <h3>TMUA mock Set L</h3>
-          <div class="chips"><a class="chip locked" href="how-it-works.html#access" data-badge="L1">Locked</a><a class="chip" href="how-it-works.html#difficulty">Paper 1 <b>8.3</b></a><a class="chip" href="how-it-works.html#difficulty">Paper 2 <b>8.3</b></a></div>
-          <p class="desc">The newest and hardest set: both papers rate above every earlier paper.</p>
-          <div class="acts"><a class="btn" href="tmua.html#set-l" data-lock="L1">See Set L</a><span class="lockline" data-lockline="L1">Win a code in an <a href="https://www.instagram.com/kevinvariant/" target="_blank" rel="noopener">Instagram challenge</a>, or use coins in the <a href="shop.html">Shop</a>.</span></div>
-        </article>
-      </div>
-    </section>
-
-    <section aria-labelledby="brief-h" id="how">
-      <h2 id="brief-h">How it works, in brief</h2>
-      <div class="brief">
-        <div>
-          <h3>One difficulty scale</h3>
-          <p>Every question is rated from 4.5 to 9.0, and every paper on the same scale.</p>
-          <div class="scale" role="img" aria-label="Difficulty scale from 4.5 to 9.0: solid from 4.5 to 5.9, hard from 6.0 to 7.4, severe from 7.5 to 9.0">
-            <div class="bar"><i></i><i></i><i></i></div>
-            <div class="ticks"><span><b>Solid</b>4.5 to 5.9</span><span><b>Hard</b>6.0 to 7.4</span><span><b>Severe</b>7.5 to 9.0</span></div>
-          </div>
-          <p><a href="how-it-works.html#difficulty">How ratings are worked out</a> &middot; <a href="how-it-works.html#start">Where to start</a></p>
-        </div>
-        <div>
-          <h3>Almost everything is free</h3>
-          <ul class="tiers">
-            <li><span class="chip free">Free</span> TMUA Sets A to D, the ESAT mocks, every tool and every olympiad paper, with no account needed.</li>
-            <li><span class="chip locked">Locked</span> TMUA Sets E onwards. Unlock them with a code from an <a href="https://www.instagram.com/kevinvariant/" target="_blank" rel="noopener">Instagram challenge</a>, or with coins in the Shop (every locked set except J).</li>
-          </ul>
-          <p><a href="how-it-works.html#access">Free and locked papers in full</a></p>
-        </div>
       </div>
     </section>
 
@@ -219,7 +147,25 @@
     </div>
   </main>
 
-<script src="site.js?v=20261106"></script>
+<script src="site.js?v=20261106b"></script>
+<script src="path.js?v=20261106b"></script>
+<script src="pathways-data.js?v=20261106b"></script>
+<script src="calendar-data.js?v=20261106b"></script>
+<script>
+/* Home: the level ladder (with progress) and the next three calendar dates. */
+(function(){
+  var D=window.KV_PATH, C=window.KV_CAL, P=window.KV_PROGRESS; if(!D) return;
+  function esc(t){ return String(t).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+  var lv=P&&P.level();
+  document.getElementById('homeLadder').innerHTML=D.levels.map(function(L){ var r=L.units.filter(function(u){return u.status==='ready';}), dn=r.filter(function(u){ return P&&P.score(u.id,u.np,u.nl)>=1; }).length;
+    return '<a class="hl'+(lv===L.n?' mine':'')+'" href="pathways.html#level-'+L.n+'"><span class="pw-num">'+L.n+'</span><span><b>'+esc(L.name)+'</b><small>'+esc(L.uk.slice(0,2).join(', '))+' · '+esc(L.us.join(', '))+'</small></span><em>'+(r.length?(dn?dn+'/':'')+r.length+' units':'Coming soon')+'</em></a>'; }).join('');
+  if(!C) return; var MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  function d(s){ if(!s) return null; var p=s.split('-'); return new Date(+p[0],+p[1]-1,+p[2]); }
+  var t0=new Date(); t0.setHours(0,0,0,0);
+  var up=C.events.filter(function(e){ return e.date_start&&d(e.date_end||e.date_start)>=t0; }).map(function(e){ var dl=d(e.entry_deadline), st=d(e.date_start); var w=dl&&dl>=t0&&dl<st?{t:dl,k:'Entry deadline'}:st<t0?{t:t0,k:'On now'}:{t:st,k:'Competition'}; return {e:e,t:w.t,k:w.k,on:st<t0}; }).sort(function(a,b){ return a.t-b.t; }).slice(0,3);
+  document.getElementById('homeCal').innerHTML=up.map(function(x){ var n=Math.round((x.t-t0)/864e5); return '<a href="calendar.html#'+esc(x.e.id)+'"><small>'+x.k+(x.on?'':' · '+(n===0?'today':n===1?'tomorrow':'in '+n+' days'))+'</small><b>'+esc(x.e.name)+'</b><span>'+(x.on?'Until ':'')+(function(t){return t.getDate()+' '+MON[t.getMonth()]+' '+t.getFullYear();})(x.on?d(x.e.date_end||x.e.date_start):x.t)+'</span></a>'; }).join('');
+})();
+</script>
 <script>
 (function(){
   var svg=document.getElementById('tri'), NS='http://www.w3.org/2000/svg', U=100;
