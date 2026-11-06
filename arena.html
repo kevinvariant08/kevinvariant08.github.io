@@ -54,8 +54,8 @@
     .lane{display:grid;grid-template-columns:6.5rem 1fr 5.2rem;gap:.8rem;align-items:center;font-size:.92rem}
     .track{height:12px;border-radius:999px;background:var(--bg-deep);border:1px solid var(--line-soft);overflow:hidden;position:relative}
     .fill{height:100%;width:0;border-radius:999px}
-    .fill.you{background:linear-gradient(90deg,var(--saffron),var(--rose))}
-    .fill.bot{background:linear-gradient(90deg,#3A7DE8,var(--aqua))}
+    .fill.you{background:var(--rose)}
+    .fill.bot{background:var(--aqua)}
     .lane .t{font-variant-numeric:tabular-nums;text-align:right;font-weight:600}
     .lane .who{color:var(--ink-soft)}
     .lane .flag{color:var(--aqua);font-weight:600}
@@ -76,8 +76,8 @@
     .lockrow{display:flex;align-items:center;gap:1rem;margin-top:1rem;flex-wrap:wrap}
     .lockrow .tally{color:var(--ink-faint);font-size:.88rem}
     .result{margin-top:1rem;border-radius:var(--r-lg);padding:1.2rem 1.3rem;border:1px solid var(--line)}
-    .result.you{background:linear-gradient(120deg,color-mix(in srgb,var(--rose) 18%,transparent),color-mix(in srgb,var(--saffron) 10%,transparent));border-color:color-mix(in srgb,var(--rose) 50%,transparent)}
-    .result.bot{background:linear-gradient(120deg,color-mix(in srgb,var(--aqua) 16%,transparent),rgba(58,125,232,.10));border-color:color-mix(in srgb,var(--aqua) 50%,transparent)}
+    .result.you{background:var(--rose-wash);border-color:color-mix(in srgb,var(--rose) 50%,transparent)}
+    .result.bot{background:var(--aqua-wash);border-color:color-mix(in srgb,var(--aqua) 50%,transparent)}
     .result h3{margin:0 0 .3rem;font-size:1.35rem}
     .result p{margin:.2rem 0;color:var(--ink-soft)}
     .sol{font-family:var(--serif);line-height:1.75;color:var(--ink-soft);margin-top:.8rem;padding:1rem 1.1rem;border-left:3px solid var(--aqua);background:color-mix(in srgb,var(--bg-deep) 50%,transparent);border-radius:0 12px 12px 0}
@@ -115,7 +115,7 @@
     <div class="top">
       <h1>Arena</h1>
       <div class="stat"><b id="myrating">1200</b><span>your arena rating</span></div>
-      <div class="stat"><b id="record">0&ndash;0</b><span>matches won and lost</span></div>
+      <div class="stat"><b id="record">0-0</b><span>matches won and lost</span></div>
       <div class="stat"><b id="best">0</b><span>best win streak</span></div>
       <button class="btn ghost sound" id="sound" type="button" aria-pressed="true">Sound on</button>
     </div>
@@ -213,7 +213,7 @@
 
   /* ------------------------------------------------------------ profile */
   var prof=load('hu_arena',{rating:1200,w:0,l:0,d:0,streak:0,best:0,history:[]});
-  function paintProfile(){ $('myrating').textContent=Math.round(prof.rating); $('record').innerHTML=prof.w+'&ndash;'+prof.l; $('best').textContent=prof.best;
+  function paintProfile(){ $('myrating').textContent=Math.round(prof.rating); $('record').textContent=prof.w+'-'+prof.l; $('best').textContent=prof.best;
     var lb=load('hu_ladder_best',0); $('ladderbest').textContent=lb?'Your best run so far: '+lb+' points.':'No runs yet.'; }
 
   /* ------------------------------------------------------------ bots */

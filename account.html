@@ -13,7 +13,7 @@
   <style>
     .acc{max-width:52rem}
     .acc-head{display:flex;align-items:center;gap:1.1rem;margin:0 0 2rem}
-    .acc-head .acc-av{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:1.6rem;color:var(--on-accent);background:conic-gradient(var(--aqua),var(--rose),var(--saffron),var(--aqua));flex:none}
+    .acc-head .acc-av{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:1.6rem;color:var(--on-accent);background:var(--aqua);flex:none}
     .acc-head h1{margin:0;font-size:clamp(1.8rem,4vw,2.6rem)}
     .acc-head p{margin:.1rem 0 0;color:var(--ink-soft)}
     .blk{border-top:1px solid var(--line-soft);padding:1.6rem 0;display:grid;grid-template-columns:minmax(0,15rem) minmax(0,1fr);gap:1rem 2.4rem}
@@ -21,7 +21,8 @@
     .blk h2{margin:0;font-size:1.2rem}
     .blk .lead2{margin:.3rem 0 0;color:var(--ink-faint);font-size:.9rem}
     .fld{display:block;margin:0 0 .9rem;max-width:26rem}
-    .fld span{display:block;font-size:.86rem;font-weight:600;color:var(--ink-soft);margin-bottom:.3rem}
+    .fld>label{display:block;font-size:.86rem;font-weight:600;color:var(--ink-soft);margin-bottom:.3rem}
+    .fld .ferr{display:block;color:var(--rose);font-size:.85rem;margin-top:.35rem}.fld .ferr:empty{display:none}
     .fld input{width:100%;font-family:var(--display);font-size:1rem;color:var(--ink);background:var(--bg-deep);border:1.5px solid var(--line);border-radius:12px;padding:.7rem .85rem;min-height:46px}
     .fld input:focus{outline:none;border-color:var(--aqua);box-shadow:0 0 0 3px var(--aqua-wash)}
     .rules{list-style:none;padding:0;margin:.1rem 0 1rem;display:grid;grid-template-columns:1fr 1fr;gap:.3rem .8rem;font-size:.85rem;max-width:30rem}
@@ -53,9 +54,9 @@
     </section>
 
     <section class="blk">
-      <div><h2>Profile</h2><p class="lead2">Your name is only ever shown to you.</p></div>
+      <div><h2>Profile</h2><p class="lead2">Shown with your scores on the Labs high-score tables, and on the leaderboard if you join it (unless you set a different leaderboard name on the rewards page).</p></div>
       <form id="profile" novalidate>
-        <label class="fld"><span>Name</span><input name="name" maxlength="40" autocomplete="nickname"></label>
+        <div class="fld"><label for="ac-name">Name</label><input id="ac-name" name="name" maxlength="40" autocomplete="nickname"></div>
         <button class="btn" type="submit">Save name</button>
         <div class="note" id="pmsg" hidden></div>
       </form>
@@ -64,11 +65,12 @@
     <section class="blk">
       <div><h2>Password</h2><p class="lead2">You'll need your current password to set a new one.</p></div>
       <form id="pwform" novalidate>
-        <label class="fld"><span>Current password</span><input type="password" name="current" autocomplete="current-password"></label>
-        <label class="fld"><span>New password</span><input type="password" name="password" autocomplete="new-password"></label>
-        <ul class="rules" id="rules"></ul>
-        <label class="fld"><span>Confirm new password</span><input type="password" name="confirm" autocomplete="new-password"></label>
-        <button class="btn" type="submit" disabled>Change password</button>
+        <input type="email" name="username" autocomplete="username" id="ac-user" hidden>
+        <div class="fld"><label for="ac-current">Current password</label><input id="ac-current" type="password" name="current" autocomplete="current-password" aria-describedby="ac-current-err"><span class="ferr" id="ac-current-err"></span></div>
+        <div class="fld"><label for="ac-new">New password</label><input id="ac-new" type="password" name="password" autocomplete="new-password" aria-describedby="ac-new-err rules"><span class="ferr" id="ac-new-err"></span></div>
+        <ul class="rules" id="rules" aria-live="polite"></ul>
+        <div class="fld"><label for="ac-confirm">Confirm new password</label><input id="ac-confirm" type="password" name="confirm" autocomplete="new-password" aria-describedby="ac-confirm-err"><span class="ferr" id="ac-confirm-err"></span></div>
+        <button class="btn" type="submit">Change password</button>
         <div class="note" id="pwmsg" hidden></div>
       </form>
     </section>
@@ -86,7 +88,7 @@
       <div>
         <button class="btn ghost danger" id="wipe" type="button">Delete my synced progress</button>
         <div class="note" id="wmsg" hidden></div>
-        <p style="color:var(--ink-faint);font-size:.88rem;margin:1rem 0 0;max-width:34rem">To close your account entirely, email the address on the home page from the address you signed up with and it will be deleted along with everything in it.</p>
+        <p style="color:var(--ink-faint);font-size:.88rem;margin:1rem 0 0;max-width:34rem">To close your account entirely, message <a href="https://www.instagram.com/kevinvariant/" target="_blank" rel="noopener">@kevinvariant</a> on Instagram with the email address you signed up with, and the account will be deleted along with everything in it. The <a href="privacy.html">privacy policy</a> says what is stored.</p>
       </div>
     </section>
   </main>
@@ -102,7 +104,7 @@
     $('av').textContent=(name||u.email||'?').charAt(0).toUpperCase();
     $('hello').textContent=name?'Hello, '+name:'Your account';
     $('email').textContent=u.email+(u.email_confirmed_at?'':' (not yet confirmed)');
-    $('profile').name.value=name;
+    $('ac-name').value=name; $('ac-user').value=u.email||'';
     var log=load('hu_drill_log',[]), ar=load('hu_arena',null), att=load('hu_drill_attempts',[]), iv=load('hu_iv_hist',[]);
     var last=window.HU_AUTH.lastSync();
     $('stats').innerHTML='<dt>Questions answered</dt><dd>'+log.length+'</dd><dt>Timed papers</dt><dd>'+att.length+'</dd><dt>Arena rating</dt><dd>'+(ar?Math.round(ar.rating)+' ('+ar.w+' won, '+ar.l+' lost)':'no matches yet')+'</dd><dt>Ladder best</dt><dd>'+load('hu_ladder_best',0)+'</dd><dt>Mock interviews</dt><dd>'+iv.length+'</dd><dt>Last synced</dt><dd>'+(last?last.toLocaleTimeString():'syncing')+'</dd>';
@@ -116,19 +118,28 @@
       H.onChange(function(u){ if(u) paint(u); else location.replace('auth.html'); });
     });
     $('sync').addEventListener('click',async function(){ this.disabled=true; $('syncmsg').textContent='Syncing'; var r=await H.syncNow(); this.disabled=false; $('syncmsg').textContent=r.ok?'Up to date.':(r.error||'Sync failed. Try again.'); if(H.user()) paint(H.user()); });
-    $('profile').addEventListener('submit',async function(e){ e.preventDefault(); var n=this.name.value.trim(); var r=await H.client.auth.updateUser({data:{display_name:n}}); if(r.error) note($('pmsg'),H.explain(r.error)); else { note($('pmsg'),'Saved.','ok'); H.updated(r.data.user); } });
+    $('profile').addEventListener('submit',async function(e){ e.preventDefault(); var n=$('ac-name').value.trim(); var r=await H.client.auth.updateUser({data:{display_name:n}}); if(r.error) note($('pmsg'),H.explain(r.error)); else { note($('pmsg'),'Saved.','ok'); H.updated(r.data.user); } });
     var f=$('pwform');
-    function check(){ var u=H.user(), rules=H.checkPassword(f.password.value,u&&u.email);
+    function ferr(input,text){ var el=$(input.id+'-err'); el.textContent=text||''; if(text) input.setAttribute('aria-invalid','true'); else input.removeAttribute('aria-invalid'); }
+    function check(submitting){ var u=H.user(), rules=H.checkPassword(f.password.value,u&&u.email);
       $('rules').innerHTML=rules.map(function(x){return '<li class="'+(x.ok?'ok':'')+'">'+x.label+'</li>';}).join('');
-      var good=f.current.value.length>0&&rules.every(function(x){return x.ok;})&&f.confirm.value===f.password.value&&f.confirm.value.length>0;
-      f.querySelector('[type=submit]').disabled=!good; return good; }
-    f.addEventListener('input',check); check();
-    f.addEventListener('submit',async function(e){ e.preventDefault(); if(!check()) return; var u=H.user(), btn=f.querySelector('[type=submit]'); btn.disabled=true; note($('pwmsg'),'');
+      var cur=f.current.value.length>0, pw=rules.every(function(x){return x.ok;}), cf=f.confirm.value.length>0&&f.confirm.value===f.password.value;
+      if(cur) ferr(f.current,''); if(pw) ferr(f.password,''); if(cf) ferr(f.confirm,'');
+      if(submitting){
+        if(!cur) ferr(f.current,'Enter your current password.');
+        if(!pw) ferr(f.password,f.password.value?'This password doesn\u2019t meet every requirement listed below.':'Choose a new password.');
+        if(!cf) ferr(f.confirm,f.confirm.value?'This doesn\u2019t match the new password.':'Type the new password again.');
+        var bad=!cur?f.current:!pw?f.password:!cf?f.confirm:null; if(bad) bad.focus();
+      }
+      return cur&&pw&&cf; }
+    f.addEventListener('input',function(){ check(false); }); check(false);
+    f.addEventListener('submit',async function(e){ e.preventDefault(); if(!check(true)) return; var u=H.user(), btn=f.querySelector('[type=submit]'); btn.disabled=true; note($('pwmsg'),'');
       var re=await H.client.auth.signInWithPassword({email:u.email,password:f.current.value});
-      if(re.error){ note($('pwmsg'),/don.t match/i.test(H.explain(re.error))?'Your current password is incorrect.':H.explain(re.error)); btn.disabled=false; return; }
+      if(re.error){ if(/don.t match/i.test(H.explain(re.error))){ ferr(f.current,'Your current password is incorrect.'); f.current.focus(); } else note($('pwmsg'),H.explain(re.error)); btn.disabled=false; return; }
       var r=await H.client.auth.updateUser({password:f.password.value});
-      if(r.error) note($('pwmsg'),H.explain(r.error)); else { note($('pwmsg'),'Password changed.','ok'); f.reset(); }
-      check(); });
+      btn.disabled=false;
+      if(r.error) note($('pwmsg'),H.explain(r.error)); else { note($('pwmsg'),'Password changed.','ok'); f.reset(); $('ac-user').value=u.email||''; }
+      check(false); });
     $('out').addEventListener('click',async function(){ this.disabled=true; await H.signOut(); location.href='auth.html?signedout=1'; });
     $('outall').addEventListener('click',async function(){ if(!confirm('Sign out on every device, including this one?')) return; this.disabled=true; await H.signOut('global'); location.href='auth.html?signedout=1'; });
     $('wipe').addEventListener('click',async function(){ if(!confirm('Delete the progress stored in your account? This cannot be undone. Progress in this browser stays, and will be uploaded again next time it syncs unless you also clear it.')) return; var r=await H.deleteCloudData(); note($('wmsg'),r.ok?'Your synced progress has been deleted.':(r.error||'Could not delete. Try again.'),r.ok?'ok':'err'); });

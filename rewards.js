@@ -185,7 +185,7 @@
     B('week','Week of Wonders',1,'Practise on 7 days running.',function(s){return s.best>=7;},function(s){return [Math.min(7,s.best),7];}),
     mk('devotee','Daily Devotee',1,'Solve 7 daily challenges.','daily',7),
     mk('rival','Friendly Rival',1,'Win a duel against a friend.','duelWins',1),
-    mk('second','Second Chance',1,'Master 10 questions from your mistake review queue.','mastered',10),
+    mk('second','Second Chance',1,'Clear 10 questions from your mistake review queue (right at the 7-day review).','mastered',10),
     mk('marathon','Marathon',1,'Answer 60 questions in a single day.','maxDay',60),
     B('viva','Viva Survivor',1,'Finish a mock interview.',function(s){return s.IV.length>0;}),
     /* gold: hard */
@@ -203,7 +203,7 @@
     mk('quicksilver','Quicksilver',2,'Get 10 questions rated 8 or above right, each in under 90 seconds.','fastHard',10),
     mk('champion','Club Champion',2,'Win 5 duels against friends.','duelWins',5),
     mk('almanac','Almanac',2,'Solve 30 daily challenges.','daily',30),
-    mk('cleanslate','Clean Slate',2,'Master 50 questions from your mistake review queue.','mastered',50),
+    mk('cleanslate','Clean Slate',2,'Clear 50 questions from your mistake review queue (right at the 7-day review).','mastered',50),
     /* invariant: legendary */
     B('flawless','Flawless',3,'Score 20 out of 20 on a Set G or Set H paper at standard time.',function(s){return s.A.some(function(a){return a.score>=20&&/^[GH]/.test(a.paper||'')&&(a.timing||4500)===4500;});}),
     B('centurion','Centurion',3,'Practise on 100 days running.',function(s){return s.best>=100;},function(s){return [Math.min(100,s.best),100];}),
@@ -223,7 +223,7 @@
     if(t===1){ var h=[]; for(var i=0;i<6;i++){ var a=Math.PI/3*i-Math.PI/2; h.push((32+23*Math.cos(a)).toFixed(2)+','+(28+23*Math.sin(a)).toFixed(2)); } shape='<polygon points="'+h.join(' ')+'"'; }
     if(!got) return '<svg viewBox="0 0 64 64" width="'+size+'" height="'+size+'" aria-hidden="true"><path d="M24 44 L20 60 L27 56 L32 61 L32 46Z M40 44 L44 60 L37 56 L32 61 L32 46Z" fill="none" stroke="var(--line,#343A82)" stroke-width="1.2"/>'+shape+' fill="none" stroke="var(--line,#343A82)" stroke-width="1.6" stroke-dasharray="3 3"/><path d="M22 37 L42 37 L34 19 Z" fill="none" stroke="var(--line,#343A82)" stroke-width="2" stroke-linejoin="round"/></svg>';
     var grad=t===3
-      ?'<linearGradient id="'+id+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4FD8E8"/><stop offset=".5" stop-color="#FF6B8B"/><stop offset="1" stop-color="#FFC53D"/><animateTransform attributeName="gradientTransform" type="rotate" from="0 .5 .5" to="360 .5 .5" dur="7s" repeatCount="indefinite"/></linearGradient><linearGradient id="rwIri" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#4FD8E8"/><stop offset=".5" stop-color="#FF6B8B"/><stop offset="1" stop-color="#FFC53D"/></linearGradient>'
+      ?'<linearGradient id="'+id+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4FD8E8"/><stop offset=".5" stop-color="#FF6B8B"/><stop offset="1" stop-color="#FFC53D"/>'+(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches?'':'<animateTransform attributeName="gradientTransform" type="rotate" from="0 .5 .5" to="360 .5 .5" dur="7s" repeatCount="indefinite"/>')+'</linearGradient><linearGradient id="rwIri" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#4FD8E8"/><stop offset=".5" stop-color="#FF6B8B"/><stop offset="1" stop-color="#FFC53D"/></linearGradient>'
       :'<linearGradient id="'+id+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="'+m[0]+'"/><stop offset=".55" stop-color="'+m[1]+'"/><stop offset="1" stop-color="'+m[2]+'"/></linearGradient>';
     var ink=t===3?'#FFFFFF':'#1A1438';
     return '<svg viewBox="0 0 64 64" width="'+size+'" height="'+size+'" aria-hidden="true"><defs>'+grad+'<radialGradient id="'+id+'s" cx=".35" cy=".25" r=".6"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient></defs>'
@@ -309,30 +309,26 @@
    +'.rw-modal button{font:700 1rem var(--display,system-ui);background:var(--rose,#FF6B8B);color:#15173B;border:0;border-radius:999px;padding:.65rem 1.4rem;cursor:pointer}'
    +'.rw-conf{position:fixed;inset:0;pointer-events:none;z-index:10001}'
    +'html[data-theme]:not([data-theme="indigo"]){--aqua-wash:color-mix(in srgb,var(--aqua) 13%,transparent);--rose-wash:color-mix(in srgb,var(--rose) 14%,transparent);--saffron-wash:color-mix(in srgb,var(--saffron) 14%,transparent);--mint-wash:color-mix(in srgb,var(--mint) 14%,transparent)}'
-   +'html[data-theme]:not([data-theme="indigo"]) body{background-image:radial-gradient(1100px 520px at 78% -8%,color-mix(in srgb,var(--aqua) 13%,transparent),transparent 60%),radial-gradient(900px 480px at -10% 8%,color-mix(in srgb,var(--rose) 10%,transparent),transparent 60%),linear-gradient(rgba(var(--grid),.055) 1px,transparent 1px),linear-gradient(90deg,rgba(var(--grid),.055) 1px,transparent 1px)}'
+   +'html[data-theme]:not([data-theme="indigo"]) body{background-image:linear-gradient(rgba(var(--grid),.055) 1px,transparent 1px),linear-gradient(90deg,rgba(var(--grid),.055) 1px,transparent 1px)}'
    +'html[data-theme]:not([data-theme="indigo"]) a:not(.btn):hover{color:color-mix(in srgb,var(--aqua) 72%,#fff)}'
    +'html[data-theme]:not([data-theme="indigo"]) .btn:hover{background:color-mix(in srgb,var(--rose) 78%,#fff);border-color:color-mix(in srgb,var(--rose) 78%,#fff)}'
    +'html[data-theme]:not([data-theme="indigo"]) .btn.secondary{border-color:color-mix(in srgb,var(--aqua) 55%,transparent)}html[data-theme]:not([data-theme="indigo"]) .btn.secondary:hover{background:var(--aqua-wash);color:var(--aqua)}'
-   +'html[data-theme="royal"] .panel,html[data-theme="royal"] .card{box-shadow:0 0 0 1px rgba(195,139,255,.07),0 18px 50px -28px rgba(195,139,255,.55)}'
-   +'html[data-theme="invariant"] h1,html[data-theme="invariant"] .title,html[data-theme="invariant"] .panel h2{background:linear-gradient(100deg,#FFF3C4 0%,#FFD166 30%,#FFA62B 55%,#FFE9A0 80%,#FFD166 100%);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:rwGold 9s ease-in-out infinite}'
-   +'html[data-theme="invariant"] .btn:not(.secondary):not(:disabled){background:linear-gradient(110deg,#E8921C 0%,#FFD166 40%,#FFF6CF 50%,#FFD166 60%,#E8921C 100%);background-size:260% 100%;border-color:#FFB547;color:#1A1204;animation:rwSheen 5s linear infinite}'
-   +'html[data-theme="invariant"] .panel,html[data-theme="invariant"] .card{box-shadow:inset 0 1px 0 rgba(255,225,150,.09),0 20px 60px -34px rgba(255,166,43,.45)}'
-   +'html[data-theme="invariant"] .site-nav .links a.rw-pill:not(.rv){border-color:#C98A1E;box-shadow:0 0 14px -2px rgba(255,176,60,.55)}'
-   +'html[data-theme="invariant"] #ringArc{filter:drop-shadow(0 0 7px rgba(255,190,80,.65))}'
-   +'@keyframes rwSheen{from{background-position:120% 0}to{background-position:-160% 0}}@keyframes rwGold{0%,100%{background-position:0% 0}50%{background-position:100% 0}}'
-   +'@media (prefers-reduced-motion:reduce){html[data-theme="invariant"] h1,html[data-theme="invariant"] .title,html[data-theme="invariant"] .panel h2,html[data-theme="invariant"] .btn{animation:none}}';
+   +'html[data-theme="invariant"] h1,html[data-theme="invariant"] .title,html[data-theme="invariant"] .panel h2{color:#FFD166}'
+   +'html[data-theme="invariant"] .btn:not(.secondary):not(:disabled){background:#FFD166;border-color:#FFD166;color:#1A1204}'
+   +'html[data-theme="invariant"] .site-nav .links a.rw-pill:not(.rv){border-color:#C98A1E}'
+   +'@media (prefers-reduced-motion:reduce){.rw-toast,.rw-modal{animation:none}}';
   function inject(){ if(document.getElementById('rw-css')) return; var st=document.createElement('style'); st.id='rw-css'; st.textContent=css; document.head.appendChild(st);
     var box=document.createElement('div'); box.className='rw-toasts'; box.id='rw-toasts'; box.setAttribute('aria-live','polite'); document.body.appendChild(box); }
   function toast(html,cls,ms){ var box=document.getElementById('rw-toasts'); if(!box) return; var el=document.createElement('div'); el.className='rw-toast '+(cls||''); el.innerHTML=html; box.appendChild(el);
     setTimeout(function(){ el.style.transition='opacity .4s'; el.style.opacity='0'; setTimeout(function(){ el.remove(); },450); },ms||3200); }
-  function confetti(){ var c=document.createElement('canvas'); c.className='rw-conf'; c.width=innerWidth; c.height=innerHeight; document.body.appendChild(c);
+  function confetti(){ if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches) return; var c=document.createElement('canvas'); c.className='rw-conf'; c.width=innerWidth; c.height=innerHeight; document.body.appendChild(c);
     var g=c.getContext('2d'), cols=['#4FD8E8','#FF6B8B','#FFC53D','#5BE3A6','#F3F1FF'], P=[];
     for(var i=0;i<160;i++) P.push({x:innerWidth/2,y:innerHeight/2.4,vx:(Math.random()-.5)*14,vy:-Math.random()*13-3,s:4+Math.random()*5,c:cols[i%5],r:Math.random()*6});
     var f=0; (function step(){ g.clearRect(0,0,c.width,c.height); P.forEach(function(p){ p.vy+=.35; p.x+=p.vx; p.y+=p.vy; p.r+=.2; g.save(); g.translate(p.x,p.y); g.rotate(p.r); g.fillStyle=p.c; g.beginPath(); g.moveTo(0,-p.s); g.lineTo(p.s*.9,p.s*.6); g.lineTo(-p.s*.9,p.s*.6); g.closePath(); g.fill(); g.restore(); });
       if(++f<150) requestAnimationFrame(step); else c.remove(); })(); }
   function levelUp(s){ var unlocked=THEMES.filter(function(t){return t.lvl===s.level;})[0];
-    var m=document.createElement('div'); m.className='rw-modal'; m.innerHTML='<div class="card" role="dialog" aria-label="Level up">'+medal({tier:s.level>=20?3:s.level>=10?2:s.level>=5?1:0},true,84)+'<h2>Level '+s.level+'</h2><p>You are now a <strong>'+esc(s.title)+'</strong>.'+(unlocked?' The <strong>'+unlocked.name+'</strong> theme is unlocked.':'')+'</p><button type="button">Keep going</button></div>';
-    document.body.appendChild(m); confetti(); m.querySelector('button').focus(); m.addEventListener('click',function(e){ if(e.target===m||e.target.tagName==='BUTTON') m.remove(); }); }
+    var m=document.createElement('div'); m.className='rw-modal'; m.innerHTML='<div class="card" role="dialog" aria-label="Level up">'+medal({tier:s.level>=20?3:s.level>=10?2:s.level>=5?1:0},true,84)+'<h2>Level '+s.level+'</h2><p>You are now a <strong>'+esc(s.title)+'</strong>.'+(unlocked?' The <strong>'+unlocked.name+'</strong> theme is unlocked.':'')+'</p><button type="button">Close</button></div>';
+    document.body.appendChild(m); confetti(); m.querySelector('button').focus(); m.addEventListener('click',function(e){ if(e.target===m||e.target.tagName==='BUTTON') m.remove(); }); m.addEventListener('keydown',function(e){ if(e.key==='Escape') m.remove(); }); }
   var FLAME='<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1c1 3 4 4.5 4 8a4 4 0 0 1-8 0c0-2 1-3 2-4 0 1.5.5 2.5 1.5 3C7.5 6 7 3.5 8 1z" fill="var(--rose,#FF6B8B)"/></svg>';
   function paintPill(s){ var li=document.querySelector('.site-nav .rw'); if(!li){ var ul=document.querySelector('.site-nav .links'); if(!ul) return; li=document.createElement('li'); li.className='rw'; var acct=ul.querySelector('.acct'); ul.insertBefore(li,acct||null); }
     var due=reviewDue().length;

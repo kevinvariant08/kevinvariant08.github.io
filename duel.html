@@ -57,7 +57,7 @@
     <div class="panel" id="incoming" hidden></div>
     <div class="panel" id="create">
       <label class="field"><span>Your name, as your friend will see it</span><input class="txt" id="name" maxlength="20" autocomplete="nickname"></label>
-      <div class="field"><span>Difficulty</span><div class="seg" id="diff"></div></div>
+      <div class="field"><span id="difflbl">Difficulty</span><div class="seg" id="diff" role="group" aria-labelledby="difflbl"></div></div>
       <div class="act"><button class="btn" type="button" id="go">Play and create a challenge</button></div>
     </div>
     <div class="panel" id="histp" hidden><h2 style="font:800 1.15rem var(--display);margin:0">Recent duels</h2><ul class="hist" id="hist"></ul></div>
@@ -106,7 +106,7 @@
   paintDiff();
   function paintHist(){ var H=load('hu_duels',[]); $('histp').hidden=!H.length;
     $('hist').innerHTML=H.slice(0,8).map(function(h){ var cls=h.res==='win'?'w':h.res==='loss'?'l':'d', word=h.res==='win'?'Won':h.res==='loss'?'Lost':'Drew';
-      return '<li><span>'+(h.opp?'vs '+esc(h.opp):'Challenge created')+' <span style="color:var(--ink-faint)">'+esc(h.diffName||'')+'</span></span><span class="'+(h.opp?cls:'')+'">'+(h.opp?word+' '+h.you+'&ndash;'+h.them:h.you+' / 5')+'</span></li>'; }).join(''); }
+      return '<li><span>'+(h.opp?'vs '+esc(h.opp):'Challenge created')+' <span style="color:var(--ink-faint)">'+esc(h.diffName||'')+'</span></span><span class="'+(h.opp?cls:'')+'">'+(h.opp?word+' '+h.you+'-'+h.them:h.you+' / 5')+'</span></li>'; }).join(''); }
   paintHist();
   function name(){ var n=$('name').value.trim().slice(0,20)||'A friend'; save('hu_duel_name',n); return n; }
 

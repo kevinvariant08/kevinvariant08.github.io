@@ -16,20 +16,20 @@
     .panel h2{font:800 1.35rem var(--display);margin:0 0 .3rem}
     .sub{color:var(--ink-soft);margin:0 0 1rem;font-size:.95rem;max-width:66ch}
     .purse{display:grid;grid-template-columns:auto 1fr auto;gap:1.6rem;align-items:center}
-    .bigcoin{width:92px;height:92px;filter:drop-shadow(0 10px 24px color-mix(in srgb,var(--saffron) 35%,transparent))}
+    .bigcoin{width:92px;height:92px}
     .bal{font:800 clamp(2.2rem,6vw,3.2rem)/1 var(--display);margin:0;font-variant-numeric:tabular-nums}
     .bal small{font:600 1rem var(--display);color:var(--ink-faint);margin-left:.4rem}
     .todayline{color:var(--ink-soft);margin:.5rem 0 .45rem;font-size:.92rem}
-    .bar{height:9px;border-radius:99px;background:var(--bg-deep);overflow:hidden;max-width:28rem}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--saffron),var(--rose));border-radius:99px;transition:width .6s}
+    .bar{height:9px;border-radius:99px;background:var(--bg-deep);overflow:hidden;max-width:28rem}.bar i{display:block;height:100%;background:var(--saffron);border-radius:99px;transition:width .6s}
     .note{margin-top:.9rem;padding:.75rem 1rem;border:1px dashed var(--line);border-radius:10px;color:var(--ink-soft)}
     .cats{display:flex;flex-wrap:wrap;gap:.45rem;margin:1.6rem 0 0}
     .cats a{font:600 .9rem var(--display);padding:.35rem .85rem;border:1px solid var(--line);border-radius:99px;color:var(--ink-soft);text-decoration:none}
     .cats a:hover{border-color:var(--saffron);color:var(--ink)}
     .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(240px,100%),1fr));gap:.9rem;margin-top:.4rem}
-    .item{position:relative;display:flex;flex-direction:column;background:var(--bg-deep);border:1px solid var(--line-soft);border-radius:var(--r-md);padding:1rem 1rem .9rem;transition:border-color .15s,transform .15s}
-    .item:hover{border-color:var(--line);transform:translateY(-2px)}
+    .item{position:relative;display:flex;flex-direction:column;background:var(--bg-deep);border:1px solid var(--line-soft);border-radius:var(--r-md);padding:1rem 1rem .9rem;transition:border-color .15s}
+    .item:hover{border-color:var(--line)}
     .item.own{border-color:color-mix(in srgb,var(--mint) 45%,transparent)}
-    .item.star{background:radial-gradient(130% 90% at 50% 0%,color-mix(in srgb,var(--saffron) 16%,transparent),transparent 60%),var(--bg-deep);border-color:color-mix(in srgb,var(--saffron) 55%,transparent)}
+    .item.star{border-color:color-mix(in srgb,var(--saffron) 55%,transparent)}
     .item h3{font:800 1.05rem var(--display);margin:.55rem 0 .25rem}
     .item p{font-size:.86rem;color:var(--ink-soft);margin:0 0 .8rem;flex:1}
     .item .art{height:64px;display:flex;align-items:center}
@@ -45,7 +45,7 @@
     .msg.ok{color:var(--mint)}
     .chip{display:inline-block;padding:.35rem .8rem;border-radius:99px;border:1px solid var(--saffron);color:var(--saffron);font:700 .95rem var(--display)}
     .sw{display:flex;gap:4px;height:64px;align-items:center}.sw i{width:26px;height:44px;border-radius:7px;border:1px solid rgba(255,255,255,.12)}
-    .vault{background:radial-gradient(120% 140% at 0% 0%,color-mix(in srgb,var(--saffron) 16%,transparent),transparent 55%),radial-gradient(120% 140% at 100% 100%,color-mix(in srgb,var(--rose) 12%,transparent),transparent 55%),var(--surface);border-color:color-mix(in srgb,var(--saffron) 55%,transparent)}
+    .vault{border-color:color-mix(in srgb,var(--saffron) 55%,transparent)}
     .grid.big{grid-template-columns:repeat(auto-fill,minmax(min(320px,100%),1fr))}
     .grid.big .item{padding:1.3rem 1.3rem 1.1rem}.grid.big .item h3{font-size:1.25rem}.grid.big .art,.grid.big .art svg{height:96px}
     .goal{margin:0 0 .9rem}.goal .bar{max-width:none;height:8px;background:var(--surface-2)}.goal small{display:block;margin-top:.35rem;color:var(--ink-faint);font-size:.8rem}
@@ -76,13 +76,13 @@
 
   <section class="panel vault" id="vault" aria-labelledby="v-h">
     <h2 id="v-h">The vault: Beyond the Incenter</h2>
-    <p class="sub">The highest awards on this site. My olympiad geometry book, earned the slow way: Chapter 1 first, then the whole book. No code, challenge or shortcut opens these, only coins.</p>
+    <p class="sub">My olympiad geometry book, bought with coins: Chapter 1 first, then the whole book. No code or challenge opens these, only coins.</p>
     <div class="grid big" data-kind="content"></div>
   </section>
 
   <section class="panel" id="titles" aria-labelledby="t-h">
     <h2 id="t-h">Titles</h2>
-    <p class="sub">Wear one next to your name on the leaderboard and in your rewards. Each is named after an idea worth owning.</p>
+    <p class="sub">Wear one next to your name on the leaderboard and in your rewards. Each is named after an idea from olympiad maths.</p>
     <div class="grid" data-kind="title"></div>
   </section>
 
@@ -99,7 +99,7 @@
 
   <section class="panel" id="labs" aria-labelledby="l-h">
     <h2 id="l-h">Labs</h2>
-    <p class="sub">Five games built on real ideas: primes, planar graphs, reflections, graph transformations and orbits. Each has a global high-score board.</p>
+    <p class="sub">Five games, each built on one idea: primes, planar graphs, reflections, graph transformations and orbits. Each has a global high-score board.</p>
     <div class="grid" data-kind="game"></div>
   </section>
 
@@ -127,7 +127,7 @@
     'title-contra':{d:'Proves it the other way round, and is right to.',p:1800},
     'title-invariant':{d:'Looks first for what never changes.',p:2600},
     'title-incenter':{d:'Ready for Beyond the Incenter.',p:4000},
-    'title-olympian':{d:'The rarest title on the site. Months of real work.',p:8000,star:1},
+    'title-olympian':{d:'The most expensive title in the shop.',p:8000,star:1},
     'theme-blackboard':{d:'Chalk on green slate.',p:1200,theme:'blackboard'},
     'theme-nebula':{d:'Violet dark with cyan and magenta.',p:1600,theme:'nebula'},
     'theme-parchment':{d:'Warm ink on old paper, after dark.',p:2000,theme:'parchment'},
@@ -198,10 +198,10 @@
       var own=C.owns(id), k=it.kind, R=H.snapshot().R;
       if(k==='freeze'){ var held=H.snapshot().freezes; return '<span class="price">'+C.icon+it.price+'</span><button class="btn secondary" data-buy="'+id+'">Buy one</button>'+'<span style="font-size:.8rem;color:var(--ink-faint)">'+held+' held</span>'; }
       if(own){
-        if(k==='title'){ var on=R.wear===id; return '<span class="price" style="color:var(--mint)">Owned</span><button class="btn '+(on?'':'secondary')+'" data-wear="'+(on?'':id)+'">'+(on?'Wearing':'Wear')+'</button>'; }
-        if(k==='theme'){ var tid=CAT[id].theme, on2=R.theme===tid; return '<span class="price" style="color:var(--mint)">Owned</span><button class="btn '+(on2?'':'secondary')+'" data-theme="'+tid+'">'+(on2?'In use':'Use')+'</button>'; }
-        if(k==='content') return '<span class="price" style="color:var(--mint)">Owned</span><span>'+(id==='bti-book'?'<button class="btn secondary" data-wear="'+(R.wear==='bti-book'?'':'bti-book')+'">'+(R.wear==='bti-book'?'Wearing title':'Wear title')+'</button> ':'')+'<button class="btn" data-read="'+esc((it.scope||CAT[id].scope)+'/'+CAT[id].file)+'">Read</button></span>';
-        return '<span class="price" style="color:var(--mint)">Owned</span><a class="btn" href="'+CAT[id].href+'">'+(k==='game'?'Play':'Sit it')+'</a>';
+        if(k==='title'){ var on=R.wear===id; return '<span class="price" style="color:var(--mint)">Owned</span><button class="btn '+(on?'':'secondary')+'" data-wear="'+(on?'':id)+'">'+(on?'Wearing':'Wear this title')+'</button>'; }
+        if(k==='theme'){ var tid=CAT[id].theme, on2=R.theme===tid; return '<span class="price" style="color:var(--mint)">Owned</span><button class="btn '+(on2?'':'secondary')+'" data-theme="'+tid+'">'+(on2?'In use':'Use this theme')+'</button>'; }
+        if(k==='content') return '<span class="price" style="color:var(--mint)">Owned</span><span>'+(id==='bti-book'?'<button class="btn secondary" data-wear="'+(R.wear==='bti-book'?'':'bti-book')+'">'+(R.wear==='bti-book'?'Wearing title':'Wear title')+'</button> ':'')+'<button class="btn" data-read="'+esc((it.scope||CAT[id].scope)+'/'+CAT[id].file)+'">Open the PDF</button></span>';
+        return '<span class="price" style="color:var(--mint)">Owned</span><a class="btn" href="'+CAT[id].href+'">'+(k==='game'?'Play '+esc(NAMES[id]):'Open in Drill')+'</a>';
       }
       var need=CAT[id].requires||it.requires; if(need&&!C.owns(need)) return '<span class="price short">'+C.icon+it.price.toLocaleString()+'</span><button class="btn secondary" disabled>Unlock '+esc(NAMES[need])+' first</button>';
       var short=w&&!w.admin&&w.balance<it.price;
@@ -224,7 +224,7 @@
     function wire(){
       document.querySelectorAll('[data-buy]').forEach(function(b){ b.addEventListener('click',function(){
         var id=b.dataset.buy, it=ITEMS[id], m=document.querySelector('[data-msg="'+id+'"]'), w=C.wallet();
-        if(w&&!w.admin&&w.balance<it.price){ m.className='msg'; m.textContent='Keep going: coins come from the activities listed below.'; return; }
+        if(w&&!w.admin&&w.balance<it.price){ m.className='msg'; m.textContent='Not enough coins yet. How to earn them is listed at the bottom of this page.'; return; }
         if(armed!==id){ armed=id; document.querySelectorAll('.btn.confirm').forEach(function(x){ x.classList.remove('confirm'); }); b.classList.add('confirm'); b.textContent=w&&w.admin?'Take it free?':'Spend '+it.price.toLocaleString()+'?'; return; }
         armed=null; b.disabled=true; b.textContent='Buying…';
         C.buy(id).then(function(r){ if(r.ok){ if(it.kind==='title'&&!H.snapshot().R.wear) C.setWear(id); paintAll(); var m2=document.querySelector('[data-msg="'+id+'"]'); if(m2){ m2.className='msg ok'; m2.textContent=it.kind==='freeze'?'Freeze added.':'It’s yours.'; } }

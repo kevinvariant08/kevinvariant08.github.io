@@ -74,7 +74,7 @@
 
   <main class="container sb">
     <h1>Conjecture sandbox</h1>
-    <p class="lead">Build a configuration, drag it about, and let the page tell you what stays true. Every relation it spots is re-tested against random perturbations of the free points, so it can tell a theorem from a coincidence. Export the finished figure as tkz-euclide code that reconstructs every derived point rather than hard-coding it.</p>
+    <p class="lead">Build a configuration, drag it about, and let the page tell you what stays true. Every relation it spots is re-tested against random perturbations of the free points, so it can separate consequences of the construction from coincidences of placement. Export the finished figure as tkz-euclide code that reconstructs every derived point rather than hard-coding it.</p>
 
     <div class="layout">
       <div class="tools" id="tools"></div>
@@ -89,9 +89,9 @@
         <div class="figinfo" id="figinfo" hidden><div class="fi-head"><span class="fi-book">From <em>Beyond the Incenter</em></span><span class="fi-ch" id="fiCh"></span></div><h3 id="fiTitle"></h3><p id="fiText"></p></div>
         <div class="row">
           <button class="btn2 quiet" id="undo">Undo</button>
-          <button class="btn2 quiet" id="clear">Clear</button>
+          <button class="btn2 quiet" id="clear">Clear the canvas</button>
           <button class="btn2" id="test">Run perturbation test</button>
-          <select id="demo"><option value="">Load an example</option><option value="ortho">Orthocentre and nine-point circle</option><option value="euler">Euler line</option><option value="incircle">Incircle and angle bisectors</option><option value="tangents">Tangents and the chord of contact</option><optgroup label="Problems from Beyond the Incenter"><option value="bk:11981">IMO 2024 Problem 4</option><option value="bk:1782">IMO 2015 Problem 4</option><option value="bk:12789">Balkan MO 2017 Problem 2</option><option value="bk:10595">USAMO 2006 Problem 6</option><option value="bk:4532">BMO2 2014 Problem 4</option><option value="bk:804">BMO1 2025 Problem 4</option><option value="bk:6220">Three circles through the contact points</option></optgroup><optgroup label="Theorems from Beyond the Incenter"><option value="isogonal">Isogonal conjugates</option><option value="sawayama">Sawayama’s lemma</option><option value="miquel">Miquel point of a complete quadrilateral</option><option value="steiner">The Steiner line</option></optgroup></select>
+          <select id="demo" aria-label="Load an example"><option value="">Load an example</option><option value="ortho">Orthocentre and nine-point circle</option><option value="euler">Euler line</option><option value="incircle">Incircle and angle bisectors</option><option value="tangents">Tangents and the chord of contact</option><optgroup label="Problems from Beyond the Incenter"><option value="bk:11981">IMO 2024 Problem 4</option><option value="bk:1782">IMO 2015 Problem 4</option><option value="bk:12789">Balkan MO 2017 Problem 2</option><option value="bk:10595">USAMO 2006 Problem 6</option><option value="bk:4532">BMO2 2014 Problem 4</option><option value="bk:804">BMO1 2025 Problem 4</option><option value="bk:6220">Three circles through the contact points</option></optgroup><optgroup label="Theorems from Beyond the Incenter"><option value="isogonal">Isogonal conjugates</option><option value="sawayama">Sawayama’s lemma</option><option value="miquel">Miquel point of a complete quadrilateral</option><option value="steiner">The Steiner line</option></optgroup></select>
         </div>
         <div class="export">
           <h2 style="font-size:1.1rem;margin:0 0 .4rem">Export to tkz-euclide</h2>

@@ -16,7 +16,7 @@
     .picker{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:.8rem;margin:1.2rem 0}
     @media (max-width:520px){.picker{grid-template-columns:1fr}}
     .pick{position:relative;text-align:left;border:1px solid var(--line);border-radius:var(--r-lg);padding:1rem 1.1rem;background:var(--surface);color:var(--ink);cursor:pointer;font:inherit;transition:transform .15s,border-color .15s}
-    .pick:hover{transform:translateY(-2px);border-color:var(--aqua)}
+    .pick:hover{border-color:var(--aqua)}
     .pick[aria-pressed="true"]{border-color:var(--saffron);box-shadow:0 0 0 2px rgba(255,197,61,.25)}
     .pick h3{font:800 1.15rem var(--display);margin:.2rem 0 .2rem}.pick p{margin:0;color:var(--ink-soft);font-size:.88rem}
     .pick .best{display:block;margin-top:.5rem;font:700 .8rem var(--display);color:var(--saffron)}
@@ -31,7 +31,7 @@
     .side .box{background:var(--bg-deep);border:1px solid var(--line-soft);border-radius:12px;padding:.8rem .9rem;margin-bottom:.8rem;font-size:.88rem;color:var(--ink-soft)}
     .side ol{margin:0;padding-left:1.3rem}.side li{margin:.15rem 0}.side li.me{color:var(--saffron);font-weight:700}
     .row{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center}
-    .overlay{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:1.2rem;background:rgba(8,9,30,.78);backdrop-filter:blur(3px);z-index:3}
+    .overlay{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:1.2rem;background:rgba(8,9,30,.78);z-index:3}
     .overlay[hidden]{display:none}
     .overlay h2{font:800 1.8rem var(--display);margin:0 0 .4rem}.overlay p{color:var(--ink-soft);max-width:44ch;margin:0 auto .9rem}
     .keys{display:grid;grid-template-columns:repeat(8,1fr);gap:.4rem;margin-top:.6rem}
@@ -39,7 +39,7 @@
     .key small{position:absolute;right:.35rem;bottom:.15rem;font:600 .6rem var(--display);color:var(--ink-faint)}
     .key:active,.key.flash{border-color:var(--saffron);transform:translateY(1px)}
     .key.off{opacity:.3}
-    .lockwall{position:absolute;inset:0;z-index:6;display:grid;place-items:center;text-align:center;padding:1.5rem;background:rgba(10,11,32,.86);backdrop-filter:blur(5px)}
+    .lockwall{position:absolute;inset:0;z-index:6;display:grid;place-items:center;text-align:center;padding:1.5rem;background:rgba(10,11,32,.86)}
     .lockwall[hidden]{display:none}
     /* light mode: the lock veil matches the page; the game screens stay dark, so their overlays keep light text */
     :root:not([data-mode="dark"]) .lockwall{background:rgba(246,244,239,.9)}
@@ -55,12 +55,12 @@
     .orpad{display:grid;grid-template-columns:repeat(3,3.4rem);gap:.35rem;flex:none;user-select:none;-webkit-user-select:none;touch-action:none}
     .orpad button{height:3.1rem;border-radius:12px;border:1px solid var(--line);background:var(--surface-2);color:var(--ink);font:800 1.35rem var(--display);cursor:pointer;touch-action:none}
     .orpad button.sm{font-size:.72rem;letter-spacing:.06em;height:2.3rem}
-    .orpad button.thr{background:linear-gradient(180deg,#FFC53D,#FF8A3D);color:#15173B;border:none}
+    .orpad button.thr{background:#FFC53D;color:#15173B;border:none}
     .orpad button.on{border-color:var(--saffron);box-shadow:0 0 0 2px rgba(255,197,61,.35) inset}
     .orside{flex:1;min-width:220px;display:grid;gap:.5rem}
     .orfuel i{display:inline-block;width:70px;height:8px;border-radius:9px;background:var(--bg-deep);border:1px solid var(--line);vertical-align:middle;margin-left:.3rem;overflow:hidden}
-    .orfuel em{display:block;height:100%;background:linear-gradient(90deg,#FF6B8B,#FFC53D)}
-    .screen canvas:focus{outline:none}
+    .orfuel em{display:block;height:100%;background:#FFC53D}
+    .screen canvas:focus:not(:focus-visible){outline:none}.screen canvas:focus-visible{outline-offset:-3px}
     .lesson{margin-top:.6rem;padding:.8rem 1rem;border-left:3px solid var(--mint);background:var(--bg-deep);border-radius:0 12px 12px 0;color:var(--ink-soft);font-size:.92rem}
     .lesson b{color:var(--ink)}
     .lvls{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.5rem}
@@ -140,7 +140,7 @@
   function gate(){
     var g=GAMES.filter(function(x){ return x.id===current; })[0]; if(!g) return;
     var w=$('lockwall'), own=owns(g.item); w.hidden=own;
-    if(!own) w.innerHTML='<div><h2>'+g.name+' is in the shop</h2><p>'+(user()?'Earn coins by solving problems, then unlock it for good.':'Sign in, earn coins by solving problems, then unlock it for good.')+'</p><a class="btn" href="shop.html#labs">Go to the shop</a></div>';
+    if(!own) w.innerHTML='<div><h2>'+g.name+' is in the shop</h2><p>'+(user()?'Earn coins by solving problems, then unlock it for good.':'Sign in, earn coins by solving problems, then unlock it for good.')+'</p><a class="btn" href="shop.html#labs">Unlock it in the shop</a></div>';
     paintPicker();
   }
   function open(id){
@@ -334,7 +334,7 @@
     function onKey(e){ if(current!=='factor'||!$('lockwall').hidden||e.target.tagName==='INPUT') return; var p=KEYS[e.key]; if(p){ e.preventDefault(); press(p); } }
     document.addEventListener('keydown',onKey);
     reset(); draw(); hud();
-    ov.innerHTML='<div><h2>Factor Fall</h2><p>Split every falling number into primes before it lands. Big numbers are worth more, and every clean break grows your combo.</p><button class="btn" type="button" id="ffgo">Start</button></div>';
+    ov.innerHTML='<div><h2>Factor Fall</h2><p>Split every falling number into primes before it lands. Big numbers are worth more, and every clean break grows your combo.</p><button class="btn" type="button" id="ffgo">Start Factor Fall</button></div>';
     $('ffgo').addEventListener('click',start);
     return {stop:function(){ cancelAnimationFrame(raf); document.removeEventListener('keydown',onKey); }};
   }
@@ -393,7 +393,7 @@
     function up(){ if(drag==null) return; G.dots[drag].setAttribute('fill','#F3F1FF'); drag=null; moves++; var n=draw(); hud(n); if(n===0&&!done) solved(); }
     svg.addEventListener('pointerup',up); svg.addEventListener('pointercancel',up);
     G=gen(lines()); build(); hud(draw());
-    ov.innerHTML='<div><h2>Untangle</h2><p>Level '+st.level+(st.total?', run score '+st.total.toLocaleString():'')+'. Drag the points until no edges cross.</p><div class="row" style="justify-content:center"><button class="btn" id="ugo">'+(st.level>1?'Continue':'Start')+'</button>'+(st.level>1?'<button class="btn secondary" id="unew">New run</button>':'')+'</div></div>';
+    ov.innerHTML='<div><h2>Untangle</h2><p>Level '+st.level+(st.total?', run score '+st.total.toLocaleString():'')+'. Drag the points until no edges cross.</p><div class="row" style="justify-content:center"><button class="btn" id="ugo">'+(st.level>1?'Continue at level '+st.level:'Start level 1')+'</button>'+(st.level>1?'<button class="btn secondary" id="unew">Restart from level 1</button>':'')+'</div></div>';
     $('ugo').addEventListener('click',startLevel); if($('unew')) $('unew').addEventListener('click',function(){ st={level:1,total:0}; save('hu_lab_untangle',st); startLevel(); });
     return {stop:function(){ clearInterval(timer); }};
   }
