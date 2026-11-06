@@ -26,3 +26,11 @@
   };
   window.KV_PROGRESS=P;
 })();
+
+/* Fill in course totals wherever the page shows them, so the figures never go stale. */
+(function(){
+  function fill(){ var D=window.KV_PATH; if(!D) return; var n=0,np=0,nl=0;
+    D.levels.forEach(function(L){ L.units.forEach(function(u){ if(u.status==='ready'){ n++; np+=u.np||0; nl+=u.nl||0; } }); });
+    [['kv-nunits',n],['kv-np',np],['kv-nl',nl]].forEach(function(x){ document.querySelectorAll('.'+x[0]).forEach(function(e){ e.textContent=x[1]; }); }); }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fill); else fill();
+})();

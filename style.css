@@ -402,3 +402,6 @@ a.pw-unit:hover{border-color:var(--ink-faint);background:var(--surface-2);color:
 .pw mjx-container[display="true"]{overflow-x:auto;overflow-y:hidden;max-width:100%}
 .pw mjx-container.mj-wide{display:block;overflow-x:auto;overflow-y:hidden;max-width:100%;margin:.35em 0;padding-bottom:2px}
 .pw-probs>li,.pw-ladder>li{min-width:0}
+
+.pw-xhead{margin:1.5rem 0 .25rem;font-size:1rem}
+.pw-xnote{margin:0 0 .75rem;color:var(--ink-soft)}
