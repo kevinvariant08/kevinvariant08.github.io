@@ -10,7 +10,7 @@
   <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=4">
   <link rel="manifest" href="/site.webmanifest?v=5">
   <meta name="theme-color" content="#F6F4EF">
-  <link rel="stylesheet" href="style.css?v=20261107e">
+  <link rel="stylesheet" href="style.css?v=20261108">
   <script>try{if(localStorage.getItem('kv_mode')==='dark')document.documentElement.setAttribute('data-mode','dark')}catch(e){}</script>
 </head>
 <body data-theme-v2>
@@ -18,7 +18,6 @@
 
   <main class="page" data-sec="cal">
     <header class="hub-head">
-      <span class="eyebrow">Calendar</span>
       <h1>Maths competition calendar</h1>
       <p class="lede">Every major maths competition and admissions test this school year, with dates, entry deadlines, who can sit it, and which Pathways level prepares you for it. Most competitions are entered through your school, so tell your maths teacher early.</p>
     </header>
@@ -36,7 +35,7 @@
         <div class="pw-filter" id="fPast" role="group" aria-label="Past events"><span>Show</span></div>
       </div>
       <div id="list"></div>
-      <p class="sub-intro" id="stamp" style="margin-top:1.6rem;font-size:.9rem"></p>
+      <p class="sub-intro cal-stamp" id="stamp"></p>
     </section>
   </main>
 
@@ -83,7 +82,7 @@
         +(e.how_to_enter?'<p>'+esc(e.how_to_enter)+'</p>':'')
         +(dl&&!past?'<p class="'+(dld>=0&&dld<=30?'cal-dl':'')+'">Entry deadline: '+fmt(e.entry_deadline)+(dld>=0?' ('+rel(dld)+')':' (passed)')+(e.deadline_note?'. '+esc(e.deadline_note):'')+'</p>':'')
         +(e.notes?'<p>'+esc(e.notes)+'</p>':'')
-        +'<div class="cal-links">'+(e.official_url?'<a href="'+esc(e.official_url)+'" target="_blank" rel="noopener">Official page</a>':'')+prep+(s&&!past?'<button type="button" class="linkish" data-ics="'+esc(e.id)+'">Add to my calendar</button>':'')+'</div>'
+        +'<div class="cal-links">'+(e.official_url?'<a href="'+esc(e.official_url)+'" target="_blank" rel="noopener" aria-label="Official page for '+esc(e.name)+' (opens in a new tab)">Official page</a>':'')+prep+(s&&!past?'<button type="button" class="linkish" data-ics="'+esc(e.id)+'" aria-label="Add '+esc(e.name)+' to my calendar (.ics file)">Add to my calendar</button>':'')+'</div>'
         +'</div></article>';
     }
     function paint(){
@@ -104,6 +103,6 @@
     paint();
   })();
   </script>
-  <script src="site.js?v=20261107e" defer></script>
+  <script src="site.js?v=20261108" defer></script>
 </body>
 </html>

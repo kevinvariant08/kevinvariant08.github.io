@@ -10,12 +10,12 @@
   <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=4">
   <link rel="manifest" href="/site.webmanifest?v=5">
   <meta name="theme-color" content="#F6F4EF">
-  <link rel="stylesheet" href="style.css?v=20261107e">
+  <link rel="stylesheet" href="style.css?v=20261108">
   <script>try{if(localStorage.getItem('kv_mode')==='dark')document.documentElement.setAttribute('data-mode','dark')}catch(e){}</script>
   <style>
     .book{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:2.4rem;align-items:start;margin-top:2rem}
     @media (max-width:860px){.book{grid-template-columns:1fr;gap:1.6rem}}
-    .book img{border-radius:var(--r-md);box-shadow:0 20px 50px rgba(6,7,30,.5);width:100%}
+    .book img{border-radius:var(--r-md);width:100%}
     .book .buy{margin-top:1.2rem}
     .book .text p{font-family:var(--serif);font-size:1.03rem;line-height:1.75;color:var(--ink-soft)}
     .book .text h2{font-size:1.35rem;margin:2rem 0 .6rem}
@@ -28,9 +28,8 @@
 
   <main class="page" data-sec="book">
     <header class="hub-head">
-      <span class="eyebrow">Book</span>
       <h1><em>Beyond the Incenter</em></h1>
-      <p class="lede">A modern monograph on olympiad geometry: a systematic route from the triangle's centres to projective geometry, radical axes and spiral similarity.</p>
+      <p class="lede">An olympiad geometry book by Kevin Hu, from the triangle's centres to projective geometry, radical axes and spiral similarity. Sold on Amazon; one chapter is free to read here.</p>
     </header>
 
     <div class="book">
@@ -40,21 +39,21 @@
           <img src="cover-mockup.png" alt="Beyond the Incenter book cover" width="960" height="673">
         </picture>
         <div class="buy">
-          <a class="btn" href="https://www.amazon.co.uk/dp/B0HCDN9VFL" target="_blank" rel="noopener">Buy on Amazon</a>
-          <a class="btn secondary" href="cross-ratios.pdf?v=wm1" target="_blank" rel="noopener">Read the sample chapter</a>
+          <a class="btn" href="https://www.amazon.co.uk/dp/B0HCDN9VFL" target="_blank" rel="noopener">Buy it on Amazon</a>
+          <a class="btn secondary" href="cross-ratios.pdf?v=wm1" target="_blank" rel="noopener">Read the cross ratios chapter (PDF)</a>
         </div>
         <div class="callout">
           <p><b>Or earn it.</b> The <a href="shop.html">Shop</a>'s vault holds Chapter 1 for 6,000 coins and the complete book for 24,000, earned by solving problems on the site. <a href="how-it-works.html#access">How coins work</a>.</p>
         </div>
       </div>
       <div class="text">
-        <h2>A modern monograph on olympiad geometry</h2>
-        <p>In competitive mathematics, geometry is often perceived by students as a chaotic collection of messy intersections and phantom points, where auxiliary lines and constructions occur purely by luck. <em>Beyond the Incenter</em> dismantles this misconception, presenting synthetic geometry as a rigorous, systematic, and highly structured discipline.</p>
-        <p>Authored for the ambitious student bridging the gap between standard high school curricula and elite-level competitions, this textbook synthesizes classical theorems with modern methods. From the foundational properties of the triangle's five centers to advanced topics like projective geometry and spiral similarity, the text guides readers through the exact techniques required to conquer IMO-caliber configurations.</p>
-        <h2>Why I wrote this book: the geometry gap</h2>
-        <p>Having analysed UKMT markers' reports from the last decade, something alarms me: geometry is consistently the least-attempted and most poorly answered section. The markers explicitly note that geometry questions are "one of the least attempted by candidates," and constantly complain that students rely on "algebraic proof with no reference to the geometrical justifications."</p>
-        <p>The reason for this is simple: modern high school syllabuses have largely stripped out classical geometry. I see this at my own school. Out of over 1,000 students, only three know Menelaus's Theorem, and exactly two know how to use a complete quadrilateral. Because students lack these core geometric tools, they default to Cartesian coordinate or trigonometric bashes in competitions. As the markers point out, this usually leads to pages of algebra, which are highly prone to errors.</p>
-        <p>I wrote <em>Beyond the Incenter</em> to fix this specific gap. There are very few resources that bridge the gap from A-Level math to that elite standard. The goal of this book is to show that Olympiad geometry isn't about guessing "lucky" lines. By breaking down methods like projective geometry, radical axes, and spiral similarity, it provides students with a reliable, systematic approach to problems that otherwise look impossible.</p>
+        <h2>What the book covers</h2>
+        <p>Many students meet olympiad geometry as a pile of intersections and auxiliary points that seem to appear from nowhere in the official solutions. <em>Beyond the Incenter</em> is written to show where those constructions come from. It starts from the triangle's five centres and builds up through radical axes and projective geometry to spiral similarity, proving each tool before using it on competition problems.</p>
+        <p>It is aimed at students who know A-level or high school mathematics and want to reach BMO, EGMO or IMO standard in geometry. You can read a full chapter, on cross ratios, before buying.</p>
+        <h2>Why I wrote it</h2>
+        <p>The UKMT markers' reports for the last decade say the same thing year after year: geometry questions are "one of the least attempted by candidates", and too many answers give "the algebraic proof with no reference to the geometrical justifications."</p>
+        <p>Part of the reason is that school syllabuses now teach very little classical geometry, so in a competition most students fall back on coordinates or trigonometry. As the reports point out, that usually means pages of algebra and a good chance of an arithmetic slip. I see the same thing at my own school: out of more than 1,000 students, I know of three who have met Menelaus's theorem and two who can use a complete quadrilateral.</p>
+        <p>There are excellent books for students already at national training camp level, and much less for the step from A-level up to it. This book is my attempt at that step: radical axes, projective geometry and spiral similarity taught as methods you can choose deliberately, so that a hard configuration has a plan of attack.</p>
         <h2 id="errata">Errata</h2>
         <p>No corrections have been submitted yet. The current Amazon version is V1.0. If you spot a typo, a logical gap or a misaligned diagram, please <a href="https://github.com/kevinvariant08/kevinvariant08.github.io/issues" target="_blank" rel="noopener">open an issue on GitHub</a>.</p>
         <p><a href="geometry.html">Try the Geometry Lab</a> to see the triangle's centres move, or browse more <a href="olympiad.html">olympiad resources</a>.</p>
@@ -62,6 +61,6 @@
     </div>
   </main>
 
-<script src="site.js?v=20261107e"></script>
+<script src="site.js?v=20261108"></script>
 </body>
 </html>

@@ -10,7 +10,7 @@
   <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=4">
   <link rel="manifest" href="/site.webmanifest?v=5">
   <meta name="theme-color" content="#F6F4EF">
-  <link rel="stylesheet" href="style.css?v=20261107e">
+  <link rel="stylesheet" href="style.css?v=20261108">
   <script>try{if(localStorage.getItem('kv_mode')==='dark')document.documentElement.setAttribute('data-mode','dark')}catch(e){}</script>
   <style>
     .hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:2.6rem;align-items:center;padding:3.2rem 0 1.4rem}
@@ -27,11 +27,17 @@
     .readout b{font-family:var(--display);font-weight:600;color:var(--ink);font-variant-numeric:tabular-nums}
     .readout .eq{margin-left:auto;color:var(--mint)}
     .hint{position:absolute;top:1rem;right:1.2rem;font-size:.82rem;color:var(--ink-faint)}
-    .draw{stroke-dasharray:var(--len);stroke-dashoffset:var(--len);animation:draw 1.1s cubic-bezier(.6,.1,.2,1) forwards}
-    .fadein{opacity:0;animation:fade .6s ease forwards;animation-delay:1s}
-    @keyframes draw{to{stroke-dashoffset:0}}
-    @keyframes fade{to{opacity:1}}
-    @media (prefers-reduced-motion:reduce){.draw{animation:none;stroke-dashoffset:0}.fadein{animation:none;opacity:1}}
+    .demo{max-width:46rem}
+    .demo .pw-prob{margin-top:1rem}
+    .demo .chk{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem;margin-top:.8rem}
+    .demo .chk label{font-weight:600;font-size:.95rem}
+    .demo .chk input{font:inherit;width:7rem;min-height:40px;padding:.3rem .6rem;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--bg-deep);color:var(--ink)}
+    .demo .chk .btn{min-height:40px;padding:.35rem .9rem;font-size:.92rem;margin:0}
+    .demo .verdict{flex-basis:100%;margin:0;font-size:.95rem}
+    .demo .verdict.ok{color:var(--mint)}.demo .verdict.no{color:var(--rose)}
+    .demo .src{margin-top:.8rem;font-size:.95rem}
+    .facts{margin:.4rem 0 0;color:var(--ink-soft)}
+    .facts b{color:var(--ink);font-variant-numeric:tabular-nums}
     .brief{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:1rem 2.4rem;align-items:start}
     @media (max-width:860px){.brief{grid-template-columns:1fr}}
     .brief h3{margin:0 0 .4rem;font-size:1.1rem}
@@ -62,11 +68,11 @@
     <section class="hero">
       <div>
         <h1>Competition maths, with a plan</h1>
-        <p class="lede">Free preparation for UKMT and MAA competitions, from the IMC and AMC 10 up to BMO2 and the USAMO. Each unit has a lesson, original problems with full solutions, and a graded list of real past problems on the same topic.</p>
+        <p class="lede">Free preparation for UKMT and MAA competitions, from the JMC and AMC 8 up to BMO2 and the USAMO. Each unit has a lesson, six original problems with hints and full solutions, and a graded list of real past problems on the same topic.</p>
         <div class="cta">
           <a class="btn" href="pathways.html#start">Find your level</a>
           <a class="btn secondary" href="calendar.html">Competition calendar</a>
-          <a class="btn secondary" href="admissions.html">Admissions prep</a>
+          <a class="btn secondary" href="admissions.html">TMUA, ESAT and interview prep</a>
           <a class="btn secondary" href="#" data-install hidden>Install the app</a>
         </div>
         <p class="newhere">No account needed. Sign in only if you want your progress on every device.</p>
@@ -81,8 +87,36 @@
     <section aria-labelledby="ladder-h" id="ladder" data-sec="path">
       <h2 id="ladder-h">Five levels, one ladder</h2>
       <p class="sub-intro">Each level maps to the UK and US competitions it prepares you for. Pick yours and work through its units in any order.</p>
+      <p class="facts">So far: <b>42</b> units across the five levels, <b>252</b> original practice problems, and <b>477</b> real contest problems linked from the units' ladders.</p>
       <div class="home-ladder" id="homeLadder"></div>
-      <p><a class="btn" href="pathways.html">See every unit</a></p>
+      <p><a class="btn" href="pathways.html">See all 42 units</a></p>
+    </section>
+
+    <section aria-labelledby="demo-h" id="demo" class="demo" data-sec="path">
+      <h2 id="demo-h">Try a problem from Level 3</h2>
+      <p class="sub-intro">Problem 3 of six from the unit <a href="unit.html?u=L3-GE1">Power of a point and cyclic quadrilaterals</a>, exactly as it appears there.</p>
+      <div class="pw-prob" id="demoProb">
+        <div class="pw-ptop"><b>Problem 3</b><span class="pw-stars" aria-label="2 out of 4 difficulty">★★<span>★★</span></span></div>
+        <div class="pw-q"><p>In a convex quadrilateral <i>ABCD</i> the diagonals meet at <i>P</i>, with <i>AP</i>&nbsp;=&nbsp;4, <i>PC</i>&nbsp;=&nbsp;9, <i>BP</i>&nbsp;=&nbsp;6 and <i>PD</i>&nbsp;=&nbsp;6. Given that <i>AB</i>&nbsp;=&nbsp;5, find <i>CD</i>.</p></div>
+        <form class="chk" id="demoChk" novalidate>
+          <label for="demoAns">Your answer</label>
+          <input id="demoAns" name="ans" inputmode="decimal" autocomplete="off" aria-describedby="demoVerdict">
+          <button type="submit" class="btn">Check my answer</button>
+          <p class="verdict" id="demoVerdict" role="status" aria-live="polite"></p>
+        </form>
+        <div class="pw-pbtns">
+          <button type="button" class="btn secondary" data-a="hint" aria-expanded="false" aria-controls="demoHint">Show the hint</button>
+          <button type="button" class="btn secondary" data-a="sol" aria-expanded="false" aria-controls="demoSol">Show the solution</button>
+        </div>
+        <div class="pw-hint" id="demoHint" hidden><b>Hint.</b> Compare <i>PA</i>&middot;<i>PC</i> with <i>PB</i>&middot;<i>PD</i>. What does that tell you about the four vertices?</div>
+        <div class="pw-sol" id="demoSol" hidden>
+          <p class="pw-ans"><b>Answer:</b> 15/2</p>
+          <figure class="sol-fig"><img src="diagrams/pw/l3-ge1-9.svg?v=20261107e" width="400" alt="Quadrilateral ABCD with diagonals meeting at P, where AP = 4, PC = 9, BP = PD = 6 and AB = 5; the dashed circle passes through all four vertices and the equal angles PAB and PDC are marked." loading="lazy"></figure>
+          <p>We have <i>PA</i>&middot;<i>PC</i>&nbsp;=&nbsp;36&nbsp;=&nbsp;<i>PB</i>&middot;<i>PD</i>, and <i>P</i> lies inside both diagonals, so by the converse of the intersecting chords theorem <i>ABCD</i> is cyclic. Then &ang;<i>BAC</i>&nbsp;=&nbsp;&ang;<i>BDC</i> (angles in the same segment), that is &ang;<i>PAB</i>&nbsp;=&nbsp;&ang;<i>PDC</i>, and &ang;<i>APB</i>&nbsp;=&nbsp;&ang;<i>DPC</i> (vertically opposite). So triangles <i>APB</i> and <i>DPC</i> are similar, with <i>A</i>, <i>P</i>, <i>B</i> corresponding to <i>D</i>, <i>P</i>, <i>C</i>. The ratio of similarity is <i>DP</i>/<i>AP</i>&nbsp;=&nbsp;6/4&nbsp;=&nbsp;3/2, so <i>CD</i>&nbsp;=&nbsp;(3/2)&middot;<i>AB</i>&nbsp;=&nbsp;15/2.</p>
+          <p>As a check, <i>CP</i>/<i>BP</i> should also equal 3/2, and indeed 9/6&nbsp;=&nbsp;3/2. In fact that check is a proof on its own: <i>AP</i>/<i>DP</i>&nbsp;=&nbsp;<i>BP</i>/<i>CP</i> with the vertically opposite angles gives the similarity directly (SAS). So the converse of power of a point is equivalent to this SAS similarity.</p>
+        </div>
+      </div>
+      <p class="src">The unit also has a lesson with worked examples, five more problems, and twelve past SMC, Maclaurin, AMC 12 and AIME problems on the same idea, easiest first. <a href="unit.html?u=L3-GE1">Open unit L3-GE1</a></p>
     </section>
 
     <section aria-labelledby="soon-h" id="soon" data-sec="cal">
@@ -94,34 +128,19 @@
 
     <section aria-labelledby="paths-h" id="paths">
       <h2 id="paths-h">Also on Kevinvariant</h2>
-      <div class="cards">
-        <article class="door" data-sec="tmua">
-          <h3><a class="go" href="admissions.html">Admissions</a></h3>
-          <p>A step-by-step plan for the TMUA, ESAT and Oxbridge interviews, with original mock papers that are harder than the real thing.</p>
-          <ul>
-            <li><a href="tmua.html">TMUA mock papers</a></li>
-            <li><a href="esat.html">ESAT mock papers</a></li>
-            <li><a href="interviews.html">Mock interviews</a></li>
-          </ul>
-        </article>
-        <article class="door" data-sec="path">
-          <h3><a class="go" href="olympiad.html">Olympiad library</a></h3>
-          <p>Original mock BMO and SMC papers, full solutions to real competitions, and the HU Collection problem sets.</p>
-          <ul>
-            <li><a href="olympiad.html#mocks">Mock papers</a></li>
-            <li><a href="olympiad.html#solutions">Competition solutions</a></li>
-            <li><a href="geometry.html">Geometry Lab</a></li>
-          </ul>
-        </article>
-        <article class="door" data-sec="play">
-          <h3><a class="go" href="compete.html">Extras</a></h3>
-          <p>Race a bot, duel a friend, the problem of the week, and ranked contest problems on Cevian.</p>
-          <ul>
-            <li><a href="qotw.html">Problem of the week</a></li>
-            <li><a href="/cevian/">Cevian</a></li>
-            <li><a href="arena.html">Arena</a></li>
-          </ul>
-        </article>
+      <div class="rows">
+        <div class="row">
+          <div><h3><a href="admissions.html">Admissions</a></h3><p class="desc">An order of preparation for the TMUA, ESAT and Oxbridge interviews. Original TMUA mock sets A to L (A to D free, with solutions), ESAT sets A to F, and timed mock interviews.</p></div>
+          <div class="files"><div class="grp"><a href="tmua.html">TMUA mock papers</a><a href="esat.html">ESAT mock papers</a><a href="interviews.html">Mock interviews</a></div></div>
+        </div>
+        <div class="row">
+          <div><h3><a href="olympiad.html">Olympiad library</a></h3><p class="desc">Two original mock papers (BMO1 and SMC style), written solutions to the SMC 2026, Purple Comet 2026, BMO2 2011 and IMO Shortlist 2025 G1 to G3, and the two HU Collection problem sets.</p></div>
+          <div class="files"><div class="grp"><a href="olympiad.html#mocks">Mock papers</a><a href="olympiad.html#solutions">Competition solutions</a><a href="geometry.html">Geometry Lab</a></div></div>
+        </div>
+        <div class="row">
+          <div><h3><a href="compete.html">Extras</a></h3><p class="desc">Race a bot in the Arena, send a friend a five-question duel, answer the problem of the week, or work through ranked contest problems on Cevian.</p></div>
+          <div class="files"><div class="grp"><a href="qotw.html">Problem of the week</a><a href="/cevian/">Cevian</a><a href="arena.html">Arena</a></div></div>
+        </div>
       </div>
     </section>
 
@@ -132,11 +151,10 @@
           <img src="cover-mockup.png" alt="Beyond the Incenter book cover" width="960" height="673" loading="lazy">
         </picture>
         <div>
-          <span class="chip">The book</span>
           <h2 id="book-h"><em>Beyond the Incenter</em></h2>
-          <p>A modern monograph on olympiad geometry, from the triangle's five centres to projective geometry, radical axes and spiral similarity.</p>
-          <a class="btn" href="book.html">About the book</a>
-          <a class="btn secondary" href="cross-ratios.pdf?v=wm1" target="_blank" rel="noopener">Sample chapter</a>
+          <p>Kevin's olympiad geometry book, from the triangle's five centres to projective geometry, radical axes and spiral similarity. The chapter on cross ratios is free to read.</p>
+          <a class="btn" href="book.html"><span>About <i>Beyond the Incenter</i></span></a>
+          <a class="btn secondary" href="cross-ratios.pdf?v=wm1" target="_blank" rel="noopener">Read the cross ratios chapter (PDF)</a>
         </div>
       </div>
     </section>
@@ -147,7 +165,7 @@
     </div>
   </main>
 
-<script src="site.js?v=20261107e"></script>
+<script src="site.js?v=20261108"></script>
 <script src="path.js?v=20261107e"></script>
 <script src="pathways-data.js?v=20261107e"></script>
 <script src="calendar-data.js?v=20261107e"></script>
@@ -172,18 +190,17 @@
   var P=[{x:118,y:380},{x:404,y:324},{x:419,y:134}];
   var COL=['var(--aqua)','var(--rose)','var(--saffron)'];
   function el(n,a){ var e=document.createElementNS(NS,n); for(var k in a){ if(/^var\(/.test(a[k])) e.style.setProperty(k,a[k]); else e.setAttribute(k,a[k]); } svg.appendChild(e); return e; }
-  var circ=el('circle',{fill:'none',stroke:'var(--ink-faint)','stroke-width':1.2,'stroke-dasharray':'5 6',opacity:.7,class:'fadein'});
-  var O=el('circle',{r:4,fill:'var(--ink-faint)',class:'fadein'});
-  var OI=el('line',{stroke:'var(--mint)','stroke-width':1.6,'stroke-dasharray':'2 5',class:'fadein'});
-  var inc=el('circle',{fill:'none',stroke:'var(--ink)','stroke-width':1.8,class:'fadein'});
+  var circ=el('circle',{fill:'none',stroke:'var(--ink-faint)','stroke-width':1.2,'stroke-dasharray':'5 6',opacity:.7});
+  var O=el('circle',{r:4,fill:'var(--ink-faint)'});
+  var OI=el('line',{stroke:'var(--mint)','stroke-width':1.6,'stroke-dasharray':'2 5'});
+  var inc=el('circle',{fill:'none',stroke:'var(--ink)','stroke-width':1.8});
   var sides=[0,1,2].map(function(i){ return el('line',{stroke:COL[i],'stroke-width':4,'stroke-linecap':'round'}); });
-  var I=el('circle',{r:4.5,fill:'var(--ink)',class:'fadein'});
-  var T=[0,1,2].map(function(){ return el('circle',{r:5,fill:'var(--ink)',stroke:'var(--surface)','stroke-width':2,class:'fadein'}); });
+  var I=el('circle',{r:4.5,fill:'var(--ink)'});
+  var T=[0,1,2].map(function(){ return el('circle',{r:5,fill:'var(--ink)',stroke:'var(--surface)','stroke-width':2}); });
   var V=[0,1,2].map(function(i){ return el('circle',{r:11,fill:'var(--surface)',stroke:COL[(i+2)%3],'stroke-width':3,class:'v',tabindex:0,role:'slider','aria-label':'Vertex '+'ABC'[i]+', move with arrow keys'}); });
   var L=[0,1,2].map(function(i){ var t=el('text',{'font-family':'IBM Plex Serif,serif','font-style':'italic','font-size':22,fill:'var(--ink)'}); t.textContent='ABC'[i]; return t; });
-  var lblO=el('text',{'font-family':'IBM Plex Serif,serif','font-style':'italic','font-size':18,fill:'var(--ink-faint)',class:'fadein'}); lblO.textContent='O';
-  var lblI=el('text',{'font-family':'IBM Plex Serif,serif','font-style':'italic','font-size':18,fill:'var(--ink)',class:'fadein'}); lblI.textContent='I';
-  var first=true;
+  var lblO=el('text',{'font-family':'IBM Plex Serif,serif','font-style':'italic','font-size':18,fill:'var(--ink-faint)'}); lblO.textContent='O';
+  var lblI=el('text',{'font-family':'IBM Plex Serif,serif','font-style':'italic','font-size':18,fill:'var(--ink)'}); lblI.textContent='I';
   function d(a,b){ return Math.hypot(a.x-b.x,a.y-b.y); }
   function draw(){
     var A=P[0],B=P[1],C=P[2], a=d(B,C), b=d(C,A), c=d(A,B), s=a+b+c;
@@ -203,9 +220,6 @@
       ln.setAttribute('x1',p.x); ln.setAttribute('y1',p.y); ln.setAttribute('x2',q.x); ln.setAttribute('y2',q.y);
       var dx=q.x-p.x,dy=q.y-p.y,t=((Ic.x-p.x)*dx+(Ic.y-p.y)*dy)/(dx*dx+dy*dy);
       T[i].setAttribute('cx',p.x+t*dx); T[i].setAttribute('cy',p.y+t*dy);
-      if(first){ ln.style.setProperty('--len',Math.hypot(dx,dy)); ln.setAttribute('class','draw'); ln.style.animationDelay=(i*.18)+'s';
-        /* the draw-in uses a dash exactly as long as the side; drop it once finished, or longer sides get cut off */
-        ln.addEventListener('animationend',function(){ ln.removeAttribute('class'); ln.style.animationDelay=''; },{once:true}); }
     });
     var gx=(A.x+B.x+C.x)/3, gy=(A.y+B.y+C.y)/3;
     P.forEach(function(p,i){ V[i].setAttribute('cx',p.x); V[i].setAttribute('cy',p.y);
@@ -213,17 +227,36 @@
     lblO.setAttribute('x',Oc.x+8); lblO.setAttribute('y',Oc.y-8); lblI.setAttribute('x',Ic.x+9); lblI.setAttribute('y',Ic.y-9);
     var RR=R/U, rr=r/U, oi2=Math.pow(d(Oc,Ic)/U,2), rhs=RR*(RR-2*rr);
     document.getElementById('readout').innerHTML='<span><i>R</i> = <b>'+RR.toFixed(2)+'</b></span><span><i>r</i> = <b>'+rr.toFixed(2)+'</b></span><span><i>OI</i>&sup2; = <b>'+oi2.toFixed(3)+'</b></span><span class="eq"><i>R</i>(<i>R</i>&minus;2<i>r</i>) = <b style="color:inherit">'+rhs.toFixed(3)+'</b></span>';
-    first=false;
   }
   var drag=null;
   function pt(e){ var r=svg.getBoundingClientRect(); return {x:(e.clientX-r.left)*560/r.width,y:(e.clientY-r.top)*430/r.height}; }
   V.forEach(function(v,i){
-    v.addEventListener('pointerdown',function(e){ drag=i; v.setPointerCapture(e.pointerId); sides.forEach(function(l){ l.removeAttribute('class'); }); });
+    v.addEventListener('pointerdown',function(e){ drag=i; v.setPointerCapture(e.pointerId); });
     v.addEventListener('keydown',function(e){ var k={ArrowLeft:[-8,0],ArrowRight:[8,0],ArrowUp:[0,-8],ArrowDown:[0,8]}[e.key]; if(k){ e.preventDefault(); P[i].x=Math.max(20,Math.min(540,P[i].x+k[0])); P[i].y=Math.max(20,Math.min(410,P[i].y+k[1])); draw(); } });
   });
   svg.addEventListener('pointermove',function(e){ if(drag==null) return; var p=pt(e); P[drag].x=Math.max(20,Math.min(540,p.x)); P[drag].y=Math.max(20,Math.min(410,p.y)); draw(); });
   svg.addEventListener('pointerup',function(){ drag=null; });
   draw();
+})();
+</script>
+<script>
+/* Home: the sample problem's answer check, hint and solution toggles */
+(function(){
+  var box=document.getElementById('demoProb'); if(!box) return;
+  box.querySelectorAll('[data-a]').forEach(function(b){
+    var label=b.textContent;
+    b.addEventListener('click',function(){ var el=document.getElementById(b.getAttribute('aria-controls')); el.hidden=!el.hidden;
+      b.setAttribute('aria-expanded',String(!el.hidden)); b.textContent=el.hidden?label:label.replace('Show','Hide'); });
+  });
+  var f=document.getElementById('demoChk'), inp=document.getElementById('demoAns'), out=document.getElementById('demoVerdict');
+  f.addEventListener('submit',function(e){ e.preventDefault();
+    var t=inp.value.replace(/\s+/g,''), v=NaN, m=t.match(/^(-?\d+(?:\.\d+)?)\/(\d+(?:\.\d+)?)$/);
+    if(m) v=+m[1]/+m[2]; else if(/^-?\d*\.?\d+$/.test(t)) v=+t;
+    if(!t){ out.className='verdict no'; out.textContent='Type an answer first, as a fraction such as 7/3 or a decimal.'; inp.focus(); return; }
+    if(isNaN(v)){ out.className='verdict no'; out.textContent='Write the answer as a number, a fraction such as 7/3, or a decimal.'; inp.focus(); return; }
+    if(Math.abs(v-7.5)<1e-9){ out.className='verdict ok'; out.textContent='Correct: CD = 15/2. Open the solution to compare methods.'; }
+    else { out.className='verdict no'; out.textContent='Not '+inp.value.trim()+'. Try the hint, then check again.'; }
+  });
 })();
 </script>
 <script src="locks.js?v=20260929"></script>

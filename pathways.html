@@ -10,7 +10,7 @@
   <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=4">
   <link rel="manifest" href="/site.webmanifest?v=5">
   <meta name="theme-color" content="#F6F4EF">
-  <link rel="stylesheet" href="style.css?v=20261107e">
+  <link rel="stylesheet" href="style.css?v=20261108">
   <script>try{if(localStorage.getItem('kv_mode')==='dark')document.documentElement.setAttribute('data-mode','dark')}catch(e){}</script>
 </head>
 <body data-theme-v2>
@@ -18,9 +18,8 @@
 
   <main class="page pw" data-sec="path">
     <header class="hub-head">
-      <span class="eyebrow">Pathways</span>
       <h1>Competition maths, in order</h1>
-      <p class="lede">Five levels, from the IMC and AMC 10 up to BMO2 and the USAMO. Each unit is a lesson on one topic, six original problems with hints and full solutions, and a list of real past contest problems on that topic in order of difficulty. Everything is free, and your progress is saved as you work.</p>
+      <p class="lede">Five levels, from the JMC and AMC 8 up to BMO2 and the USAMO: 42 units so far. Each unit is a lesson on one topic, six original problems with hints and full solutions, and a list of real past contest problems on that topic in order of difficulty. Everything is free, and your progress is saved as you work.</p>
     </header>
 
     <section class="pw-start" id="start" aria-labelledby="start-h">
@@ -38,12 +37,12 @@
 
     <section aria-labelledby="how-h">
       <h2 id="how-h">How a unit works</h2>
-      <div class="pw-how">
-        <div><b>1. Learn</b><span>A lesson on one topic, with the theorems stated and proved and three or four worked examples. The examples include the first attempts that fail, not only the solution that works.</span></div>
-        <div><b>2. Practise</b><span>Six original problems rated from one to four stars, each with a hint and a full solution. Mark each one as got it or not yet.</span></div>
-        <div><b>3. Climb</b><span>Eight to twelve real UKMT, BMO, AMC and AIME problems on the same topic, easiest first, each linked to the official paper or the AoPS wiki.</span></div>
-      </div>
-      <p class="sub-intro" style="margin-top:1rem">If you sign in, your progress syncs across your devices; otherwise it stays in this browser. <a href="calendar.html">See every competition date in the calendar.</a></p>
+      <ol class="pw-how">
+        <li><b>Lesson.</b> One topic, with the theorems stated and proved and three or four worked examples. The examples show the first attempts that fail as well as the one that works.</li>
+        <li><b>Practice.</b> Six original problems rated from one to four stars, each with a hint and a full solution. You mark each one as &ldquo;got it&rdquo; or &ldquo;not yet&rdquo;. <a href="index.html#demo">Try one from Level 3 on the home page.</a></li>
+        <li><b>Contest ladder.</b> Nine to twelve real UKMT, BMO, AMC and AIME problems on the same topic, easiest first, each linked to the official paper or the AoPS wiki rather than copied here.</li>
+      </ol>
+      <p class="sub-intro">If you sign in, your progress syncs across your devices; otherwise it stays in this browser. <a href="calendar.html">See every competition date in the calendar.</a></p>
     </section>
   </main>
 
@@ -63,8 +62,9 @@
 
     function unitTile(u){
       if(u.status!=='ready') return '<div class="pw-unit soon"><span class="pw-strand">'+esc(D.strands[u.strand])+'</span><b>'+esc(u.title)+'</b><span class="pw-st">Coming soon</span></div>';
-      var s=P.score(u.id,u.np,u.nl), st=s>=1?'Done':P.started(u.id)?Math.round(s*100)+'% done':'Start';
-      return '<a class="pw-unit'+(s>=1?' done':'')+'" href="unit.html?u='+u.id+'"><span class="pw-strand">'+esc(D.strands[u.strand])+'</span><b>'+esc(u.title)+'</b><span class="pw-blurb">'+esc(u.blurb)+'</span>'
+      var s=P.score(u.id,u.np,u.nl), st=s>=1?'Done: review unit':P.started(u.id)?'Continue ('+Math.round(s*100)+'% done)':'Start unit';
+      var name=(s>=1?'Review':P.started(u.id)?'Continue':'Start')+' unit '+u.id+': '+u.title+(P.started(u.id)&&s<1?', '+Math.round(s*100)+'% done':s>=1?', done':'');
+      return '<a class="pw-unit'+(s>=1?' done':'')+'" href="unit.html?u='+u.id+'" aria-label="'+esc(name)+'"><span class="pw-strand">'+esc(D.strands[u.strand])+'</span><b>'+esc(u.title)+'</b><span class="pw-blurb">'+esc(u.blurb)+'</span>'
         +'<span class="pw-meta"><span>About '+Math.round(u.minutes/15)*15+' min</span><span class="pw-st'+(s>=1?' ok':'')+'">'+st+'</span></span>'
         +'<span class="pw-bar" aria-hidden="true"><i style="width:'+Math.round(s*100)+'%"></i></span></a>';
     }
@@ -86,6 +86,6 @@
     window.addEventListener('kv-path',function(){ paint(); });
   })();
   </script>
-  <script src="site.js?v=20261107e" defer></script>
+  <script src="site.js?v=20261108" defer></script>
 </body>
 </html>

@@ -4,13 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Privacy | Kevinvariant</title>
-  <meta name="description" content="What Kevinvariant stores, what it shares anonymously if you agree, and how to switch sharing off or delete it.">
+  <meta name="description" content="What Kevinvariant keeps in your browser, what it sends to other services, and how to delete it. Run by Kevin Hu.">
   <link rel="icon" href="/favicon.ico?v=4" sizes="32x32">
   <link rel="icon" href="/favicon.svg?v=4" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=4">
   <link rel="manifest" href="/site.webmanifest?v=5">
   <meta name="theme-color" content="#F6F4EF">
-  <link rel="stylesheet" href="style.css?v=20261107e">
+  <link rel="stylesheet" href="style.css?v=20261108">
   <script>try{if(localStorage.getItem('kv_mode')==='dark')document.documentElement.setAttribute('data-mode','dark')}catch(e){}</script>
   <style>
     .share-box{border:1px solid var(--line);border-radius:var(--r-lg);padding:1rem 1.1rem;background:var(--surface)}
@@ -25,23 +25,30 @@
 
   <main class="page">
     <header class="hub-head">
-      <span class="eyebrow">Guide</span>
       <h1>Privacy</h1>
-      <p class="lede">If you agree, Kevinvariant shares your answers anonymously so the questions can be rated fairly. You can practise either way. This page explains exactly what that means, and what the site's other features send.</p>
+      <p class="lede">Kevinvariant is a free site written and run by one person, Kevin Hu, a sixth-form student. There is no company behind it, no advertising and no analytics. This page lists, feature by feature, what the site keeps in your browser, what it sends elsewhere, and how to remove it.</p>
       <ul class="jump">
-        <li><a href="#choice">Your choice</a></li>
-        <li><a href="#what">What is shared</a></li>
-        <li><a href="#never">What is never collected</a></li>
-        <li><a href="#who">Who sees it</a></li>
-        <li><a href="#delete">Switching off and deleting</a></li>
-        <li><a href="#other">Accounts and other features</a></li>
+        <li><a href="#browser">In your browser</a></li>
+        <li><a href="#choice">Anonymous sharing</a></li>
+        <li><a href="#accounts">Accounts</a></li>
+        <li><a href="#ai">Proof marker and interviews</a></li>
+        <li><a href="#services">Services the site uses</a></li>
+        <li><a href="#delete">Deleting your data</a></li>
+        <li><a href="#contact">Contact</a></li>
       </ul>
     </header>
 
+    <section id="browser" aria-labelledby="browser-h">
+      <h2 id="browser-h">What stays in your browser</h2>
+      <p>Without an account, everything you do on the site is saved in your browser's local storage on this device and nowhere else. That includes your Pathways progress, Drill and Arena results, scores, coins, streaks, badges, review queue, problem of the week answers, your dark mode and theme choices, and the history of solutions you have had marked. Clearing this site's data in your browser settings removes all of it.</p>
+      <p>If you install the app or visit often, the browser also keeps copies of pages and papers you have opened so they work offline. The site sets no advertising or tracking cookies.</p>
+    </section>
+
     <section id="choice" aria-labelledby="choice-h">
-      <h2 id="choice-h">Your choice on this browser</h2>
+      <h2 id="choice-h">Anonymous answer sharing (optional)</h2>
+      <p>Smart Practice needs to know how hard each TMUA question really is, and the fairest way to find out is from how students answer them. If you agree, your answers are shared anonymously for that purpose. You can practise either way.</p>
       <div class="share-box" id="share-box">
-        <p>Sharing is <span class="share-state" id="share-state">not chosen yet</span>. <span id="share-detail"></span></p>
+        <p>Sharing on this browser is <span class="share-state" id="share-state">not chosen yet</span>. <span id="share-detail"></span></p>
         <div class="acts">
           <button type="button" class="btn" id="share-yes">Share anonymously</button>
           <button type="button" class="btn ghost" id="share-no">Keep on this device</button>
@@ -49,11 +56,7 @@
         </div>
         <p id="share-msg" role="status" aria-live="polite"></p>
       </div>
-    </section>
-
-    <section id="what" aria-labelledby="what-h">
-      <h2 id="what-h">What is shared, and why</h2>
-      <p>Smart Practice picks questions at the right level for you. To do that well it needs to know how hard each question really is, and the only fair way to find out is from how real students answer them. So, if you choose <b>Share anonymously</b>, each answer you give from then on sends these items and nothing else:</p>
+      <h3 id="what">What each shared answer contains</h3>
       <dl class="fields">
         <dt>A random code</dt><dd>Made by your browser, for example <code>3f9c…</code>. It is not your name, email or account, and it is different on each device.</dd>
         <dt>The question</dt><dd>Its id, such as <code>B1-7</code>.</dd>
@@ -62,44 +65,61 @@
         <dt>When you answered</dt><dd>The date and time.</dd>
         <dt>Where on the site</dt><dd>For example Smart Practice, Drill or the question bank.</dd>
       </dl>
-      <p>Answers you gave before choosing, or while sharing is off, never leave your browser.</p>
+      <p>Nothing else is sent: no name, email, school, age, location or free text. Answers you gave before choosing, or while sharing is off, never leave your browser. Shared answers are sent without your sign-in details, so even if you are signed in they cannot be matched to your account, and the sharing system does not store IP addresses.</p>
+      <p>Nobody can read the shared answers through the website, other visitors included. Once a week a calibration program works out a difficulty number for each question from all the shared answers together, and only those numbers are published. The answers are kept while they help rate the questions. <b>Delete what this browser shared</b> removes every answer sent with this browser's code and gives it a new one; since the code exists only in your browser, do this on each device you used.</p>
     </section>
 
-    <section id="never" aria-labelledby="never-h">
-      <h2 id="never-h">What sharing never collects</h2>
-      <p>No names, emails, school, age, location or free text, and no link to your Kevinvariant account. Shared answers are sent without your sign-in details, so even if you are signed in they cannot be matched to your account. Sharing never stores IP addresses. The site uses no advertising or tracking cookies.</p>
-      <p>Like every website, the services that host Kevinvariant (GitHub Pages for the pages, Supabase for the database) keep short-lived technical logs of requests, which include IP addresses, for security and reliability. We do not use them.</p>
-    </section>
-
-    <section id="who" aria-labelledby="who-h">
-      <h2 id="who-h">Who sees it</h2>
-      <p>Nobody can read the shared answers from the website, including other visitors. Once a week a calibration program works out how hard each question is from all the shared answers together, and only those results (a difficulty number for each question) are published. Individual answers are never published.</p>
-      <p>The shared answers are kept while they help rate the questions. Your scores, streaks and progress stay in this browser, or in your account if you <a href="auth.html">sign in</a> to sync them; that is separate from sharing and is described on <a href="how-it-works.html#privacy">How it works</a>.</p>
-    </section>
-
-    <section id="delete" aria-labelledby="delete-h">
-      <h2 id="delete-h">Switching off and deleting</h2>
-      <p>Choose <b>Keep on this device</b> above at any time to stop sharing; you can still use everything on the site. <b>Delete what this browser shared</b> removes every answer sent with this browser's random code and gives it a new code. Because the code is random and kept only in this browser, we cannot find your answers any other way, so delete them from each device you used.</p>
-      </section>
-
-    <section id="other" aria-labelledby="other-h">
-      <h2 id="other-h">Accounts and other features</h2>
-      <p>These are separate from anonymous sharing, and each is optional.</p>
+    <section id="accounts" aria-labelledby="accounts-h">
+      <h2 id="accounts-h">Accounts (optional)</h2>
+      <p>You never need an account to use the lessons, papers or practice. If you create one, it is handled by Supabase, the database service the site uses.</p>
       <dl class="fields">
-        <dt>Accounts</dt><dd>If you <a href="auth.html">create an account</a>, your email address is used to sign you in, and your progress, coins and unlocks are saved to it so they follow you between devices. Your email is never shown to other visitors.</dd>
-        <dt>Leaderboard</dt><dd>Only if you switch it on: your display name, title and points appear on the leaderboard. If you do not choose a name, you are listed as &ldquo;Player&rdquo; and four digits. No part of your email address is ever shown.</dd>
-        <dt>Results</dt><dd>If you log a paper score, only the paper and the score are added to an anonymous tally. To stop spam, a counter tied to your internet connection's IP address is kept for about a day, then deleted automatically.</dd>
-        <dt>Mock interviews</dt><dd>What you type is sent to an AI model (run by Cloudflare, or another AI provider) to write the interviewer's replies. We do not keep it, but do not type personal details. A similar day-long counter tied to your IP address limits how many interviews each connection can start.</dd>
+        <dt>Sign-in details</dt><dd>Your email address and password, and a display name if you give one. Supabase stores the password hashed; I cannot see it. Supabase sends the confirmation and password reset emails. Your browser keeps a sign-in token in local storage so you stay signed in.</dd>
+        <dt>Synced progress</dt><dd>The progress listed above (Pathways, Drill, Arena, scores, rewards, duels, problem of the week, review queue and traps) is copied to your account so it follows you between devices. Proof marker history and API keys are not synced.</dd>
+        <dt>Coins and unlocks</dt><dd>Codes you redeem, papers you unlock and things you buy with coins in the Shop are saved to your account.</dd>
+        <dt>Leaderboard</dt><dd>Only if you switch it on: your display name, title, points, level and streak appear on the leaderboard. Without a display name you are listed as &ldquo;Player&rdquo; and four digits. No part of your email address is shown.</dd>
+        <dt>Labs high scores</dt><dd>If you are signed in when you finish a Labs minigame, your score and display name are added to that game's public high-score table.</dd>
+        <dt>Problem of the week</dt><dd>If you post a method in the discussion, the post and your display name are shown to other visitors who open that week's discussion.</dd>
+      </dl>
+      <p>Your email address is never shown to other visitors and is used only for signing in and account emails.</p>
+    </section>
+
+    <section id="ai" aria-labelledby="ai-h">
+      <h2 id="ai-h">Proof marker, mock interviews and results</h2>
+      <p>These features send what you type to an AI model, so do not type personal details into them.</p>
+      <dl class="fields">
+        <dt>Proof marker: free marker</dt><dd>The problem and your written solution go to the site's own server (a Cloudflare Worker), which passes them to an AI model run by Cloudflare Workers AI and returns the mark. The worker does not save your text. To keep the free service within its limits it counts requests from each IP address for about a day; the counter then expires.</dd>
+        <dt>Proof marker: your own API key</dt><dd>Your browser sends the problem and solution straight to the provider you choose (OpenAI, Google Gemini or Anthropic), using your key, under that provider's terms. The key and the text never pass through Kevinvariant. If you tick <b>Remember the key in this browser</b>, the key is saved in this browser's local storage; untick it to clear it.</dd>
+        <dt>Proof marker: any chatbot</dt><dd>You copy a prompt into a chatbot yourself and paste its reply back. The site sends nothing.</dd>
+        <dt>Mock interviews</dt><dd>What you type goes through the same Cloudflare Worker to an AI model, which writes the interviewer's replies. The worker does not save the conversation, and the same day-long IP counter limits how many interviews each connection can start.</dd>
+        <dt>Results</dt><dd>If you log a paper score, only the paper and the score are added to an anonymous tally. A day-long IP counter stops one connection logging too many scores.</dd>
       </dl>
     </section>
 
-    <section aria-labelledby="contact-h">
-      <h2 id="contact-h">Questions</h2>
-      <p>Questions about privacy: message <a href="https://www.instagram.com/kevinvariant/" target="_blank" rel="noopener">@kevinvariant</a>. Last updated 24 October 2026.</p>
+    <section id="services" aria-labelledby="services-h">
+      <h2 id="services-h">Services the site uses</h2>
+      <p>Each of these receives your IP address and browser details when your browser contacts it, as any web server does, and keeps short-lived technical logs under its own privacy policy. I do not use those logs.</p>
+      <dl class="fields">
+        <dt>GitHub Pages</dt><dd>Hosts the pages and PDFs.</dd>
+        <dt>Supabase</dt><dd>Accounts, synced progress, unlocks, the leaderboard, discussion posts and anonymous answer sharing.</dd>
+        <dt>Cloudflare</dt><dd>Runs the worker behind the free proof marker, the mock interviews and the results tally.</dd>
+        <dt>Google Fonts</dt><dd>Supplies the two typefaces used on every page.</dd>
+        <dt>jsDelivr</dt><dd>Supplies MathJax, which draws the mathematics, and the Supabase sign-in library.</dd>
+      </dl>
+      <p>Links to Amazon, Instagram, UKMT, the AoPS wiki and other sites only contact those sites when you click them.</p>
+    </section>
+
+    <section id="delete" aria-labelledby="delete-h">
+      <h2 id="delete-h">Deleting your data</h2>
+      <p><b>On this device:</b> clear this site's data in your browser settings. <b>Shared answers:</b> use <b>Delete what this browser shared</b> above, on each device. <b>Synced progress:</b> sign in and use <b>Delete my synced progress</b> on <a href="account.html">your account page</a>. <b>The whole account:</b> message <a href="https://www.instagram.com/kevinvariant/" target="_blank" rel="noopener">@kevinvariant</a> on Instagram and say which email address you signed up with; the account and everything stored with it will be deleted. <b>Leaderboard:</b> switching it off on the <a href="rewards.html">Rewards</a> page removes your entry.</p>
+    </section>
+
+    <section id="contact" aria-labelledby="contact-h">
+      <h2 id="contact-h">Contact</h2>
+      <p>Kevinvariant has no email address for enquiries. For anything about privacy, message <a href="https://www.instagram.com/kevinvariant/" target="_blank" rel="noopener">@kevinvariant</a> on Instagram. See also the <a href="terms.html">terms of use</a>. Last updated November 2026.</p>
     </section>
   </main>
 
-<script src="site.js?v=20261107e"></script>
+<script src="site.js?v=20261108"></script>
 <script>
 (function(){
   function ready(f){ if(window.KV_TELEMETRY) return f(window.KV_TELEMETRY); var n=0, t=setInterval(function(){ if(window.KV_TELEMETRY||++n>100){ clearInterval(t); if(window.KV_TELEMETRY) f(window.KV_TELEMETRY); } },100); }

@@ -10,7 +10,7 @@
   <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=4">
   <link rel="manifest" href="/site.webmanifest?v=5">
   <meta name="theme-color" content="#F6F4EF">
-  <link rel="stylesheet" href="style.css?v=20261107e">
+  <link rel="stylesheet" href="style.css?v=20261108">
   <script>try{if(localStorage.getItem('kv_mode')==='dark')document.documentElement.setAttribute('data-mode','dark')}catch(e){}</script>
   <script>window.MathJax={tex:{inlineMath:[['$','$']],displayMath:[['\\[','\\]']],processEscapes:true},options:{skipHtmlTags:['script','noscript','style','textarea','pre']}};</script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js" async></script>
@@ -49,7 +49,6 @@
     function render(U){
       var pre=(U.prereqs||[]).map(function(p){ var m=byId[p]; return m?(m.status==='ready'?'<a href="unit.html?u='+p+'">'+esc(m.title)+'</a>':esc(m.title)):''; }).filter(Boolean);
       var h='<header class="pw-uhead">'
-        +'<span class="eyebrow">Level '+L.n+' · '+esc(L.name)+' · '+esc(D.strands[U.strand])+'</span>'
         +'<h1>'+esc(U.title)+'</h1><p class="lede">'+esc(U.blurb)+'</p>'
         +'<div class="chips"><span class="chip">About '+Math.round(U.minutes/15)*15+' minutes</span>'+(U.contests||[]).map(function(c){return '<span class="chip">'+esc(c)+'</span>';}).join('')+(U.pdf?'<a class="chip" href="'+U.pdf+'" target="_blank" rel="noopener">Printable handout (PDF)</a>':'')+'</div>'
         +'<div class="pw-goals"><div><b>By the end you can</b><ul>'+U.outcomes.map(function(o){return '<li>'+esc(o)+'</li>';}).join('')+'</ul></div>'
@@ -61,17 +60,17 @@
       h+='<section id="practice" aria-labelledby="ph"><h2 id="ph">Practice</h2><p class="sub-intro">Try each problem properly before opening the hint, and the hint before the solution. Then mark it honestly: problems marked \u201cnot yet\u201d are worth another go in a few days.</p><ol class="pw-probs">';
       U.practice.forEach(function(q,i){
         h+='<li class="pw-prob" data-i="'+i+'"><div class="pw-ptop"><b>Problem '+(i+1)+'</b>'+stars(q.stars)+'</div><div class="pw-q">'+q.q+'</div>'
-          +'<div class="pw-pbtns"><button type="button" class="btn secondary" data-a="hint">Hint</button><button type="button" class="btn secondary" data-a="sol">Solution</button>'
-          +'<span class="pw-mark"><button type="button" data-m="got">Got it</button><button type="button" data-m="not">Not yet</button></span></div>'
-          +'<div class="pw-hint" hidden><b>Hint.</b> '+q.hint+'</div>'
-          +'<div class="pw-sol" hidden>'+(q.ans?'<p class="pw-ans"><b>Answer:</b> '+q.ans+'</p>':'')+q.sol+'</div></li>';
+          +'<div class="pw-pbtns"><button type="button" class="btn secondary" data-a="hint" aria-expanded="false" aria-controls="hint-'+i+'">Show the hint</button><button type="button" class="btn secondary" data-a="sol" aria-expanded="false" aria-controls="sol-'+i+'">Show the solution</button>'
+          +'<span class="pw-mark" role="group" aria-label="Mark problem '+(i+1)+'"><button type="button" data-m="got">Got it</button><button type="button" data-m="not">Not yet</button></span></div>'
+          +'<div class="pw-hint" id="hint-'+i+'" hidden><b>Hint.</b> '+q.hint+'</div>'
+          +'<div class="pw-sol" id="sol-'+i+'" hidden>'+(q.ans?'<p class="pw-ans"><b>Answer:</b> '+q.ans+'</p>':'')+q.sol+'</div></li>';
       });
       h+='</ol></section>';
       h+='<section id="ladder" aria-labelledby="lh"><h2 id="lh">Contest ladder</h2><p class="sub-intro">Real past problems that use this unit\u2019s idea, easiest first. They open on the official paper or the AoPS wiki in a new tab. Tick each one off when you have solved it, and only open the idea if you are stuck.</p><ol class="pw-lad">';
       U.ladder.forEach(function(x,i){
-        h+='<li data-i="'+i+'"><label class="pw-tick"><input type="checkbox"><span class="visually-hidden">Solved</span></label>'
+        h+='<li data-i="'+i+'"><label class="pw-tick"><input type="checkbox"><span class="visually-hidden">Solved '+esc(x.src)+'</span></label>'
           +'<div><a href="'+esc(x.url)+'" target="_blank" rel="noopener">'+esc(x.src)+'</a> '+stars(x.stars)
-          +'<details><summary>Idea</summary><span>'+esc(x.note)+'</span></details></div></li>';
+          +'<details><summary>Show the idea</summary><span>'+esc(x.note)+'</span></details></div></li>';
       });
       h+='</ol></section>';
       h+='<section class="pw-finish" aria-label="Finish"><button type="button" class="btn" id="doneBtn"></button>'
@@ -80,8 +79,8 @@
 
       root.querySelectorAll('.pw-prob').forEach(function(li){
         var i=li.dataset.i;
-        li.querySelector('[data-a="hint"]').addEventListener('click',function(){ var e=li.querySelector('.pw-hint'); e.hidden=!e.hidden; this.setAttribute('aria-expanded',String(!e.hidden)); });
-        li.querySelector('[data-a="sol"]').addEventListener('click',function(){ var e=li.querySelector('.pw-sol'); e.hidden=!e.hidden; this.setAttribute('aria-expanded',String(!e.hidden)); });
+        li.querySelector('[data-a="hint"]').addEventListener('click',function(){ var e=li.querySelector('.pw-hint'); e.hidden=!e.hidden; this.setAttribute('aria-expanded',String(!e.hidden)); this.textContent=e.hidden?'Show the hint':'Hide the hint'; });
+        li.querySelector('[data-a="sol"]').addEventListener('click',function(){ var e=li.querySelector('.pw-sol'); e.hidden=!e.hidden; this.setAttribute('aria-expanded',String(!e.hidden)); this.textContent=e.hidden?'Show the solution':'Hide the solution'; });
         li.querySelectorAll('[data-m]').forEach(function(b){ b.addEventListener('click',function(){ var cur=P.unit(id).ps[i]; P.markPractice(id,i,cur===b.dataset.m?null:b.dataset.m); paintState(); }); });
       });
       root.querySelectorAll('.pw-lad li').forEach(function(li){ li.querySelector('input').addEventListener('change',function(){ P.markLadder(id,li.dataset.i,this.checked); paintState(); }); });
@@ -95,13 +94,13 @@
         root.querySelectorAll('.pw-prob').forEach(function(li){ var v=u.ps[li.dataset.i]; if(v==='got') got++; if(v==='not') not++;
           li.querySelectorAll('[data-m]').forEach(function(b){ b.setAttribute('aria-pressed',String(v===b.dataset.m)); }); li.classList.toggle('got',v==='got'); });
         var lad=0; root.querySelectorAll('.pw-lad li').forEach(function(li){ var on=!!u.lad[li.dataset.i]; li.querySelector('input').checked=on; li.classList.toggle('ok',on); if(on) lad++; });
-        document.getElementById('readBtn').textContent=u.read?'Lesson read ✓ (undo)':'I\u2019ve read the lesson';
-        document.getElementById('doneBtn').textContent=u.done?'Unit complete ✓ (undo)':'Mark this unit complete';
+        document.getElementById('readBtn').textContent=u.read?'Lesson marked as read (undo)':'Mark the lesson as read';
+        document.getElementById('doneBtn').textContent=u.done?'Unit marked complete (undo)':'Mark this unit complete';
         document.getElementById('track').innerHTML='<span class="'+(u.read?'ok':'')+'">Lesson '+(u.read?'read':'not read')+'</span><span class="'+(got===6?'ok':'')+'">Practice '+got+'/'+U.practice.length+(not?' ('+not+' not yet)':'')+'</span><span class="'+(lad===U.ladder.length?'ok':'')+'">Ladder '+lad+'/'+U.ladder.length+'</span>'+(u.done?'<span class="ok">Complete</span>':'');
       }
     }
   })();
   </script>
-  <script src="site.js?v=20261107e" defer></script>
+  <script src="site.js?v=20261108" defer></script>
 </body>
 </html>
