@@ -158,7 +158,7 @@
     <h1>Proof marker</h1>
     <p class="tally hidden" id="agreement"></p>
     <p class="tally hidden" id="adminlink"><a href="marker-admin.html">Open the Problem editor</a> to add, edit or hide problems.</p>
-    <p class="lead">Write a solution to an olympiad or interview problem and get it marked like an examiner would: checkpoint by checkpoint, with the exact line where the argument breaks. Problems from the library are marked against their own mark scheme and examples, then checked a second time by an independent pass. Treat the result as a demanding second opinion, not an official mark.</p>
+    <p class="lead">Write a solution to an olympiad or interview problem and have it marked checkpoint by checkpoint, with the line where the argument breaks quoted back to you. Problems from the library are marked against their own mark scheme and marked examples, then checked by a second, independent pass. The marking is done by a language model, so read the result as a second opinion rather than an official mark.</p>
 
     <h2>1. The problem</h2>
     <div class="seg" role="group" aria-label="Where the problem comes from">
@@ -168,25 +168,25 @@
 
     <div id="libwrap">
       <div class="filters">
-        <label>Topic <select id="ftopic"><option value="">All topics</option></select></label>
+        <label for="ftopic">Topic <select id="ftopic"><option value="">All topics</option></select></label>
       </div>
       <div class="plist" id="plist" role="group" aria-label="Problems"></div>
       <div class="pstate hidden" id="pstate" aria-live="polite"></div>
     </div>
 
     <div id="ownwrap" class="hidden">
-      <label>Problem statement <small class="tex2jax_ignore">(LaTeX between dollar signs is fine)</small>
+      <label for="prob">Problem statement <small class="tex2jax_ignore">(LaTeX between dollar signs is fine)</small>
         <textarea id="prob" placeholder="State the problem exactly as set."></textarea></label>
-      <label>Marking scheme <select id="scheme"></select></label>
+      <label for="scheme">Marking scheme <select id="scheme"></select></label>
       <p class="tally">Your own problems are marked against a general scheme, because there is no problem-specific mark scheme to compare with. Library problems are marked more reliably.</p>
     </div>
 
     <h2>2. Your solution</h2>
-    <label>Your solution <small class="tex2jax_ignore">(LaTeX between dollar signs is fine)</small>
+    <label for="sol">Your solution <small class="tex2jax_ignore">(LaTeX between dollar signs is fine)</small>
       <textarea id="sol" placeholder="Write it as you would on paper: every step you would expect a marker to read."></textarea></label>
     <div class="row" style="margin-top:.5rem"><button type="button" class="btn quiet" id="pvbtn" aria-expanded="false" aria-controls="preview">Show preview</button></div>
     <div class="preview hidden" id="preview" aria-live="polite"></div>
-    <label id="photorow" class="hidden">Or attach a photo of your handwritten solution <small>(Claude only)</small>
+    <label id="photorow" class="hidden" for="photo">Or attach a photo of your handwritten solution <small>(Claude only)</small>
       <input type="file" id="photo" multiple style="margin-top:.4rem"></label>
     <p class="history hidden" id="history"></p>
 
@@ -200,12 +200,12 @@
       <button type="button" class="card" id="card-chat" aria-pressed="false">
         <span class="t">Any chatbot</span>
         <span class="d">ChatGPT, Gemini, Claude or another. Copy a prompt into it and paste its reply back. Uses the strongest model your plan allows.</span>
-        <span class="s">Works everywhere</span>
+        <span class="s">No key needed</span>
       </button>
       <button type="button" class="card" id="card-key" aria-pressed="false">
         <span class="t">Your API key</span>
         <span class="d">OpenAI, Google Gemini or Anthropic. The key stays in your browser and goes straight to the provider.</span>
-        <span class="s">Most accurate</span>
+        <span class="s">Billed by your provider</span>
       </button>
       <button type="button" class="card" id="card-claude" aria-pressed="false">
         <span class="t">Claude, built in</span>
@@ -217,14 +217,14 @@
     <div class="pane" id="pane-free">
       <p class="panehead">Free marker</p>
       <p class="tally" style="margin:0">Marking takes two or three requests: a first marking, an independent check, and a re-mark if the check finds something serious. Each visitor has a daily allowance shared with the mock interviews. Your solution is sent to the model only to be marked; this site does not store it.</p>
-      <div class="row"><button class="btn" id="go-free">Mark it</button></div>
+      <div class="row"><button class="btn" id="go-free">Mark my solution</button></div>
       <p class="msg" id="msg-free"></p>
     </div>
 
     <div class="pane hidden" id="pane-claude">
       <p class="panehead">Claude, built in</p>
       <p class="tally" style="margin:0">Uses Claude's most capable reasoning model where your plan allows, with the two-pass check. Careful marking takes a minute or two.</p>
-      <div class="row"><button class="btn" id="go-claude">Mark with Claude</button><button class="btn quiet hidden" id="stop-claude">Stop</button></div>
+      <div class="row"><button class="btn" id="go-claude">Mark with Claude</button><button class="btn quiet hidden" id="stop-claude">Stop marking</button></div>
       <p class="msg" id="msg-claude"></p>
     </div>
 
@@ -242,16 +242,16 @@
         <button class="btn quiet" id="copy-plain">Just copy the prompt</button>
       </div>
       <input type="hidden" id="whichbot" value="your chatbot">
-      <div id="promptwrap" class="hidden"><label>The prompt <small>(in case copying was blocked)</small><textarea id="promptbox" readonly></textarea></label></div>
-      <label>The chatbot's reply<textarea id="reply" placeholder="Paste the whole reply here."></textarea></label>
+      <div id="promptwrap" class="hidden"><label for="promptbox">The prompt <small>(in case copying was blocked)</small><textarea id="promptbox" readonly></textarea></label></div>
+      <label for="reply">The chatbot's reply<textarea id="reply" placeholder="Paste the whole reply here."></textarea></label>
       <div class="row"><button class="btn" id="render">Show report</button></div>
       <p class="msg" id="msg-chat"></p>
       <div class="step2 hidden" id="step2">
         <p class="panehead">Second check (recommended)</p>
         <p class="tally" style="margin:0">A second, independent read catches steps the first marking credited too generously. Start a new chat for it, so the checker has not seen its own earlier reply.</p>
         <div class="row"><button class="btn" id="copy-check">Copy the checking prompt</button></div>
-        <div id="checkwrap" class="hidden"><label>The checking prompt <small>(in case copying was blocked)</small><textarea id="checkbox" readonly style="min-height:7rem;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.8rem"></textarea></label></div>
-        <label>The checker's reply<textarea id="checkreply" placeholder="Paste the whole reply here." style="min-height:6rem;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85rem"></textarea></label>
+        <div id="checkwrap" class="hidden"><label for="checkbox">The checking prompt <small>(in case copying was blocked)</small><textarea id="checkbox" readonly style="min-height:7rem;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.8rem"></textarea></label></div>
+        <label for="checkreply">The checker's reply<textarea id="checkreply" placeholder="Paste the whole reply here." style="min-height:6rem;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85rem"></textarea></label>
         <div class="row"><button class="btn" id="apply-check">Apply the check</button></div>
         <p class="msg" id="msg-check"></p>
       </div>
@@ -259,11 +259,12 @@
 
     <div class="pane hidden" id="pane-key">
       <p class="panehead">Your API key</p>
-      <label>Provider <select id="prov"><option value="openai">OpenAI</option><option value="gemini">Google Gemini</option><option value="anthropic">Anthropic</option></select></label>
-      <label>API key <input type="password" id="apikey" autocomplete="off"></label>
-      <label>Model <small>(change it if your provider has renamed it)</small><input type="text" id="apimodel"></label>
-      <label style="display:flex;gap:.5rem;align-items:center;color:var(--soft)"><input type="checkbox" id="remember" checked style="width:auto;margin:0"> Remember the key in this browser</label>
-      <div class="row"><button class="btn" id="go-key">Mark it</button></div>
+      <label for="prov">Provider <select id="prov"><option value="openai">OpenAI</option><option value="gemini">Google Gemini</option><option value="anthropic">Anthropic</option></select></label>
+      <label for="apikey">API key <input type="password" id="apikey" autocomplete="off"></label>
+      <p class="tally" style="margin:.3rem 0 0">Each marking makes two or three requests to your provider, charged to your account at its usual API rates.</p>
+      <label for="apimodel">Model <small>(change it if your provider has renamed it)</small><input type="text" id="apimodel"></label>
+      <label for="remember" style="display:flex;gap:.5rem;align-items:center;color:var(--soft)"><input type="checkbox" id="remember" checked style="width:auto;margin:0"> Remember the key in this browser</label>
+      <div class="row"><button class="btn" id="go-key">Mark my solution</button></div>
       <p class="msg" id="msg-key"></p>
     </div>
 
@@ -609,6 +610,7 @@ function boot(){
   $('apply-check').addEventListener('click',applyCheck);
   $('prov').addEventListener('change',loadKeyUI); loadKeyUI();
   $('go-key').addEventListener('click',markWithKey);
+  ['apikey','apimodel'].forEach(function(id){ $(id).addEventListener('keydown',function(e){ if(e.key==='Enter'){ e.preventDefault(); $('go-key').click(); } }); });
 
   if(inArtifact){
     $('card-key').classList.add('hidden'); $('card-free').classList.add('hidden');

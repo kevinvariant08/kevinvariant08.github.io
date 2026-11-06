@@ -44,15 +44,15 @@
 
   <main class="container rs">
     <h1>Results</h1>
-    <p class="lead">Sit a paper under timed conditions, mark it, and log the score here. Scores are anonymous and pooled, so you can see how a mark compares with everyone else who has sat the same paper rather than staring at a number out of twenty. The distributions also tell me which questions are landing where I intended.</p>
+    <p class="lead">Sit a paper under timed conditions, mark it, and log the score here. Scores are anonymous and pooled, so you can see how a mark compares with everyone else who has sat the same paper rather than staring at a number out of twenty. The distributions also tell me whether each paper is landing at the difficulty I intended.</p>
 
     <div class="panel">
-      <label>Paper
+      <label for="paper">Paper
         <select id="paper"></select>
       </label>
       <div class="row">
-        <label style="margin:0">Your score <input type="number" id="score" min="0" max="20" step="1" style="width:5.5rem"> <span style="color:var(--faint)">/ 20</span></label>
-        <button class="btn2" id="submit">Log score</button>
+        <label for="score" style="margin:0">Your score <input type="number" id="score" min="0" max="20" step="1" style="width:5.5rem"> <span style="color:var(--faint)">/ 20</span></label>
+        <button class="btn2" id="submit">Log my score</button>
         <span class="msg" id="msg"></span>
       </div>
     </div>
@@ -147,6 +147,7 @@ async function refresh(){
   renderMine();
 }
 sel.addEventListener('change',refresh);
+document.getElementById('score').addEventListener('keydown',function(e){ if(e.key==='Enter'){ e.preventDefault(); document.getElementById('submit').click(); } });
 document.getElementById('submit').addEventListener('click',async function(){
   var paper=sel.value, s=parseInt(document.getElementById('score').value,10), msg=document.getElementById('msg'), btn=this;
   msg.className='msg';

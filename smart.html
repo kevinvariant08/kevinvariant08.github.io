@@ -59,7 +59,6 @@
 
   <main class="page sp" data-sec="tmua">
     <header class="hub-head">
-      <span class="eyebrow">TMUA</span>
       <h1>Smart Practice</h1>
       <p class="lede">Each question is chosen to suit your level as it changes, rotating through topics. At the end you get an estimate of your level, your strongest and weakest topics, and what to practise next.</p>
     </header>
@@ -259,7 +258,7 @@
   Promise.all([json('data/item_bank.json'),json('data/item_params.json').catch(function(){ return {model:'prior',responses:0,population:{mean:0,sd:1},items:{}}; })])
     .then(function(r){
       bank=r[0]; params=r[1]; bank.topics.forEach(function(t){ TOPIC[t.key]=t.label; });
-      $('start').disabled=false; $('start').textContent='Start'; note(); drawHistory();
+      $('start').disabled=false; $('start').textContent='Start the session'; note(); drawHistory();
       /* Locked papers: only those this account has unlocked, through HU_LOCKS (server-checked). */
       return timeout(window.HU_LOCKS?HU_LOCKS.scopes().catch(function(){ return []; }):Promise.resolve([]),8000).then(function(sc){
         scopes=sc||[]; if(!scopes.length) return;

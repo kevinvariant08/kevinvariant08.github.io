@@ -97,8 +97,8 @@
       <div class="tblwrap"><table class="tbl"><thead><tr><th scope="col">Problem</th><th scope="col">Where</th><th scope="col">Status</th><th scope="col">Actions</th></tr></thead><tbody id="plist"></tbody></table></div>
       <div class="row"><button class="btn" id="newbtn">New problem</button><button class="btn quiet" id="importbtn">Paste a problem file</button></div>
       <div id="importbox" class="hidden">
-        <label>Choose a problem file (.md) from your computer <input type="file" id="importfile" accept=".md,.txt,text/markdown,text/plain" style="margin-top:.4rem"></label>
-        <label>Or paste the file's whole contents here <small>(open the file, select all, copy; not just its name)</small><textarea id="importtext" class="tall"></textarea></label>
+        <label for="importfile">Choose a problem file (.md) from your computer <input type="file" id="importfile" accept=".md,.txt,text/markdown,text/plain" style="margin-top:.4rem"></label>
+        <label for="importtext">Or paste the file's contents here <small>(open the file, select all, copy, then paste the text)</small><textarea id="importtext" class="tall"></textarea></label>
         <div class="row"><button class="btn" id="importgo">Load into the editor</button><button class="btn quiet" id="importcancel">Cancel</button></div>
       </div>
       <p class="msg" id="listmsg"></p>
@@ -108,20 +108,20 @@
         <div class="work">
           <div>
             <h3>Details</h3>
-            <label>Title <small>(shown to students; $...$ maths is fine)</small><input type="text" id="f-title"></label>
+            <label for="f-title">Title <small>(shown to students; $...$ maths is fine)</small><input type="text" id="f-title"></label>
             <div class="grid2">
-              <label>Id <small>(lower case and hyphens; fixed once saved)</small><input type="text" id="f-id" spellcheck="false"></label>
-              <label>Source <small>(competition, year, number)</small><input type="text" id="f-source"></label>
+              <label for="f-id">Id <small>(lower case and hyphens; fixed once saved)</small><input type="text" id="f-id" spellcheck="false"></label>
+              <label for="f-source">Source <small>(competition, year, number)</small><input type="text" id="f-source"></label>
             </div>
             <div class="grid4">
-              <label>Topic <select id="f-topic"><option value="geometry">Geometry</option><option value="number theory">Number theory</option><option value="algebra">Algebra</option><option value="combinatorics">Combinatorics</option><option value="interview">Interview</option></select></label>
-              <label>Difficulty <small>1 to 10</small><input type="number" id="f-difficulty" min="1" max="10" step="1" value="6"></label>
-              <label>Out of <input type="number" id="f-max" min="1" max="50" step="1" value="10"></label>
+              <label for="f-topic">Topic <select id="f-topic"><option value="geometry">Geometry</option><option value="number theory">Number theory</option><option value="algebra">Algebra</option><option value="combinatorics">Combinatorics</option><option value="interview">Interview</option></select></label>
+              <label for="f-difficulty">Difficulty <small>1 to 10</small><input type="number" id="f-difficulty" min="1" max="10" step="1" value="6"></label>
+              <label for="f-max">Out of <input type="number" id="f-max" min="1" max="50" step="1" value="10"></label>
               <span></span>
             </div>
 
             <h3>Problem</h3>
-            <label>Statement <small>(LaTeX: $...$ inline, \[...\] displayed; a blank line starts a new paragraph)</small><textarea id="f-problem" class="tall"></textarea></label>
+            <label for="f-problem">Statement <small>(LaTeX: $...$ inline, \[...\] displayed; a blank line starts a new paragraph)</small><textarea id="f-problem" class="tall"></textarea></label>
 
             <h3>Solutions</h3>
             <div id="sols"></div>
@@ -133,11 +133,11 @@
             <div class="row"><button class="btn quiet small" id="addcp">Add checkpoint</button><button class="btn quiet small" id="addcap">Add cap</button><button class="btn quiet small" id="aischeme">Draft a mark scheme from my solution</button></div>
             <div id="caps"></div>
             <p class="total" id="total"></p>
-            <label>Fatal errors <small>(one per line: a mistake that breaks the proof, and what it costs)</small><textarea id="f-fatal"></textarea></label>
-            <label>Not enough <small>(one per line: things that look like progress but earn nothing)</small><textarea id="f-notenough"></textarea></label>
+            <label for="f-fatal">Fatal errors <small>(one per line: a mistake that breaks the proof, and what it costs)</small><textarea id="f-fatal"></textarea></label>
+            <label for="f-notenough">Not enough <small>(one per line: things that look like progress but earn nothing)</small><textarea id="f-notenough"></textarea></label>
 
             <h3>Marked examples</h3>
-            <p class="lead" style="font-size:.88rem;margin:0">Scripts in a student's voice with your mark. Three (full marks, partial, convincing but wrong) make the marker far more consistent.</p>
+            <p class="lead" style="font-size:.88rem;margin:0">Scripts in a student's voice with your mark. Three (full marks, partial, convincing but wrong) give the marker a reference point for each kind of script.</p>
             <div id="exs"></div>
             <div class="row"><button class="btn quiet small" id="addex">Add example</button><button class="btn quiet small" id="aiex">Draft three examples</button></div>
             <p class="msg" id="aimsg"></p>
@@ -147,7 +147,7 @@
                 <button class="btn" id="publish">Publish</button>
                 <button class="btn quiet" id="savedraft">Save as draft</button>
                 <button class="btn quiet" id="download">Download as a file</button>
-                <button class="btn quiet" id="closeed">Close</button>
+                <button class="btn quiet" id="closeed">Close the editor</button>
               </div>
               <p class="msg" id="savemsg" aria-live="polite"></p>
               <ul class="errs" id="errs"></ul>

@@ -7,16 +7,16 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Serif:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<script>try{var m=localStorage.getItem('kv_mode');if(m==="dark"||m==="light")document.documentElement.setAttribute('data-theme',m)}catch(e){}</script>
 <style>
 :root{
   box-sizing:border-box;
   padding-top:env(safe-area-inset-top,0px);
   padding-bottom:env(safe-area-inset-bottom,0px);
   --paper:#FBFAF6;
-  --grid:rgba(40,70,120,.07);
-  --ink:#1A2230;
+    --ink:#1A2230;
   --ink-soft:#586374;
-  --ink-faint:#8A93A1;
+  --ink-faint:#66707E;
   --rule:#D9D6CC;
   --clock:#1A2230;
   --warn:#8A5A12;
@@ -27,22 +27,20 @@
 }
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
-    --paper:#12151B;--grid:rgba(120,160,220,.07);--ink:#E6E4DD;--ink-soft:#A7AEBB;
-    --ink-faint:#737C8B;--rule:#2B313B;--clock:#E6E4DD;
+    --paper:#12151B;--ink:#E6E4DD;--ink-soft:#A7AEBB;
+    --ink-faint:#8C95A3;--rule:#2B313B;--clock:#E6E4DD;
     --warn:#D9A64E;--urgent:#E07A6F;--mark:#7FBFA3;
   }
 }
 :root[data-theme="dark"]{
-  --paper:#12151B;--grid:rgba(120,160,220,.07);--ink:#E6E4DD;--ink-soft:#A7AEBB;
-  --ink-faint:#737C8B;--rule:#2B313B;--clock:#E6E4DD;--warn:#D9A64E;
+  --paper:#12151B;--ink:#E6E4DD;--ink-soft:#A7AEBB;
+  --ink-faint:#8C95A3;--rule:#2B313B;--clock:#E6E4DD;--warn:#D9A64E;
   --urgent:#E07A6F;--mark:#7FBFA3;
 }
 *,*::before,*::after{box-sizing:inherit}
 body{
   margin:0;background-color:var(--paper);color:var(--ink);
   font-family:var(--sans);font-size:17px;line-height:1.6;
-  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
-  background-size:26px 26px;
 }
 .wrap{max-width:43rem;margin:0 auto;padding:2.2rem 1.3rem 5rem}
 h1{font-family:var(--serif);font-weight:600;font-size:1.6rem;line-height:1.25;margin:0 0 .2rem}
@@ -112,7 +110,7 @@ footer{margin-top:3rem;color:var(--ink-faint);font-size:.85rem;font-family:var(-
 </div>
 
 <div id="preamble">
-  <p>This runs like a real interview. The problem arrives in parts, one at a time, and you cannot see what is coming. When you are stuck you may ask for a nudge, exactly as you would in the room, and the number you use is recorded. The mark scheme and two sample performances stay locked until you end the session.</p>
+  <p>This follows the format of an Oxbridge maths interview. The problem arrives in parts, one at a time, and you cannot see what is coming. When you are stuck you may ask for a nudge, as you could in the room, and the number you use is recorded. The mark scheme and two sample performances stay locked until you end the session.</p>
   <p>Do not read ahead, and do not stop the clock to think. Start when you have a pen in your hand.</p>
   <div class="controls"><button id="start">Start the interview</button></div>
 </div>

@@ -87,7 +87,7 @@
     chosen=null; t0=performance.now();
     if(rec){ card.innerHTML='<div class="q">'+q.q+'</div><ul class="opts">'+q.opts.map(function(o,k){ var L=String.fromCharCode(65+k), cls=L===q.ans?'right':(L===rec.chosen?'wrong':''); return '<li><button type="button" disabled class="'+cls+'"><b>'+L+'</b><span>'+o+'</span></button></li>'; }).join('')+'</ul>'
         +'<div class="verdict">'+(rec.gaveUp?'You revealed this one without answering.':rec.ok?'<strong style="color:var(--mint)">Solved</strong> in '+fmt(rec.secs)+'.':'<strong style="color:var(--rose)">Not this time.</strong> The answer is '+q.ans+'.')
-        +'<details class="sol"><summary>Official solution</summary><div style="margin-top:.5rem">'+q.sol+'</div></details></div>'; }
+        +'<details class="sol"><summary>Worked solution</summary><div style="margin-top:.5rem">'+q.sol+'</div></details></div>'; }
     else{ card.innerHTML='<div class="q">'+q.q+'</div><ul class="opts" id="opts">'+q.opts.map(function(o,k){ var L=String.fromCharCode(65+k); return '<li><button type="button" data-l="'+L+'" aria-pressed="false"><b>'+L+'</b><span>'+o+'</span></button></li>'; }).join('')+'</ul>'
         +'<div class="act"><button class="btn" type="button" id="commit" disabled>Commit my answer</button>'+(offset<0?'<button class="btn secondary" type="button" id="giveup">Reveal without answering</button>':'')+'<span class="note">One attempt. Take as long as you like.</span></div>';
       card.querySelectorAll('#opts button').forEach(function(b){ b.addEventListener('click',function(){ chosen=b.dataset.l; card.querySelectorAll('#opts button').forEach(function(x){ x.setAttribute('aria-pressed',String(x===b)); }); $('commit').disabled=false; }); });
@@ -107,11 +107,11 @@
     if(!A){ el.innerHTML='<p class="note">The discussion needs accounts, which are not switched on for this site yet.</p>'; return; }
     var countQ=A.client.from('discussion').select('id',{count:'exact',head:true}).eq('week',wk);
     if(!rec){ el.innerHTML='<div class="lock">'+LOCK+'<div><strong>Commit an answer to unlock the discussion.</strong><br><span class="note" id="cnt">Nobody has seen other people&rsquo;s methods before trying it themselves.</span></div></div>';
-      countQ.then(function(r){ if(!r.error&&r.count&&$('cnt')) $('cnt').textContent=r.count+(r.count===1?' person has':' people have')+' posted a method. Yours could be next.'; }); return; }
+      countQ.then(function(r){ if(!r.error&&r.count&&$('cnt')) $('cnt').textContent=r.count+(r.count===1?' person has':' people have')+' posted a method.'; }); return; }
     el.innerHTML='<div id="posts"><p class="note">Loading&hellip;</p></div><div id="compose" style="margin-top:1rem"></div>';
     var u=A.user();
     if(!u) $('compose').innerHTML='<p class="note"><a href="auth.html">Sign in</a> to share your method.</p>';
-    else{ $('compose').innerHTML='<label class="note" for="msg">Share your method. Write maths between dollar signs, for example <code>$x^2+1$</code>.</label><textarea id="msg" maxlength="2000" placeholder="The key step was..."></textarea><div class="preview" id="pv"><span class="note">Preview appears here.</span></div><div class="act"><button class="btn" type="button" id="post">Post</button><span class="note" id="pst"></span></div>';
+    else{ $('compose').innerHTML='<label class="note" for="msg">Share your method. Write maths between dollar signs, for example <code>$x^2+1$</code>.</label><textarea id="msg" maxlength="2000" placeholder="The key step was..."></textarea><div class="preview" id="pv"><span class="note">Preview appears here.</span></div><div class="act"><button class="btn" type="button" id="post">Post my method</button><span class="note" id="pst"></span></div>';
       var pv=$('pv'), ta=$('msg'), tmr=null;
       ta.addEventListener('input',function(){ clearTimeout(tmr); tmr=setTimeout(function(){ pv.innerHTML=ta.value.trim()?body(ta.value):'<span class="note">Preview appears here.</span>'; typeset(pv); },300); });
       $('post').addEventListener('click',function(){ var t=ta.value.trim(); if(!t){ $('pst').textContent='Write something first.'; return; } $('post').disabled=true; $('pst').textContent='Posting\u2026';

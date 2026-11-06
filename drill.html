@@ -88,7 +88,7 @@
 
     <section id="hub">
       <h1>Drill</h1>
-      <p class="lead">All eight TMUA mock sets as an engine rather than a PDF. Every answer is timed and every question is tagged by technique, so the site learns where you are weak and puts those questions in front of you first. When a wrong option comes from a common mistake, the site names that mistake. Nothing leaves your browser except a score you choose to log.</p>
+      <p class="lead">The TMUA mock papers from Sets B to L, to sit in the browser. Every answer is timed and every question is tagged by technique, so Weakest first can put the questions you miss back in front of you. When a wrong option comes from a common mistake, the site names that mistake. Your history stays in this browser unless you sign in to sync it or choose to log a score.</p>
 
       <div class="modes">
         <div class="mode">
@@ -99,19 +99,19 @@
           <p class="tally" id="paperdiff" style="margin:.35rem 0 0"></p>
           <label class="lab2">Time allowed
             <select id="timing"><option value="4500" selected>Standard: 75:00</option><option value="5400">+20%: 90:00</option><option value="5625">+25%: 93:45</option><option value="6750">+50%: 112:30</option><option value="9000">+100%: 150:00</option><option value="0">Untimed</option></select></label>
-          <div class="row"><button class="btn2" id="startPaper">Start</button></div>
+          <div class="row"><button class="btn2" id="startPaper">Start the paper</button></div>
           <p class="tally" style="margin:.2rem 0 0">Only standard-time attempts go into the shared score distribution; the rest are kept in your own record.</p>
         </div>
         <div class="mode">
           <h3>Drill a technique</h3>
           <p>Pick one or more techniques. Questions come one at a time with immediate feedback and the full solution after each. Untimed, but your time is recorded.</p>
           <div class="chips" id="techchips"></div>
-          <div class="row"><button class="btn2" id="startTech">Start</button><span class="tally" id="techcount"></span></div>
+          <div class="row"><button class="btn2" id="startTech">Start the technique drill</button><span class="tally" id="techcount"></span></div>
         </div>
         <div class="mode">
           <h3>Weakest first</h3>
           <p>Ten questions chosen from what you have got wrong, what you have not seen, and what you last got right long enough ago that it is worth checking again. The queue is rebuilt from your history every time.</p>
-          <div class="row"><button class="btn2" id="startWeak">Start</button><span class="tally" id="weaknote"></span></div>
+          <div class="row"><button class="btn2" id="startWeak">Start ten questions</button><span class="tally" id="weaknote"></span></div>
         </div>
       </div>
       <p class="tally"><label><input type="checkbox" id="askconf"> Ask how sure I am (Guess, Unsure or Sure) before each answer is checked.</label> Timed papers never ask. <a href="progress.html#confidence">See your calibration</a>.</p>
@@ -313,7 +313,7 @@ function finishPaper(){
   var used=S.elapsed;
   var A=load('hu_drill_attempts',[]); A.unshift({date:new Date().toISOString().slice(0,10),paper:paper,score:score,secs:used,per:per,timing:limit,pauses:pauses,pausedSecs:pausedSecs}); save('hu_drill_attempts',A.slice(0,50));
   var tb={}; per.forEach(function(p){ byId(p.id).tags.forEach(function(t){ tb[t]=tb[t]||{n:0,c:0}; tb[t].n++; if(p.correct) tb[t].c++; }); });
-  var rows=per.map(function(p,k){ var q=byId(p.id); return '<tr><td>'+q.n+'</td><td class="'+(p.correct?'ok':'bad')+'">'+(p.chosen||'\u2014')+(p.correct?'':' \u2192 '+q.ans)+'</td><td>'+fmt(p.secs)+'</td><td>'+q.tags.map(function(t){return TECH[t];}).join(', ')+'</td><td><button class="btn2 quiet" data-k="'+k+'" style="padding:.2rem .6rem;font-size:.85rem">Solution</button></td></tr><tr class="hidden solrow"><td colspan="5">'+(p.chosen&&!p.correct?trapNote(q.id,p.chosen):'')+'<div class="sol">'+q.sol+'</div></td></tr>'; }).join('');
+  var rows=per.map(function(p,k){ var q=byId(p.id); return '<tr><td>'+q.n+'</td><td class="'+(p.correct?'ok':'bad')+'">'+(p.chosen||'No answer')+(p.correct?'':' \u2192 '+q.ans)+'</td><td>'+fmt(p.secs)+'</td><td>'+q.tags.map(function(t){return TECH[t];}).join(', ')+'</td><td><button class="btn2 quiet" data-k="'+k+'" style="padding:.2rem .6rem;font-size:.85rem">Solution</button></td></tr><tr class="hidden solrow"><td colspan="5">'+(p.chosen&&!p.correct?trapNote(q.id,p.chosen):'')+'<div class="sol">'+q.sol+'</div></td></tr>'; }).join('');
   var fell={}; per.forEach(function(p){ var t=p.chosen&&!p.correct&&window.HU_TRAPMAP&&HU_TRAPMAP.get(p.id,p.chosen); if(t){ fell[t.type]=fell[t.type]||{name:t.name,qs:[]}; fell[t.type].qs.push('Q'+byId(p.id).n); } });
   var fellList=Object.keys(fell).map(function(k){ return '<li>'+esc(fell[k].name)+': '+fell[k].qs.join(', ')+'. <a href="drill.html?trap='+encodeURIComponent(k)+'">Drill this trap</a></li>'; }).join('');
   var techs=Object.keys(tb).sort(function(a,b){return (tb[a].c/tb[a].n)-(tb[b].c/tb[b].n);}).map(function(t){ var pc=Math.round(100*tb[t].c/tb[t].n); return '<div><span style="font-size:.9rem">'+TECH[t]+' <span class="tally">'+tb[t].c+'/'+tb[t].n+'</span></span><div class="bar"><span style="width:'+pc+'%"></span></div></div>'; }).join('');
@@ -325,7 +325,7 @@ function finishPaper(){
     +'<h3>By technique</h3>'+techs
     +(fellList?'<h3>Traps you fell into</h3><ul>'+fellList+'</ul>':'')
     +'<h3>Questions</h3><table><tr><th>Q</th><th>Yours</th><th>Time</th><th>Technique</th><th></th></tr>'+rows+'</table>'
-    +'<div class="row">'+(limit===4500?'<button class="btn2" id="logscore">Log this score to Results</button>':'<span class="tally">This attempt used non-standard timing, so it is saved to your own record but not to the shared distribution.</span>')+'<span class="tally" id="logmsg"></span><button class="btn2 quiet" id="back">Back</button></div>';
+    +'<div class="row">'+(limit===4500?'<button class="btn2" id="logscore">Log this score to Results</button>':'<span class="tally">This attempt used non-standard timing, so it is saved to your own record but not to the shared distribution.</span>')+'<span class="tally" id="logmsg"></span><button class="btn2 quiet" id="back">Back to the Drill menu</button></div>';
   typeset(R);
   R.querySelectorAll('button[data-k]').forEach(function(b){ b.addEventListener('click',function(){ var tr=b.closest('tr').nextElementSibling; tr.classList.toggle('hidden'); }); });
   document.getElementById('back').addEventListener('click',function(){ R.classList.add('hidden'); document.getElementById('hub').classList.remove('hidden'); renderHub(); });
@@ -338,7 +338,7 @@ function finishDrill(){
   var n=S.ids.length, c=S.ids.filter(function(id){return S.checked[id]&&S.ans[id]===byId(id).ans;}).length, tot=S.ids.reduce(function(a,id){return a+(S.secs[id]||0);},0);
   var R=document.getElementById('review'); R.classList.remove('hidden'); document.getElementById('stage').classList.add('hidden');
   var trapMsg=(S.mode==='trap'&&TRAP)?'<p>'+trapResult(TRAP,c,n)+'</p>':'';
-  R.innerHTML='<h2>Drill finished</h2><div class="score"><div><div class="big">'+c+'<span style="font-size:1.2rem;color:var(--faint)">/'+n+'</span></div><div class="lab">correct</div></div><div><div class="big">'+fmt(tot)+'</div><div class="lab">total time</div></div></div>'+trapMsg+'<p class="tally">Your technique accuracies on the <a href="progress.html">Progress</a> page have been updated.</p><div class="row"><button class="btn2" id="back2">Back</button></div>';
+  R.innerHTML='<h2>Drill finished</h2><div class="score"><div><div class="big">'+c+'<span style="font-size:1.2rem;color:var(--faint)">/'+n+'</span></div><div class="lab">correct</div></div><div><div class="big">'+fmt(tot)+'</div><div class="lab">total time</div></div></div>'+trapMsg+'<p class="tally">Your technique accuracies on the <a href="progress.html">Progress</a> page have been updated.</p><div class="row"><button class="btn2" id="back2">Back to the Drill menu</button></div>';
   document.getElementById('back2').addEventListener('click',function(){ R.classList.add('hidden'); document.getElementById('hub').classList.remove('hidden'); renderHub(); });
   S=null; window.scrollTo({top:0});
 }

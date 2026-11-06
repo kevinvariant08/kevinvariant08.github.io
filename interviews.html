@@ -91,11 +91,11 @@
     <!-- ============================================================ HUB -->
     <section id="hub">
       <h1>Mock interview simulators</h1>
-      <p class="lead">Oxbridge maths interviews are twenty-five minutes with one problem, delivered in parts you cannot see in advance, with a tutor who probes every step and gives ground only when you ask. These simulators reproduce that. Each problem is original, escalates from accessible to genuinely hard, and comes with a mark scheme, a scored debrief and sample performances at the bottom and top of the scale, all locked until you finish.</p>
+      <p class="lead">Oxbridge maths interviews are twenty-five minutes with one problem, delivered in parts you cannot see in advance, with a tutor who probes every step and gives ground only when you ask. These simulators follow the same format. Each problem is original, starts with a part most candidates can do and ends with one few can, and comes with a mark scheme, a scored debrief and sample performances scoring 0 and 10, all locked until you finish.</p>
 
       <div class="settings">
         <h2 style="margin:0 0 .3rem;font-size:1.1rem">Interviewer</h2>
-        <label>Mode
+        <label for="mode">Mode
           <select id="mode">
             <option value="free">AI interviewer, free (no sign-up, no key)</option>
             <option value="self">Self-guided (timer and written nudges, no AI)</option>
@@ -104,19 +104,19 @@
         </label>
         <p id="freenote" style="font-size:.88rem;color:var(--faint);margin:.6rem 0 0">Free interviews are paid for by this site and capped each day so the budget lasts. If you hit the cap, switch to self-guided or use your own key.</p>
         <div id="ownopts" class="hidden">
-          <label>Anthropic API key <small>(kept in this browser only, sent straight to api.anthropic.com, never to this site)</small>
+          <label for="apikey">Anthropic API key <small>(kept in this browser only, sent straight to api.anthropic.com, never to this site)</small>
             <input type="password" id="apikey" placeholder="sk-ant-..." style="width:100%;max-width:32rem">
           </label>
-          <label>Model
+          <label for="model">Model
             <input type="text" id="model" value="claude-sonnet-5" style="width:16rem">
           </label>
-          <label>Custom proxy URL <small>(optional; overrides the key field)</small>
+          <label for="proxy">Custom proxy URL <small>(optional; overrides the key field)</small>
             <input type="text" id="proxy" placeholder="https://..." style="width:100%;max-width:32rem">
           </label>
         </div>
-        <label id="voicelab" style="display:flex;gap:.5rem;align-items:flex-start;margin-top:.9rem;color:var(--ink)">
+        <label id="voicelab" for="voice" style="display:flex;gap:.5rem;align-items:flex-start;margin-top:.9rem;color:var(--ink)">
           <input type="checkbox" id="voice" style="margin-top:.3rem">
-          <span>Voice mode: speak your reasoning and hear the interviewer reply. Your silences are timed and count towards the score, exactly as in the room. <small style="color:var(--faint)">Chrome and Safari only; nothing is recorded or uploaded, transcription happens in the browser.</small></span>
+          <span>Voice mode: speak your reasoning and hear the interviewer reply. Your silences are timed and count towards the score. <small style="color:var(--faint)">Chrome and Safari only. This site records and stores nothing; your browser's own speech service does the transcription, and in Chrome that service runs on Google's servers.</small></span>
         </label>
         <p style="font-size:.88rem;color:var(--faint);margin:.7rem 0 0">Whichever mode you pick, the interviewer never gives answers. It asks you to justify what you claim, gives the smallest possible nudge when you ask for one, and moves you on only when you have earned it.</p>
         <div class="row"><button class="btn2 quiet" id="savecfg">Save settings</button><span id="cfgmsg" class="tally"></span></div>
@@ -143,7 +143,7 @@
 
       <div class="chat" id="chat"></div>
       <div id="composer">
-        <textarea id="input" placeholder="Say what you are trying, then try it. Short messages are fine; this is a conversation."></textarea>
+        <label for="input" class="visually-hidden">Your reply to the interviewer</label><textarea id="input" placeholder="Say what you are trying, then try it. Short messages are fine. Ctrl or Cmd with Enter sends."></textarea>
         <div class="row">
           <button class="btn2" id="send">Send</button>
           <button class="btn2 quiet hidden" id="mic">Start listening</button>
@@ -218,7 +218,7 @@ var PROBLEMS = [
 },
 {
   id:"repeat", title:"Tossing until something happens", topics:"Probability, expectation",
-  blurb:"A fair coin, no tricks, and two questions at the end whose answers differ when everything about them looks the same. Applied-style; expect to be asked why, not just how much.",
+  blurb:"A fair coin, no tricks, and two questions at the end whose answers differ when everything about them looks the same. Applied-style; expect to be asked why as well as how much.",
   setup:'A fair coin is tossed repeatedly. Let N be the number of tosses made up to and including the first time two consecutive tosses show the same face.',
   parts:[
    {label:"(a)", text:"Find P(N = 2) and P(N = 3).",
@@ -276,7 +276,7 @@ function renderHub(){
   });
   var h = loadHist(); var r = document.getElementById('record');
   if(!h.length){ r.innerHTML = '<p>No attempts recorded in this browser yet. Attempts are saved here so you can watch the score move.</p>'; return; }
-  var rows = h.map(function(x){ return '<tr><td>'+esc(x.date)+'</td><td>'+esc(x.title)+'</td><td>'+esc(x.mode)+'</td><td>'+esc(x.parts)+'/5</td><td>'+esc(x.nudges)+'</td><td>'+(x.score==null?'&ndash;':esc(x.score)+'/10')+'</td></tr>'; }).join('');
+  var rows = h.map(function(x){ return '<tr><td>'+esc(x.date)+'</td><td>'+esc(x.title)+'</td><td>'+esc(x.mode)+'</td><td>'+esc(x.parts)+'/5</td><td>'+esc(x.nudges)+'</td><td>'+(x.score==null?'Not scored':esc(x.score)+'/10')+'</td></tr>'; }).join('');
   r.innerHTML = '<h2 style="font-size:1.1rem">Your record</h2><table><tr><th>Date</th><th>Problem</th><th>Mode</th><th>Parts</th><th>Nudges</th><th>Score</th></tr>'+rows+'</table>';
 }
 function applyModeUI(m){
@@ -537,6 +537,7 @@ document.getElementById('send').addEventListener('click', function(){
 });
 inputEl = document.getElementById('input');
 inputEl.addEventListener('keydown', function(e){ if((e.metaKey||e.ctrlKey)&&e.key==='Enter'){ document.getElementById('send').click(); } });
+['apikey','model','proxy'].forEach(function(id){ var f=document.getElementById(id); if(f) f.addEventListener('keydown',function(e){ if(e.key==='Enter'){ e.preventDefault(); document.getElementById('savecfg').click(); } }); });
 document.getElementById('nudge').addEventListener('click', function(){ if(!st||st.ended) return; if(st.ai){ candMsg('Could I have a nudge?'); converse('',true); } else staticHint(); });
 document.getElementById('next').addEventListener('click', function(){ if(!st||st.ended||st.idx>=st.p.parts.length-1) return; st.forced++; if(st.ai) sysMsg('You moved on without the interviewer\'s agreement; this is noted.'); st.idx++; showPart(st.idx); });
 document.getElementById('mic').addEventListener('click', function(){ if(!st||st.ended) return; if(listening) stopListening(); else startListening(); });

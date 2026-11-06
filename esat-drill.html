@@ -70,7 +70,6 @@
   <main class="page ed" data-sec="esat">
     <section id="menu">
       <header class="hub-head">
-        <span class="eyebrow">ESAT</span>
         <h1>ESAT Drill</h1>
         <p class="lede">Sit an ESAT module (Mathematics 1, Physics or Mathematics 2) the way the real test runs it: 27 questions, 40 minutes, no calculator, nothing marked until you submit. Then go through every question with its worked solution.</p>
       </header>
@@ -84,14 +83,14 @@
           <label class="lab" for="timing">Time allowed
             <select id="timing"><option value="2400" selected>Standard: 40:00</option><option value="3000">+25%: 50:00</option><option value="3600">+50%: 60:00</option><option value="0">Untimed</option></select>
           </label>
-          <div class="erow"><button class="btn2" id="startPaper" type="button">Start</button></div>
+          <div class="erow"><button class="btn2" id="startPaper" type="button">Start the module</button></div>
           <p class="tally best" id="best"></p>
         </div>
         <div class="mode">
           <h3>Practise by topic</h3>
           <p>Choose topics; questions come one at a time with the answer and the worked solution straight after each. Untimed.</p>
           <div class="chips" id="topics" role="group" aria-label="Topics"></div>
-          <div class="erow"><button class="btn2" id="startTopic" type="button">Start</button><span class="tally" id="topiccount"></span></div>
+          <div class="erow"><button class="btn2" id="startTopic" type="button">Start topic practice</button><span class="tally" id="topiccount"></span></div>
         </div>
       </div>
       <p class="tally">The papers are original and written for this site. Choose a paper on the <a href="esat.html">ESAT page</a> to download it as a PDF instead.</p>
@@ -100,7 +99,7 @@
     <section id="stage" class="hidden" aria-live="polite">
       <div class="clockrow">
         <div><span class="tally" id="modelabel"></span><div id="clock" role="timer">40:00</div></div>
-        <div class="erow" style="margin:0"><button class="btn2 quiet" id="flag" type="button">Flag</button><button class="btn2" id="submit" type="button">Submit</button><button class="btn2 quiet hidden" id="quit" type="button">Back to menu</button></div>
+        <div class="erow" style="margin:0"><button class="btn2 quiet" id="flag" type="button">Flag</button><button class="btn2" id="submit" type="button">Submit paper</button><button class="btn2 quiet hidden" id="quit" type="button">Back to menu</button></div>
       </div>
       <div id="confirmbox" class="confirm hidden" role="alertdialog" aria-labelledby="confirmtitle">
         <p id="confirmtitle" style="margin:0 0 .4rem"><b>Submit the paper?</b> <span id="confirmnote"></span></p>
@@ -120,7 +119,7 @@
       <p class="tally">Select a question in the grid below to see the options you chose and the worked solution.</p>
       <div class="grid" id="rgrid"></div>
       <table class="res" id="topictable"></table>
-      <div class="erow"><button class="btn2" id="again" type="button">Back to menu</button><a class="btn2 quiet" href="esat.html" style="text-decoration:none">ESAT page</a></div>
+      <div class="erow"><button class="btn2" id="again" type="button">Back to menu</button><a class="btn2 quiet" href="esat.html" style="text-decoration:none">All ESAT papers</a></div>
     </section>
   </main>
 

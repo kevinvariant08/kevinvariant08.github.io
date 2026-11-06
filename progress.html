@@ -57,7 +57,7 @@
   <nav id="sitenav"><div class="nav-links"><a href="index.html">Home</a> <a href="drill.html">Drill</a> <a href="arena.html">Arena</a> <a href="bank.html">Question bank</a></div></nav>
   <main class="container hu">
     <h1>Progress</h1>
-    <p class="lead">Everything you have done on this site, in one place: drill accuracy by technique, how long questions take you, how your interview scores are moving, and what to do next. It is all read from this browser, so it is yours alone.</p>
+    <p class="lead">Everything you have done on this site, in one place: drill accuracy by technique, how long questions take you, how your interview scores are moving, and what to do next. It is read from this browser, and synced to your account if you are signed in.</p>
     <div id="body"></div>
   </main>
 
@@ -169,7 +169,7 @@ function paintConf(){ var el=document.getElementById('confprof'), C=window.HU_CO
   st.levels.forEach(function(l,i){ if(!l.n) return; var acc=100*l.right/l.n, x=sx(100*l.p), y=sy(acc);
     svg+='<g class="cpt" tabindex="0" data-i="'+i+'" aria-label="'+l.label+': '+Math.round(acc)+' percent right over '+l.n+' answers"><circle cx="'+x+'" cy="'+y+'" r="16" fill="transparent"/><circle class="dot" cx="'+x+'" cy="'+y+'" r="6" style="fill:var(--aqua);stroke:var(--bg)" stroke-width="2"/></g>'; });
   svg+='</svg>';
-  var rows=st.levels.map(function(l){ return '<tr><td>'+l.label+'</td><td>'+Math.round(100*l.p)+'%</td><td>'+(l.n?Math.round(100*l.right/l.n)+'%':'–')+'</td><td>'+l.n+'</td></tr>'; }).join('');
+  var rows=st.levels.map(function(l){ return '<tr><td>'+l.label+'</td><td>'+Math.round(100*l.p)+'%</td><td>'+(l.n?Math.round(100*l.right/l.n)+'%':'none yet')+'</td><td>'+l.n+'</td></tr>'; }).join('');
   var vs=C.verdicts(st).slice(0,3);
   el.innerHTML=head+'<p class="tally">Each dot shows how often you were right at that confidence. On the line, confidence matches results; below it, you were less often right than you thought.</p>'
     +'<div class="two"><div class="cchart" style="position:relative;max-width:26rem">'+svg+'<div class="ctip" role="status" hidden></div></div>'
