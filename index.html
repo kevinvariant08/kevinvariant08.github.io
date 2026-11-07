@@ -10,7 +10,7 @@
   <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=4">
   <link rel="manifest" href="/site.webmanifest?v=5">
   <meta name="theme-color" content="#F6F4EF">
-  <link rel="stylesheet" href="style.css?v=20261108d">
+  <link rel="stylesheet" href="style.css?v=20261108f">
   <script>try{if(localStorage.getItem('kv_mode')==='dark')document.documentElement.setAttribute('data-mode','dark')}catch(e){}</script>
   <style>
     .hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:2.6rem;align-items:center;padding:3.2rem 0 1.4rem}
@@ -70,27 +70,20 @@
         <h1>Competition maths, with a plan</h1>
         <p class="lede">Free preparation for UKMT and MAA competitions, from the JMC and AMC 8 up to BMO2 and the USAMO. Each unit has a lesson, six original problems with hints and full solutions, and a graded list of real past problems on the same topic.</p>
         <div class="cta">
-          <a class="btn" href="pathways.html#start">Find your level</a>
+          <a class="btn" href="pathways.html">Open the five levels</a>
           <a class="btn secondary" href="calendar.html">Competition calendar</a>
           <a class="btn secondary" href="admissions.html">TMUA, ESAT and interview prep</a>
           <a class="btn secondary" href="#" data-install hidden>Install the app</a>
         </div>
         <p class="newhere">No account needed. Sign in only if you want your progress on every device.</p>
       </div>
-      <figure class="board" aria-label="A triangle with its incircle. Drag the vertices.">
-        <span class="hint">Drag a vertex</span>
-        <svg id="tri" viewBox="0 0 560 430" role="img" aria-labelledby="tri-title"><title id="tri-title">Triangle, incircle and circumcircle, with Euler's formula checked live</title></svg>
-        <figcaption class="readout" id="readout"></figcaption>
-      </figure>
+      <div class="hero-ladder" data-sec="path">
+        <h2 id="ladder-h" class="hl-h">Five levels, one ladder</h2>
+        <div class="home-ladder" id="homeLadder" aria-labelledby="ladder-h"></div>
+        <p class="facts">So far: <b class="kv-nunits">50</b> units, <b class="kv-np">300</b> original practice problems and <b class="kv-nl">554</b> real contest problems on the units' ladders.</p>
+      </div>
     </section>
 
-    <section aria-labelledby="ladder-h" id="ladder" data-sec="path">
-      <h2 id="ladder-h">Five levels, one ladder</h2>
-      <p class="sub-intro">Each level maps to the UK and US competitions it prepares you for. Pick yours and work through its units in any order.</p>
-      <p class="facts">So far: <b class="kv-nunits">42</b> units across the five levels, <b class="kv-np">252</b> original practice problems, and <b class="kv-nl">477</b> real contest problems linked from the units' ladders.</p>
-      <div class="home-ladder" id="homeLadder"></div>
-      <p><a class="btn" href="pathways.html">See all <span class="kv-nunits">42</span> units</a></p>
-    </section>
 
     <section aria-labelledby="demo-h" id="demo" class="demo" data-sec="path">
       <h2 id="demo-h">Try a problem from Level 3</h2>
@@ -165,10 +158,10 @@
     </div>
   </main>
 
-<script src="site.js?v=20261108d"></script>
-<script src="path.js?v=20261108d"></script>
-<script src="pathways-data.js?v=20261108d"></script>
-<script src="calendar-data.js?v=20261108d"></script>
+<script src="site.js?v=20261108e"></script>
+<script src="path.js?v=20261108e"></script>
+<script src="pathways-data.js?v=20261108e"></script>
+<script src="calendar-data.js?v=20261108e"></script>
 <script>
 /* Home: the level ladder (with progress) and the next three calendar dates. */
 (function(){
@@ -176,7 +169,7 @@
   function esc(t){ return String(t).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
   var lv=P&&P.level();
   document.getElementById('homeLadder').innerHTML=D.levels.map(function(L){ var r=L.units.filter(function(u){return u.status==='ready';}), dn=r.filter(function(u){ return P&&P.score(u.id,u.np,u.nl)>=1; }).length;
-    return '<a class="hl'+(lv===L.n?' mine':'')+'" href="pathways.html#level-'+L.n+'"><span class="pw-num">'+L.n+'</span><span><b>'+esc(L.name)+'</b><small>'+esc(L.uk.slice(0,2).join(', '))+' · '+esc(L.us.join(', '))+'</small></span><em>'+(r.length?(dn?dn+'/':'')+r.length+' units':'Coming soon')+'</em></a>'; }).join('');
+    return '<a class="hl'+(lv===L.n?' mine':'')+'" data-lv="'+L.n+'" href="pathways.html#level-'+L.n+'"><span class="lv-num">'+L.n+'</span><span><b>'+esc(L.name)+(lv===L.n?' (your level)':'')+'</b><small>'+esc(L.uk.slice(0,2).join(', '))+' · '+esc(L.us.join(', '))+'</small></span><em>'+(dn?dn+' of ':'')+r.length+' units</em></a>'; }).reverse().join('');
   if(!C) return; var MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   function d(s){ if(!s) return null; var p=s.split('-'); return new Date(+p[0],+p[1]-1,+p[2]); }
   var t0=new Date(); t0.setHours(0,0,0,0);
@@ -186,7 +179,7 @@
 </script>
 <script>
 (function(){
-  var svg=document.getElementById('tri'), NS='http://www.w3.org/2000/svg', U=100;
+  var svg=document.getElementById('tri'), NS='http://www.w3.org/2000/svg', U=100; if(!svg) return;
   var P=[{x:118,y:380},{x:404,y:324},{x:419,y:134}];
   var COL=['var(--aqua)','var(--rose)','var(--saffron)'];
   function el(n,a){ var e=document.createElementNS(NS,n); for(var k in a){ if(/^var\(/.test(a[k])) e.style.setProperty(k,a[k]); else e.setAttribute(k,a[k]); } svg.appendChild(e); return e; }

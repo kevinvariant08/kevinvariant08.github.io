@@ -405,3 +405,50 @@ a.pw-unit:hover{border-color:var(--ink-faint);background:var(--surface-2);color:
 
 .pw-xhead{margin:1.5rem 0 .25rem;font-size:1rem}
 .pw-xnote{margin:0 0 .75rem;color:var(--ink-soft)}
+
+/* ---------- The five levels: one colour each, used wherever a level appears ---------- */
+:root{--lv1:#2E7D32;--lv2:#00796B;--lv3:#1F5FAD;--lv4:#7B3FA0;--lv5:#B0283F;--on-lv:#FFFFFF}
+@media (prefers-color-scheme:dark){:root:not([data-mode="light"]){--lv1:#7CCB80;--lv2:#5FC7B7;--lv3:#8DB7F0;--lv4:#C79BE6;--lv5:#F08A9C;--on-lv:#14163A}}
+:root[data-mode="dark"]{--lv1:#7CCB80;--lv2:#5FC7B7;--lv3:#8DB7F0;--lv4:#C79BE6;--lv5:#F08A9C;--on-lv:#14163A}
+[data-lv="1"]{--lv:var(--lv1)}[data-lv="2"]{--lv:var(--lv2)}[data-lv="3"]{--lv:var(--lv3)}[data-lv="4"]{--lv:var(--lv4)}[data-lv="5"]{--lv:var(--lv5)}
+.lv-num{display:grid;place-items:center;flex:none;width:2.2rem;height:2.2rem;border-radius:8px;background:var(--lv,var(--accent));color:var(--on-lv);font-family:var(--heading);font-weight:700;font-size:1.05rem}
+.lv-num.big{width:2.8rem;height:2.8rem;font-size:1.35rem;border-radius:10px}
+.lv-steps{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:.5rem;margin:1.2rem 0 1rem;align-items:end}
+.lv-step{display:flex;gap:.6rem;align-items:flex-start;padding:.75rem .8rem;background:var(--surface);border:1px solid var(--line-soft);border-top:4px solid var(--lv);border-radius:var(--r-lg);color:var(--ink);text-decoration:none;min-width:0}
+.lv-step:nth-child(1){min-height:5.2rem}.lv-step:nth-child(2){min-height:5.9rem}.lv-step:nth-child(3){min-height:6.6rem}.lv-step:nth-child(4){min-height:7.3rem}.lv-step:nth-child(5){min-height:8rem}
+.lv-step:hover{border-color:var(--lv)}
+.lv-step[aria-current="page"]{background:color-mix(in srgb,var(--lv) 10%,var(--surface));border-color:var(--lv)}
+.lv-txt{display:flex;flex-direction:column;min-width:0}
+.lv-txt b{font-size:.98rem;line-height:1.25}
+.lv-txt small{color:var(--ink-soft);font-size:.8rem;line-height:1.35}
+.pw-level{border-top:4px solid var(--lv,var(--line-soft))}
+.pw-level .pw-lhead h2{margin:0 0 .3rem;font-size:1.45rem}
+.pw-shead{margin:1.3rem 0 .5rem;font-size:.82rem;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-soft)}
+.pw-level .pw-xhead{margin:1.6rem 0 .25rem;font-size:1.05rem;padding-top:1rem;border-top:1px solid var(--line-soft)}
+.pw-nav{display:flex;justify-content:space-between;gap:1rem;margin:1.4rem 0 0;padding-top:.9rem;border-top:1px solid var(--line-soft)}
+.pw-start{margin:0 0 1rem}
+.pw-start-h{font-size:1rem;margin:0 0 .5rem}
+@media (max-width:760px){
+  .lv-steps{grid-template-columns:1fr;gap:.4rem}
+  .lv-step{min-height:0!important;padding:.55rem .7rem;border-top-width:1px;border-left:4px solid var(--lv)}
+  .lv-txt small+small{display:none}
+}
+
+/* home: the five levels as a staircase, highest at the top */
+.hero-ladder .hl-h{font-size:1.05rem;margin:0 0 .6rem}
+.home-ladder .hl{border-left:4px solid var(--lv)}
+.home-ladder .hl:nth-child(1){margin-left:4rem}.home-ladder .hl:nth-child(2){margin-left:3rem}.home-ladder .hl:nth-child(3){margin-left:2rem}.home-ladder .hl:nth-child(4){margin-left:1rem}.home-ladder .hl:nth-child(5){margin-left:0}
+@media (max-width:600px){.home-ladder .hl{margin-left:0!important}}
+.hero-ladder .facts{margin-top:.8rem;font-size:.92rem;color:var(--ink-soft)}
+.lv-num.sm{width:1.5rem;height:1.5rem;font-size:.8rem;border-radius:6px}
+.lv-item>a{display:flex!important;gap:.6rem;align-items:flex-start}
+.crumb-lv{display:inline-flex;gap:.4rem;align-items:center}
+main[data-lv] .pw-uhead{border-top:4px solid var(--lv);padding-top:1rem}
+.pw-strands{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.8rem;margin-top:1rem}
+.pw-scol{display:flex;flex-direction:column;gap:.6rem;min-width:0}
+.pw-scol .pw-shead{margin:0;padding-bottom:.35rem;border-bottom:2px solid var(--lv,var(--line-soft))}
+.pw-scol .pw-unit .pw-strand{display:none}
+.pw-strat{margin-top:1rem}
+@media (max-width:980px){.pw-strands{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:600px){.pw-strands{grid-template-columns:1fr}}
+.pw-crumbs .lv-num.sm{width:1.3rem;height:1.3rem;font-size:.72rem}

@@ -332,7 +332,7 @@
   var FLAME='<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1c1 3 4 4.5 4 8a4 4 0 0 1-8 0c0-2 1-3 2-4 0 1.5.5 2.5 1.5 3C7.5 6 7 3.5 8 1z" fill="var(--rose,#FF6B8B)"/></svg>';
   function paintPill(s){ var li=document.querySelector('.site-nav .rw'); if(!li){ var ul=document.querySelector('.site-nav .links'); if(!ul) return; li=document.createElement('li'); li.className='rw'; var acct=ul.querySelector('.acct'); ul.insertBefore(li,acct||null); }
     var due=reviewDue().length;
-    li.innerHTML=(due?'<a class="rw-pill rv" href="review.html" title="Mistakes due for review">'+due+' to review</a> ':'')+(wallet()?'<a class="rw-pill cn" href="shop.html" title="Coins: spend them in the shop">'+COIN+(wallet().admin?'\u221e':wallet().balance.toLocaleString())+'</a> ':'')+'<a class="rw-pill" href="rewards.html" title="'+esc((worn()?worn()+' \u00b7 ':'')+s.title)+', '+s.xp+' XP"><span class="lv">'+(s.admin?'Admin \u00b7 ':'')+'Lv '+s.level+'</span>'+(s.streak?FLAME+s.streak:'')+'</a>'; }
+    li.innerHTML=(due?'<a class="rw-pill rv" href="review.html" title="Mistakes due for review">'+due+' to review</a> ':'')+(wallet()?'<a class="rw-pill cn" href="shop.html" title="Coins: spend them in the shop">'+COIN+(wallet().admin?'\u221e':wallet().balance.toLocaleString())+'</a> ':'')+'<a class="rw-pill" href="rewards.html" title="'+esc((worn()?worn()+' \u00b7 ':'')+s.title)+', '+s.xp+' XP"><span class="lv">'+(s.admin?'Admin \u00b7 ':'')+'Rank '+s.level+'</span>'+(s.streak?FLAME+s.streak:'')+'</a>'; }
 
   /* ---------------- tick: recompute, notify, sync the leaderboard */
   var last=null, lbPushed=0;

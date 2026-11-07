@@ -10,7 +10,7 @@
   <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=4">
   <link rel="manifest" href="/site.webmanifest?v=5">
   <meta name="theme-color" content="#F6F4EF">
-  <link rel="stylesheet" href="style.css?v=20261108d">
+  <link rel="stylesheet" href="style.css?v=20261108f">
   <script>try{if(localStorage.getItem('kv_mode')==='dark')document.documentElement.setAttribute('data-mode','dark')}catch(e){}</script>
   <script>window.MathJax={tex:{inlineMath:[['$','$']],displayMath:[['\\[','\\]']],processEscapes:true},options:{skipHtmlTags:['script','noscript','style','textarea','pre']}};</script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js" async></script>
@@ -23,8 +23,8 @@
     <div id="unit"><p>Loading the unit…</p></div>
   </main>
 
-  <script src="path.js?v=20261108d"></script>
-  <script src="pathways-data.js?v=20261108d"></script>
+  <script src="path.js?v=20261108e"></script>
+  <script src="pathways-data.js?v=20261108e"></script>
   <script>
   (function(){
     var D=window.KV_PATH, P=window.KV_PROGRESS, root=document.getElementById('unit');
@@ -39,7 +39,8 @@
     D.levels.forEach(function(lv){ lv.units.forEach(function(u){ if(u.id===id){ meta=u; L=lv; } }); });
     if(!meta||meta.status!=='ready'){ root.innerHTML='<h1>Unit not found</h1><p>That unit isn\u2019t available yet. <a href="pathways.html">Back to Pathways</a>.</p>'; return; }
     document.title=meta.title+' | Kevinvariant Pathways';
-    document.getElementById('crumbs').innerHTML='<a href="pathways.html">Pathways</a> <span>›</span> <a href="pathways.html#level-'+L.n+'">Level '+L.n+': '+esc(L.name)+'</a> <span>›</span> '+esc(D.strands[meta.strand]);
+    document.querySelector('main').setAttribute('data-lv',L.n);
+    document.getElementById('crumbs').innerHTML='<a href="pathways.html">Pathways</a> <span>›</span> <a class="crumb-lv" href="pathways.html#level-'+L.n+'"><span class="lv-num sm" aria-hidden="true">'+L.n+'</span>Level '+L.n+': '+esc(L.name)+'</a> <span>›</span> '+esc(D.strands[meta.strand])+(meta.extra?' <span>›</span> Beyond the textbook':'');
     var ready=L.units.filter(function(u){ return u.status==='ready'; }), k=ready.indexOf(meta), prev=ready[k-1], next=ready[k+1];
     var byId={}; D.levels.forEach(function(lv){ lv.units.forEach(function(u){ byId[u.id]=u; }); });
 
@@ -101,6 +102,6 @@
     }
   })();
   </script>
-  <script src="site.js?v=20261108d" defer></script>
+  <script src="site.js?v=20261108e" defer></script>
 </body>
 </html>

@@ -10,7 +10,7 @@
   <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=4">
   <link rel="manifest" href="/site.webmanifest?v=5">
   <meta name="theme-color" content="#F6F4EF">
-  <link rel="stylesheet" href="style.css?v=20261108d">
+  <link rel="stylesheet" href="style.css?v=20261108f">
   <script>try{if(localStorage.getItem('kv_mode')==='dark')document.documentElement.setAttribute('data-mode','dark')}catch(e){}</script>
 </head>
 <body data-theme-v2>
@@ -22,18 +22,15 @@
       <p class="lede">Five levels, from the JMC and AMC 8 up to BMO2 and the USAMO: <span class="kv-nunits">42</span> units so far. Each unit is a lesson on one topic, six original problems with hints and full solutions, and a list of real past contest problems on that topic in order of difficulty. Everything is free, and your progress is saved as you work.</p>
     </header>
 
+    <nav class="lv-steps" id="steps" aria-label="The five levels"></nav>
+
     <section class="pw-start" id="start" aria-labelledby="start-h">
-      <h2 id="start-h">Where should I start?</h2>
-      <p class="sub-intro">Pick the next competition you are preparing for. If it already feels comfortable, start one level higher.</p>
-      <div class="pw-pick" id="pick" role="group" aria-label="Your next competition"></div>
+      <h2 id="start-h" class="pw-start-h">Not sure which level? Pick your next competition.</h2>
+      <div class="pw-pick" id="pick" role="group" aria-labelledby="start-h"></div>
       <p class="pw-pick-note" id="pickNote" hidden></p>
     </section>
 
-    <section aria-labelledby="levels-h">
-      <h2 id="levels-h">The levels</h2>
-      <p class="sub-intro">Units within a level can be taken in any order, though each lists what it builds on. Strategy units are worth doing just before the contest.</p>
-      <div id="levels"></div>
-    </section>
+    <div id="levels"></div>
 
     <section aria-labelledby="how-h">
       <h2 id="how-h">How a unit works</h2>
@@ -46,8 +43,8 @@
     </section>
   </main>
 
-  <script src="path.js?v=20261108d"></script>
-  <script src="pathways-data.js?v=20261108d"></script>
+  <script src="path.js?v=20261108e"></script>
+  <script src="pathways-data.js?v=20261108e"></script>
   <script>
   (function(){
     var D=window.KV_PATH, P=window.KV_PROGRESS;
@@ -57,7 +54,7 @@
     function paintPick(){ var lv=P.level(); pick.querySelectorAll('button').forEach(function(b){ b.setAttribute('aria-pressed',String(+b.dataset.l===lv)); });
       if(lv){ var L=D.levels[lv-1]; note.hidden=false; note.innerHTML='Start with <a href="#level-'+lv+'">Level '+lv+': '+esc(L.name)+'</a>.'+(L.ready?'':' Its lessons are on the way; meanwhile, start with the level below or its resources.'); } }
     PICK.forEach(function(p){ var b=document.createElement('button'); b.type='button'; b.dataset.l=p[1]; b.textContent=p[0];
-      b.addEventListener('click',function(){ P.setLevel(p[1]); paintPick(); paint(); var el=document.getElementById('level-'+p[1]); if(el) el.scrollIntoView({behavior:'smooth',block:'start'}); });
+      b.addEventListener('click',function(){ P.setLevel(p[1]); paintPick(); if(location.hash==='#level-'+p[1]) paint(); else location.hash='level-'+p[1]; });
       pick.appendChild(b); });
 
     function unitTile(u){
@@ -68,25 +65,36 @@
         +'<span class="pw-meta"><span>About '+Math.round(u.minutes/15)*15+' min</span><span class="pw-st'+(s>=1?' ok':'')+'">'+st+'</span></span>'
         +'<span class="pw-bar" aria-hidden="true"><i style="width:'+Math.round(s*100)+'%"></i></span></a>';
     }
-    function paint(){
-      var lv=P.level(), h='';
-      D.levels.forEach(function(L){
+    var ORDER=['NT','AL','CO','GE','ST'];
+    function shown(){ var m=/^#level-([1-5])$/.exec(location.hash); return m?+m[1]:(P.level()||1); }
+    function steps(cur){
+      document.getElementById('steps').innerHTML=D.levels.map(function(L){
         var ready=L.units.filter(function(u){ return u.status==='ready'; }), done=ready.filter(function(u){ return P.score(u.id,u.np,u.nl)>=1; }).length;
-        h+='<section class="pw-level'+(lv===L.n?' mine':'')+'" id="level-'+L.n+'" aria-labelledby="lh-'+L.n+'">'
-          +'<div class="pw-lhead"><span class="pw-num">'+L.n+'</span><div><h3 id="lh-'+L.n+'">'+esc(L.name)+(lv===L.n?' <span class="chip">Your level</span>':'')+'</h3>'
-          +'<p>'+esc(L.blurb)+'</p><div class="chips">'+L.uk.map(function(c){return '<span class="chip">UK: '+esc(c)+'</span>';}).join('')+L.us.map(function(c){return '<span class="chip">US: '+esc(c)+'</span>';}).join('')+'</div></div>'
-          +(ready.length?'<div class="pw-prog"><b>'+done+'/'+ready.length+'</b><span>units done</span></div>':'')+'</div>'
-          +'<div class="pw-units">'+L.units.filter(function(u){ return !u.extra; }).map(unitTile).join('')+'</div>'
-          +(L.units.some(function(u){ return u.extra; })?'<h4 class="pw-xhead">Beyond the textbook</h4><p class="pw-xnote">Techniques that most books leave out but that decide contest problems at this level.</p><div class="pw-units">'+L.units.filter(function(u){ return u.extra; }).map(unitTile).join('')+'</div>':'')
-          +(L.resources&&L.resources.length?'<p class="pw-res"><span>Also for this level:</span> '+L.resources.map(function(r){ return '<a href="'+esc(r.href)+'"'+(/\.pdf/.test(r.href)?' target="_blank" rel="noopener"':'')+'>'+esc(r.name)+'</a>'; }).join(' · ')+'</p>':'')
-          +'</section>';
-      });
-      document.getElementById('levels').innerHTML=h;
+        return '<a class="lv-step" data-lv="'+L.n+'" href="#level-'+L.n+'"'+(cur===L.n?' aria-current="page"':'')+'><span class="lv-num">'+L.n+'</span><span class="lv-txt"><b>'+esc(L.name)+'</b><small>'+esc(L.uk[0]+' \u00b7 '+L.us[0])+'</small><small>'+done+' of '+ready.length+' units done</small></span></a>';
+      }).join('');
     }
+    function paint(){
+      var cur=shown(), mine=P.level(), L=D.levels[cur-1];
+      steps(cur);
+      var core=L.units.filter(function(u){ return !u.extra; }), extra=L.units.filter(function(u){ return u.extra; });
+      var cols=ORDER.filter(function(k){ return k!=='ST'; }).map(function(k){ var us=core.filter(function(u){ return u.strand===k; }); return us.length?'<div class="pw-scol"><h3 class="pw-shead">'+esc(D.strands[k])+'</h3>'+us.map(unitTile).join('')+'</div>':''; }).join('');
+      var st=core.filter(function(u){ return u.strand==='ST'; });
+      var groups='<div class="pw-strands">'+cols+'</div>'+(st.length?'<div class="pw-scol pw-strat"><h3 class="pw-shead">Strategy</h3><div class="pw-units">'+st.map(unitTile).join('')+'</div></div>':'');
+      var prev=D.levels[cur-2], next=D.levels[cur];
+      document.getElementById('levels').innerHTML='<section class="pw-level" data-lv="'+L.n+'" id="level-'+L.n+'" aria-labelledby="lh-'+L.n+'">'
+        +'<div class="pw-lhead"><span class="lv-num big">'+L.n+'</span><div><h2 id="lh-'+L.n+'">Level '+L.n+': '+esc(L.name)+(mine===L.n?' <span class="chip">Your level</span>':'')+'</h2>'
+        +'<p>'+esc(L.blurb)+'</p><div class="chips">'+L.uk.map(function(c){return '<span class="chip">UK: '+esc(c)+'</span>';}).join('')+L.us.map(function(c){return '<span class="chip">US: '+esc(c)+'</span>';}).join('')+'</div></div></div>'
+        +groups
+        +(extra.length?'<h3 class="pw-xhead">Beyond the textbook</h3><p class="pw-xnote">Techniques that most books leave out but that decide contest problems at this level.</p><div class="pw-units">'+extra.map(unitTile).join('')+'</div>':'')
+        +(L.resources&&L.resources.length?'<p class="pw-res"><span>Also for this level:</span> '+L.resources.map(function(r){ return '<a href="'+esc(r.href)+'"'+(/\.pdf/.test(r.href)?' target="_blank" rel="noopener"':'')+'>'+esc(r.name)+'</a>'; }).join(' \u00b7 ')+'</p>':'')
+        +'<p class="pw-nav">'+(prev?'<a href="#level-'+prev.n+'">Level '+prev.n+': '+esc(prev.name)+'</a>':'<span></span>')+(next?'<a href="#level-'+next.n+'">Level '+next.n+': '+esc(next.name)+'</a>':'')+'</p>'
+        +'</section>';
+    }
+    window.addEventListener('hashchange',function(){ paint(); var s=document.getElementById('steps'); if(s) s.scrollIntoView({block:'start'}); });
     paintPick(); paint();
     window.addEventListener('kv-path',function(){ paint(); });
   })();
   </script>
-  <script src="site.js?v=20261108d" defer></script>
+  <script src="site.js?v=20261108e" defer></script>
 </body>
 </html>

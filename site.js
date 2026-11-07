@@ -6,14 +6,13 @@
      prepare for admissions, and the optional extras. Each tool appears once. */
   var GROUPS=[
     {label:'Pathways', sec:'path', items:[
-      {href:'pathways.html', name:'All Pathways', note:'Five levels, from JMC and AMC 8 to BMO and AIME'},
-      {href:'pathways.html#start', name:'Find your level', note:'Start from the competition you are preparing for'},
-      {href:'pathways.html#level-2', name:'Level 2: Intermediate', note:'IMC, Kangaroo, AMC 10'},
-      {href:'pathways.html#level-3', name:'Level 3: Senior', note:'SMC, Senior Kangaroo, AMC 12'},
-      {href:'pathways.html#level-4', name:'Level 4: Olympiad', note:'BMO1, MOG, AIME'},
+      {href:'pathways.html', name:'All five levels', note:'Find your level, then work through its units'},
+      {href:'pathways.html#level-1', name:'Level 1: Foundations', note:'JMC, Junior Kangaroo, AMC 8', lv:1},
+      {href:'pathways.html#level-2', name:'Level 2: Intermediate', note:'IMC, Kangaroo, AMC 10', lv:2},
+      {href:'pathways.html#level-3', name:'Level 3: Senior', note:'SMC, Senior Kangaroo, AMC 12', lv:3},
+      {href:'pathways.html#level-4', name:'Level 4: Olympiad', note:'BMO1, MOG, AIME', lv:4},
+      {href:'pathways.html#level-5', name:'Level 5: Advanced', note:'BMO2, EGMO, IMO selection, USAMO', lv:5},
       {href:'olympiad.html', name:'Olympiad library', note:'Mock papers, competition solutions, the HU Collection'},
-      {href:'geometry.html', name:'Geometry Lab', note:'Triangle centres you can drag'},
-      {href:'marker.html', name:'Proof marker', note:'Get a written solution marked'},
       {href:'book.html', name:'Beyond the Incenter', note:'Kevin\u2019s olympiad geometry book'}]},
     {label:'Calendar', sec:'cal', href:'calendar.html'},
     {label:'Admissions', sec:'tmua', items:[
@@ -34,6 +33,8 @@
       {href:'/cevian/', name:'Cevian', note:'Ranked contest problems, 8 kyu to IMO'},
       {href:'arena.html', name:'Arena', note:'Race a bot to the right answer'},
       {href:'duel.html', name:'Friend duel', note:'Five questions; your friend races your ghost'},
+      {href:'geometry.html', name:'Geometry Lab', note:'Triangle centres you can drag'},
+      {href:'marker.html', name:'Proof marker', note:'Get a written solution marked'},
       {href:'sandbox.html', name:'Conjecture sandbox', note:'Build a figure, find what stays true'},
       {href:'rewards.html', name:'Rewards', note:'Levels, badges, quests and the daily challenge'},
       {href:'shop.html', name:'Shop', note:'Spend coins on titles, themes and papers'},
@@ -62,7 +63,7 @@
       if(g.href){ h+='<li class="sec-'+g.sec+'"><a href="'+g.href+'"'+(g.href===here?' aria-current="page"':'')+'>'+g.label+'</a></li>'; return; }
       var cur=g.items.some(function(it){return it.href===here;})||(g.sec==='path'&&here==='unit.html');
       h+='<li class="sec-'+g.sec+'"><button type="button" class="'+(cur?'current':'')+'" aria-expanded="false" aria-controls="m'+i+'">'+g.label+caret()+'</button><ul class="menu" id="m'+i+'">'
-        +g.items.map(function(it){return '<li><a href="'+it.href+'"'+(it.href===here?' aria-current="page"':'')+'>'+it.name+'<small>'+it.note+'</small></a></li>';}).join('')+'</ul></li>';
+        +g.items.map(function(it){return '<li'+(it.lv?' data-lv="'+it.lv+'" class="lv-item"':'')+'><a href="'+it.href+'"'+(it.href===here?' aria-current="page"':'')+'>'+(it.lv?'<span class="lv-num sm" aria-hidden="true">'+it.lv+'</span>':'')+'<span>'+it.name+'<small>'+it.note+'</small></span></a></li>';}).join('')+'</ul></li>';
     });
     nav.innerHTML=h+'</ul></div>';
     nav.classList.add('site-nav'); nav.setAttribute('aria-label','Site');
