@@ -452,3 +452,4 @@ main[data-lv] .pw-uhead{border-top:4px solid var(--lv);padding-top:1rem}
 @media (max-width:980px){.pw-strands{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:600px){.pw-strands{grid-template-columns:1fr}}
 .pw-crumbs .lv-num.sm{width:1.3rem;height:1.3rem;font-size:.72rem}
+.pw-markit{margin-left:auto;font-size:.9rem;align-self:center}

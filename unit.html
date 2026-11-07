@@ -10,7 +10,7 @@
   <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=4">
   <link rel="manifest" href="/site.webmanifest?v=5">
   <meta name="theme-color" content="#F6F4EF">
-  <link rel="stylesheet" href="style.css?v=20261108f">
+  <link rel="stylesheet" href="style.css?v=20261108g">
   <script>try{if(localStorage.getItem('kv_mode')==='dark')document.documentElement.setAttribute('data-mode','dark')}catch(e){}</script>
   <script>window.MathJax={tex:{inlineMath:[['$','$']],displayMath:[['\\[','\\]']],processEscapes:true},options:{skipHtmlTags:['script','noscript','style','textarea','pre']}};</script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js" async></script>
@@ -62,7 +62,7 @@
       U.practice.forEach(function(q,i){
         h+='<li class="pw-prob" data-i="'+i+'"><div class="pw-ptop"><b>Problem '+(i+1)+'</b>'+stars(q.stars)+'</div><div class="pw-q">'+q.q+'</div>'
           +'<div class="pw-pbtns"><button type="button" class="btn secondary" data-a="hint" aria-expanded="false" aria-controls="hint-'+i+'">Show the hint</button><button type="button" class="btn secondary" data-a="sol" aria-expanded="false" aria-controls="sol-'+i+'">Show the solution</button>'
-          +'<span class="pw-mark" role="group" aria-label="Mark problem '+(i+1)+'"><button type="button" data-m="got">Got it</button><button type="button" data-m="not">Not yet</button></span></div>'
+          +'<span class="pw-mark" role="group" aria-label="Mark problem '+(i+1)+'"><button type="button" data-m="got">Got it</button><button type="button" data-m="not">Not yet</button></span>'+(q.ans?'':'<a class="pw-markit" href="marker.html#from=pathways" data-mark="'+i+'">Get my proof marked</a>')+'</div>'
           +'<div class="pw-hint" id="hint-'+i+'" hidden><b>Hint.</b> '+q.hint+'</div>'
           +'<div class="pw-sol" id="sol-'+i+'" hidden>'+(q.ans?'<p class="pw-ans"><b>Answer:</b> '+q.ans+'</p>':'')+q.sol+'</div></li>';
       });
@@ -81,6 +81,11 @@
       root.querySelectorAll('.pw-prob').forEach(function(li){
         var i=li.dataset.i;
         li.querySelector('[data-a="hint"]').addEventListener('click',function(){ var e=li.querySelector('.pw-hint'); e.hidden=!e.hidden; this.setAttribute('aria-expanded',String(!e.hidden)); this.textContent=e.hidden?'Show the hint':'Hide the hint'; });
+        var mk=li.querySelector('[data-mark]'), q=U.practice[+i]; if(mk) mk.addEventListener('click',function(){
+          var div=document.createElement('div'); div.innerHTML=q.q; div.querySelectorAll('figure').forEach(function(f){ f.remove(); });
+          var t=div.textContent.replace(/\s+/g,' ').trim();
+          try{ sessionStorage.setItem('kv_mark_prefill',JSON.stringify({prob:t,scheme:U.level>=5?'bmo2':'bmo',from:U.id+' Problem '+(+i+1)})); }catch(e){}
+        });
         li.querySelector('[data-a="sol"]').addEventListener('click',function(){ var e=li.querySelector('.pw-sol'); e.hidden=!e.hidden; this.setAttribute('aria-expanded',String(!e.hidden)); this.textContent=e.hidden?'Show the solution':'Hide the solution'; });
         li.querySelectorAll('[data-m]').forEach(function(b){ b.addEventListener('click',function(){ var cur=P.unit(id).ps[i]; P.markPractice(id,i,cur===b.dataset.m?null:b.dataset.m); paintState(); }); });
       });
