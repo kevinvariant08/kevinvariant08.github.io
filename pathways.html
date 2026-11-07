@@ -10,7 +10,7 @@
   <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=4">
   <link rel="manifest" href="/site.webmanifest?v=5">
   <meta name="theme-color" content="#F6F4EF">
-  <link rel="stylesheet" href="style.css?v=20261108g">
+  <link rel="stylesheet" href="style.css?v=20261108n">
   <script>try{if(localStorage.getItem('kv_mode')==='dark')document.documentElement.setAttribute('data-mode','dark')}catch(e){}</script>
 </head>
 <body data-theme-v2>
@@ -44,7 +44,7 @@
   </main>
 
   <script src="path.js?v=20261108e"></script>
-  <script src="pathways-data.js?v=20261108m"></script>
+  <script src="pathways-data.js?v=20261108n"></script>
   <script>
   (function(){
     var D=window.KV_PATH, P=window.KV_PROGRESS;
@@ -61,7 +61,7 @@
       if(u.status!=='ready') return '<div class="pw-unit soon"><span class="pw-strand">'+esc(D.strands[u.strand])+'</span><b>'+esc(u.title)+'</b><span class="pw-st">Coming soon</span></div>';
       var s=P.score(u.id,u.np,u.nl), st=s>=1?'Done: review unit':P.started(u.id)?'Continue ('+Math.round(s*100)+'% done)':'Start unit';
       var name=(s>=1?'Review':P.started(u.id)?'Continue':'Start')+' unit '+u.id+': '+u.title+(P.started(u.id)&&s<1?', '+Math.round(s*100)+'% done':s>=1?', done':'');
-      return '<a class="pw-unit'+(s>=1?' done':'')+'" href="unit.html?u='+u.id+'" aria-label="'+esc(name)+'"><span class="pw-strand">'+esc(D.strands[u.strand])+'</span><b>'+esc(u.title)+'</b><span class="pw-blurb">'+esc(u.blurb)+'</span>'
+      return '<a class="pw-unit'+(s>=1?' done':'')+(u.extra?' extra':'')+'" href="unit.html?u='+u.id+'" aria-label="'+esc(name+(u.extra?' (extra, beyond the textbook)':''))+'"><span class="pw-strand">'+esc(D.strands[u.strand])+'</span>'+(u.extra?'<span class="pw-xtag">Extra</span>':'')+'<b>'+esc(u.title)+'</b><span class="pw-blurb">'+esc(u.blurb)+'</span>'
         +'<span class="pw-meta"><span>About '+Math.round(u.minutes/15)*15+' min</span><span class="pw-st'+(s>=1?' ok':'')+'">'+st+'</span></span>'
         +'<span class="pw-bar" aria-hidden="true"><i style="width:'+Math.round(s*100)+'%"></i></span></a>';
     }
@@ -69,7 +69,7 @@
     function shown(){ var m=/^#level-([1-5])$/.exec(location.hash); return m?+m[1]:(P.level()||1); }
     function steps(cur){
       document.getElementById('steps').innerHTML=D.levels.map(function(L){
-        var ready=L.units.filter(function(u){ return u.status==='ready'; }), done=ready.filter(function(u){ return P.score(u.id,u.np,u.nl)>=1; }).length;
+        var ready=L.units.filter(function(u){ return u.status==='ready'&&!u.extra; }), done=ready.filter(function(u){ return P.score(u.id,u.np,u.nl)>=1; }).length;
         return '<a class="lv-step" data-lv="'+L.n+'" href="#level-'+L.n+'"'+(cur===L.n?' aria-current="page"':'')+'><span class="lv-num">'+L.n+'</span><span class="lv-txt"><b>'+esc(L.name)+'</b><small>'+esc(L.uk[0]+' \u00b7 '+L.us[0])+'</small><small>'+done+' of '+ready.length+' units done</small></span></a>';
       }).join('');
     }
@@ -77,7 +77,7 @@
       var cur=shown(), mine=P.level(), L=D.levels[cur-1];
       steps(cur);
       var core=L.units.filter(function(u){ return !u.extra; }), extra=L.units.filter(function(u){ return u.extra; });
-      var cols=ORDER.filter(function(k){ return k!=='ST'; }).map(function(k){ var us=core.filter(function(u){ return u.strand===k; }); return us.length?'<div class="pw-scol"><h3 class="pw-shead">'+esc(D.strands[k])+'</h3>'+us.map(unitTile).join('')+'</div>':''; }).join('');
+      var cols=ORDER.filter(function(k){ return k!=='ST'; }).map(function(k){ var us=core.filter(function(u){ return u.strand===k; }).concat(extra.filter(function(u){ return u.strand===k; })); return us.length?'<div class="pw-scol"><h3 class="pw-shead">'+esc(D.strands[k])+'</h3>'+us.map(unitTile).join('')+'</div>':''; }).join('');
       var st=core.filter(function(u){ return u.strand==='ST'; });
       var groups='<div class="pw-strands">'+cols+'</div>'+(st.length?'<div class="pw-scol pw-strat"><h3 class="pw-shead">Strategy</h3><div class="pw-units">'+st.map(unitTile).join('')+'</div></div>':'');
       var prev=D.levels[cur-2], next=D.levels[cur];
@@ -85,7 +85,6 @@
         +'<div class="pw-lhead"><span class="lv-num big">'+L.n+'</span><div><h2 id="lh-'+L.n+'">Level '+L.n+': '+esc(L.name)+(mine===L.n?' <span class="chip">Your level</span>':'')+'</h2>'
         +'<p>'+esc(L.blurb)+'</p><div class="chips">'+L.uk.map(function(c){return '<span class="chip">UK: '+esc(c)+'</span>';}).join('')+L.us.map(function(c){return '<span class="chip">US: '+esc(c)+'</span>';}).join('')+'</div></div></div>'
         +groups
-        +(extra.length?'<h3 class="pw-xhead">Beyond the textbook</h3><p class="pw-xnote">Techniques that most books leave out but that decide contest problems at this level.</p><div class="pw-units">'+extra.map(unitTile).join('')+'</div>':'')
         +(L.resources&&L.resources.length?'<p class="pw-res"><span>Also for this level:</span> '+L.resources.map(function(r){ return '<a href="'+esc(r.href)+'"'+(/\.pdf/.test(r.href)?' target="_blank" rel="noopener"':'')+'>'+esc(r.name)+'</a>'; }).join(' \u00b7 ')+'</p>':'')
         +'<p class="pw-nav">'+(prev?'<a href="#level-'+prev.n+'">Level '+prev.n+': '+esc(prev.name)+'</a>':'<span></span>')+(next?'<a href="#level-'+next.n+'">Level '+next.n+': '+esc(next.name)+'</a>':'')+'</p>'
         +'</section>';

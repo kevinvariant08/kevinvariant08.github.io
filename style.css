@@ -453,3 +453,7 @@ main[data-lv] .pw-uhead{border-top:4px solid var(--lv);padding-top:1rem}
 @media (max-width:600px){.pw-strands{grid-template-columns:1fr}}
 .pw-crumbs .lv-num.sm{width:1.3rem;height:1.3rem;font-size:.72rem}
 .pw-markit{margin-left:auto;font-size:.9rem;align-self:center}
+/* optional "beyond the textbook" units sit at the end of their strand column */
+.pw-unit.extra{border-style:dashed;background:var(--bg)}
+.pw-xtag{align-self:flex-start;font-size:.72rem;font-weight:600;letter-spacing:.03em;padding:.05rem .45rem;border:1px solid var(--line);border-radius:999px;color:var(--ink-soft)}
+.pw-scol .pw-unit.extra:first-of-type{margin-top:0}
