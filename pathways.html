@@ -10,7 +10,7 @@
   <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=4">
   <link rel="manifest" href="/site.webmanifest?v=5">
   <meta name="theme-color" content="#F6F4EF">
-  <link rel="stylesheet" href="style.css?v=20261108n">
+  <link rel="stylesheet" href="style.css?v=20261108o">
   <script>try{if(localStorage.getItem('kv_mode')==='dark')document.documentElement.setAttribute('data-mode','dark')}catch(e){}</script>
 </head>
 <body data-theme-v2>
@@ -25,7 +25,7 @@
     <nav class="lv-steps" id="steps" aria-label="The five levels"></nav>
 
     <section class="pw-start" id="start" aria-labelledby="start-h">
-      <h2 id="start-h" class="pw-start-h">Not sure which level? Pick your next competition.</h2>
+      <h2 id="start-h" class="pw-start-h">Not sure which level? Pick your next competition, or <a href="diagnostic.html">take a level check</a>.</h2>
       <div class="pw-pick" id="pick" role="group" aria-labelledby="start-h"></div>
       <p class="pw-pick-note" id="pickNote" hidden></p>
     </section>
@@ -83,7 +83,7 @@
       var prev=D.levels[cur-2], next=D.levels[cur];
       document.getElementById('levels').innerHTML='<section class="pw-level" data-lv="'+L.n+'" id="level-'+L.n+'" aria-labelledby="lh-'+L.n+'">'
         +'<div class="pw-lhead"><span class="lv-num big">'+L.n+'</span><div><h2 id="lh-'+L.n+'">Level '+L.n+': '+esc(L.name)+(mine===L.n?' <span class="chip">Your level</span>':'')+'</h2>'
-        +'<p>'+esc(L.blurb)+'</p><div class="chips">'+L.uk.map(function(c){return '<span class="chip">UK: '+esc(c)+'</span>';}).join('')+L.us.map(function(c){return '<span class="chip">US: '+esc(c)+'</span>';}).join('')+'</div></div></div>'
+        +'<p>'+esc(L.blurb)+'</p>'+'<p class="pw-dg"><a href="diagnostic.html#l'+L.n+'">Do you need Level '+L.n+'? Take the eight-problem level check</a>'+(function(){ try{ var r=JSON.parse(localStorage.getItem('kv_diag')||'{}')[L.n]; return r?' (last score '+r.score+'/8)':''; }catch(e){ return ''; } })()+'</p>'+'<div class="chips">'+L.uk.map(function(c){return '<span class="chip">UK: '+esc(c)+'</span>';}).join('')+L.us.map(function(c){return '<span class="chip">US: '+esc(c)+'</span>';}).join('')+'</div></div></div>'
         +groups
         +(L.resources&&L.resources.length?'<p class="pw-res"><span>Also for this level:</span> '+L.resources.map(function(r){ return '<a href="'+esc(r.href)+'"'+(/\.pdf/.test(r.href)?' target="_blank" rel="noopener"':'')+'>'+esc(r.name)+'</a>'; }).join(' \u00b7 ')+'</p>':'')
         +'<p class="pw-nav">'+(prev?'<a href="#level-'+prev.n+'">Level '+prev.n+': '+esc(prev.name)+'</a>':'<span></span>')+(next?'<a href="#level-'+next.n+'">Level '+next.n+': '+esc(next.name)+'</a>':'')+'</p>'

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Level check | Kevinvariant Pathways</title>
+  <meta name="description" content="Eight contest problems per level, marked automatically, to tell you whether you need a Pathways level or are ready for the next one.">
+  <link rel="icon" href="/favicon.ico?v=4" sizes="32x32">
+  <link rel="icon" href="/favicon.svg?v=4" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=4">
+  <link rel="manifest" href="/site.webmanifest?v=5">
+  <meta name="theme-color" content="#F6F4EF">
+  <link rel="stylesheet" href="style.css?v=20261108o">
+  <script>try{if(localStorage.getItem('kv_mode')==='dark')document.documentElement.setAttribute('data-mode','dark')}catch(e){}</script>
+  <script>window.MathJax={tex:{inlineMath:[['$','$']],displayMath:[['\\[','\\]']],processEscapes:true},options:{skipHtmlTags:['script','noscript','style','textarea','pre']}};</script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js" async></script>
+</head>
+<body data-theme-v2>
+  <nav id="sitenav"><div class="nav-links"><a href="index.html">Home</a> <a href="pathways.html">Pathways</a> <a href="calendar.html">Calendar</a> <a href="admissions.html">Admissions</a></div></nav>
+
+  <main class="page pw dg" data-sec="path">
+    <p class="crumbs"><a href="pathways.html">Pathways</a> / Level check</p>
+    <nav class="dg-tabs" id="tabs" aria-label="Choose a level check"></nav>
+    <div id="app"></div>
+  </main>
+
+  <script src="path.js?v=20261108e"></script>
+  <script src="pathways-data.js?v=20261108t"></script>
+  <script src="diagnostic-data.js?v=20261108a"></script>
+  <script>
+  (function(){
+    var D=window.KV_PATH, P=window.KV_PROGRESS, G=window.KV_DIAG, app=document.getElementById('app');
+    var SN={NT:'Number theory',AL:'Algebra',CO:'Combinatorics',GE:'Geometry'};
+    function esc(t){ return String(t).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+    function lvl(){ var m=/^#l([1-5])$/.exec(location.hash); return m?+m[1]:(P.level()||1); }
+    function unitOf(id){ var r=null; D.levels.forEach(function(L){ L.units.forEach(function(u){ if(u.id===id) r=u; }); }); return r; }
+    function store(){ try{ return JSON.parse(localStorage.getItem('kv_diag')||'{}'); }catch(e){ return {}; } }
+    function keep(n,rec){ var o=store(); o[n]=rec; try{ localStorage.setItem('kv_diag',JSON.stringify(o)); }catch(e){} }
+    function typeset(el){ if(window.MathJax&&MathJax.typesetPromise) MathJax.typesetPromise([el]).catch(function(){}); else setTimeout(function(){ typeset(el); },300); }
+
+    /* Answer matching: ignore spaces, dollar signs, case and a trailing full stop; compare fractions and decimals by value. */
+    function clean(s){ return String(s).replace(/[\s$]/g,'').replace(/\u2212/g,'-').replace(/\\[dt]?frac\{([^}]*)\}\{([^}]*)\}/g,'($1)/($2)').replace(/\.$/,'').toLowerCase(); }
+    function val(s){ s=clean(s).replace(/[()]/g,''); var m=/^(-?\d+(?:\.\d+)?)(?:\/(-?\d+(?:\.\d+)?))?$/.exec(s); if(!m) return null; var v=+m[1]/(m[2]?+m[2]:1); return isFinite(v)?v:null; }
+    function right(q,a){ if(!clean(a)) return false; var c=[q.ans].concat(q.accept||[]);
+      for(var i=0;i<c.length;i++){ if(clean(c[i])===clean(a)) return true; var x=val(c[i]), y=val(a); if(x!==null&&y!==null&&Math.abs(x-y)<1e-9*Math.max(1,Math.abs(x))) return true; }
+      return false; }
+
+    function tabs(n){ document.getElementById('tabs').innerHTML=D.levels.map(function(L){ var r=store()[L.n];
+      return '<a href="#l'+L.n+'"'+(L.n===n?' aria-current="page"':'')+'><b>Level '+L.n+'</b><small>'+esc(L.name)+(r?' \u00b7 last: '+r.score+'/8':'')+'</small></a>'; }).join(''); }
+
+    function render(){
+      var n=lvl(), L=D.levels[n-1], Q=G[n]||[], proof=Q.some(function(q){ return q.proof; });
+      tabs(n);
+      var h='<header class="hub-head"><h1>Level '+n+' check: '+esc(L.name)+'</h1>'
+        +'<p class="lede">Eight problems, two from each strand, at the standard of the middle of '+esc(L.uk.concat(L.us).join(', '))+'. A high score means you can skip Level '+n+'; a low one shows which units to start with.</p>'
+        +'<p class="sub-intro">Allow about '+[0,30,40,50,75,100][n]+' minutes, no calculator. Give each answer as a number or a short expression (fractions like 3/4 are fine). Leave a box empty rather than guess.'+(proof?' At this level a correct number is not enough: after marking, tick the problems where you could also write the complete proof described.':'')+'</p></header>'
+        +'<form id="f" novalidate><ol class="pw-probs dg-probs">';
+      Q.forEach(function(q,i){
+        h+='<li class="pw-prob" data-i="'+i+'"><div class="pw-ptop"><b>Problem '+(i+1)+'</b><span class="pw-strand">'+SN[q.strand]+'</span></div><div class="pw-q">'+q.q+'</div>'
+          +'<p class="dg-in"><label for="a'+i+'">Your answer</label> <input id="a'+i+'" name="a'+i+'" type="text" inputmode="text" autocomplete="off" spellcheck="false"> <span class="dg-res" id="r'+i+'" aria-live="polite"></span></p>'
+          +'<div class="dg-after" hidden>'+(q.proof?'<p class="dg-pf"><input type="checkbox" id="p'+i+'"> <label for="p'+i+'">I could write a complete proof: '+q.proof+'</label></p>':'')
+          +'<div class="pw-pbtns"><button type="button" class="btn secondary" data-sol="'+i+'" aria-expanded="false" aria-controls="s'+i+'">Show the solution</button></div>'
+          +'<div class="pw-sol" id="s'+i+'" hidden><p class="pw-ans"><b>Answer:</b> '+q.ans+'</p>'+q.sol+'</div></div></li>';
+      });
+      h+='</ol><p><button type="submit" class="btn" id="go">Mark my answers</button></p></form><section id="result" class="dg-result" hidden aria-live="polite"></section>';
+      app.innerHTML=h; typeset(app);
+      var f=document.getElementById('f'), marked=false;
+      f.addEventListener('submit',function(e){ e.preventDefault(); marked=true;
+        Q.forEach(function(q,i){ var a=f['a'+i].value, ok=right(q,a), li=f.querySelector('[data-i="'+i+'"]');
+          li.classList.toggle('got',ok); li.classList.toggle('miss',!ok);
+          document.getElementById('r'+i).textContent=ok?'Correct':(a.trim()?'Not correct':'No answer');
+          li.querySelector('.dg-after').hidden=false; li.dataset.ok=ok?1:0; });
+        document.getElementById('go').textContent='Mark again';
+        result(); typeset(f); });
+      f.addEventListener('change',function(e){ if(marked&&e.target.type==='checkbox') result(); });
+      f.addEventListener('click',function(e){ var b=e.target.closest('[data-sol]'); if(!b) return; var s=document.getElementById('s'+b.dataset.sol); s.hidden=!s.hidden; b.setAttribute('aria-expanded',String(!s.hidden)); b.textContent=s.hidden?'Show the solution':'Hide the solution'; });
+
+      function result(){
+        var by={}, miss=[], score=0;
+        Q.forEach(function(q,i){ var li=f.querySelector('[data-i="'+i+'"]'), ok=li.dataset.ok==='1'&&(!q.proof||document.getElementById('p'+i).checked);
+          by[q.strand]=(by[q.strand]||0)+(ok?1:0); if(ok) score++; else if(miss.indexOf(q.unit)<0) miss.push(q.unit); });
+        keep(n,{score:score,t:Date.now()});
+        var next=D.levels[n], prev=D.levels[n-2], adv, act;
+        if(score>=7){ adv=next?'You do not need Level '+n+'. Take the Level '+(n+1)+' check next to see whether you need that one.':'You are ready for the hardest problems in the course. Work through the Level 5 ladders and the extra units, and sit real BMO2, USAMO and IMO papers under time.';
+          act=next?'<a class="btn" href="#l'+(n+1)+'">Take the Level '+(n+1)+' check</a> <button type="button" class="btn secondary" data-set="'+(n+1)+'">Make Level '+(n+1)+' my level</button>':'<button type="button" class="btn" data-set="5">Make Level 5 my level</button>'; }
+        else if(score>=5){ adv='Level '+n+' is the right level, but you do not need all of it. Start with the units below, which teach the problems you dropped, then move to the contest ladders in the other units.';
+          act='<button type="button" class="btn" data-set="'+n+'">Make Level '+n+' my level</button>'; }
+        else { adv='Take Level '+n+' from the start.'+(prev?' If most of these felt out of reach, try the Level '+(n-1)+' check first.':'');
+          act='<button type="button" class="btn" data-set="'+n+'">Make Level '+n+' my level</button>'+(prev?' <a class="btn secondary" href="#l'+(n-1)+'">Take the Level '+(n-1)+' check</a>':''); }
+        var r=document.getElementById('result');
+        r.innerHTML='<h2>Your result: '+score+' out of 8</h2><ul class="dg-strands">'+['NT','AL','CO','GE'].map(function(k){ return '<li><span>'+SN[k]+'</span><b>'+(by[k]||0)+' / 2</b></li>'; }).join('')+'</ul>'
+          +'<p>'+adv+'</p>'
+          +(miss.length&&score<7?'<p><b>Start with:</b></p><ul class="dg-units">'+miss.map(function(id){ var u=unitOf(id); return u?'<li><a href="unit.html?u='+id+'">'+id+': '+esc(u.title)+'</a></li>':''; }).join('')+'</ul>':'')
+          +'<p class="dg-act">'+act+'</p><p class="dg-set" id="setNote" hidden></p>';
+        r.hidden=false;
+        r.querySelectorAll('[data-set]').forEach(function(b){ b.addEventListener('click',function(){ P.setLevel(+b.dataset.set); var s=document.getElementById('setNote'); s.hidden=false; s.innerHTML='Saved. <a href="pathways.html#level-'+b.dataset.set+'">Open Level '+b.dataset.set+' on the Pathways page</a>.'; }); });
+        tabs(n);
+      }
+    }
+    window.addEventListener('hashchange',function(){ render(); window.scrollTo(0,0); });
+    render();
+  })();
+  </script>
+  <script src="site.js?v=20261108e" defer></script>
+</body>
+</html>
