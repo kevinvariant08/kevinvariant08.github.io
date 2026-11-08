@@ -36,7 +36,10 @@
     function unitOf(id){ var r=null; D.levels.forEach(function(L){ L.units.forEach(function(u){ if(u.id===id) r=u; }); }); return r; }
     function store(){ try{ return JSON.parse(localStorage.getItem('kv_diag')||'{}'); }catch(e){ return {}; } }
     function keep(n,rec){ var o=store(); o[n]=rec; try{ localStorage.setItem('kv_diag',JSON.stringify(o)); }catch(e){} }
-    function typeset(el){ if(window.MathJax&&MathJax.typesetPromise) MathJax.typesetPromise([el]).catch(function(){}); else setTimeout(function(){ typeset(el); },300); }
+    function fitWide(){ document.querySelectorAll('main mjx-container:not([display])').forEach(function(c){ var p=c.parentElement.closest('p,li,div,section'); if(!p||!p.clientWidth) return; var w=c.classList.contains('mj-wide')?c.scrollWidth:c.getBoundingClientRect().width; c.classList.toggle('mj-wide', w>p.clientWidth-4); }); }
+    var fitT; window.addEventListener('resize',function(){ clearTimeout(fitT); fitT=setTimeout(fitWide,80); });
+    document.addEventListener('click',function(){ setTimeout(fitWide,30); });
+    function typeset(el){ if(window.MathJax&&MathJax.typesetPromise) MathJax.typesetPromise([el]).then(fitWide).catch(function(){}); else setTimeout(function(){ typeset(el); },300); }
 
     /* Answer matching: ignore spaces, dollar signs, case and a trailing full stop; compare fractions and decimals by value. */
     function clean(s){ return String(s).replace(/[\s$]/g,'').replace(/\u2212/g,'-').replace(/\\[dt]?frac\{([^}]*)\}\{([^}]*)\}/g,'($1)/($2)').replace(/\.$/,'').toLowerCase(); }
@@ -58,7 +61,7 @@
       Q.forEach(function(q,i){
         h+='<li class="pw-prob" data-i="'+i+'"><div class="pw-ptop"><b>Problem '+(i+1)+'</b><span class="pw-strand">'+SN[q.strand]+'</span></div><div class="pw-q">'+q.q+'</div>'
           +'<p class="dg-in"><label for="a'+i+'">Your answer</label> <input id="a'+i+'" name="a'+i+'" type="text" inputmode="text" autocomplete="off" spellcheck="false"> <span class="dg-res" id="r'+i+'" aria-live="polite"></span></p>'
-          +'<div class="dg-after" hidden>'+(q.proof?'<p class="dg-pf"><input type="checkbox" id="p'+i+'"> <label for="p'+i+'">I could write a complete proof: '+q.proof+'</label></p>':'')
+          +'<div class="dg-after" hidden>'+(q.proof?'<p class="dg-pf"><input type="checkbox" id="p'+i+'" aria-describedby="pd'+i+'"> <label for="p'+i+'">I could write a complete proof of this.</label></p><p class="dg-pd" id="pd'+i+'">'+q.proof+'</p>':'')
           +'<div class="pw-pbtns"><button type="button" class="btn secondary" data-sol="'+i+'" aria-expanded="false" aria-controls="s'+i+'">Show the solution</button></div>'
           +'<div class="pw-sol" id="s'+i+'" hidden><p class="pw-ans"><b>Answer:</b> '+q.ans+'</p>'+q.sol+'</div></div></li>';
       });
