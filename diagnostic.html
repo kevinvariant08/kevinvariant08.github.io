@@ -43,7 +43,11 @@
 
     /* Answer matching: ignore spaces, dollar signs, case and a trailing full stop; compare fractions and decimals by value. */
     function clean(s){ return String(s).replace(/[\s$]/g,'').replace(/\u2212/g,'-').replace(/\\[dt]?frac\{([^}]*)\}\{([^}]*)\}/g,'($1)/($2)').replace(/\.$/,'').toLowerCase(); }
-    function val(s){ s=clean(s).replace(/[()]/g,''); var m=/^(-?\d+(?:\.\d+)?)(?:\/(-?\d+(?:\.\d+)?))?$/.exec(s); if(!m) return null; var v=+m[1]/(m[2]?+m[2]:1); return isFinite(v)?v:null; }
+    /* Value of a short answer: integers, decimals, fractions and square roots such as 9\sqrt2/32, 9sqrt(2)/32 or 9√2/32. */
+    function val(s){ s=clean(s).replace(/\\sqrt\{([^}]*)\}/g,'r($1)').replace(/\\sqrt(\d+)/g,'r($1)').replace(/(?:sqrt|\u221a)\(([^)]*)\)/g,'r($1)').replace(/(?:sqrt|\u221a)(\d+(?:\.\d+)?)/g,'r($1)').replace(/\\cdot|\\times|\u00d7/g,'*');
+      if(!/^[\d.+\-*\/()r]+$/.test(s)||/[*\/+\-]{2}/.test(s.replace(/[*\/]-/g,'*'))) return null;
+      s=s.replace(/(\d|\))(?=[r(])/g,'$1*').replace(/\)(?=\d)/g,')*');
+      try{ var v=Function('r','return ('+s+');')(Math.sqrt); return typeof v==='number'&&isFinite(v)?v:null; }catch(e){ return null; } }
     function right(q,a){ if(!clean(a)) return false; var c=[q.ans].concat(q.accept||[]);
       for(var i=0;i<c.length;i++){ if(clean(c[i])===clean(a)) return true; var x=val(c[i]), y=val(a); if(x!==null&&y!==null&&Math.abs(x-y)<1e-9*Math.max(1,Math.abs(x))) return true; }
       return false; }
