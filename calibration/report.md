@@ -1,10 +1,10 @@
-# Calibration report, 2026-10-24
+# Calibration report, 2026-11-09
 
 Questions are named by id only. No option letters or content appear in this report.
 
-- Model: **prior**. No usable answers yet: every value is the prior from the question ratings.
-- Answers received 0, used 0 (dropped: 0 under 2 s, 0 repeats, 0 unknown ids). Re-marked against the current key: 0.
-- People: 0. Site users' ability: mean 0.0, SD 1.0 (TMUA candidates: mean 0, SD 1).
+- Model: **1PL**. 1PL fallback: only 4 usable answers (median 1 per answered question); 2PL needs at least 3000 and a median of 50. Discrimination is fixed at 1.327 for every question.
+- Answers received 4, used 4 (dropped: 0 under 2 s, 0 repeats, 0 unknown ids). Re-marked against the current key: 0.
+- People: 2. Site users' ability: mean -0.71, SD 2.031 (TMUA candidates: mean 0, SD 1).
 
 ## Check the answer key or wording (0)
 
