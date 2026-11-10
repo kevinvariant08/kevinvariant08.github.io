@@ -2,18 +2,18 @@
 
 /* ======================================================================
    Kevinvariant design system
-   Calm by default: a warm light page, white cards, navy ink. The three
+   Calm by default: a white page, bordered white cards, navy ink. The three
    pigments from the logo's triangle are kept for meaning only (links,
    right/wrong, locked/free), never for decoration. Dark mode keeps the
    original indigo palette, flattened; reward themes recolour dark mode.
    ====================================================================== */
 :root{
-  --bg:#F6F4EF;          /* page */
+  --bg:#FFFFFF;          /* page */
   --bg-deep:#FFFFFF;     /* wells, inputs */
   --surface:#FFFFFF;     /* panels */
-  --surface-2:#F0EDE6;   /* raised panels, hover */
-  --line:#D9D4C8;        /* borders */
-  --line-soft:#E6E2D8;
+  --surface-2:#F3F4F6;   /* raised panels, hover */
+  --line:#D0D4DB;        /* borders */
+  --line-soft:#E3E6EB;
   --ink:#1B1E33;         /* text */
   --ink-soft:#4A4D62;
   --ink-faint:#67697D;   /* 4.6:1 on surface-2 */
@@ -27,7 +27,7 @@
   --mint-wash:rgba(39,113,78,.10);
   --on-accent:#FFFFFF;   /* text on a solid pigment or ink fill */
   --btn-bg:#1B1E33; --btn-ink:#FFFFFF; --btn-hover:#30344F;
-  --board:#F6F4EF; --chalk:#1B1E33; --chalk-cyan:#1D738B; --chalk-rose:#B83155; --chalk-gold:#8A5C00; /* Geometry Lab ink */
+  --board:#FFFFFF; --chalk:#1B1E33; --chalk-cyan:#1D738B; --chalk-rose:#B83155; --chalk-gold:#8A5C00; /* Geometry Lab ink */
   --display:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
   --heading:"Bricolage Grotesque",system-ui,-apple-system,"Segoe UI",sans-serif;
   --serif:"IBM Plex Serif",Georgia,"Times New Roman",serif;
@@ -86,7 +86,7 @@ code{font-size:.92em;background:var(--bg-deep);padding:.1em .35em;border-radius:
 /* ------------------------------------------------------ legacy content */
 .card{background:var(--surface);border:1px solid var(--line-soft);border-radius:var(--r-lg);padding:1.5rem 1.6rem;margin:1.2rem 0}
 .card h3{margin-top:0}
-.board-card{border-left:4px solid var(--aqua)}
+
 
 /* ----------------------------------------------------------- navigation */
 .site-nav{position:sticky;top:0;z-index:50;background:var(--surface);border-bottom:1px solid var(--line-soft)}
@@ -186,7 +186,7 @@ body:not([data-theme-v2]) main canvas,body:not([data-theme-v2]) main svg{backgro
 /* doorway and content cards */
 .page .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(16.5rem,1fr));gap:1rem;margin-top:1rem}
 .page .cards.two{grid-template-columns:repeat(auto-fit,minmax(20rem,1fr))}
-.page .door,.page .pc{position:relative;display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line-soft);border-top:2px solid var(--accent,var(--line-soft));border-radius:var(--r-lg);padding:1.3rem 1.3rem 1.1rem}
+.page .door,.page .pc{position:relative;display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line-soft);border-radius:var(--r-lg);padding:1.3rem 1.3rem 1.1rem}
 .page .door h3,.page .pc h3{margin:0 0 .35rem;font-size:1.18rem}
 .page .door p,.page .pc p{font-size:.95rem;color:var(--ink-soft);margin:0 0 .8rem}
 .page .door ul{list-style:none;margin:auto 0 0;padding:.6rem 0 0;border-top:1px solid var(--line-soft);display:grid;gap:.15rem}
@@ -221,7 +221,7 @@ body:not([data-theme-v2]) main canvas,body:not([data-theme-v2]) main svg{backgro
 .page .tool p{margin:0;font-size:.95rem;color:var(--ink-soft)}
 
 /* callouts */
-.page .callout{background:var(--surface);border:1px solid var(--line-soft);border-left:3px solid var(--accent,var(--ink-faint));border-radius:var(--r-md);padding:1rem 1.2rem;margin:1.2rem 0}
+.page .callout{background:var(--surface);border:1px solid var(--line-soft);border:1px solid var(--line-soft);border-radius:var(--r-md);padding:1rem 1.2rem;margin:1.2rem 0}
 .page .callout p:last-child{margin-bottom:0}
 .page .callout h3{margin:0 0 .3rem;font-size:1.05rem}
 
@@ -253,7 +253,7 @@ body:not([data-theme-v2]) main canvas,body:not([data-theme-v2]) main svg{backgro
 @media (max-width:760px){.site-foot .foot-grid{grid-template-columns:1fr 1fr}}
 
 /* Trap Map: the mistake behind a wrong answer (trap-map.js), shown above the solution */
-.trapnote{margin:.9rem 0 .2rem;padding:.65rem .9rem;border:1px solid var(--line-soft);border-left:3px solid var(--saffron);border-radius:var(--r-sm);background:var(--saffron-wash);color:var(--ink);font-family:var(--display);font-size:.95rem;line-height:1.55;max-width:70ch}
+.trapnote{margin:.9rem 0 .2rem;padding:.65rem .9rem;border:1px solid var(--line-soft);border:1px solid var(--line-soft);border-radius:var(--r-sm);background:var(--saffron-wash);color:var(--ink);font-family:var(--display);font-size:.95rem;line-height:1.55;max-width:70ch}
 .trapnote p{margin:0}
 .trapnote .draft{margin-top:.3rem;font-size:.82rem;color:var(--ink-soft)}
 
@@ -330,9 +330,9 @@ a.pw-unit:hover{border-color:var(--ink-faint);background:var(--surface-2);color:
 .pw-lesson p,.pw-lesson li{max-width:none}
 .pw-lesson h3{font-family:var(--heading);font-size:1.3rem;margin:2rem 0 .6rem}
 .pw-lesson .key,.pw-lesson .warn,.pw-lesson .eg{margin:1.2rem 0;padding:.9rem 1.1rem;border-radius:var(--r-md);border:1px solid var(--line-soft);background:var(--surface)}
-.pw-lesson .key{border-left:3px solid var(--accent)}
-.pw-lesson .warn{border-left:3px solid var(--rose);background:var(--rose-wash)}
-.pw-lesson .eg{border-left:3px solid var(--aqua)}
+.pw-lesson .key{border:1px solid var(--line-soft)}
+.pw-lesson .warn{border:1px solid var(--line-soft);background:var(--rose-wash)}
+.pw-lesson .eg{border:1px solid var(--line-soft)}
 .pw-lesson .eg .egq{margin-bottom:.6rem}
 .pw-lesson .eg .egs{border-top:1px dashed var(--line);padding-top:.6rem}
 .pw-lesson .key>*:last-child,.pw-lesson .warn>*:last-child,.pw-lesson .egs>*:last-child{margin-bottom:0}
@@ -372,7 +372,7 @@ a.pw-unit:hover{border-color:var(--ink-faint);background:var(--surface-2);color:
 .cal-filters .pw-filter>span{font-size:.82rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint);margin-right:.2rem}
 .cal-filters .pw-filter button{min-height:38px;padding:.3rem .75rem;font-size:.9rem}
 .cal-next{display:grid;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:.8rem;margin:1rem 0 1.4rem}
-.cal-next a{display:block;padding:.9rem 1rem;border:1px solid var(--line-soft);border-top:2px solid var(--accent);border-radius:var(--r-md);background:var(--surface);color:var(--ink);text-decoration:none}
+.cal-next a{display:block;padding:.9rem 1rem;border:1px solid var(--line-soft);border-radius:var(--r-md);background:var(--surface);color:var(--ink);text-decoration:none}
 .cal-next a:hover{border-color:var(--ink-faint)}
 .cal-next small{display:block;color:var(--ink-faint);font-size:.8rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
 .cal-next b{display:block;font-family:var(--heading);font-size:1.08rem;margin:.15rem 0}
@@ -414,14 +414,14 @@ a.pw-unit:hover{border-color:var(--ink-faint);background:var(--surface-2);color:
 .lv-num{display:grid;place-items:center;flex:none;width:2.2rem;height:2.2rem;border-radius:8px;background:var(--lv,var(--accent));color:var(--on-lv);font-family:var(--heading);font-weight:700;font-size:1.05rem}
 .lv-num.big{width:2.8rem;height:2.8rem;font-size:1.35rem;border-radius:10px}
 .lv-steps{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:.5rem;margin:1.2rem 0 1rem;align-items:end}
-.lv-step{display:flex;gap:.6rem;align-items:flex-start;padding:.75rem .8rem;background:var(--surface);border:1px solid var(--line-soft);border-top:4px solid var(--lv);border-radius:var(--r-lg);color:var(--ink);text-decoration:none;min-width:0}
+.lv-step{display:flex;gap:.6rem;align-items:flex-start;padding:.75rem .8rem;background:var(--surface);border:1px solid var(--line-soft);border-radius:var(--r-lg);color:var(--ink);text-decoration:none;min-width:0}
 .lv-step:nth-child(1){min-height:5.2rem}.lv-step:nth-child(2){min-height:5.9rem}.lv-step:nth-child(3){min-height:6.6rem}.lv-step:nth-child(4){min-height:7.3rem}.lv-step:nth-child(5){min-height:8rem}
 .lv-step:hover{border-color:var(--lv)}
 .lv-step[aria-current="page"]{background:color-mix(in srgb,var(--lv) 10%,var(--surface));border-color:var(--lv)}
 .lv-txt{display:flex;flex-direction:column;min-width:0}
 .lv-txt b{font-size:.98rem;line-height:1.25}
 .lv-txt small{color:var(--ink-soft);font-size:.8rem;line-height:1.35}
-.pw-level{border-top:4px solid var(--lv,var(--line-soft))}
+
 .pw-level .pw-lhead h2{margin:0 0 .3rem;font-size:1.45rem}
 .pw-shead{margin:1.3rem 0 .5rem;font-size:.82rem;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-soft)}
 .pw-level .pw-xhead{margin:1.6rem 0 .25rem;font-size:1.05rem;padding-top:1rem;border-top:1px solid var(--line-soft)}
@@ -430,20 +430,20 @@ a.pw-unit:hover{border-color:var(--ink-faint);background:var(--surface-2);color:
 .pw-start-h{font-size:1rem;margin:0 0 .5rem}
 @media (max-width:760px){
   .lv-steps{grid-template-columns:1fr;gap:.4rem}
-  .lv-step{min-height:0!important;padding:.55rem .7rem;border-top-width:1px;border-left:4px solid var(--lv)}
+  .lv-step{min-height:0!important;padding:.55rem .7rem}
   .lv-txt small+small{display:none}
 }
 
 /* home: the five levels as a staircase, highest at the top */
 .hero-ladder .hl-h{font-size:1.05rem;margin:0 0 .6rem}
-.home-ladder .hl{border-left:4px solid var(--lv)}
+
 .home-ladder .hl:nth-child(1){margin-left:4rem}.home-ladder .hl:nth-child(2){margin-left:3rem}.home-ladder .hl:nth-child(3){margin-left:2rem}.home-ladder .hl:nth-child(4){margin-left:1rem}.home-ladder .hl:nth-child(5){margin-left:0}
 @media (max-width:600px){.home-ladder .hl{margin-left:0!important}}
 .hero-ladder .facts{margin-top:.8rem;font-size:.92rem;color:var(--ink-soft)}
 .lv-num.sm{width:1.5rem;height:1.5rem;font-size:.8rem;border-radius:6px}
 .lv-item>a{display:flex!important;gap:.6rem;align-items:flex-start}
 .crumb-lv{display:inline-flex;gap:.4rem;align-items:center}
-main[data-lv] .pw-uhead{border-top:4px solid var(--lv);padding-top:1rem}
+
 .pw-strands{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.8rem;margin-top:1rem}
 .pw-scol{display:flex;flex-direction:column;gap:.6rem;min-width:0}
 .pw-scol .pw-shead{margin:0;padding-bottom:.35rem;border-bottom:2px solid var(--lv,var(--line-soft))}

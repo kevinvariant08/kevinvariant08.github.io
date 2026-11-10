@@ -9,8 +9,8 @@
   <link rel="icon" href="/favicon.svg?v=4" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=4">
   <link rel="manifest" href="/site.webmanifest?v=5">
-  <meta name="theme-color" content="#F6F4EF">
-  <link rel="stylesheet" href="style.css?v=20261108n">
+  <meta name="theme-color" content="#FFFFFF">
+  <link rel="stylesheet" href="style.css?v=20261110a">
   <script>try{if(localStorage.getItem('kv_mode')==='dark')document.documentElement.setAttribute('data-mode','dark')}catch(e){}</script>
   <script>window.MathJax={tex:{inlineMath:[['$','$']],displayMath:[['\\[','\\]']],processEscapes:true},options:{skipHtmlTags:['script','noscript','style','textarea','pre']}};</script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js" async></script>
@@ -24,13 +24,13 @@
   </main>
 
   <script src="path.js?v=20261108e"></script>
-  <script src="pathways-data.js?v=20261109a"></script>
+  <script src="pathways-data.js?v=20261110a"></script>
   <script>
   (function(){
     var D=window.KV_PATH, P=window.KV_PROGRESS, root=document.getElementById('unit');
     var id=(new URLSearchParams(location.search).get('u')||'').toUpperCase();
     function esc(t){ return String(t).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
-    function stars(n){ return '<span class="pw-stars" aria-label="'+n+' out of 4 difficulty">'+'★'.repeat(n)+'<span>'+'★'.repeat(4-n)+'</span></span>'; }
+    function stars(n){ n=Math.max(0,Math.min(4,n|0)); return '<span class="pw-stars" aria-label="'+n+' out of 4 difficulty">'+'★'.repeat(n)+'<span>'+'★'.repeat(4-n)+'</span></span>'; }
     function fitWide(){ document.querySelectorAll('main mjx-container:not([display])').forEach(function(c){ var p=c.parentElement.closest('p,li,div,section,figure,td'); if(!p||!p.clientWidth) return; var w=c.classList.contains('mj-wide')?c.scrollWidth:c.getBoundingClientRect().width; c.classList.toggle('mj-wide', w>p.clientWidth-4); }); }
     function typeset(el){ if(window.MathJax&&MathJax.typesetPromise) MathJax.typesetPromise([el]).then(fitWide).catch(function(){}); else setTimeout(function(){ typeset(el); },300); }
     var fitT; function fitSoon(){ clearTimeout(fitT); fitT=setTimeout(fitWide,80); }
