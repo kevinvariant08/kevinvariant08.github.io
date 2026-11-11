@@ -34,7 +34,7 @@
 
   /* ---------------- themes unlocked by level */
   var THEMES=[
-    {id:'indigo',name:'Indigo',lvl:1,v:{}},
+    {id:'indigo',name:'Charcoal',lvl:1,v:{}},
     {id:'ember',name:'Ember',lvl:4,v:{'--aqua':'#FFB86B','--rose':'#FF5F6D','--saffron':'#FFD166','--bg':'#1C1014','--bg-deep':'#140A0D','--surface':'#2A161B','--surface-2':'#351C22','--line':'#57303A','--line-soft':'#44262E','--ink-soft':'#E8C9C4','--ink-faint':'#A98580','--grid':'255,140,110'}},
     {id:'aurora',name:'Aurora',lvl:7,v:{'--aqua':'#7CF5D8','--rose':'#B38CFF','--saffron':'#9BE8FF','--bg':'#0C1A22','--bg-deep':'#07121A','--surface':'#11262F','--surface-2':'#16303B','--line':'#23505D','--line-soft':'#1B3F4A','--ink-soft':'#BFE3E4','--ink-faint':'#7FA7AC','--grid':'124,245,216'}},
     {id:'sakura',name:'Sakura',lvl:10,v:{'--aqua':'#9AD8FF','--rose':'#FF8FB8','--saffron':'#FFE3A3','--bg':'#1D1424','--bg-deep':'#150E1B','--surface':'#2A1D33','--surface-2':'#35243F','--line':'#553B63','--line-soft':'#443050','--ink-soft':'#EAD0E4','--ink-faint':'#A98BA5','--grid':'255,143,184'}},
@@ -170,7 +170,7 @@
     B('dailyone','Daily Habit',0,'Solve a daily challenge.',function(s){return metrics(s).daily>=1;}),
     B('throwdown','Throw Down',0,'Send a friend a duel challenge.',function(s){return metrics(s).duelsMade>=1||metrics(s).duelWins>=1;}),
     B('lookagain','Look Again',0,'Finish your first mistake review.',function(s){return metrics(s).reviews>=1;}),
-    B('newlook','New Look',0,'Switch the site to a theme other than Indigo.',function(s){return s.R.theme&&s.R.theme!=='indigo';}),
+    B('newlook','New Look',0,'Switch the site to a theme other than Charcoal.',function(s){return s.R.theme&&s.R.theme!=='indigo';}),
     B('contender','Contender',0,'Reach an Arena rating of 1400.',function(s){return metrics(s).peakElo>=1400;},function(s){return [Math.min(1400,metrics(s).peakElo),1400];}),
     B('rung','Rung Runner',0,'Score 1000 in a ten-minute ladder.',function(s){return s.LB>=1000;},function(s){return [Math.min(1000,s.LB),1000];}),
     B('owl','Night Owl',0,'Get a question right between midnight and 5am.',function(s){return s.L.some(function(e){return e.correct&&new Date(e.t).getHours()<5;});}),
