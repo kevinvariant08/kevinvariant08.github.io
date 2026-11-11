@@ -10,7 +10,7 @@
   <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=4">
   <link rel="manifest" href="/site.webmanifest?v=5">
   <meta name="theme-color" content="#FFFFFF">
-  <link rel="stylesheet" href="style.css?v=20261110a">
+  <link rel="stylesheet" href="style.css?v=20261111a">
   <script>try{if(localStorage.getItem('kv_mode')==='dark')document.documentElement.setAttribute('data-mode','dark')}catch(e){}</script>
   <script>window.MathJax={tex:{inlineMath:[['$','$']],displayMath:[['\\[','\\]']],processEscapes:true},options:{skipHtmlTags:['script','noscript','style','textarea','pre']}};</script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js" async></script>
@@ -18,7 +18,7 @@
     .sp{max-width:52rem}
     .card{border:1px solid var(--line);border-radius:var(--r-lg);background:var(--surface);padding:1.2rem 1.3rem;margin:1.2rem 0}
     .choices{display:flex;flex-wrap:wrap;gap:.5rem;margin:.4rem 0 1rem}
-    .choices label{display:flex;align-items:center;gap:.45rem;border:1px solid var(--line);border-radius:999px;padding:.4rem .9rem;cursor:pointer;background:var(--bg-deep)}
+    .choices label{display:flex;align-items:center;gap:.45rem;border:1px solid var(--line);border-radius:var(--r-sm);padding:.4rem .9rem;cursor:pointer;background:var(--bg-deep)}
     .choices input{accent-color:var(--ink)}
     .choices label:has(input:checked){border-color:var(--ink);font-weight:600}
     .choices label:focus-within{outline:2px solid var(--ink);outline-offset:2px}
@@ -30,7 +30,7 @@
     .qtext .c{text-align:center;margin:.6rem 0}
     .qtext ol.stmts{margin:.4rem 0 .4rem 1.6rem;list-style-type:upper-roman;padding-left:1.2rem}
     .opts{list-style:none;padding:0;margin:.9rem 0 0;display:grid;gap:.4rem}
-    .opt{display:flex;gap:.9rem;align-items:baseline;width:100%;text-align:left;font-family:var(--serif);font-size:1.02rem;background:var(--bg-deep);color:var(--ink);border:1px solid var(--line-soft);border-radius:12px;padding:.65rem .9rem;cursor:pointer;min-height:44px}
+    .opt{display:flex;gap:.9rem;align-items:baseline;width:100%;text-align:left;font-family:var(--serif);font-size:1.02rem;background:var(--bg-deep);color:var(--ink);border:1px solid var(--line-soft);border-radius:var(--r-sm);padding:.65rem .9rem;cursor:pointer;min-height:44px}
     .opt:hover{border-color:var(--ink-soft)}
     .opt:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
     .opt .L{font-family:var(--display);font-weight:700;color:var(--ink-faint);min-width:1.1rem}
@@ -42,7 +42,7 @@
     .acts{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:1rem}
     .big{font-size:2rem;font-weight:800;line-height:1.1}
     .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(12rem,1fr));gap:1rem}
-    .stats>div{border:1px solid var(--line-soft);border-radius:12px;padding:.8rem 1rem;background:var(--bg-deep)}
+    .stats>div{border:1px solid var(--line-soft);border-radius:var(--r-sm);padding:.8rem 1rem;background:var(--bg-deep)}
     .topics{width:100%;border-collapse:collapse;margin-top:.6rem;font-size:.95rem}
     .topics th,.topics td{text-align:left;padding:.45rem .3rem;border-bottom:1px solid var(--line-soft)}
     .topics td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
@@ -126,7 +126,7 @@
 <script src="questions.js?v=20261031"></script>
 <script src="locks.js?v=20260929"></script>
 <script src="smart.js?v=20261024"></script>
-<script src="site.js?v=20261108e"></script>
+<script src="site.js?v=20261111a"></script>
 <script>
 (function(){
   var S=window.KV_SMART, $=function(id){ return document.getElementById(id); };

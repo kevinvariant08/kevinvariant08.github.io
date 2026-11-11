@@ -9,16 +9,16 @@
   <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=4">
   <link rel="manifest" href="/site.webmanifest?v=5">
   <meta name="theme-color" content="#FFFFFF">
-  <link rel="stylesheet" href="style.css?v=20261110a">
+  <link rel="stylesheet" href="style.css?v=20261111a">
   <script>try{if(localStorage.getItem('kv_mode')==='dark')document.documentElement.setAttribute('data-mode','dark')}catch(e){}</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&display=swap" rel="stylesheet">
   <style>
-    .sb{--ink:#1B1E33;--soft:#4A4D62;--faint:#6C6F84;--rule:#D0D4DB;--paper:#FFFFFF;--well:#FFFFFF;--onink:#FFFFFF;--glass:rgba(255,255,255,.88);--grid:rgba(27,30,51,.06);
+    .sb{--ink:#16171A;--soft:#4A4D62;--faint:#6C6F84;--rule:#D0D4DB;--paper:#FFFFFF;--well:#FFFFFF;--onink:#FFFFFF;--glass:rgba(255,255,255,.88);--grid:rgba(27,30,51,.06);
         --stable:#2A7A54;--maybe:#986500;--derived:#1F7A94;--circ:#BE3358;--dline:#986500;
         --serif:"IBM Plex Serif",Georgia,serif;--sans:"Bricolage Grotesque","IBM Plex Sans",system-ui,sans-serif;--mono:"IBM Plex Mono",monospace;
         font-family:var(--sans);color:var(--ink);line-height:1.55}
-    [data-mode="dark"] .sb{--ink:#F3F1FF;--soft:#BDBBE6;--faint:#8A89BD;--rule:#343A82;--paper:#15173B;--well:#0F1130;--onink:#15173B;--glass:rgba(21,23,59,.86);--grid:rgba(143,150,255,.08);
+    [data-mode="dark"] .sb{--ink:#F3F1FF;--soft:#BDBBE6;--faint:#8A89BD;--rule:#343A82;--paper:#121316;--well:#0F1130;--onink:#121316;--glass:rgba(21,23,59,.86);--grid:rgba(143,150,255,.08);
         --stable:#5BE3A6;--maybe:#FFC53D;--derived:#4FD8E8;--circ:#FF6B8B;--dline:#FFC53D}
     .sb h2{font-family:var(--serif);font-weight:600}
     .sb p{max-width:68ch}
@@ -37,10 +37,10 @@
     .sb svg{display:block;width:100%;height:auto;touch-action:none;cursor:crosshair}
     #cv *{vector-effect:non-scaling-stroke}
     .zoombar{position:absolute;right:.6rem;top:.6rem;display:flex;gap:.3rem}
-    .zoombar button{width:2rem;height:2rem;border-radius:8px;border:1px solid var(--line);background:var(--glass);color:var(--ink);font:700 1rem var(--display);cursor:pointer}
+    .zoombar button{width:2rem;height:2rem;border-radius:var(--r-sm);border:1px solid var(--line);background:var(--glass);color:var(--ink);font:700 1rem var(--display);cursor:pointer}
     .zoombar button.fit{width:auto;padding:0 .6rem;font-size:.8rem}
     .sb .status{position:absolute;left:.8rem;bottom:.6rem;font-size:.85rem;color:var(--soft);pointer-events:none;background:var(--glass);padding:.15rem .5rem;max-width:80%}
-    .figinfo{margin-top:.8rem;padding:.9rem 1.1rem;border:1px solid var(--line-soft);border:1px solid var(--line-soft);border-radius:12px;background:var(--surface)}
+    .figinfo{margin-top:.8rem;padding:.9rem 1.1rem;border:1px solid var(--line-soft);border:1px solid var(--line-soft);border-radius:var(--r-sm);background:var(--surface)}
     .figinfo .fi-head{display:flex;gap:.8rem;flex-wrap:wrap;font:600 .78rem var(--display);color:var(--ink-faint);text-transform:uppercase;letter-spacing:.06em}
     .figinfo .fi-book em{color:var(--saffron);font-style:italic;text-transform:none;letter-spacing:0}
       .figinfo .fi-note{display:block;margin-top:.6rem;font-size:.82rem;color:var(--ink-faint)}
@@ -116,7 +116,7 @@
 
 <script>
 /* The figure is drawn with the dark palette; in light mode each colour is swapped for its light equivalent. */
-var LIGHT_COLS={'#F3F1FF':'#1B1E33','#15173B':'#FFFFFF','#4FD8E8':'#1F7A94','#5BE3A6':'#2A7A54','#FF6B8B':'#BE3358','#FFC53D':'#986500','#8A89BD':'#6C6F84','#B38CFF':'#6A3FB0','#FFB86B':'#B35C00'};
+var LIGHT_COLS={'#F3F1FF':'#16171A','#121316':'#FFFFFF','#4FD8E8':'#1F7A94','#5BE3A6':'#2A7A54','#FF6B8B':'#BE3358','#FFC53D':'#986500','#8A89BD':'#6C6F84','#B38CFF':'#6A3FB0','#FFB86B':'#B35C00'};
 function themeCols(str){ if(document.documentElement.getAttribute('data-mode')==='dark') return str; return str.replace(/#[0-9A-Fa-f]{6}\b/g,function(c){ return LIGHT_COLS[c.toUpperCase()]||c; }); }
 try{ new MutationObserver(function(){ if(typeof draw==='function') draw(); }).observe(document.documentElement,{attributes:true,attributeFilter:['data-mode']}); }catch(e){}
 var W=760,H=520,objs=[],labels=0,tool='point',picks=[],drag=null,stableSet=null,groups=[],nextId=1;
@@ -431,9 +431,9 @@ function draw(){
   });
   objs.forEach(function(o){ if(o.type!=='point'||o.hidden||!isFinite(o.g.x)) return;
     var sel=picks.indexOf(o.id)>=0;
-    if(o.kind==='free') s+='<circle cx="'+o.g.x+'" cy="'+o.g.y+'" r="'+(sel?7:5)*z+'" fill="#F3F1FF" stroke="'+(sel?'#5BE3A6':'#15173B')+'" stroke-width="2" style="cursor:grab"/>';
-    else if(o.kind==='onl'||o.kind==='onc') s+='<circle cx="'+o.g.x+'" cy="'+o.g.y+'" r="'+(sel?7:5)*z+'" fill="#4FD8E8" stroke="'+(sel?'#5BE3A6':'#15173B')+'" stroke-width="2" style="cursor:grab"/>';
-    else s+='<circle cx="'+o.g.x+'" cy="'+o.g.y+'" r="'+(sel?6:4.5)*z+'" fill="#15173B" stroke="'+(sel?'#5BE3A6':'#4FD8E8')+'" stroke-width="2"/>';
+    if(o.kind==='free') s+='<circle cx="'+o.g.x+'" cy="'+o.g.y+'" r="'+(sel?7:5)*z+'" fill="#F3F1FF" stroke="'+(sel?'#5BE3A6':'#121316')+'" stroke-width="2" style="cursor:grab"/>';
+    else if(o.kind==='onl'||o.kind==='onc') s+='<circle cx="'+o.g.x+'" cy="'+o.g.y+'" r="'+(sel?7:5)*z+'" fill="#4FD8E8" stroke="'+(sel?'#5BE3A6':'#121316')+'" stroke-width="2" style="cursor:grab"/>';
+    else s+='<circle cx="'+o.g.x+'" cy="'+o.g.y+'" r="'+(sel?6:4.5)*z+'" fill="#121316" stroke="'+(sel?'#5BE3A6':'#4FD8E8')+'" stroke-width="2"/>';
     s+='<text x="'+(o.g.x+8*z)+'" y="'+(o.g.y-8*z)+'" font-family="IBM Plex Serif,serif" font-style="italic" font-size="'+15*z+'" fill="#F3F1FF">'+labSVG(o.label)+'</text>';
   });
   objs.forEach(function(o){ if(o.type!=='meas'||o.kind!=='angle') return; var a=P(o.of[0]),b=P(o.of[1]),c=P(o.of[2]);
@@ -725,6 +725,6 @@ svg.addEventListener('pointermove',function(e){ if(!pan) return; var r=svg.getBo
 svg.addEventListener('pointerup',function(e){ if(!pan) return; pan=null; svg.style.cursor=''; e.stopImmediatePropagation(); },true);
 renderTools(); draw();
 </script>
-<script src="site.js?v=20261108e"></script>
+<script src="site.js?v=20261111a"></script>
 </body>
 </html>
