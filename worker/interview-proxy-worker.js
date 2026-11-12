@@ -58,6 +58,21 @@ function refuse(status, message, cors) {
   });
 }
 
+// Messages may carry an image of the candidate's whiteboard as an Anthropic image block.
+// textOf flattens a message to text for text-only models; imagesOf pulls out the images.
+function textOf(content) {
+  if (typeof content === "string") return content;
+  if (!Array.isArray(content)) return String(content);
+  return content.map((b) => b.type === "text" ? b.text : b.type === "image" ? "[whiteboard image: this model cannot see it]" : "").join("\n");
+}
+function imagesOf(content) {
+  return Array.isArray(content) ? content.filter((b) => b.type === "image" && b.source && b.source.type === "base64") : [];
+}
+// Size limit on text only, so a whiteboard image does not count against maxChars.
+function textSize(body) {
+  return (body.system || "").length + body.messages.reduce((n, m) => n + textOf(m.content).length, 0);
+}
+
 // Count a request against a KV counter that expires at the end of the day.
 async function bump(kv, key, limit) {
   const current = parseInt((await kv.get(key)) || "0", 10);
@@ -91,9 +106,10 @@ async function callGemini(env, body) {
   const contents = [];
   for (const m of body.messages) {
     const role = m.role === "assistant" ? "model" : "user";
-    const text = String(m.content);
-    if (contents.length && contents[contents.length - 1].role === role) contents[contents.length - 1].parts[0].text += "\n\n" + text;
-    else contents.push({ role, parts: [{ text }] });
+    const text = textOf(m.content).replace("[whiteboard image: this model cannot see it]", "");
+    const imgs = imagesOf(m.content).map((b) => ({ inlineData: { mimeType: b.source.media_type, data: b.source.data } }));
+    if (contents.length && contents[contents.length - 1].role === role) { contents[contents.length - 1].parts[0].text += "\n\n" + text; contents[contents.length - 1].parts.push(...imgs); }
+    else contents.push({ role, parts: [{ text }, ...imgs] });
   }
   if (contents.length && contents[0].role !== "user") contents.unshift({ role: "user", parts: [{ text: "(start)" }] });
   const payload = {
@@ -134,7 +150,7 @@ async function callWorkersAI(env, body) {
   const messages = [{ role: "system", content: body.system }];
   for (const m of body.messages) {
     const role = m.role === "assistant" ? "assistant" : "user";
-    const text = String(m.content);
+    const text = textOf(m.content);
     const last = messages[messages.length - 1];
     if (last.role === role) last.content += "\n\n" + text; else messages.push({ role, content: text });
   }
@@ -210,7 +226,9 @@ export default {
     }
     if (!Array.isArray(body.messages) || !body.system) return refuse(400, "Missing system or messages.", cors);
     if (body.messages.length > CONFIG.maxMessages) return refuse(400, "That conversation is longer than the interviewer accepts.", cors);
-    if (JSON.stringify(body).length > CONFIG.maxChars) return refuse(400, "That request is too large.", cors);
+    if (textSize(body) > CONFIG.maxChars) return refuse(400, "That request is too large.", cors);
+    const imgs = body.messages.flatMap((m) => imagesOf(m.content));
+    if (imgs.length > 2 || imgs.some((b) => String(b.source.data).length > 400000)) return refuse(400, "That whiteboard image is too large.", cors);
     body.max_tokens = Math.min(Number(body.max_tokens) || 600, CONFIG.maxTokensCap);
 
     const day = DAY();

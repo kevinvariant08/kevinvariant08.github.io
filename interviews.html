@@ -59,6 +59,17 @@
     .iv .ptext{font-family:var(--serif);font-size:1.05rem;line-height:1.7;margin:0}
     .iv .hint{margin:.8rem 0 0;padding:.7rem .9rem;border:1px dashed var(--rule);font-size:.95rem;color:var(--soft)}
     .iv .hint .who,.iv .msg .who{font-family:var(--sans);font-weight:500;color:var(--ink);display:block;font-size:.82rem;margin-bottom:.15rem}
+    .iv .ivgrid{display:grid;grid-template-columns:minmax(0,1fr);gap:1.4rem;align-items:start}
+    @media (min-width:1000px){ .iv .ivgrid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)} .iv .board{position:sticky;top:1rem} }
+    .iv .board{border:1px solid var(--rule);border-radius:2px;padding:.7rem;background:var(--paper)}
+    .iv .boardbar{display:flex;justify-content:space-between;align-items:center;gap:.5rem;flex-wrap:wrap;margin-bottom:.5rem}
+    .iv .boardbar h2{font-size:1.05rem;margin:0;padding:0;border:0}
+    .iv .tools{display:flex;gap:.35rem;flex-wrap:wrap}
+    .iv .tool{font-family:var(--sans);font-size:.85rem;padding:.3rem .65rem;border:1px solid var(--rule);border-radius:2px;background:transparent;color:var(--ink);cursor:pointer;min-height:36px}
+    .iv .tool.on{border-color:var(--ink);font-weight:600}
+    .iv .tool:focus-visible{outline:2px solid var(--urgent);outline-offset:2px}
+    .iv #bcanvas{display:block;width:100%;aspect-ratio:4/5;background:#FFFFFF;border:1px solid var(--rule);touch-action:none;cursor:crosshair}
+    .iv .boardnote{font-size:.85rem;color:var(--faint);margin:.5rem 0 0}
     .iv .chat{margin:1.4rem 0 .6rem;border-top:1px solid var(--rule);padding-top:1rem}
     .iv .msg{margin:0 0 .9rem;max-width:66ch}
     .iv .msg.tutor{font-family:var(--serif);font-size:1.02rem;line-height:1.65}
@@ -134,10 +145,12 @@
       <div class="clockbox">
         <div class="clockrow">
           <div id="clock">25:00</div>
-          <div class="clocknote" id="clocknote">Paper and pen beside you. Everything you would say aloud, type.</div>
+          <div class="clocknote" id="clocknote">Talk through your thinking and write on the whiteboard, as in the real interview. Voice mode lets you speak instead of typing.</div>
         </div>
         <div class="drain"><div id="drainbar"></div></div>
       </div>
+      <div class="ivgrid">
+      <div class="ivleft">
       <p class="setup" id="setup"></p>
       <div id="parts"></div>
 
@@ -154,6 +167,21 @@
           <span class="tally hidden" id="quiet"></span>
         </div>
         <p class="err" id="err"></p>
+      </div>
+      </div>
+      <aside class="board" aria-labelledby="board-h">
+        <div class="boardbar">
+          <h2 id="board-h">Whiteboard</h2>
+          <div class="tools" role="group" aria-label="Whiteboard tools">
+            <button type="button" class="tool on" data-tool="pen" aria-pressed="true">Pen</button>
+            <button type="button" class="tool" data-tool="eraser" aria-pressed="false">Eraser</button>
+            <button type="button" class="tool" id="bundo">Undo</button>
+            <button type="button" class="tool" id="bclear">Clear</button>
+          </div>
+        </div>
+        <canvas id="bcanvas" width="1000" height="1250" aria-label="Whiteboard. Draw with a mouse, a stylus or a finger."></canvas>
+        <p class="boardnote" id="boardnote">Write as you would on the interview whiteboard. The interviewer sees the board each time you send or finish speaking.</p>
+      </aside>
       </div>
       <div id="debrief" class="debrief hidden"></div>
     </section>
@@ -612,6 +640,7 @@ function interviewerSystem(p){
   return 'You are a mathematics admissions tutor at an Oxford college conducting a 25-minute interview. You are warm, curious and rigorous. The candidate types what they would say aloud.\n\n'
   + 'PROBLEM SETUP: '+p.setup.replace(/<[^>]+>/g,'')+'\n\n'+parts+'\n\n'
   + (deep ? 'DEEPER DIRECTIONS (private). A strong candidate should never run out of mathematics. Once the last part is settled, or earlier if the candidate raises one of these ideas themselves, take the conversation into these directions one at a time, in whatever order follows from what the candidate has just said, going as deep as they can follow. Pose each as a short open question in your own words, never as a list, and apply the same rules: no answers, hints only on request, one question per reply. Also follow any sound idea of the candidate\'s own beyond these.\n'+deep+'\n\n' : '')
+  + 'THE WHITEBOARD: the candidate writes on a whiteboard as they would in a real interview. When an image of the board is attached, read it as part of what they said: refer to what they have written, point to an error on the board rather than restating it, and ask them to explain anything written but not said. Never draw or write the solution for them.\n\n'
   + 'RULES, in priority order:\n'
   + '1. Never state the answer or solution to any part, never complete a calculation for the candidate, never confirm an unjustified number. If they state a correct answer without justification, ask them to justify it. If they state a wrong answer, do not say it is wrong outright; ask a question that exposes the error.\n'
   + '2. Give a hint only when the candidate explicitly asks, or has been stuck across two consecutive messages. When you do, give ONLY the next rung of the hint ladder for the current part, paraphrased in your own words, and set "hinted" to true. Never skip rungs. Never give a hint the candidate did not need.\n'
@@ -697,6 +726,7 @@ function speak(text){
 /* ================================================================ INTERVIEW */
 var clockEl, barEl, noteEl, partsEl, chatEl, inputEl, errEl, tallyEl;
 function startInterview(p){
+  board.reset();
   st = {p:p, idx:0, left:25*60, nudges:0, hintLevel:[], transcript:[], tick:null, ended:false, ai:aiAvailable(), forced:0, quiet:0, longestQuiet:0};
   stopListening(); vbuf=''; lastQuietStart=0;
   p.parts.forEach(function(){ st.hintLevel.push(0); });
@@ -756,13 +786,61 @@ function staticHint(){
   st.transcript.push({role:'assistant', text:'[nudge] '+q.hints[lvl]});
   if(st.hintLevel[st.idx]>=q.hints.length) document.getElementById('nudge').disabled=true;
 }
+/* ================================================================ WHITEBOARD
+   Strokes are stored as point lists so undo and redraw are exact. The board
+   is drawn in black on white whatever the site theme, like a real board.   */
+var board = (function(){
+  var cv = document.getElementById('bcanvas'), cx = cv.getContext('2d');
+  var strokes = [], cur = null, tool = 'pen', dirty = false, version = 0, sentVersion = 0;
+  function pos(e){ var r = cv.getBoundingClientRect(); return [(e.clientX-r.left)*cv.width/r.width, (e.clientY-r.top)*cv.height/r.height, e.pressure>0?e.pressure:0.5]; }
+  function draw(s){
+    cx.lineCap='round'; cx.lineJoin='round';
+    cx.strokeStyle = s.tool==='eraser' ? '#FFFFFF' : '#111111';
+    var p = s.pts; if(!p.length) return;
+    if(p.length===1){ cx.beginPath(); cx.fillStyle=cx.strokeStyle; cx.arc(p[0][0],p[0][1],s.tool==='eraser'?16:2.6,0,7); cx.fill(); return; }
+    for(var i=1;i<p.length;i++){ cx.beginPath(); cx.lineWidth = s.tool==='eraser' ? 34 : 2.2+3.2*p[i][2]; cx.moveTo(p[i-1][0],p[i-1][1]); cx.lineTo(p[i][0],p[i][1]); cx.stroke(); }
+  }
+  function redraw(){ cx.fillStyle='#FFFFFF'; cx.fillRect(0,0,cv.width,cv.height); strokes.forEach(draw); }
+  function changed(){ version++; }
+  cv.addEventListener('pointerdown', function(e){ e.preventDefault(); cv.setPointerCapture(e.pointerId); cur = {tool:tool, pts:[pos(e)]}; strokes.push(cur); draw(cur); });
+  cv.addEventListener('pointermove', function(e){ if(!cur) return; e.preventDefault(); var evs = e.getCoalescedEvents ? e.getCoalescedEvents() : [e];
+    evs.forEach(function(ev){ cur.pts.push(pos(ev)); }); var n=cur.pts.length; draw({tool:cur.tool, pts:cur.pts.slice(Math.max(0,n-evs.length-1))}); });
+  function up(){ if(cur){ cur = null; changed(); } }
+  cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', up); cv.addEventListener('pointerleave', function(e){ if(e.pointerType==='mouse') up(); });
+  document.querySelectorAll('.board .tool[data-tool]').forEach(function(b){ b.addEventListener('click', function(){
+    tool = b.dataset.tool; document.querySelectorAll('.board .tool[data-tool]').forEach(function(o){ var on=o===b; o.classList.toggle('on',on); o.setAttribute('aria-pressed',String(on)); }); }); });
+  document.getElementById('bundo').addEventListener('click', function(){ if(strokes.length){ strokes.pop(); redraw(); changed(); } });
+  document.getElementById('bclear').addEventListener('click', function(){ if(strokes.length){ strokes = []; redraw(); changed(); } });
+  redraw();
+  return {
+    empty: function(){ return !strokes.some(function(s){ return s.tool==='pen'; }); },
+    reset: function(){ strokes = []; redraw(); version = 0; sentVersion = 0; },
+    /* A small greyscale JPEG of the board, or null if nothing changed since the last one sent. */
+    snapshot: function(force){
+      if(this.empty() || (!force && version===sentVersion)) return null;
+      var w = 760, h = Math.round(w*cv.height/cv.width), t = document.createElement('canvas'); t.width=w; t.height=h;
+      t.getContext('2d').drawImage(cv,0,0,w,h); sentVersion = version;
+      return t.toDataURL('image/jpeg',0.72).split(',')[1];
+    }
+  };
+})();
+/* The interviewer sees the board with your own key or proxy (Claude reads images).
+   The free interviewer sees the board once its worker runs a model that reads images;
+   set FREE_VISION to true after redeploying worker/interview-proxy-worker.js.        */
+var FREE_VISION = false;
+function boardSeen(){ return cfg.mode !== 'free' || FREE_VISION; }
+function withBoard(text, force){
+  if(!boardSeen()) return text;
+  var img = board.snapshot(force); if(!img) return text;
+  return [{type:'image', source:{type:'base64', media_type:'image/jpeg', data:img}}, {type:'text', text:text+'\n[The candidate\'s whiteboard is attached as it looks now.]'}];
+}
 async function converse(userText, isNudge){
   var busy = document.getElementById('send'); busy.disabled=true; errEl.textContent='';
   var q = st.p.parts[st.idx];
   var msgs = st.transcript.filter(function(m){return m.role!=='system';}).map(function(m){return {role:m.role==='assistant'?'assistant':'user',content:m.text};});
   var prefix = 'CURRENT PART: '+st.idx+' '+q.label+'. Hints already given for this part: '+st.hintLevel[st.idx]+' of '+q.hints.length+'. Time left: '+fmt(Math.max(st.left,0))+'.\n';
   var content = prefix + (isNudge ? '[The candidate asks for a hint.]' : 'CANDIDATE: '+userText);
-  msgs.push({role:'user',content:content});
+  msgs.push({role:'user',content:withBoard(content,false)});
   st.transcript.push({role:'user', text:isNudge?'[asks for a hint]':userText});
   try{
     var raw = await callAI(interviewerSystem(st.p), msgs, 500);
@@ -800,7 +878,7 @@ async function endInterview(){
     box.innerHTML = head + '<p class="msg sys">The interviewer is writing your report.</p>';
     try{
       var tr = st.transcript.map(function(m){return (m.role==='assistant'?'TUTOR: ':m.role==='user'?'CANDIDATE: ':'')+m.text;}).join('\n');
-      var raw = await callAI(markingSystem(p), [{role:'user',content:'TRANSCRIPT:\n'+tr+'\n\nParts reached: '+reached+' of '+p.parts.length+'. Nudges: '+st.nudges+'. Moved on without agreement: '+st.forced+'. Time used: '+fmt(used)+'.'+(st.quiet>0?' Voice mode was on: total silence '+fmt(Math.round(st.quiet))+', longest silent stretch '+fmt(Math.round(st.longestQuiet))+'. Treat silences over 45 seconds as a significant negative, as a real interviewer would.':'')}], 1200);
+      var raw = await callAI(markingSystem(p), [{role:'user',content:withBoard('TRANSCRIPT:\n'+tr+'\n\nParts reached: '+reached+' of '+p.parts.length+'. Nudges: '+st.nudges+'. Moved on without agreement: '+st.forced+'. Time used: '+fmt(used)+'.'+(st.quiet>0?' Voice mode was on: total silence '+fmt(Math.round(st.quiet))+', longest silent stretch '+fmt(Math.round(st.longestQuiet))+'. Treat silences over 45 seconds as a significant negative, as a real interviewer would.':''),true)}], 1200);
       var j = parseJSON(raw);
       if(j){ score = j.score;
         report = '<h2>Report</h2><div class="score"><span class="big">'+esc(j.score)+'<span style="font-size:1.2rem;color:var(--faint)">/10</span></span><span class="band">'+esc(j.band||'')+'</span></div><p>'+esc(j.headline||'')+'</p>'
