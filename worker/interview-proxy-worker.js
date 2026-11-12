@@ -25,11 +25,11 @@ const ALLOWED_ORIGINS = [
 ];
 
 const CONFIG = {
-  backend: "workers-ai",       // "workers-ai" (free, built into Cloudflare), "gemini" (free tier) or "anthropic" (paid)
+  backend: "gemini",           // "workers-ai" (free, built into Cloudflare), "gemini" (free tier) or "anthropic" (paid)
   workersModel: "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
   anthropicModel: "claude-haiku-4-5-20251001",
   geminiModel: "gemini-2.5-flash",   // stable and on the free tier; 2.0 Flash was shut down in June 2026
-  maxTokensCap: 1500,          // per reply (the proof marker needs room for its JSON report)
+  maxTokensCap: 2500,          // per reply (the proof marker needs room for its JSON report)
   perVisitorPerDay: 45,        // ~2 full interviews
   sitePerDay: 450,             // site-wide circuit breaker; Cloudflare also enforces its own free daily allowance
   maxMessages: 60,             // reject runaway conversations
