@@ -178,9 +178,19 @@ async function callWorkersAI(env, body) {
 }
 
 export default {
+  // Any unexpected error still returns a CORS response, so the page can show a clear message.
   async fetch(request, env) {
+    const cors = corsFor(request.headers.get("Origin") || "");
+    try { return await handle(request, env); }
+    catch (e) { return refuse(500, "The interviewer service hit an error: " + String(e && e.message || e).slice(0, 120), cors); }
+  },
+};
+
+async function handle(request, env) {
+  {
     const origin = request.headers.get("Origin") || "";
     const cors = corsFor(origin);
+    if (!env.IV) return refuse(500, "The interviewer service is missing its KV storage. Set the namespace id in wrangler.toml and redeploy.", cors);
 
     if (request.method === "OPTIONS") return new Response(null, { headers: cors });
     const path = new URL(request.url).pathname;
@@ -264,5 +274,5 @@ export default {
       status: 200,
       headers: { ...cors, "content-type": "application/json" },
     });
-  },
-};
+  }
+}

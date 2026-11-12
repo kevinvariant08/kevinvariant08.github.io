@@ -1440,7 +1440,11 @@ async function callAI(system, messages, maxTokens){
     headers['anthropic-version'] = '2023-06-01';
     headers['anthropic-dangerous-direct-browser-access'] = 'true';
   }
-  var res = await fetch(url, {method:'POST', headers:headers, body:JSON.stringify(body)});
+  var res;
+  try{ res = await fetch(url, {method:'POST', headers:headers, body:JSON.stringify(body)}); }
+  catch(e){ throw new Error(cfg.mode === 'free'
+    ? 'The free AI interviewer could not be reached just now. Your work is safe. Try Send again in a minute, or switch to self-guided in the settings above, which works offline with the same hints.'
+    : 'Could not reach the AI service. Check your connection, your key or proxy URL, then try Send again.'); }
   if(res.status === 429){
     var msg = 'The free interviewer has reached its limit for now. Switch to self-guided in settings, or add your own key to carry on.';
     try{ var j429 = await res.json(); if(j429 && j429.message) msg = j429.message; }catch(e){}
