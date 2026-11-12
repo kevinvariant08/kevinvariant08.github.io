@@ -6,41 +6,20 @@
      prepare for admissions, and the optional extras. Each tool appears once. */
   var GROUPS=[
     {label:'Pathways', sec:'path', items:[
-      {href:'pathways.html', name:'All five levels', note:'Find your level, then work through its units'},
-      {href:'pathways.html#level-1', name:'Level 1: Foundations', note:'JMC, Junior Kangaroo, AMC 8', lv:1},
-      {href:'pathways.html#level-2', name:'Level 2: Intermediate', note:'IMC, Kangaroo, AMC 10', lv:2},
-      {href:'pathways.html#level-3', name:'Level 3: Senior', note:'SMC, Senior Kangaroo, AMC 12', lv:3},
-      {href:'pathways.html#level-4', name:'Level 4: Olympiad', note:'BMO1, MOG, AIME', lv:4},
-      {href:'pathways.html#level-5', name:'Level 5: Advanced', note:'BMO2, EGMO, IMO selection, USAMO', lv:5},
-      {href:'olympiad.html', name:'Olympiad library', note:'Mock papers, competition solutions, the HU Collection'},
+      {href:'pathways.html', name:'Pathways course', note:'Five levels, from JMC to IMO selection'},
+      {href:'olympiad.html', name:'Olympiad library', note:'Mock papers, solutions, the HU Collection'},
       {href:'book.html', name:'Beyond the Incenter', note:'Kevin\u2019s olympiad geometry book'}]},
     {label:'Calendar', sec:'cal', href:'calendar.html'},
     {label:'Admissions', sec:'tmua', items:[
-      {href:'admissions.html', name:'Admissions plan', note:'TMUA, ESAT, interviews and STEP, step by step'},
-      {href:'tmua.html', name:'TMUA mock papers', note:'Every set, newest first'},
-      {href:'esat.html', name:'ESAT mock papers', note:'Mathematics 1, Physics and Mathematics 2'},
-      {href:'interviews.html', name:'Mock interviews', note:'Twenty-five minutes, one problem'},
-      {href:'drill.html', name:'TMUA Drill', note:'Sit a paper timed, or drill one technique'},
-      {href:'esat-drill.html', name:'ESAT Drill', note:'27 questions, 40 minutes, or practise by topic'},
-      {href:'smart.html', name:'Smart Practice', note:'Questions chosen to suit your level'},
-      {href:'bank.html', name:'Question bank', note:'Every free question, rated 4.5 to 9.0'},
-      {href:'techniques.html', name:'Technique index', note:'Questions filed by the idea that cracks them'},
-      {href:'review.html', name:'Review mistakes', note:'Wrong answers return after 1, 3 and 7 days'},
-      {href:'unlock.html', name:'Unlock a paper', note:'Redeem a code for a locked set'}]},
+      {href:'admissions.html', name:'Admissions plan', note:'What to do, and when'},
+      {href:'tmua.html', name:'TMUA', note:'Mock papers, drills and the question bank'},
+      {href:'esat.html', name:'ESAT', note:'Mock papers and drills'},
+      {href:'interviews.html', name:'Mock interviews', note:'With an AI interviewer or a partner'}]},
     {label:'Extras', sec:'play', items:[
-      {href:'compete.html', name:'All extras', note:'Games, challenges and rewards on one page'},
-      {href:'qotw.html', name:'Problem of the week', note:'Discussion unlocks when you answer'},
-      {href:'/cevian/', name:'Cevian', note:'Ranked contest problems, 8 kyu to IMO'},
-      {href:'arena.html', name:'Arena', note:'Race a bot to the right answer'},
-      {href:'duel.html', name:'Friend duel', note:'Five questions; your friend races your ghost'},
-      {href:'geometry.html', name:'Geometry Lab', note:'Triangle centres you can drag'},
-      {href:'marker.html', name:'Proof marker', note:'Get a written solution marked'},
-      {href:'sandbox.html', name:'Conjecture sandbox', note:'Build a figure, find what stays true'},
-      {href:'rewards.html', name:'Rewards', note:'Levels, badges, quests and the daily challenge'},
-      {href:'shop.html', name:'Shop', note:'Spend coins on titles, themes and papers'},
-      {href:'games.html', name:'Labs', note:'Maths minigames from the Shop'},
-      {href:'progress.html', name:'My progress', note:'Accuracy, timing, traps and confidence'},
-      {href:'results.html', name:'Results', note:'Your scores against everyone else'}]}
+      {href:'qotw.html', name:'Problem of the week', note:'One hard problem for everyone'},
+      {href:'/cevian/', name:'Cevian', note:'Ranked contest problems'},
+      {href:'progress.html', name:'My progress', note:'Scores, mistakes to review, rewards'},
+      {href:'compete.html', name:'Everything else', note:'Games, tools and the shop'}]}
   ];
   var FOOT='<div class="foot-grid">'
     +'<div><b>Pathways</b><a href="pathways.html">All levels</a><a href="pathways.html#start">Find your level</a><a href="olympiad.html">Olympiad library</a><a href="geometry.html">Geometry Lab</a></div>'
@@ -109,7 +88,7 @@
     window.addEventListener('hu-auth-ready',function(){ window.HU_AUTH.onChange(paint); });
     if(window.HU_AUTH) window.HU_AUTH.onChange(paint);
   }
-  function loadRewards(){ if(window.HU_REWARDS) return; var sc=document.createElement('script'); sc.src='rewards.js?v=20261111b'; sc.defer=true; document.head.appendChild(sc); }
+  function loadRewards(){ if(window.HU_REWARDS) return; var sc=document.createElement('script'); sc.src='rewards.js?v=20261113a'; sc.defer=true; document.head.appendChild(sc); }
   function loadAccounts(){
     if(window.HU_AUTH) return;
     loadScript('auth-config.js?v=20260927').catch(function(){}).then(function(){
