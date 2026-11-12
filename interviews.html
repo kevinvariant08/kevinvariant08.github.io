@@ -91,6 +91,70 @@
     .iv details{margin:1rem 0}
     .iv summary{cursor:pointer;font-family:var(--serif);font-weight:600}
     .iv .err{color:var(--urgent);font-size:.9rem}
+    .iv .visually-hidden{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+    /* report */
+    .iv ol.scale{list-style:none;padding:0;margin:.7rem 0 0;font-size:.88rem;color:var(--soft);max-width:68ch}
+    .iv ol.scale li{font-family:var(--sans);font-size:.88rem;line-height:1.5;padding:.2rem 0 .2rem .7rem;border-left:2px solid transparent}
+    .iv ol.scale li.on{border-left-color:var(--ink);color:var(--ink)}
+    .iv ol.scale b{font-family:var(--serif);font-weight:600;display:inline-block;min-width:1.6rem}
+    .iv dl.facts{display:grid;grid-template-columns:minmax(0,12rem) minmax(0,1fr);gap:.35rem 1.2rem;margin:.4rem 0 1.2rem;max-width:72ch}
+    .iv dl.facts dt{font-size:.84rem;font-weight:500;color:var(--faint);padding-top:.2rem}
+    .iv dl.facts dd{margin:0;font-family:var(--serif);font-size:1.02rem;line-height:1.65}
+    @media (max-width:640px){ .iv dl.facts{grid-template-columns:minmax(0,1fr);gap:.1rem} .iv dl.facts dd{margin-bottom:.5rem} }
+    .iv blockquote.q{margin:.2rem 0 .5rem;padding-left:1rem;border-left:2px solid var(--rule);font-family:var(--serif);font-style:italic;color:var(--soft);max-width:66ch}
+    .iv .debrief ol.drills li{margin-bottom:.6rem}
+    /* partner mode */
+    .iv .peerbox{border:1px solid var(--rule);padding:.9rem 1.1rem 1rem;margin:.9rem 0 0}
+    .iv .peerbox p{margin:0 0 .6rem;font-size:.95rem;color:var(--soft)}
+    .iv .peerbox label{display:block;font-size:.9rem;color:var(--soft);margin:.7rem 0 0}
+    .iv .peerbox input{width:100%;max-width:40rem;margin-top:.2rem}
+    .iv .peerbox .row{margin-top:.5rem}
+    .iv .crumb{font-size:.92rem;margin:0 0 1rem}
+    .iv .crumb a{color:var(--soft)}
+    .iv .eyebrow{font-size:.86rem;color:var(--faint);margin:0 0 .2rem;font-weight:500}
+    .iv .pclock{font-family:var(--serif);font-weight:600;font-size:3rem;line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+    .iv .pclock.warn{color:var(--warn)} .iv .pclock.urgent{color:var(--urgent)}
+    .iv .pdrain{height:100%;width:0%;background:var(--ink)}
+    .iv .pdrain.warn{background:var(--warn)} .iv .pdrain.urgent{background:var(--urgent)}
+    .iv .guide{border:1px solid var(--rule);padding:.9rem 1.2rem 1rem;margin:0 0 1.8rem}
+    .iv .guide h2{font-size:1.08rem;margin:0 0 .4rem}
+    .iv .guide ul{margin:0;padding-left:1.15rem}
+    .iv .guide li{font-size:.95rem;margin:0 0 .3rem;max-width:72ch}
+    .iv .pivgrid{display:grid;grid-template-columns:minmax(0,1fr);gap:2rem;align-items:start}
+    @media (min-width:1000px){ .iv .pivgrid{grid-template-columns:minmax(0,1.1fr) minmax(0,1fr)} }
+    .iv .pivgrid h2{font-size:1.2rem;margin:0 0 .8rem}
+    .iv .spart{border-left:2px solid var(--rule);padding:.1rem 0 .1rem 1.1rem;margin:0 0 1.6rem}
+    .iv .slab{font-size:.82rem;font-weight:500;color:var(--faint);margin:.8rem 0 .3rem}
+    .iv ol.hints{margin:0;padding-left:1.3rem}
+    .iv ol.hints li{margin:0 0 .55rem;font-size:.97rem}
+    .iv .given{display:inline-flex;gap:.35rem;align-items:center;font-size:.86rem;color:var(--soft);margin-left:.4rem;white-space:nowrap;cursor:pointer}
+    .iv .when{font-size:.84rem;color:var(--mark);margin-left:.4rem}
+    .iv .spart details{margin:.6rem 0 0}
+    .iv .spart summary{font-family:var(--sans);font-weight:500;font-size:.9rem;color:var(--soft)}
+    .iv .spart details p{font-size:.95rem;margin:.4rem 0 0;color:var(--soft)}
+    .iv input[type=checkbox]{width:1.05rem;height:1.05rem;accent-color:var(--ink);margin:0}
+    .iv fieldset{border:1px solid var(--rule);border-radius:2px;padding:.6rem 1rem .9rem;margin:0 0 1rem;min-width:0}
+    .iv legend{font-family:var(--serif);font-weight:600;padding:0 .3rem}
+    .iv .srow{display:flex;flex-wrap:wrap;gap:.4rem 1rem;align-items:center;padding:.5rem 0;border-bottom:1px solid var(--rule)}
+    .iv .srow:last-child{border-bottom:0}
+    .iv .srow .sl{font-family:var(--serif);font-weight:600;min-width:2.4rem}
+    .iv .srow label{display:inline-flex;gap:.4rem;align-items:center;font-size:.92rem;color:var(--soft);cursor:pointer}
+    .iv .sheet .f{display:block;font-size:.92rem;color:var(--soft);margin:.2rem 0 1rem}
+    .iv .sheet .f select,.iv .sheet .f input,.iv .sheet .f textarea{display:block;margin-top:.25rem}
+    .iv .sheet .f textarea{min-height:8rem}
+    .iv .rgrid{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:.45rem 1rem;align-items:center}
+    .iv .rgrid label{font-size:.92rem;color:var(--soft)}
+    .iv .small{font-size:.86rem;color:var(--faint);margin:0 0 .6rem}
+    .iv .dchk{display:flex;gap:.6rem;align-items:flex-start;font-size:.92rem;color:var(--soft);margin:.45rem 0;cursor:pointer}
+    .iv .dchk input{margin-top:.3rem;flex:none}
+    .iv .sheet .board{margin-top:.6rem}
+    .iv .sheet details.bd summary{font-family:var(--serif);font-weight:600}
+    @media print{
+      body.printsheet *{visibility:hidden}
+      body.printsheet #psheet,body.printsheet #psheet *{visibility:visible;color:#000!important;background:#fff!important;border-color:#999!important}
+      body.printsheet #psheet{position:absolute;left:0;top:0;width:100%}
+      body.printsheet #psheet .noprint,body.printsheet #psheet details.bd{display:none!important}
+    }
   </style>
 </head>
 <body data-theme-v2>
@@ -134,6 +198,7 @@
       </div>
 
       <h2>Choose a problem</h2>
+      <p>Run any problem on your own with the interviewer above, or practise with a partner. In partner mode a friend plays the interviewer from a full script with hints, model answers and a scoring sheet, each of you on your own device, and no AI is needed.</p>
       <div class="plist" id="plist"></div>
 
       <div class="record" id="record"></div>
@@ -184,6 +249,61 @@
       </aside>
       </div>
       <div id="debrief" class="debrief hidden"></div>
+    </section>
+
+    <!-- ===================================================== PARTNER MODE -->
+    <section id="peer" class="hidden">
+      <p class="crumb"><a href="interviews.html">Back to the problems</a></p>
+      <p class="eyebrow" id="prole"></p>
+      <h1 id="pptitle"></h1>
+      <div class="clockbox">
+        <div class="clockrow">
+          <div class="pclock" id="pclock" role="timer" aria-live="off">25:00</div>
+          <div class="clocknote" id="pclocknote"></div>
+        </div>
+        <div class="drain"><div class="pdrain" id="pdrain"></div></div>
+        <div class="row">
+          <button class="btn2" id="ptstart">Start the timer</button>
+          <button class="btn2 quiet" id="ptreset">Reset the timer</button>
+        </div>
+      </div>
+
+      <!-- candidate view -->
+      <div id="pcand" class="hidden">
+        <div class="ivgrid" id="pcgrid">
+          <div>
+            <p class="setup" id="pcsetup"></p>
+            <div id="pcparts"></div>
+            <div class="row">
+              <button class="btn2" id="pcnext">Show the first part</button>
+              <button class="btn2 quiet" id="pcreset">Start again</button>
+            </div>
+            <p class="tally" id="pcnote" style="margin-top:.8rem">Think aloud and write on the board. Show the next part only when your interviewer asks you to. After the last part your interviewer may take the problem further aloud.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- interviewer view -->
+      <div id="piv" class="hidden">
+        <div class="guide">
+          <h2>How to run the interview</h2>
+          <ul>
+            <li>Read the setup aloud. Tell the candidate to show the next part only when the current one is settled, so they never see a part early.</li>
+            <li>Give a hint only when the candidate asks, or after a long silence with no progress. Start with the gentlest one and tick it as you give it.</li>
+            <li>Never give an answer or confirm a number that has not been justified. Ask "why?" and "how do you know?" instead.</li>
+            <li>Let silences sit. A pause is thinking, not a request for help.</li>
+            <li>Stay polite and neutral. Do not praise or reassure, and do not say whether an answer is right.</li>
+            <li>If the candidate is wrong, ask a question that exposes the error, such as a special case to check.</li>
+            <li>Push a strong candidate into the deeper directions, one at a time, once the parts are done.</li>
+          </ul>
+          <div class="row"><button class="btn2 quiet" id="pcopycand">Copy the candidate link</button><span class="tally" id="pcopymsg" aria-live="polite"></span></div>
+        </div>
+        <div class="pivgrid">
+          <div id="pscript"></div>
+          <form id="psheet" class="sheet" autocomplete="off" onsubmit="return false"></form>
+        </div>
+        <div id="pfeedback" class="debrief hidden" aria-live="polite"></div>
+      </div>
     </section>
 
   </main>
@@ -540,7 +660,22 @@ function renderHub(){
     d.innerHTML = '<h3>'+esc(p.title)+'</h3><p class="meta">'+esc(p.topics)+' &nbsp;&middot;&nbsp; 25 minutes &nbsp;&middot;&nbsp; '+p.parts.length+' parts'+((p.deeper&&p.deeper.length)?', then open questions as far as you can go':'')+'</p><p class="blurb">'+esc(p.blurb)+'</p>';
     var b = document.createElement('button'); b.className='btn2'; b.textContent='Start this interview';
     b.addEventListener('click', function(){ startInterview(p); });
-    d.appendChild(b); pl.appendChild(d);
+    var row = document.createElement('div'); row.className = 'row'; row.style.marginTop = '0';
+    var pb = document.createElement('button'); pb.className='btn2 quiet'; pb.textContent='Practise with a partner';
+    pb.setAttribute('aria-expanded','false'); pb.setAttribute('aria-controls','peerbox-'+p.id);
+    var box = document.createElement('div'); box.className='peerbox hidden'; box.id='peerbox-'+p.id;
+    var il = peerLink(p.id,'interviewer'), cl = peerLink(p.id,'candidate');
+    box.innerHTML = '<p>Open each link on its own device, for example while you are on a video call. The interviewer view has the script, the hints, the model answers and a scoring sheet. The candidate view has only the problem, the parts one at a time, a whiteboard and a timer.</p>'
+      + '<label for="il-'+p.id+'">Interviewer link</label><input type="text" readonly id="il-'+p.id+'" value="'+esc(il)+'">'
+      + '<div class="row"><button class="btn2 quiet" data-copy="'+esc(il)+'">Copy the interviewer link</button><a class="btn2 quiet" style="text-decoration:none" href="'+esc(il)+'">Open the interviewer view here</a></div>'
+      + '<label for="cl-'+p.id+'">Candidate link</label><input type="text" readonly id="cl-'+p.id+'" value="'+esc(cl)+'">'
+      + '<div class="row"><button class="btn2 quiet" data-copy="'+esc(cl)+'">Copy the candidate link</button><a class="btn2 quiet" style="text-decoration:none" href="'+esc(cl)+'">Open the candidate view here</a></div>'
+      + '<p class="tally" aria-live="polite" style="margin:.6rem 0 0"></p>';
+    box.querySelectorAll('[data-copy]').forEach(function(cb){ cb.addEventListener('click', function(){
+      copyText(cb.getAttribute('data-copy')).then(function(ok){ box.querySelector('.tally').textContent = ok ? 'Link copied.' : 'Could not copy. Select the link above and copy it by hand.'; }); }); });
+    pb.addEventListener('click', function(){ var open = box.classList.toggle('hidden') === false; pb.setAttribute('aria-expanded', String(open)); });
+    row.appendChild(b); row.appendChild(pb);
+    d.appendChild(row); d.appendChild(box); pl.appendChild(d);
   });
   var h = loadHist(); var r = document.getElementById('record');
   if(!h.length){ r.innerHTML = '<p>No attempts recorded in this browser yet. Attempts are saved here so you can watch the score move.</p>'; return; }
@@ -637,30 +772,53 @@ function interviewerSystem(p){
     return 'PART '+i+' '+q.label+': '+q.text+'\n  MODEL ANSWER (private): '+q.model+'\n  HINT LADDER (gentlest first): '+q.hints.map(function(h,k){return '['+(k+1)+'] '+h;}).join(' ');
   }).join('\n');
   var deep = (p.deeper||[]).map(function(x,i){ return 'EXTENSION '+(i+1)+': '+x.text+'\n  NOTES (private): '+x.model; }).join('\n');
-  return 'You are a mathematics admissions tutor at an Oxford college conducting a 25-minute interview. You are warm, curious and rigorous. The candidate types what they would say aloud.\n\n'
+  return 'You are a mathematics tutor at an Oxford college conducting a 25-minute admissions interview. The candidate types or speaks what they would say aloud.\n\n'
+  + 'MANNER: You are polite, neutral, brief and exacting, as real Oxford tutors are. You are not a friendly assistant and you are not here to make the candidate feel good. Never praise, never reassure, never encourage. Never write "great question", "good", "nice", "well done", "exactly", "don\'t worry" or anything like them, and never use exclamation marks. Do not thank the candidate for answers. A typical reply is one plain sentence and a question.\n'
+  + '- When the candidate is vague ("it gets bigger", "roughly a log", "something like symmetry"), ask for the precise statement.\n'
+  + '- When a claim is unjustified, ask why it is true.\n'
+  + '- When they are wrong, do not say so. Ask a question whose answer exposes the error: a special case, a value to check, a consequence that fails.\n'
+  + '- Occasionally, once an argument is complete but messy, ask them to restate it more cleanly in two or three sentences before you move on.\n'
+  + '- Allow silence. If the candidate says they are thinking, or says very little, reply with a minimal prompt such as "Go on." or "What are you trying?" and nothing more. Do not fill gaps with hints.\n\n'
   + 'PROBLEM SETUP: '+p.setup.replace(/<[^>]+>/g,'')+'\n\n'+parts+'\n\n'
   + (deep ? 'DEEPER DIRECTIONS (private). A strong candidate should never run out of mathematics. Once the last part is settled, or earlier if the candidate raises one of these ideas themselves, take the conversation into these directions one at a time, in whatever order follows from what the candidate has just said, going as deep as they can follow. Pose each as a short open question in your own words, never as a list, and apply the same rules: no answers, hints only on request, one question per reply. Also follow any sound idea of the candidate\'s own beyond these.\n'+deep+'\n\n' : '')
   + 'THE WHITEBOARD: the candidate writes on a whiteboard as they would in a real interview. When an image of the board is attached, read it as part of what they said: refer to what they have written, point to an error on the board rather than restating it, and ask them to explain anything written but not said. Never draw or write the solution for them.\n\n'
   + 'RULES, in priority order:\n'
   + '1. Never state the answer or solution to any part, never complete a calculation for the candidate, never confirm an unjustified number. If they state a correct answer without justification, ask them to justify it. If they state a wrong answer, do not say it is wrong outright; ask a question that exposes the error.\n'
   + '2. Give a hint only when the candidate explicitly asks, or has been stuck across two consecutive messages. When you do, give ONLY the next rung of the hint ladder for the current part, paraphrased in your own words, and set "hinted" to true. Never skip rungs. Never give a hint the candidate did not need.\n'
-  + '3. Keep every reply to at most three sentences and ask exactly one question. Be specific to what they wrote; quote their own words back when probing.\n'
-  + '4. Work only on the CURRENT PART given in the user message, except that after the last part you move into the deeper directions. If they jump ahead to a later part, steer them back. Set "advance" to true only when they have correctly and fully justified the current part; say something brief like "Good, that settles it" and nothing about the next part, which the page will show.\n'
-  + '5. Reward good habits in one short clause when you see them: checking a result against a special case, naming a structure before computing, asking whether a bound is attained.\n'
-  + '6. Output ONLY a JSON object, no prose outside it: {"say": string, "advance": boolean, "hinted": boolean}.';
+  + '3. Keep every reply to at most three sentences, usually one or two, and ask exactly one question. Be specific to what they wrote; quote their own words back when probing.\n'
+  + '4. Work only on the CURRENT PART given in the user message, except that after the last part you move into the deeper directions. If they jump ahead to a later part, steer them back. Set "advance" to true only when they have correctly and fully justified the current part; then say only something brief and neutral such as "That settles it." and nothing about the next part, which the page will show.\n'
+  + '5. Keep private notes for the marking in "note": a few words when you see a habit worth recording, good or bad (checked a special case unprompted, named a structure before computing, asked whether a bound is attained, unjustified leap, imprecise statement, long silence). The candidate never sees the note, so never mention it or praise the habit in "say". Use "" when there is nothing to record.\n'
+  + '6. Output ONLY a JSON object, no prose outside it: {"say": string, "advance": boolean, "hinted": boolean, "note": string}.';
 }
-function markingSystem(p){
-  return 'You are the same tutor, now writing the post-interview score. Use this scale, which is how Oxford tutors calibrate a 25-minute maths interview.\n'
-  + '10: found the governing structure before computing, completed every part unaided, checked own work, asked a research-shaped question of their own. Given only a few times a year.\n'
-  + '8: every part essentially unaided, at most one nudge, checks attainment or special cases without being asked.\n'
-  + '6: most parts, two or three nudges, stops at the first plausible answer; roughly the offer threshold.\n'
-  + '4: reaches the middle of the problem with substantial help, correct but dependent.\n'
-  + '2: only what the interviewer supplied was correct.\n'
-  + '0: no engagement or reasoning.\n'
-  + 'Weigh the transcript, the number of nudges, how far they got, and above all whether steps were generated or supplied. Be honest and specific; quote the candidate. The model answers for each part are:\n'
+/* The calibration a tutor uses for a 25-minute interview. Shared by the AI marking and the partner scoring sheet. */
+var CALIBRATION = [
+  [10,'Found the governing structure before computing, completed every part unaided, checked own work, asked a research-shaped question of their own. Given only a few times a year.'],
+  [8,'Every part essentially unaided, at most one nudge, checks attainment or special cases without being asked.'],
+  [6,'Most parts, two or three nudges, stops at the first plausible answer. Roughly the offer threshold.'],
+  [4,'Reaches the middle of the problem with substantial help. Correct but dependent.'],
+  [2,'Only what the interviewer supplied was correct.'],
+  [0,'No engagement or reasoning.']
+];
+function calibrationText(){ return CALIBRATION.map(function(c){ return c[0]+': '+c[1]; }).join('\n'); }
+function markingSystem(p, peer){
+  return 'You are the tutor who has just interviewed this candidate. Write your notes on the interview as you would for the admissions meeting, then a candid debrief the candidate will read. Write like a tutor\'s interview notes: plain, specific, unsentimental British English. No encouragement, no padding, no "great job", no exclamation marks, no em dashes. Where the candidate did well, state it as a fact with the evidence. Support every judgement with the evidence, quoting the candidate\'s own words where you have them.\n\n'
+  + 'Score on this scale, which is how Oxford tutors calibrate a 25-minute maths interview. Odd scores sit between the levels either side.\n' + calibrationText() + '\n\n'
+  + 'Weigh above all whether each step was generated by the candidate or supplied by the interviewer: a correct answer reached after the key idea was handed over earns little. Then weigh how far they got, the number and timing of hints, whether they checked special cases or attainment unprompted, how they recovered from errors, and how precisely they spoke.\n'
+  + (peer
+    ? 'THE EVIDENCE is a scoring sheet filled in by a human interviewer, a fellow student running a mock, during and after a live interview. There is no transcript. Treat the parts reached, the hint log with its times, the ratings and the notes as the record. The interviewer\'s own overall score is their view; you may disagree with it, and if you do, say why in the calibration. Quote the candidate only where the notes record their words, and never invent a quotation; where there is none, use "". If the sheet is too thin to judge something, say so in a clause and mark on what is there. If an image of a whiteboard is attached, it is the board kept on the interviewer\'s device.\n'
+    : 'THE EVIDENCE is the transcript of the interview. Lines marked TUTOR NOTE are your own private notes made during the interview and were not seen by the candidate.\n')
+  + 'The model answers for each part are:\n'
   + p.parts.map(function(q){return q.label+' '+q.model;}).join('\n')
   + ((p.deeper&&p.deeper.length) ? '\nDeeper directions that only strong candidates reach (credit real progress on any of these toward 9 or 10):\n'+p.deeper.map(function(x){return '- '+x.text+' '+x.model;}).join('\n') : '')
-  + '\nOutput ONLY JSON: {"score": integer 0-10, "band": short phrase, "headline": one sentence, "parts": [{"label": string, "comment": string}], "strengths": [string], "improve": [string], "practice": one concrete thing to do this week}.';
+  + '\n\nKeep the whole report under 600 words; every sentence should carry evidence or advice.\n'
+  + 'Output ONLY a JSON object, no prose outside it, with these fields:\n'
+  + '{"score": integer 0-10,\n'
+  + ' "band": a short phrase placing the score on the scale, such as "around the offer threshold",\n'
+  + ' "verdict": one line in the voice of a tutor\'s interview notes, such as "Quick on (a) and (b), needed the identity supplied in (c), never asked whether the bound in (d) is attained. Borderline.",\n'
+  + ' "calibration": one or two sentences on why this score and not one higher,\n'
+  + ' "moments": 2 to 5 decisive moments, in order, each {"where": the part label and a few words, "stuck": what they were stuck on, or "" if they were not, "quote": the candidate\'s words at that moment, short and verbatim, or "", "unlocked": what moved them on, "source": "own" if the idea was theirs, "prompted" if a question or gentle hint led them to it, "supplied" if the interviewer effectively gave it, "offer": what a candidate who gets an offer would have done at this point, concretely},\n'
+  + ' "communication": {"thinking_aloud": string, "precision": string, "silences": string, "board": string about their use of the whiteboard, or "" if no image of the board was attached},\n'
+  + ' "drills": exactly three, each {"title": a short imperative, "detail": what to do over the next week, for how long, and how to tell it is working, tied to a specific moment above}}.';
 }
 
 /* ================================================================ VOICE  */
@@ -726,6 +884,8 @@ function speak(text){
 /* ================================================================ INTERVIEW */
 var clockEl, barEl, noteEl, partsEl, chatEl, inputEl, errEl, tallyEl;
 function startInterview(p){
+  if(location.hash) history.replaceState(null,'',location.pathname+location.search);
+  closePeer();
   board.reset();
   st = {p:p, idx:0, left:25*60, nudges:0, hintLevel:[], transcript:[], tick:null, ended:false, ai:aiAvailable(), forced:0, quiet:0, longestQuiet:0};
   stopListening(); vbuf=''; lastQuietStart=0;
@@ -837,15 +997,16 @@ function withBoard(text, force){
 async function converse(userText, isNudge){
   var busy = document.getElementById('send'); busy.disabled=true; errEl.textContent='';
   var q = st.p.parts[st.idx];
-  var msgs = st.transcript.filter(function(m){return m.role!=='system';}).map(function(m){return {role:m.role==='assistant'?'assistant':'user',content:m.text};});
+  var msgs = st.transcript.filter(function(m){return m.role==='user'||m.role==='assistant';}).map(function(m){return {role:m.role==='assistant'?'assistant':'user',content:m.text};});
   var prefix = 'CURRENT PART: '+st.idx+' '+q.label+'. Hints already given for this part: '+st.hintLevel[st.idx]+' of '+q.hints.length+'. Time left: '+fmt(Math.max(st.left,0))+'.\n';
   var content = prefix + (isNudge ? '[The candidate asks for a hint.]' : 'CANDIDATE: '+userText);
   msgs.push({role:'user',content:withBoard(content,false)});
   st.transcript.push({role:'user', text:isNudge?'[asks for a hint]':userText});
   try{
     var raw = await callAI(interviewerSystem(st.p), msgs, 500);
-    var j = parseJSON(raw) || {say: raw.slice(0,600), advance:false, hinted:isNudge};
+    var j = parseJSON(raw) || {say: raw.slice(0,600), advance:false, hinted:isNudge, note:''};
     tutorMsg(j.say); st.transcript.push({role:'assistant', text:j.say}); speak(j.say);
+    if(j.note && String(j.note).trim()) st.transcript.push({role:'note', text:String(j.note).trim()});
     if(j.hinted){ st.nudges++; st.hintLevel[st.idx]=Math.min(st.hintLevel[st.idx]+1,q.hints.length); tallyEl.textContent='Nudges used: '+st.nudges; }
     if(j.advance && st.idx < st.p.parts.length-1){ st.idx++; showPart(st.idx); }
     else if(j.advance){ sysMsg('That was the last part. End the session when you are ready for the debrief.'); }
@@ -877,16 +1038,11 @@ async function endInterview(){
   if(st.ai){
     box.innerHTML = head + '<p class="msg sys">The interviewer is writing your report.</p>';
     try{
-      var tr = st.transcript.map(function(m){return (m.role==='assistant'?'TUTOR: ':m.role==='user'?'CANDIDATE: ':'')+m.text;}).join('\n');
-      var raw = await callAI(markingSystem(p), [{role:'user',content:withBoard('TRANSCRIPT:\n'+tr+'\n\nParts reached: '+reached+' of '+p.parts.length+'. Nudges: '+st.nudges+'. Moved on without agreement: '+st.forced+'. Time used: '+fmt(used)+'.'+(st.quiet>0?' Voice mode was on: total silence '+fmt(Math.round(st.quiet))+', longest silent stretch '+fmt(Math.round(st.longestQuiet))+'. Treat silences over 45 seconds as a significant negative, as a real interviewer would.':''),true)}], 1200);
+      var tr = st.transcript.map(function(m){return (m.role==='assistant'?'TUTOR: ':m.role==='user'?'CANDIDATE: ':m.role==='note'?'TUTOR NOTE (private): ':'')+m.text;}).join('\n');
+      var raw = await callAI(markingSystem(p), [{role:'user',content:withBoard('TRANSCRIPT:\n'+tr+'\n\nParts reached: '+reached+' of '+p.parts.length+'. Nudges: '+st.nudges+'. Moved on without agreement: '+st.forced+'. Time used: '+fmt(used)+'.'+(st.quiet>0?' Voice mode was on: total silence '+fmt(Math.round(st.quiet))+', longest silent stretch '+fmt(Math.round(st.longestQuiet))+'. Treat silences over 45 seconds as a significant negative, as a real interviewer would.':''),true)}], 2200);
       var j = parseJSON(raw);
-      if(j){ score = j.score;
-        report = '<h2>Report</h2><div class="score"><span class="big">'+esc(j.score)+'<span style="font-size:1.2rem;color:var(--faint)">/10</span></span><span class="band">'+esc(j.band||'')+'</span></div><p>'+esc(j.headline||'')+'</p>'
-          + (j.parts||[]).map(function(x){return '<h3>'+esc(x.label)+'</h3><p>'+esc(x.comment)+'</p>';}).join('')
-          + (j.strengths&&j.strengths.length?'<h3>What worked</h3><ul>'+j.strengths.map(function(s){return '<li>'+esc(s)+'</li>';}).join('')+'</ul>':'')
-          + (j.improve&&j.improve.length?'<h3>What to change</h3><ul>'+j.improve.map(function(s){return '<li>'+esc(s)+'</li>';}).join('')+'</ul>':'')
-          + (j.practice?'<h3>This week</h3><p>'+esc(j.practice)+'</p>':'');
-      } else report = '<p class="err">The report came back in an unexpected format. Raw text follows.</p><p>'+esc(raw)+'</p>';
+      if(j){ score = j.score; report = renderReport(j); }
+      else report = '<p class="err">The report came back in an unexpected format. Raw text follows.</p><p>'+esc(raw)+'</p>';
     }catch(e){ report = '<p class="err">Could not fetch the report: '+esc(e.message)+'</p>'; }
   } else {
     report = '<h2>Self-marking</h2><p>Before opening the scheme, place yourself. Five parts with no nudges and the key structural remark said aloud is an 8 or better. Four parts with one or two nudges is a 6. Reaching part (c) with help is a 4. If (a) took more than three minutes the issue is organisation, not mathematics.</p><div class="row"><label style="font-size:.95rem">Your score <select id="selfscore">'+[0,1,2,3,4,5,6,7,8,9,10].map(function(n){return '<option value="'+n+'">'+n+'</option>';}).join('')+'</select></label><button class="btn2 quiet" id="saveself">Save to record</button></div>';
@@ -903,7 +1059,336 @@ async function endInterview(){
   box.scrollIntoView({behavior:'smooth',block:'start'});
 }
 
-loadCfg(); renderHub();
+/* ================================================================ REPORT
+   Renders the marking JSON. Older field names (headline, parts, strengths,
+   improve, practice) are still shown if a model returns them.               */
+function renderReport(j){
+  function li(a){ return (a||[]).map(function(s){ return '<li>'+esc(s)+'</li>'; }).join(''); }
+  var sc = parseInt(j.score,10), h = '<h2>Report</h2>';
+  if(j.verdict) h += '<p class="verdict">'+esc(j.verdict)+'</p>';
+  h += '<div class="score"><span class="big">'+esc(isNaN(sc)?j.score:sc)+'<span style="font-size:1.2rem;color:var(--faint)">/10</span></span><span class="band">'+esc(j.band||'')+'</span></div>';
+  if(j.calibration) h += '<p>'+esc(j.calibration)+'</p>';
+  if(!isNaN(sc)) h += scaleHTML(sc);
+  if(j.headline) h += '<p>'+esc(j.headline)+'</p>';
+  var src = {own:'Their own idea', prompted:'Reached after a question or a gentle hint', supplied:'Supplied by the interviewer'};
+  if(j.moments && j.moments.length){
+    h += '<h3 style="font-size:1.1rem;margin-top:1.6rem">Decisive moments</h3>';
+    j.moments.forEach(function(m){
+      h += '<h3>'+esc(m.where||'')+'</h3>' + (m.quote ? '<blockquote class="q">"'+esc(m.quote)+'"</blockquote>' : '') + '<dl class="facts">'
+        + (m.stuck ? '<dt>Where it stuck</dt><dd>'+esc(m.stuck)+'</dd>' : '')
+        + (m.unlocked ? '<dt>What moved it on</dt><dd>'+esc(m.unlocked)+'</dd>' : '')
+        + (m.source ? '<dt>Whose idea</dt><dd>'+esc(src[m.source]||m.source)+'</dd>' : '')
+        + (m.offer ? '<dt>What an offer-holder would have done</dt><dd>'+esc(m.offer)+'</dd>' : '')
+        + '</dl>';
+    });
+  }
+  (j.parts||[]).forEach(function(x){ h += '<h3>'+esc(x.label)+'</h3><p>'+esc(x.comment)+'</p>'; });
+  var c = j.communication;
+  if(c && typeof c === 'object'){
+    var rows = [['thinking_aloud','Thinking aloud'],['precision','Precision of language'],['silences','Silences'],['board','Use of the board']]
+      .filter(function(r){ return c[r[0]]; }).map(function(r){ return '<dt>'+r[1]+'</dt><dd>'+esc(c[r[0]])+'</dd>'; }).join('');
+    if(rows) h += '<h3 style="font-size:1.1rem;margin-top:1.6rem">Communication</h3><dl class="facts">'+rows+'</dl>';
+  } else if(c) h += '<h3>Communication</h3><p>'+esc(c)+'</p>';
+  if(j.strengths && j.strengths.length) h += '<h3>What worked</h3><ul>'+li(j.strengths)+'</ul>';
+  if(j.improve && j.improve.length) h += '<h3>What to change</h3><ul>'+li(j.improve)+'</ul>';
+  if(j.drills && j.drills.length){
+    h += '<h3 style="font-size:1.1rem;margin-top:1.6rem">Three drills for the next week</h3><ol class="drills">'
+      + j.drills.map(function(d){ return typeof d === 'string' ? '<li>'+esc(d)+'</li>' : '<li><b>'+esc(d.title||'')+'</b> '+esc(d.detail||'')+'</li>'; }).join('') + '</ol>';
+  }
+  if(j.practice) h += '<h3>This week</h3><p>'+esc(j.practice)+'</p>';
+  return h;
+}
+/* The scale, with the level or the two levels either side of score s marked. */
+function scaleHTML(s){
+  return '<ol class="scale" aria-label="How the score is calibrated">' + CALIBRATION.map(function(c){
+    var on = s !== null && s !== '' && !isNaN(s) && Math.abs(c[0]-s) <= 1;
+    return '<li'+(on?' class="on"':'')+'><b>'+c[0]+'</b>'+esc(c[1])+'</li>'; }).join('') + '</ol>';
+}
+
+/* ================================================================ PARTNER MODE
+   Two views linked by the URL hash, #peer=<id>&role=interviewer|candidate.
+   Each runs on its own device; nothing is shared between them except the link.
+   The interviewer's sheet is kept under kv_peer_sheet, one per problem.      */
+var PEER_KEY = 'kv_peer_sheet', CAND_KEY = 'kv_peer_cand';
+function lsGet(k){ try{ return JSON.parse(localStorage.getItem(k)||'null'); }catch(e){ return null; } }
+function lsSet(k,v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+function peerLink(id, role){ return location.href.split('#')[0] + '#peer=' + encodeURIComponent(id) + '&role=' + role; }
+function parseHash(){
+  var o = {}; location.hash.replace(/^#/,'').split('&').forEach(function(kv){ var i = kv.indexOf('='); if(i>0){ try{ o[decodeURIComponent(kv.slice(0,i))] = decodeURIComponent(kv.slice(i+1)); }catch(e){} } });
+  return o;
+}
+async function copyText(t){
+  try{ await navigator.clipboard.writeText(t); return true; }catch(e){}
+  try{ var ta = document.createElement('textarea'); ta.value = t; ta.setAttribute('readonly',''); ta.style.position='fixed'; ta.style.opacity='0';
+    document.body.appendChild(ta); ta.select(); var ok = document.execCommand('copy'); ta.remove(); return !!ok; }catch(e){ return false; }
+}
+var boardEl = document.querySelector('aside.board'), boardHome = boardEl.parentNode, boardNoteDefault = document.getElementById('boardnote').textContent;
+function placeBoard(where, note){
+  where.appendChild(boardEl); document.getElementById('boardnote').textContent = note || boardNoteDefault;
+}
+
+var pv = null, ptick = null;
+function timerElapsed(t){ return (t.acc||0) + (t.since ? (Date.now()-t.since)/1000 : 0); }
+function paintPeerClock(){
+  if(!pv) return;
+  var t = pv.timer(), used = timerElapsed(t), left = Math.max(0, Math.ceil(25*60 - used));
+  var ck = document.getElementById('pclock'), bar = document.getElementById('pdrain');
+  ck.textContent = fmt(left);
+  bar.style.width = Math.min(100, used/(25*60)*100) + '%';
+  var c = left<=60 ? 'urgent' : (left<=300 ? 'warn' : ''); ck.className = 'pclock' + (c?' '+c:''); bar.className = 'pdrain' + (c?' '+c:'');
+  var sb = document.getElementById('ptstart');
+  sb.textContent = t.since ? 'Pause the timer' : (used > 0 ? 'Resume the timer' : 'Start the timer');
+  var note = document.getElementById('pclocknote');
+  if(left <= 0) note.textContent = 'Time is up. Finish the sentence you are on.';
+  else note.textContent = pv.role === 'candidate' ? 'Start the timer when your interviewer starts theirs.' : 'Start the timer together with the candidate.';
+}
+document.getElementById('ptstart').addEventListener('click', function(){
+  if(!pv) return; var t = pv.timer();
+  if(t.since){ t.acc = timerElapsed(t); t.since = null; } else t.since = Date.now();
+  pv.save(); paintPeerClock();
+});
+document.getElementById('ptreset').addEventListener('click', function(){
+  if(!pv) return; var t = pv.timer(); if(timerElapsed(t) > 0 && !confirm('Reset the timer to 25:00?')) return;
+  t.acc = 0; t.since = null; pv.save(); paintPeerClock();
+});
+
+function openPeer(p, role){
+  if(st && !st.ended && st.tick){ clearInterval(st.tick); st.tick = null; }
+  document.getElementById('hub').classList.add('hidden');
+  document.getElementById('stage').classList.add('hidden');
+  document.getElementById('peer').classList.remove('hidden');
+  document.getElementById('pcand').classList.toggle('hidden', role !== 'candidate');
+  document.getElementById('piv').classList.toggle('hidden', role !== 'interviewer');
+  document.getElementById('prole').textContent = role === 'candidate' ? 'Practice with a partner: candidate view' : 'Practice with a partner: interviewer view';
+  document.getElementById('pptitle').textContent = p.title;
+  document.title = p.title + ' | ' + (role === 'candidate' ? 'Candidate view' : 'Interviewer view') + ' | Kevinvariant';
+  board.reset();
+  if(role === 'candidate') openCandidate(p); else openInterviewer(p);
+  if(ptick) clearInterval(ptick);
+  ptick = setInterval(paintPeerClock, 1000); paintPeerClock();
+  window.scrollTo({top:0});
+}
+function closePeer(){
+  if(ptick){ clearInterval(ptick); ptick = null; } pv = null;
+  document.getElementById('peer').classList.add('hidden');
+  document.title = 'Mock interviews | Kevinvariant';
+  if(boardEl.parentNode !== boardHome) placeBoard(boardHome, boardNoteDefault);
+  if(document.getElementById('stage').classList.contains('hidden')) document.getElementById('hub').classList.remove('hidden');
+}
+
+/* ---------------- candidate view */
+function openCandidate(p){
+  var all = lsGet(CAND_KEY) || {}, c = all[p.id];
+  if(!c || typeof c.shown !== 'number' || !c.timer) c = {shown:0, timer:{acc:0, since:null}};
+  c.shown = Math.max(0, Math.min(c.shown, p.parts.length));
+  pv = {p:p, role:'candidate', c:c, timer:function(){ return c.timer; }, save:function(){ var a = lsGet(CAND_KEY) || {}; a[p.id] = c; lsSet(CAND_KEY, a); }};
+  document.getElementById('pcsetup').innerHTML = p.setup;
+  placeBoard(document.getElementById('pcgrid'), 'Write as you would on the interview whiteboard. On a video call, share this screen so your interviewer can see the board.');
+  renderCandParts(false);
+}
+function renderCandParts(scroll){
+  var p = pv.p, c = pv.c, box = document.getElementById('pcparts'); box.innerHTML = '';
+  for(var i = 0; i < c.shown; i++){
+    var q = p.parts[i], d = document.createElement('div'); d.className = 'part' + (i === c.shown-1 ? ' live' : ' done');
+    d.innerHTML = '<p class="plabel">'+esc(q.label)+'</p><p class="ptext">'+esc(q.text)+'</p>'; box.appendChild(d);
+    if(scroll && i === c.shown-1) d.scrollIntoView({behavior:'smooth', block:'center'});
+  }
+  var nb = document.getElementById('pcnext');
+  nb.disabled = c.shown >= p.parts.length;
+  nb.textContent = c.shown === 0 ? 'Show the first part' : (c.shown >= p.parts.length ? 'That is the last part' : 'Show the next part');
+}
+document.getElementById('pcnext').addEventListener('click', function(){
+  if(!pv || pv.role !== 'candidate' || pv.c.shown >= pv.p.parts.length) return;
+  pv.c.shown++; pv.save(); renderCandParts(true);
+});
+document.getElementById('pcreset').addEventListener('click', function(){
+  if(!pv || pv.role !== 'candidate') return;
+  if(!confirm('Hide every part, clear the board and reset the timer?')) return;
+  pv.c.shown = 0; pv.c.timer = {acc:0, since:null}; pv.save(); board.reset(); renderCandParts(false); paintPeerClock();
+});
+
+/* ---------------- interviewer view */
+var HELP = [['','Not recorded'],['none','Unaided'],['one','One nudge'],['two','Two or more nudges']];
+var KEYIDEA = [['','Not recorded'],['own','Yes, unprompted'],['hint','Yes, after a hint'],['no','No']];
+var RATINGS = [['think','Thinking aloud'],['hints','Response to hints'],['checks','Checking special cases and attainment'],['recover','Recovery from errors'],['precise','Precision of language']];
+function newSheet(p){
+  return {id:p.id, parts:p.parts.map(function(q){ return {reached:false, help:'', hints:q.hints.map(function(){ return null; })}; }),
+    key:'', ratings:{think:'',hints:'',checks:'',recover:'',precise:''}, deeper:(p.deeper||[]).map(function(){ return false; }),
+    silence:'', notes:'', score:'', timer:{acc:0, since:null}, feedback:null, started:new Date().toISOString().slice(0,10)};
+}
+function loadSheet(p){
+  var all = lsGet(PEER_KEY) || {}, s = all[p.id];
+  var ok = s && s.parts && s.parts.length === p.parts.length && s.parts.every(function(x,i){ return x.hints && x.hints.length === p.parts[i].hints.length; })
+        && s.deeper && s.deeper.length === (p.deeper||[]).length && s.ratings && s.timer;
+  return ok ? s : newSheet(p);
+}
+function openInterviewer(p){
+  var s = loadSheet(p);
+  pv = {p:p, role:'interviewer', s:s, timer:function(){ return pv.s.timer; }, save:function(){ var a = lsGet(PEER_KEY) || {}; a[p.id] = pv.s; lsSet(PEER_KEY, a); }};
+  renderScript(); renderSheet();
+}
+function hintWhen(h){ return h ? (h.t != null ? 'given at '+fmt(h.t)+' on the timer' : 'given at '+h.at+' (no timer running)') : ''; }
+function renderScript(){
+  var p = pv.p, s = pv.s;
+  var h = '<h2>Script</h2><p class="slab" style="margin-top:0">Read this aloud first</p><p class="setup">'+p.setup+'</p>';
+  p.parts.forEach(function(q,i){
+    h += '<div class="spart"><p class="plabel">Part '+esc(q.label)+'</p><p class="ptext">'+esc(q.text)+'</p>'
+      + '<p class="slab" id="hl-'+i+'">Hints, gentlest first. Tick each one when you give it.</p><ol class="hints" aria-labelledby="hl-'+i+'">'
+      + q.hints.map(function(t,k){ var g = s.parts[i].hints[k];
+          return '<li>'+esc(t)+' <label class="given"><input type="checkbox" data-part="'+i+'" data-hint="'+k+'"'+(g?' checked':'')+'> Given<span class="visually-hidden"> (part '+esc(q.label)+', hint '+(k+1)+')</span></label><span class="when" id="w-'+i+'-'+k+'">'+esc(hintWhen(g))+'</span></li>'; }).join('')
+      + '</ol><details><summary>Model answer (private)</summary><p>'+esc(q.model)+'</p></details></div>';
+  });
+  if(p.deeper && p.deeper.length){
+    h += '<h2 style="margin-top:2rem">Deeper directions</h2><p class="small">Use these once the parts are settled, or earlier if the candidate raises the idea. Pose one at a time in your own words and follow where the candidate goes.</p>';
+    p.deeper.forEach(function(x,i){ h += '<div class="spart"><p class="plabel">Direction '+(i+1)+'</p><p class="ptext">'+esc(x.text)+'</p><details><summary>Notes (private)</summary><p>'+esc(x.model)+'</p></details></div>'; });
+  }
+  h += '<details><summary>Mark scheme</summary>'+p.scheme+'</details>';
+  var el = document.getElementById('pscript'); el.innerHTML = h;
+  el.querySelectorAll('input[data-hint]').forEach(function(cb){ cb.addEventListener('change', function(){
+    var i = +cb.dataset.part, k = +cb.dataset.hint, ps = pv.s.parts[i];
+    if(cb.checked){
+      var t = pv.s.timer, used = timerElapsed(t), now = new Date();
+      ps.hints[k] = {t: (t.since || used > 0) ? Math.round(used) : null, at: ('0'+now.getHours()).slice(-2)+':'+('0'+now.getMinutes()).slice(-2)};
+      ps.reached = true;
+      var n = ps.hints.filter(Boolean).length, want = n >= 2 ? 'two' : 'one', order = ['','none','one','two'];
+      if(order.indexOf(ps.help) < order.indexOf(want)) ps.help = want;
+    } else ps.hints[k] = null;
+    document.getElementById('w-'+i+'-'+k).textContent = hintWhen(ps.hints[k]);
+    pv.save(); syncSheetParts();
+  }); });
+}
+function opts(list, val){ return list.map(function(o){ return '<option value="'+o[0]+'"'+(String(val)===o[0]?' selected':'')+'>'+esc(o[1])+'</option>'; }).join(''); }
+function renderSheet(){
+  var p = pv.p, s = pv.s;
+  var h = '<h2>Scoring sheet</h2><p class="small">Fill this in during or after the session. It is saved in this browser as you go.</p>'
+    + '<fieldset><legend>Parts</legend>' + p.parts.map(function(q,i){
+        return '<div class="srow"><span class="sl">'+esc(q.label)+'</span><label><input type="checkbox" name="reached" data-i="'+i+'"> Reached</label>'
+          + '<label>Help <select name="help" data-i="'+i+'">'+opts(HELP,'')+'</select></label><span class="tally" id="hc-'+i+'"></span></div>'; }).join('') + '</fieldset>'
+    + '<label class="f">Key idea said aloud<select name="key">'+opts(KEYIDEA,'')+'</select></label>'
+    + '<fieldset><legend>Ratings from 1 to 4</legend><p class="small">1 rarely, 2 sometimes, 3 mostly, 4 throughout.</p><div class="rgrid">'
+    + RATINGS.map(function(r){ return '<label for="r-'+r[0]+'">'+r[1]+'</label><select id="r-'+r[0]+'" name="r-'+r[0]+'">'+opts([['','Not rated'],['1','1'],['2','2'],['3','3'],['4','4']],'')+'</select>'; }).join('')
+    + '</div></fieldset>'
+    + '<fieldset><legend>Deeper directions reached</legend>' + ((p.deeper&&p.deeper.length) ? p.deeper.map(function(x,i){
+        return '<label class="dchk"><input type="checkbox" name="deeper" data-i="'+i+'"><span>'+(i+1)+'. '+esc(x.text)+'</span></label>'; }).join('') : '<p class="small">This problem has no deeper directions.</p>') + '</fieldset>'
+    + '<label class="f">Longest silence, in minutes and seconds<input type="text" name="silence" placeholder="for example 1:30" style="width:10rem"></label>'
+    + '<label class="f">Notes<textarea name="notes" placeholder="What the candidate said at the key moments, in their words where you can. Where they got stuck, and what moved them on."></textarea></label>'
+    + '<fieldset><legend>Overall score</legend><label class="f" style="margin-bottom:.2rem">Score from 0 to 10<select name="score">'+opts([['','Not scored']].concat([0,1,2,3,4,5,6,7,8,9,10].map(function(n){ return [String(n),String(n)]; })),'')+'</select></label>'
+    + '<p class="small" style="margin:.6rem 0 0">Use the same calibration as the AI marking. Odd scores sit between the levels either side.</p><div id="sscale"></div></fieldset>'
+    + '<details class="bd"><summary>Board for the AI feedback</summary><p class="small" style="margin-top:.5rem">If you want the AI feedback to see the candidate\'s working, copy the key lines from their board here, or use this board directly if you share one device.</p><div id="pivboardslot"></div></details>'
+    + '<div class="row noprint"><button type="button" class="btn2" id="pscopy">Copy the sheet as text</button><button type="button" class="btn2 quiet" id="psprint">Print the sheet</button><button type="button" class="btn2" id="psai">Get AI feedback</button><button type="button" class="btn2 quiet" id="psfresh">Start a fresh sheet</button></div>'
+    + '<p class="tally noprint" id="psmsg" aria-live="polite" style="margin-top:.7rem"></p>';
+  var f = document.getElementById('psheet'); f.innerHTML = h;
+  placeBoard(document.getElementById('pivboardslot'), 'The AI feedback sees this board when the AI can read images.');
+  // fill values
+  p.parts.forEach(function(q,i){ f.querySelector('[name=reached][data-i="'+i+'"]').checked = !!s.parts[i].reached; });
+  f.querySelector('[name=key]').value = s.key;
+  RATINGS.forEach(function(r){ f.querySelector('[name=r-'+r[0]+']').value = s.ratings[r[0]] || ''; });
+  f.querySelectorAll('[name=deeper]').forEach(function(cb){ cb.checked = !!s.deeper[+cb.dataset.i]; });
+  f.querySelector('[name=silence]').value = s.silence; f.querySelector('[name=notes]').value = s.notes; f.querySelector('[name=score]').value = s.score;
+  syncSheetParts(); paintScale();
+  var fb = document.getElementById('pfeedback');
+  if(s.feedback){ fb.innerHTML = renderReport(s.feedback); fb.classList.remove('hidden'); } else { fb.innerHTML = ''; fb.classList.add('hidden'); }
+  document.getElementById('pscopy').addEventListener('click', function(){ copyText(sheetText()).then(function(ok){ document.getElementById('psmsg').textContent = ok ? 'Sheet copied as text.' : 'Could not copy. Your browser blocked the clipboard.'; }); });
+  document.getElementById('psprint').addEventListener('click', function(){ document.body.classList.add('printsheet'); window.print(); setTimeout(function(){ document.body.classList.remove('printsheet'); }, 500); });
+  document.getElementById('psai').addEventListener('click', peerFeedback);
+  document.getElementById('psfresh').addEventListener('click', function(){
+    if(!confirm('Clear every tick, rating, note and the timer on this sheet?')) return;
+    pv.s = newSheet(pv.p); pv.save(); board.reset(); renderScript(); renderSheet(); paintPeerClock();
+  });
+}
+function syncSheetParts(){
+  var f = document.getElementById('psheet'), s = pv.s;
+  pv.p.parts.forEach(function(q,i){
+    f.querySelector('[name=reached][data-i="'+i+'"]').checked = !!s.parts[i].reached;
+    f.querySelector('[name=help][data-i="'+i+'"]').value = s.parts[i].help || '';
+    var n = s.parts[i].hints.filter(Boolean).length; document.getElementById('hc-'+i).textContent = n ? 'Hints ticked: '+n : '';
+  });
+}
+function paintScale(){ var v = pv.s.score; document.getElementById('sscale').innerHTML = scaleHTML(v === '' ? null : +v); }
+function readSheet(){
+  var f = document.getElementById('psheet'), s = pv.s;
+  f.querySelectorAll('[name=reached]').forEach(function(cb){ s.parts[+cb.dataset.i].reached = cb.checked; });
+  f.querySelectorAll('[name=help]').forEach(function(sel){ s.parts[+sel.dataset.i].help = sel.value; });
+  s.key = f.querySelector('[name=key]').value;
+  RATINGS.forEach(function(r){ s.ratings[r[0]] = f.querySelector('[name=r-'+r[0]+']').value; });
+  f.querySelectorAll('[name=deeper]').forEach(function(cb){ s.deeper[+cb.dataset.i] = cb.checked; });
+  s.silence = f.querySelector('[name=silence]').value; s.notes = f.querySelector('[name=notes]').value; s.score = f.querySelector('[name=score]').value;
+  pv.save(); paintScale();
+}
+document.getElementById('psheet').addEventListener('input', function(){ if(pv && pv.role === 'interviewer') readSheet(); });
+document.getElementById('psheet').addEventListener('change', function(e){ if(pv && pv.role === 'interviewer' && e.target.name) readSheet(); });
+
+function label(list, v){ for(var i=0;i<list.length;i++) if(list[i][0] === v) return list[i][1]; return 'Not recorded'; }
+function sheetText(){
+  var p = pv.p, s = pv.s, used = timerElapsed(s.timer), L = [];
+  L.push('Mock interview scoring sheet (practice with a partner)');
+  L.push('Problem: ' + p.title);
+  L.push('Date: ' + new Date().toISOString().slice(0,10));
+  L.push('Timer: ' + fmt(Math.round(Math.min(used, 99*60))) + ' used of 25:00');
+  L.push('');
+  L.push('PARTS');
+  p.parts.forEach(function(q,i){
+    var ps = s.parts[i];
+    L.push(q.label + ' ' + (ps.reached ? 'Reached' : 'Not reached') + '. Help: ' + label(HELP, ps.help) + '.');
+    ps.hints.forEach(function(h,k){ if(h) L.push('   Hint ' + (k+1) + ' ' + hintWhen(h) + ': "' + q.hints[k] + '"'); });
+    if(!ps.hints.some(Boolean)) L.push('   No hints ticked.');
+  });
+  L.push('');
+  L.push('Key idea said aloud: ' + label(KEYIDEA, s.key));
+  L.push('');
+  L.push('RATINGS (1 rarely, 2 sometimes, 3 mostly, 4 throughout)');
+  RATINGS.forEach(function(r){ L.push(r[1] + ': ' + (s.ratings[r[0]] || 'Not rated')); });
+  L.push('');
+  var dr = (p.deeper||[]).filter(function(x,i){ return s.deeper[i]; }).map(function(x){ return '   ' + x.text; });
+  L.push('Deeper directions reached: ' + (dr.length ? '' : 'none')); dr.forEach(function(x){ L.push(x); });
+  L.push('Longest silence: ' + (s.silence.trim() || 'Not recorded'));
+  L.push('');
+  L.push('NOTES');
+  L.push(s.notes.trim() || 'None.');
+  L.push('');
+  var sc = s.score === '' ? null : +s.score;
+  L.push('Overall score from the interviewer: ' + (sc === null ? 'Not scored' : sc + '/10'));
+  if(sc !== null){ CALIBRATION.forEach(function(c){ if(Math.abs(c[0]-sc) <= 1) L.push('   ' + c[0] + ': ' + c[1]); }); }
+  return L.join('\n');
+}
+async function peerFeedback(){
+  var msg = document.getElementById('psmsg'), btn = document.getElementById('psai'), fb = document.getElementById('pfeedback');
+  if(!aiAvailable()){
+    msg.innerHTML = 'AI feedback needs the AI interviewer, and this browser is set to self-guided' + (cfg.mode === 'own' ? ' with no key saved' : '') + '. On <a href="interviews.html">the problems page</a>, choose the free AI interviewer or add your own API key, save the settings, then come back to this link. The sheet stays saved in this browser.';
+    return;
+  }
+  readSheet();
+  btn.disabled = true; msg.textContent = 'The tutor is reading the sheet and writing the report.';
+  try{
+    var text = 'SCORING SHEET FROM A HUMAN INTERVIEWER (not a transcript):\n\n' + sheetText()
+      + '\n\nThe hint texts above are the hint ladder the interviewer read from; the times are when each was given.';
+    var raw = await callAI(markingSystem(pv.p, true), [{role:'user', content:withBoard(text, true)}], 2200);
+    var j = parseJSON(raw);
+    if(!j){ msg.textContent = 'The report came back in an unexpected format.'; fb.innerHTML = '<p>'+esc(raw)+'</p>'; fb.classList.remove('hidden'); }
+    else {
+      pv.s.feedback = j; pv.save(); fb.innerHTML = renderReport(j); fb.classList.remove('hidden'); msg.textContent = 'Report written below the sheet.';
+      var reached = pv.s.parts.filter(function(x){ return x.reached; }).length, nudges = pv.s.parts.reduce(function(n,x){ return n + x.hints.filter(Boolean).length; }, 0);
+      pushHist({date:new Date().toISOString().slice(0,10), title:pv.p.title, mode:'Partner', parts:reached, nudges:nudges, score:j.score});
+      fb.scrollIntoView({behavior:'smooth', block:'start'});
+    }
+  }catch(e){ msg.textContent = 'Could not fetch the report: ' + e.message; }
+  btn.disabled = false;
+}
+document.getElementById('pcopycand').addEventListener('click', function(){
+  if(!pv) return; copyText(peerLink(pv.p.id,'candidate')).then(function(ok){ document.getElementById('pcopymsg').textContent = ok ? 'Candidate link copied.' : 'Could not copy. The link is this page\'s address with role=candidate.'; });
+});
+
+function route(){
+  var o = parseHash();
+  if(o.peer){
+    var p = PROBLEMS.filter(function(x){ return x.id === o.peer; })[0];
+    if(p && (o.role === 'interviewer' || o.role === 'candidate')){ openPeer(p, o.role); return; }
+  }
+  closePeer();
+}
+window.addEventListener('hashchange', route);
+
+loadCfg(); renderHub(); route();
 </script>
 <script src="site.js?v=20261112c"></script>
 </body>
