@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- 2026-11-14. Olympiad library: full solutions to six PUMaC Individual Finals geometry problems (Division A, 2013 to 2025), with construction diagrams, as a watermarked PDF under CC BY-NC-ND 4.0.
 - 2026-10-28. ESAT mock Set C (Mathematics 1 and 2, both rated 8.1): between Sets A and B in difficulty, with many unfamiliar-format problems; free in ESAT Drill and as watermarked PDFs.
 - 2026-10-28. ESAT mock Set D (Mathematics 1 rated 8.0, Mathematics 2 rated 8.1): between Sets A and B in difficulty, with several unfamiliar-format problems; free in ESAT Drill and as watermarked PDFs.
 - 2026-10-27. ESAT mock Set B (Mathematics 1 rated 8.4, Mathematics 2 rated 8.3): much harder, wordier papers strictly within the ESAT specification, free in ESAT Drill and as watermarked PDFs.
