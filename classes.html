@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Classes | Kevinvariant</title>
+  <meta name="description" content="For maths clubs and classes: a teacher sets Pathways units and level checks, students join with a code, and the teacher sees who has done what.">
+  <link rel="icon" href="/favicon.ico?v=4" sizes="32x32">
+  <link rel="icon" href="/favicon.svg?v=4" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=4">
+  <link rel="manifest" href="/site.webmanifest?v=5">
+  <meta name="theme-color" content="#FFFFFF">
+  <link rel="stylesheet" href="style.css?v=20261111a">
+  <script>try{if(localStorage.getItem('kv_mode')==='dark')document.documentElement.setAttribute('data-mode','dark')}catch(e){}</script>
+  <style>
+    .cl [hidden]{display:none!important}
+    .cl .fld{display:block;margin:0 0 .9rem;max-width:26rem}
+    .cl .fld>label,.cl .fld>.lab{display:block;font-size:.86rem;font-weight:600;color:var(--ink-soft);margin-bottom:.3rem;font-family:var(--display)}
+    .cl .fld small{display:block;color:var(--ink-faint);font-size:.84rem;margin-top:.3rem}
+    .cl input[type=text],.cl input[type=date],.cl select{width:100%;font-family:var(--display);font-size:1rem;color:var(--ink);background:var(--bg-deep);border:1px solid var(--line);border-radius:var(--r-sm);padding:.6rem .75rem;min-height:44px}
+    .cl input:focus,.cl select:focus{outline:none;border-color:var(--aqua);box-shadow:0 0 0 3px var(--aqua-wash)}
+    .cl input.code{text-transform:uppercase;letter-spacing:.18em;font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;max-width:12rem}
+    .cl .row2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 1rem;max-width:40rem}
+    .cl .row2 .fld{max-width:none}
+    .cl .msg{font-family:var(--display);font-size:.92rem;margin:.4rem 0 0;min-height:1.2em}
+    .cl .msg.bad{color:var(--rose)} .cl .msg.ok{color:var(--mint)}
+    .cl .gate{border-left:2px solid var(--line);padding:.2rem 0 .2rem 1rem;color:var(--ink-soft)}
+    .cl .klass{border-top:1px solid var(--line);padding:1.1rem 0 .4rem;margin-top:1.2rem}
+    .cl .klass h3{margin:0 0 .2rem}
+    .cl .meta{color:var(--ink-faint);font-size:.9rem;font-family:var(--display);margin:0 0 .6rem}
+    .cl ol.set{list-style:none;padding:0;margin:.4rem 0 1rem;border-top:1px solid var(--line-soft)}
+    .cl ol.set li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:.2rem 1rem;padding:.55rem 0;border-bottom:1px solid var(--line-soft);align-items:baseline}
+    .cl ol.set .st{font-family:var(--display);font-size:.88rem;color:var(--ink-soft);white-space:nowrap}
+    .cl ol.set .st.done{color:var(--mint)}
+    .cl ol.set .note{grid-column:1/-1;font-size:.92rem;color:var(--ink-soft);margin:0}
+    .cl ol.set .due{font-family:var(--display);font-size:.84rem;color:var(--ink-faint)}
+    .cl ol.set .due.late{color:var(--rose)}
+    .cl .acts{display:flex;flex-wrap:wrap;gap:.2rem .4rem;align-items:center}
+    .cl .linkish{background:none;border:0;padding:0;color:var(--aqua);font:inherit;text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1px;cursor:pointer;min-height:auto}
+    .cl .linkish:hover{color:var(--ink)}
+    .cl .linkish.danger{color:var(--rose)}
+    .cl .codebox{display:flex;flex-wrap:wrap;align-items:center;gap:.4rem 1rem;margin:.6rem 0}
+    .cl .codebig{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:2rem;letter-spacing:.2em;border:1px solid var(--ink);padding:.2rem .6rem .2rem .8rem;line-height:1.2}
+    .cl .say{border-left:2px solid var(--ink);padding:.3rem 0 .3rem 1rem;font-size:1rem;max-width:44rem}
+    .cl fieldset{border:0;padding:0;margin:0 0 .9rem}
+    .cl legend{font-size:.86rem;font-weight:600;color:var(--ink-soft);margin-bottom:.3rem;font-family:var(--display);padding:0}
+    .cl .radios{display:flex;flex-wrap:wrap;gap:.3rem 1.2rem;font-family:var(--display);font-size:.95rem}
+    .cl .radios label{display:flex;align-items:center;gap:.4rem;min-height:36px;cursor:pointer}
+    .cl .tablewrap{position:relative;overflow-x:auto;max-width:100%;border-top:1px solid var(--line);margin:.6rem 0}
+    .cl table.prog{border-collapse:collapse;font-family:var(--display);font-size:.9rem;min-width:100%}
+    .cl table.prog th,.cl table.prog td{text-align:left;padding:.45rem .8rem .45rem 0;border-bottom:1px solid var(--line-soft);white-space:nowrap;vertical-align:top}
+    .cl table.prog th{font-weight:600;color:var(--ink-faint);font-size:.82rem}
+    .cl table.prog th button{background:none;border:0;padding:0;font:inherit;color:inherit;cursor:pointer;display:inline-flex;gap:.3rem;align-items:center;min-height:32px;text-align:left}
+    .cl table.prog th button:hover{color:var(--ink)}
+    .cl table.prog th[aria-sort] button{color:var(--ink)}
+    .cl table.prog th .ar{font-size:.75rem}
+    .cl table.prog td.y{color:var(--mint)} .cl table.prog td.part{color:var(--saffron)} .cl table.prog td.n{color:var(--ink-faint)}
+    .cl table.prog td:first-child,.cl table.prog th:first-child{position:sticky;left:0;background:var(--bg);padding-left:0}
+    .cl .summary{font-size:.98rem;max-width:60ch}
+    .cl .manage{margin-top:1.4rem;padding-top:.8rem;border-top:1px solid var(--line-soft)}
+    .cl .pick{max-width:26rem}
+    @media (max-width:600px){ .cl .row2{grid-template-columns:1fr} .cl .codebig{font-size:1.6rem} }
+  </style>
+</head>
+<body data-theme-v2>
+  <nav id="sitenav"><div class="nav-links"><a href="index.html">Home</a> <a href="pathways.html">Pathways</a> <a href="calendar.html">Calendar</a> <a href="admissions.html">Admissions</a></div></nav>
+
+  <main class="page cl" data-sec="play">
+    <header class="hub-head">
+      <h1>Classes</h1>
+      <p class="lede">For a maths club, a UKMT group or a school class. The teacher makes a class and reads out its code, students join with the code, and the teacher sets Pathways units and level checks and sees who has done them.</p>
+      <ul class="jump">
+        <li><a href="#join">Join a class</a></li>
+        <li><a href="#teach">Teach a class</a></li>
+      </ul>
+    </header>
+
+    <section id="join" aria-labelledby="join-h">
+      <h2 id="join-h">Join a class</h2>
+      <div id="joinGate" class="gate"><p>Loading your account.</p></div>
+      <div id="mine"></div>
+      <form id="joinForm" hidden novalidate>
+        <h3 id="joinFormH">Join with a code</h3>
+        <div class="row2">
+          <div class="fld"><label for="jcode">Class code</label><input type="text" id="jcode" class="code" maxlength="9" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-describedby="jcodeHint"><small id="jcodeHint">Six letters and digits, from your teacher.</small></div>
+          <div class="fld"><label for="jname">Your name in this class</label><input type="text" id="jname" maxlength="40" autocomplete="off" aria-describedby="jnameHint"><small id="jnameHint">What your teacher will see. A first name and initial is enough.</small></div>
+        </div>
+        <button type="submit" class="btn">Join class</button>
+        <p class="msg" id="joinMsg" role="status" aria-live="polite"></p>
+        <p class="sub-intro">Your teacher will see your name in this class, the Pathways units you have finished, your level-check scores and when you were last active. Nothing else, and never your email. You can leave a class at any time. <a href="privacy.html#classes">More in the privacy page.</a></p>
+      </form>
+    </section>
+
+    <section id="teach" aria-labelledby="teach-h">
+      <h2 id="teach-h">Teach a class</h2>
+      <p class="sub-intro">Make a class, read the code out, and set units from the <a href="pathways.html">Pathways course</a> or a <a href="diagnostic.html">level check</a>. Students need a free account, so that their progress can reach you. A class holds up to 60 students, and you can have 10 active classes.</p>
+      <div id="teachGate" class="gate" hidden></div>
+      <form id="newForm" hidden novalidate>
+        <div class="fld"><label for="cname">New class name</label><input type="text" id="cname" maxlength="60" autocomplete="off" placeholder="For example, Year 9 maths club"></div>
+        <button type="submit" class="btn">Make class</button>
+        <p class="msg" id="newMsg" role="status" aria-live="polite"></p>
+      </form>
+      <div id="teachArea"></div>
+    </section>
+  </main>
+
+  <script src="path.js?v=20261114a"></script>
+  <script src="pathways-data.js?v=20261112c"></script>
+  <script src="classes.js?v=20261114a"></script>
+  <script>
+  (function(){
+    var K=window.KV_CLASSES, D=window.KV_PATH, esc=K.esc, A=null, user=null, sb=null;
+    var SITE='kevinvariant08.github.io/classes.html';
+    var $=function(id){ return document.getElementById(id); };
+    function say(el,text,kind){ el.textContent=text||''; el.className='msg'+(kind?' '+kind:''); }
+    function err(e){ return (A&&A.explain)?A.explain(e):String(e&&e.message||e); }
+    function copy(text,btn,label){
+      function done(ok){ var old=label||btn.textContent; btn.textContent=ok?'Copied':'Could not copy'; setTimeout(function(){ btn.textContent=old; },1600); }
+      if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(function(){ done(true); },function(){ fallback(); });
+      else fallback();
+      function fallback(){ var t=document.createElement('textarea'); t.value=text; t.setAttribute('readonly',''); t.style.position='fixed'; t.style.opacity='0'; document.body.appendChild(t); t.select(); var ok=false; try{ ok=document.execCommand('copy'); }catch(e){} t.remove(); done(ok); }
+    }
+
+    /* ------------------------------------------------------------ signed out or unavailable */
+    function gate(){
+      var jg=$('joinGate'), tg=$('teachGate');
+      if(!A){ var m='<p>Classes need the account service, which could not be reached. Check your connection and reload the page.</p>'; jg.innerHTML=m; tg.innerHTML=m; jg.hidden=false; tg.hidden=false; return false; }
+      if(!user){ var s='<p>Classes need a free account, so that your progress can reach your teacher. <a href="auth.html?next=classes.html#signin">Sign in</a> or <a href="auth.html?next=classes.html#signup">create an account</a>, then come back to this page.</p><p>Students under 13 should only join a class with a parent&rsquo;s or teacher&rsquo;s agreement.</p>';
+        jg.innerHTML=s; tg.innerHTML='<p><a href="auth.html?next=classes.html#signin">Sign in</a> or <a href="auth.html?next=classes.html#signup">create an account</a> to make a class.</p>'; jg.hidden=false; tg.hidden=false;
+        $('joinForm').hidden=true; $('newForm').hidden=true; $('mine').innerHTML=''; $('teachArea').innerHTML=''; return false; }
+      jg.hidden=true; tg.hidden=true; $('joinForm').hidden=false; $('newForm').hidden=false; return true;
+    }
+
+    /* ------------------------------------------------------------ student */
+    var mine=[];
+    function loadMine(){
+      return K.myClasses(A,user).then(function(c){ mine=c; paintMine(); },function(e){ $('mine').innerHTML='<p class="msg bad">Could not load your classes: '+esc(err(e))+'</p>'; });
+    }
+    function paintMine(){
+      var el=$('mine');
+      $('joinFormH').textContent=mine.length?'Join another class':'Join with a code';
+      if(!mine.length){ el.innerHTML=''; return; }
+      el.innerHTML=mine.map(function(c){
+        var items=c.assignments.map(function(a){ var d=K.describe(a), late=!d.done&&K.overdue(a.due_date);
+          return '<li><span><a href="'+d.href+'">'+esc(d.title)+'</a>'+(a.due_date?' <span class="due'+(late?' late':'')+'">'+(late?'Was due ':'Due ')+esc(K.due(a.due_date))+'</span>':'')+'</span><span class="st'+(d.done?' done':'')+'">'+esc(d.state)+'</span>'+(a.note?'<p class="note">'+esc(a.note)+'</p>':'')+'</li>'; }).join('');
+        return '<div class="klass" data-class="'+esc(c.id)+'"><h3>'+esc(c.name)+'</h3>'
+          +'<p class="meta">You appear as <b>'+esc(c.display_name)+'</b>. '+(c.assignments.length?c.assignments.length+' item'+(c.assignments.length===1?'':'s')+' set.':'Nothing set yet.')+'</p>'
+          +(items?'<ol class="set" aria-label="Set by '+esc(c.name)+'">'+items+'</ol>':'')
+          +'<div class="acts"><button type="button" class="btn secondary" data-rename="'+esc(c.id)+'">Change my name</button><button type="button" class="btn secondary" data-leave="'+esc(c.id)+'">Leave class</button></div>'
+          +'<form class="renameForm" data-for="'+esc(c.id)+'" hidden novalidate><div class="fld"><label for="rn-'+esc(c.id)+'">Your name in '+esc(c.name)+'</label><input type="text" id="rn-'+esc(c.id)+'" maxlength="40" value="'+esc(c.display_name)+'"></div><button type="submit" class="btn">Save name</button></form>'
+          +'<p class="msg" role="status" aria-live="polite"></p></div>';
+      }).join('');
+    }
+    $('mine').addEventListener('click',function(e){
+      var b=e.target.closest('button'); if(!b) return; var box=b.closest('.klass'), msg=box.querySelector('.msg');
+      if(b.dataset.rename){ var f=box.querySelector('.renameForm'); f.hidden=!f.hidden; if(!f.hidden) f.querySelector('input').focus(); }
+      if(b.dataset.leave){ var c=mine.filter(function(x){ return x.id===b.dataset.leave; })[0];
+        if(!window.confirm('Leave '+c.name+'? Your teacher will no longer see your progress. You can rejoin with the code.')) return;
+        b.disabled=true; say(msg,'Leaving.');
+        sb.from('class_members').delete().eq('class_id',c.id).eq('user_id',user.id).then(function(r){
+          if(r.error){ b.disabled=false; say(msg,'Could not leave: '+err(r.error),'bad'); return; }
+          loadMine().then(function(){ say($('joinMsg'),'You have left '+c.name+'.','ok'); }); }); }
+    });
+    $('mine').addEventListener('submit',function(e){
+      e.preventDefault(); var f=e.target, id=f.dataset.for, box=f.closest('.klass'), msg=box.querySelector('.msg'), v=f.querySelector('input').value.trim().replace(/\s+/g,' ');
+      if(!v||v.length>40||/[<>]/.test(v)){ say(msg,'Choose a name of up to 40 characters, without < or >.','bad'); return; }
+      sb.from('class_members').update({display_name:v}).eq('class_id',id).eq('user_id',user.id).then(function(r){
+        if(r.error){ say(msg,'Could not save: '+err(r.error),'bad'); return; }
+        loadMine().then(function(){ var m=document.querySelector('.klass[data-class="'+id+'"] .msg'); if(m) say(m,'Saved.','ok'); }); });
+    });
+    $('joinForm').addEventListener('submit',function(e){
+      e.preventDefault(); var msg=$('joinMsg'), code=$('jcode').value.toUpperCase().replace(/[^A-Z0-9]/g,''), name=$('jname').value.trim().replace(/\s+/g,' ');
+      if(code.length!==6){ say(msg,'A class code is six letters and digits. Check it with your teacher.','bad'); $('jcode').focus(); return; }
+      if(!name){ say(msg,'Choose the name your teacher will see.','bad'); $('jname').focus(); return; }
+      if(name.length>40||/[<>]/.test(name)){ say(msg,'Choose a name of up to 40 characters, without < or >.','bad'); $('jname').focus(); return; }
+      var btn=e.target.querySelector('button[type=submit]'); btn.disabled=true; say(msg,'Joining.');
+      sb.rpc('join_class',{p_code:code,p_display_name:name}).then(function(r){
+        btn.disabled=false;
+        if(r.error){ say(msg,'Could not join: '+err(r.error),'bad'); return; }
+        var d=r.data||{}; if(!d.ok){ say(msg,d.error||'Could not join.','bad'); return; }
+        $('jcode').value=''; if(A.syncNow) A.syncNow();
+        loadMine().then(function(){ say(msg,d.already?'You are already in '+d.name+'. Your name there is updated.':'You have joined '+d.name+'.','ok'); });
+      });
+    });
+
+    /* ------------------------------------------------------------ teacher */
+    var classes=[], cur=null, assigns=[], prog=[], sortBy={key:'name',dir:1};
+    function loadClasses(keep){
+      return sb.from('classes').select('id,name,join_code,created_at,archived').eq('owner',user.id).order('created_at',{ascending:true}).then(function(r){
+        if(r.error){ $('teachArea').innerHTML='<p class="msg bad">Could not load your classes: '+esc(err(r.error))+'</p>'; return; }
+        classes=r.data||[];
+        var active=classes.filter(function(c){ return !c.archived; });
+        if(!keep||!classes.some(function(c){ return c.id===cur; })) cur=(active[active.length-1]||classes[classes.length-1]||{}).id||null;
+        try{ var saved=localStorage.getItem('kv_class_cur'); if(!keep&&saved&&classes.some(function(c){ return c.id===saved; })) cur=saved; }catch(e){}
+        return loadClass();
+      });
+    }
+    function loadClass(){
+      if(!cur){ paintTeach(); return Promise.resolve(); }
+      try{ localStorage.setItem('kv_class_cur',cur); }catch(e){}
+      return Promise.all([
+        sb.from('class_assignments').select('id,class_id,kind,ref,note,due_date,created_at').eq('class_id',cur).order('created_at',{ascending:true}),
+        sb.rpc('class_progress',{p_class:cur})
+      ]).then(function(rs){
+        if(rs[0].error||rs[1].error){ $('teachArea').innerHTML='<p class="msg bad">Could not load the class: '+esc(err(rs[0].error||rs[1].error))+'</p>'; return; }
+        assigns=rs[0].data||[]; prog=rs[1].data||[]; paintTeach();
+      });
+    }
+    function klass(){ return classes.filter(function(c){ return c.id===cur; })[0]; }
+    function unitOptions(){
+      return D.levels.map(function(L){ return '<optgroup label="Level '+L.n+': '+esc(L.name)+'">'+L.units.filter(function(u){ return u.status==='ready'; }).map(function(u){
+        return '<option value="'+u.id+'">'+u.id+': '+esc(u.title)+(u.extra?' (extra)':'')+'</option>'; }).join('')+'</optgroup>'; }).join('');
+    }
+    function itemTitle(a){ if(a.kind==='check') return 'Level '+a.ref+' check'; var u=K.unitOf(a.ref); return a.ref+(u?': '+u.title:''); }
+    function latest(checks){ var best=null; Object.keys(checks||{}).forEach(function(n){ var r=checks[n]; if(!best||(r.t||0)>(best.t||0)) best={n:+n,score:r.score,t:r.t||0,by:r.by}; }); return best; }
+
+    /* one row of plain values per student, used by the table, the sort and the CSV */
+    function rows(){
+      return prog.map(function(p){
+        var units=p.units||[], started=p.started||[], checks=p.checks||{}, L=latest(checks), w=K.weakest(L);
+        var cells=assigns.map(function(a){
+          if(a.kind==='check'){ var r=checks[a.ref]; return r?{t:r.score+'/8',v:1+r.score,c:r.score>=5?'y':'part'}:{t:'Not taken',v:0,c:'n'}; }
+          if(units.indexOf(a.ref)>=0) return {t:'Done',v:2,c:'y'};
+          if(started.indexOf(a.ref)>=0) return {t:'Started',v:1,c:'part'};
+          return {t:'Not started',v:0,c:'n'}; });
+        return {p:p, name:p.display_name, cells:cells, units:units.length,
+          check:L?{t:'Level '+L.n+': '+L.score+'/8',v:L.n*10+L.score}:{t:'None',v:-1},
+          weak:w?w.text:(L?'Not recorded':''), active:p.last_active?new Date(p.last_active):null};
+      });
+    }
+    function sorted(){
+      var R=rows(), k=sortBy.key, d=sortBy.dir;
+      R.sort(function(a,b){ var x,y;
+        if(k==='name'){ x=a.name.toLowerCase(); y=b.name.toLowerCase(); }
+        else if(k==='units'){ x=a.units; y=b.units; }
+        else if(k==='check'){ x=a.check.v; y=b.check.v; }
+        else if(k==='weak'){ x=a.weak; y=b.weak; }
+        else if(k==='active'){ x=a.active?a.active.getTime():0; y=b.active?b.active.getTime():0; }
+        else { var i=+k.slice(1); x=a.cells[i].v; y=b.cells[i].v; }
+        return (x<y?-1:x>y?1:0)*d||a.name.localeCompare(b.name); });
+      return R;
+    }
+    function ago(t){ if(!t) return 'Not yet'; var days=Math.floor((Date.now()-t.getTime())/864e5); if(days<1) return 'Today'; if(days<2) return 'Yesterday'; if(days<14) return days+' days ago'; return t.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}); }
+    function th(key,label,full){ var on=sortBy.key===key; return '<th scope="col"'+(on?' aria-sort="'+(sortBy.dir>0?'ascending':'descending')+'"':'')+'><button type="button" data-sort="'+key+'"'+(full?' title="'+esc(full)+'"':'')+'>'+esc(label)+'<span class="ar" aria-hidden="true">'+(on?(sortBy.dir>0?'▲':'▼'):'')+'</span></button></th>'; }
+    function table(){
+      if(!prog.length) return '<p class="gate">No students yet. When they join with the code, they appear here.</p>';
+      var R=sorted();
+      var h='<div class="tablewrap" role="region" aria-labelledby="progH" tabindex="0"><table class="prog"><thead><tr>'+th('name','Student')
+        +assigns.map(function(a,i){ return th('a'+i,a.kind==='check'?'Check L'+a.ref:a.ref,itemTitle(a)); }).join('')
+        +th('units','Units done')+th('check','Latest check')+th('weak','Weakest strand')+th('active','Last active')+'<th scope="col"><span class="visually-hidden">Remove</span></th></tr></thead><tbody>';
+      R.forEach(function(r){ h+='<tr><th scope="row" style="font-weight:500;color:var(--ink)">'+esc(r.name)+'</th>'+r.cells.map(function(c){ return '<td class="'+c.c+'">'+esc(c.t)+'</td>'; }).join('')
+        +'<td>'+r.units+'</td><td>'+esc(r.check.t)+'</td><td>'+esc(r.weak)+'</td><td>'+esc(ago(r.active))+'</td>'
+        +'<td><button type="button" class="linkish danger" data-remove="'+esc(r.p.user_id)+'" aria-label="Remove '+esc(r.name)+' from this class">Remove</button></td></tr>'; });
+      return h+'</tbody></table></div>';
+    }
+    function summary(){
+      if(!prog.length) return '';
+      var R=rows(), n=R.length, tally={}, withCheck=0;
+      R.forEach(function(r){ var w=K.weakest(latest(r.p.checks)); if(w){ withCheck++; w.keys.forEach(function(k){ tally[k]=(tally[k]||0)+1; }); } });
+      var top=Object.keys(tally).sort(function(a,b){ return tally[b]-tally[a]; })[0];
+      var parts=[n+' student'+(n===1?'':'s')+'.'];
+      assigns.forEach(function(a,i){ if(a.kind==='unit'){ var d=R.filter(function(r){ return r.cells[i].v===2; }).length; if(i<3) parts.push(a.ref+' done by '+d+' of '+n+'.'); } });
+      if(top) parts.push('Weakest strand most often: '+K.strands[top]+' ('+tally[top]+' of the '+withCheck+' with a level check).');
+      return '<p class="summary">'+esc(parts.join(' '))+'</p>';
+    }
+    function paintTeach(){
+      var el=$('teachArea'), c=klass();
+      if(!classes.length){ el.innerHTML=''; return; }
+      var pick=classes.length>1?'<div class="fld pick"><label for="pickClass">Class</label><select id="pickClass">'+classes.map(function(x){ return '<option value="'+esc(x.id)+'"'+(x.id===cur?' selected':'')+'>'+esc(x.name)+(x.archived?' (archived)':'')+'</option>'; }).join('')+'</select></div>':'';
+      if(!c){ el.innerHTML=pick; return; }
+      var instr='Go to '+SITE+', sign in or make a free account, then type the code '+c.join_code+' under Join a class. Use your first name and initial.';
+      el.innerHTML=pick+'<div class="klass"><h3>'+esc(c.name)+(c.archived?' (archived)':'')+'</h3>'
+        +(c.archived?'<p class="gate">This class is archived: nobody can join it, and it does not count towards your 10 active classes. Restore it to use the code again.</p>':
+          '<div class="codebox"><span class="lab" style="font-family:var(--display);font-size:.86rem;font-weight:600;color:var(--ink-soft)">Join code</span><span class="codebig" aria-label="Join code '+c.join_code.split('').join(' ')+'">'+esc(c.join_code)+'</span><button type="button" class="btn secondary" id="copyCode">Copy code</button></div>'
+          +'<p class="say"><b>Read this out:</b> '+esc(instr)+'</p><p><button type="button" class="btn secondary" id="copyInstr">Copy instructions</button></p>')
+        +'<h3 style="margin-top:1.6rem">Set work</h3>'
+        +'<form id="setForm" novalidate><fieldset><legend>What to set</legend><div class="radios"><label><input type="radio" name="kind" value="unit" checked> A Pathways unit</label><label><input type="radio" name="kind" value="check"> A level check</label></div></fieldset>'
+        +'<div class="row2"><div class="fld" id="unitFld"><label for="setUnit">Unit</label><select id="setUnit">'+unitOptions()+'</select></div>'
+        +'<div class="fld" id="checkFld" hidden><label for="setCheck">Level check</label><select id="setCheck">'+D.levels.map(function(L){ return '<option value="'+L.n+'">Level '+L.n+': '+esc(L.name)+'</option>'; }).join('')+'</select></div>'
+        +'<div class="fld"><label for="setDue">Due date (optional)</label><input type="date" id="setDue"></div></div>'
+        +'<div class="fld" style="max-width:40rem"><label for="setNote">Note for students (optional)</label><input type="text" id="setNote" maxlength="200" placeholder="For example, do the practice problems before Thursday"></div>'
+        +'<button type="submit" class="btn">Set this work</button><p class="msg" id="setMsg" role="status" aria-live="polite"></p></form>'
+        +(assigns.length?'<ol class="set" aria-label="Work set for '+esc(c.name)+'">'+assigns.map(function(a){ return '<li><span>'+(a.kind==='unit'?'<a href="unit.html?u='+esc(a.ref)+'">'+esc(itemTitle(a))+'</a>':'<a href="diagnostic.html#l'+esc(a.ref)+'">'+esc(itemTitle(a))+'</a>')+(a.due_date?' <span class="due">Due '+esc(K.due(a.due_date))+'</span>':'')+'</span><button type="button" class="linkish danger" data-unset="'+a.id+'" aria-label="Remove '+esc(itemTitle(a))+' from the set work">Remove</button>'+(a.note?'<p class="note">'+esc(a.note)+'</p>':'')+'</li>'; }).join('')+'</ol>':'<p class="meta">Nothing set yet.</p>')
+        +'<h3 id="progH" style="margin-top:1.6rem">Progress</h3>'+summary()
+        +'<p class="meta">A unit counts as done when the student marks it done at the end of the unit. Progress reaches you a few seconds after a signed-in student finishes something, or the next time they open the site.</p>'
+        +table()
+        +(prog.length?'<div class="acts"><button type="button" class="btn secondary" id="csv">Copy as CSV</button><button type="button" class="btn secondary" id="refresh">Refresh progress</button></div>':'<div class="acts"><button type="button" class="btn secondary" id="refresh">Refresh progress</button></div>')
+        +'<p class="msg" id="tableMsg" role="status" aria-live="polite"></p>'
+        +'<div class="manage"><h3>Manage this class</h3><div class="acts">'
+        +(c.archived?'':'<button type="button" class="btn secondary" id="newCode">Make a new join code</button>')
+        +'<button type="button" class="btn secondary" id="archive">'+(c.archived?'Restore class':'Archive class')+'</button><button type="button" class="btn secondary" id="delClass">Delete class</button></div>'
+        +'<p class="meta">A new code stops the old one working; students already in the class stay. Deleting a class removes its members and set work for good.</p><p class="msg" id="manageMsg" role="status" aria-live="polite"></p></div>'
+        +'</div>';
+      wireTeach(c, instr);
+    }
+    function wireTeach(c,instr){
+      var p=$('pickClass'); if(p) p.addEventListener('change',function(){ cur=p.value; sortBy={key:'name',dir:1}; loadClass().then(function(){ var q=$('pickClass'); if(q) q.focus(); }); });
+      if($('copyCode')) $('copyCode').addEventListener('click',function(){ copy(c.join_code,this,'Copy code'); });
+      if($('copyInstr')) $('copyInstr').addEventListener('click',function(){ copy(instr,this,'Copy instructions'); });
+      var f=$('setForm');
+      f.addEventListener('change',function(e){ if(e.target.name==='kind'){ var u=f.kind.value==='unit'; $('unitFld').hidden=!u; $('checkFld').hidden=u; } });
+      f.addEventListener('submit',function(e){
+        e.preventDefault(); var kind=f.kind.value, ref=kind==='unit'?$('setUnit').value:$('setCheck').value, due=$('setDue').value||null, note=$('setNote').value.trim()||null, msg=$('setMsg');
+        if(assigns.some(function(a){ return a.kind===kind&&a.ref===ref; })){ say(msg,'That is already set for this class.','bad'); return; }
+        var btn=f.querySelector('button[type=submit]'); btn.disabled=true; say(msg,'Saving.');
+        sb.from('class_assignments').insert({class_id:cur,kind:kind,ref:ref,due_date:due,note:note}).then(function(r){
+          btn.disabled=false; if(r.error){ say(msg,'Could not set it: '+err(r.error),'bad'); return; }
+          var t=itemTitle({kind:kind,ref:ref}); loadClass().then(function(){ say($('setMsg'),'Set: '+t+'.','ok'); });
+        });
+      });
+      $('teachArea').querySelectorAll('[data-unset]').forEach(function(b){ b.addEventListener('click',function(){
+        var a=assigns.filter(function(x){ return String(x.id)===b.dataset.unset; })[0]; if(!a||!window.confirm('Remove '+itemTitle(a)+' from the set work?')) return;
+        sb.from('class_assignments').delete().eq('id',a.id).then(function(r){ if(r.error){ say($('setMsg'),'Could not remove it: '+err(r.error),'bad'); return; } loadClass().then(function(){ say($('setMsg'),'Removed '+itemTitle(a)+'.','ok'); }); }); }); });
+      $('teachArea').querySelectorAll('[data-sort]').forEach(function(b){ b.addEventListener('click',function(){
+        var k=b.dataset.sort; sortBy=sortBy.key===k?{key:k,dir:-sortBy.dir}:{key:k,dir:k==='name'||k==='weak'?1:-1}; paintTeach();
+        var nb=document.querySelector('[data-sort="'+k+'"]'); if(nb) nb.focus(); }); });
+      $('teachArea').querySelectorAll('[data-remove]').forEach(function(b){ b.addEventListener('click',function(){
+        var p=prog.filter(function(x){ return x.user_id===b.dataset.remove; })[0]; if(!p||!window.confirm('Remove '+p.display_name+' from '+c.name+'? They can rejoin with the code.')) return;
+        sb.rpc('remove_class_member',{p_class:cur,p_user:p.user_id}).then(function(r){ var d=r.data||{}; if(r.error||!d.ok){ say($('tableMsg'),'Could not remove: '+(r.error?err(r.error):d.error),'bad'); return; } loadClass().then(function(){ say($('tableMsg'),'Removed '+p.display_name+'.','ok'); }); }); }); });
+      if($('csv')) $('csv').addEventListener('click',function(){
+        var q=function(v){ v=String(v==null?'':v); return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v; };
+        var head=['Student'].concat(assigns.map(itemTitle),['Units done','Latest check','Weakest strand','Last active']);
+        var lines=[head.map(q).join(',')].concat(sorted().map(function(r){ return [r.name].concat(r.cells.map(function(x){ return x.t; }),[r.units,r.check.t,r.weak,r.active?r.active.toISOString().slice(0,10):'']).map(q).join(','); }));
+        copy(lines.join('\n'),this,'Copy as CSV'); });
+      $('refresh').addEventListener('click',function(){ var b=this; b.disabled=true; loadClass().then(function(){ say($('tableMsg'),'Progress refreshed.','ok'); }); });
+      if($('newCode')) $('newCode').addEventListener('click',function(){ if(!window.confirm('Make a new join code? The old code '+c.join_code+' will stop working.')) return;
+        sb.rpc('new_class_code',{p_class:cur}).then(function(r){ var d=r.data||{}; if(r.error||!d.ok){ say($('manageMsg'),'Could not change the code: '+(r.error?err(r.error):d.error),'bad'); return; } loadClasses(true).then(function(){ say($('manageMsg'),'New join code: '+d.join_code+'.','ok'); }); }); });
+      $('archive').addEventListener('click',function(){ var to=!c.archived;
+        sb.from('classes').update({archived:to}).eq('id',cur).then(function(r){ if(r.error){ say($('manageMsg'),'Could not change it: '+err(r.error),'bad'); return; } loadClasses(true).then(function(){ say($('manageMsg'),to?'Archived.':'Restored.','ok'); }); }); });
+      $('delClass').addEventListener('click',function(){ if(!window.confirm('Delete '+c.name+' for good? Its members and set work are removed. This cannot be undone.')) return;
+        sb.from('classes').delete().eq('id',cur).then(function(r){ if(r.error){ say($('manageMsg'),'Could not delete: '+err(r.error),'bad'); return; } cur=null; loadClasses(false).then(function(){ say($('newMsg'),'Deleted '+c.name+'.','ok'); }); }); });
+    }
+    $('newForm').addEventListener('submit',function(e){
+      e.preventDefault(); var msg=$('newMsg'), name=$('cname').value.trim();
+      if(!name){ say(msg,'Give the class a name.','bad'); $('cname').focus(); return; }
+      var btn=e.target.querySelector('button[type=submit]'); btn.disabled=true; say(msg,'Making the class.');
+      sb.rpc('create_class',{p_name:name}).then(function(r){
+        btn.disabled=false; var d=r.data||{};
+        if(r.error||!d.ok){ say(msg,'Could not make the class: '+(r.error?err(r.error):d.error),'bad'); return; }
+        $('cname').value=''; cur=d.id; try{ localStorage.setItem('kv_class_cur',d.id); }catch(x){}
+        loadClasses(true).then(function(){ say(msg,'Made '+d.name+'. Its join code is '+d.join_code+'.','ok'); });
+      });
+    });
+
+    /* ------------------------------------------------------------ start */
+    function start(){ if(!gate()) return; sb=A.client; loadMine(); loadClasses(false); }
+    K.session(function(auth,u){
+      A=auth; user=u; start();
+      if(A) A.onChange(function(nu){ var was=user&&user.id, now=nu&&nu.id; if(was!==now){ user=nu; start(); } });
+    });
+    window.addEventListener('kv-path',function(){ if(mine.length) paintMine(); });
+  })();
+  </script>
+  <script src="site.js?v=20261114a" defer></script>
+</body>
+</html>

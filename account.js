@@ -47,7 +47,7 @@
   }
 
   /* ---------------------------------------------------------- progress sync */
-  var KEYS=['hu_drill_log','hu_drill_attempts','hu_iv_hist','hu_scores','hu_arena','hu_ladder_best','hu_rewards','hu_duels','hu_qotw','hu_review','hu_traps','kv_path'];
+  var KEYS=['hu_drill_log','hu_drill_attempts','hu_iv_hist','hu_scores','hu_arena','hu_ladder_best','hu_rewards','hu_duels','hu_qotw','hu_review','hu_traps','kv_path','kv_diag'];
   function readLocal(){ var o={}; KEYS.forEach(function(k){ try{ var v=localStorage.getItem(k); if(v!=null) o[k]=JSON.parse(v); }catch(e){} }); return o; }
   function writeLocal(o){ KEYS.forEach(function(k){ if(o[k]!==undefined){ try{ localStorage.setItem(k,JSON.stringify(o[k])); }catch(e){} } }); }
   function unionBy(a,b,keyFn,cap,sortFn){ var seen={}, out=[]; (a||[]).concat(b||[]).forEach(function(x){ var k=keyFn(x); if(!seen[k]){ seen[k]=1; out.push(x); } }); if(sortFn) out.sort(sortFn); return cap?out.slice(-cap):out; }
@@ -85,6 +85,10 @@
         if(b.read) a.read=Math.max(a.read||0,b.read); if(b.done) a.done=Math.max(a.done||0,b.done);
         Object.assign(a.lad,b.lad||{}); Object.keys(b.ps||{}).forEach(function(k){ if(a.ps[k]!=='got') a.ps[k]=b.ps[k]; }); pu[id]=a; }); });
       o.kv_path={level:lp.level||cp.level||null,u:pu}; }
+    // level checks: for each level keep the most recent attempt (classes read these through class_progress)
+    if(L.kv_diag||C.kv_diag){ var dg={};
+      [C.kv_diag||{},L.kv_diag||{}].forEach(function(src){ Object.keys(src).forEach(function(n){ var r=src[n]; if(r&&typeof r==='object'&&(!dg[n]||(r.t||0)>=(dg[n].t||0))) dg[n]=r; }); });
+      o.kv_diag=dg; }
     return o;
   }
   var lastPushed='', syncing=false, lastSync=null;
@@ -99,6 +103,9 @@
     finally{ syncing=false; }
   }
   async function deleteCloudData(){ if(!client||!user) return {ok:false}; var r=await client.from('progress').delete().eq('user_id',user.id); lastPushed=''; return r.error?{ok:false,error:explain(r.error)}:{ok:true}; }
+  /* sync a few seconds after a change that a class teacher may be waiting for (a unit done, a level check marked) */
+  var soonT=null;
+  function syncSoon(){ if(!user) return; clearTimeout(soonT); soonT=setTimeout(function(){ if(syncing) syncSoon(); else syncNow(); },3000); }
   setInterval(function(){ if(user) syncNow(); },45000);
   document.addEventListener('visibilitychange',function(){ if(document.visibilityState==='hidden'&&user) syncNow(); });
 
@@ -118,7 +125,7 @@
 
   window.HU_AUTH={configured:configured,client:client,site:cfg.site||(location.origin+'/'),
     user:function(){return user;}, onChange:onChange, updated:function(u){ if(u){ user=u; emit(); } }, checkPassword:checkPassword, passwordOk:passwordOk,
-    explain:explain, syncNow:syncNow, lastSync:function(){return lastSync;}, deleteCloudData:deleteCloudData,
+    explain:explain, syncNow:syncNow, syncSoon:syncSoon, lastSync:function(){return lastSync;}, deleteCloudData:deleteCloudData,
     signOut:async function(scope){ if(user) await syncNow(); return client.auth.signOut(scope?{scope:scope}:undefined); }};
   window.dispatchEvent(new Event('hu-auth-ready'));
 })();

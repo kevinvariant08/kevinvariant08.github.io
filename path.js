@@ -1,10 +1,13 @@
 /* Pathways: progress storage shared by pathways.html and unit.html.
-   Progress lives in localStorage under kv_path and is synced by account.js when signed in.
+   Progress lives in localStorage under kv_path and is synced by account.js when signed in
+   (level-check scores live under kv_diag, written by diagnostic.html, and sync the same way).
    Shape: {level: n|null, u: {UNIT_ID: {read: t, ps: {i: 'got'|'not'}, lad: {i: t}, done: t}}} */
 (function(){
   var KEY='kv_path';
   function load(){ try{ var o=JSON.parse(localStorage.getItem(KEY)||'{}'); o.u=o.u||{}; return o; }catch(e){ return {u:{}}; } }
-  function save(o){ try{ localStorage.setItem(KEY,JSON.stringify(o)); }catch(e){} window.dispatchEvent(new Event('kv-path')); }
+  function save(o){ try{ localStorage.setItem(KEY,JSON.stringify(o)); }catch(e){} window.dispatchEvent(new Event('kv-path'));
+    /* signed in: send it to the account soon, so a class teacher sees it without waiting for the next sync */
+    if(window.HU_AUTH&&window.HU_AUTH.syncSoon) window.HU_AUTH.syncSoon(); }
   function unit(o,id){ return o.u[id]||(o.u[id]={ps:{},lad:{}}); }
   var P={
     get:load,

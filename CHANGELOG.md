@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- 2026-11-14. Classes: a teacher makes a class, students join with a six-character code, and the teacher sets Pathways units or level checks and sees each student's units, level-check scores, weakest strand and last active date (classes.html, classes.sql). Level-check scores now sync to accounts with a strand breakdown.
 - 2026-11-14. Olympiad library: full solutions to six PUMaC Individual Finals geometry problems (Division A, 2013 to 2025), with construction diagrams, as a watermarked PDF under CC BY-NC-ND 4.0.
 - 2026-10-28. ESAT mock Set C (Mathematics 1 and 2, both rated 8.1): between Sets A and B in difficulty, with many unfamiliar-format problems; free in ESAT Drill and as watermarked PDFs.
 - 2026-10-28. ESAT mock Set D (Mathematics 1 rated 8.0, Mathematics 2 rated 8.1): between Sets A and B in difficulty, with several unfamiliar-format problems; free in ESAT Drill and as watermarked PDFs.

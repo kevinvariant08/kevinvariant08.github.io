@@ -31,6 +31,7 @@
         <li><a href="#browser">In your browser</a></li>
         <li><a href="#choice">Anonymous sharing</a></li>
         <li><a href="#accounts">Accounts</a></li>
+        <li><a href="#classes">Classes</a></li>
         <li><a href="#ai">Proof marker and interviews</a></li>
         <li><a href="#services">Services the site uses</a></li>
         <li><a href="#delete">Deleting your data</a></li>
@@ -74,13 +75,20 @@
       <p>You never need an account to use the lessons, papers or practice. If you create one, it is handled by Supabase, the database service the site uses.</p>
       <dl class="fields">
         <dt>Sign-in details</dt><dd>Your email address and password, and a display name if you give one. Supabase stores the password hashed; I cannot see it. Supabase sends the confirmation and password reset emails. Your browser keeps a sign-in token in local storage so you stay signed in.</dd>
-        <dt>Synced progress</dt><dd>The progress listed above (Pathways, Drill, Arena, scores, rewards, duels, problem of the week, review queue and traps) is copied to your account so it follows you between devices. Proof marker history and API keys are not synced.</dd>
+        <dt>Synced progress</dt><dd>The progress listed above (Pathways units and level-check scores, Drill, Arena, scores, rewards, duels, problem of the week, review queue and traps) is copied to your account so it follows you between devices. Proof marker history and API keys are not synced.</dd>
         <dt>Coins and unlocks</dt><dd>Codes you redeem, papers you unlock and things you buy with coins in the Shop are saved to your account.</dd>
         <dt>Leaderboard</dt><dd>Only if you switch it on: your display name, title, points, level and streak appear on the leaderboard. Without a display name you are listed as &ldquo;Player&rdquo; and four digits. No part of your email address is shown.</dd>
         <dt>Labs high scores</dt><dd>If you are signed in when you finish a Labs minigame, your score and display name are added to that game's public high-score table.</dd>
         <dt>Problem of the week</dt><dd>If you post a method in the discussion, the post and your display name are shown to other visitors who open that week's discussion.</dd>
       </dl>
       <p>Your email address is never shown to other visitors and is used only for signing in and account emails.</p>
+    </section>
+
+    <section id="classes" aria-labelledby="classes-h">
+      <h2 id="classes-h">Classes (optional)</h2>
+      <p>A teacher with an account can make a class on the <a href="classes.html">Classes page</a>, and students with an account can join it with its code. A student chooses the name the class sees, and can change it.</p>
+      <p>For each student in the class, the teacher can see exactly this: that display name, the Pathways units the student has finished or started, their level-check scores (the total and the score in each strand), when they joined, and the date they were last active. The teacher never sees the student's email address or any other progress, such as Drill results, scores, coins or mistakes. Students in a class do not see each other.</p>
+      <p>Students can leave a class at any time on the Classes page, which removes the teacher's access at once. A teacher can also remove a student, or delete the class, which deletes its list of members and the work set. Students under 13 should only join a class with a parent's or teacher's agreement.</p>
     </section>
 
     <section id="ai" aria-labelledby="ai-h">
@@ -100,7 +108,7 @@
       <p>Each of these receives your IP address and browser details when your browser contacts it, as any web server does, and keeps short-lived technical logs under its own privacy policy. I do not use those logs.</p>
       <dl class="fields">
         <dt>GitHub Pages</dt><dd>Hosts the pages and PDFs.</dd>
-        <dt>Supabase</dt><dd>Accounts, synced progress, unlocks, the leaderboard, discussion posts and anonymous answer sharing.</dd>
+        <dt>Supabase</dt><dd>Accounts, synced progress, classes, unlocks, the leaderboard, discussion posts and anonymous answer sharing.</dd>
         <dt>Cloudflare</dt><dd>Runs the worker behind the free proof marker, the mock interviews and the results tally.</dd>
         <dt>Google Fonts</dt><dd>Supplies the two typefaces used on every page.</dd>
         <dt>jsDelivr</dt><dd>Supplies MathJax, which draws the mathematics, and the Supabase sign-in library.</dd>
@@ -119,7 +127,7 @@
     </section>
   </main>
 
-<script src="site.js?v=20261113a"></script>
+<script src="site.js?v=20261114a"></script>
 <script>
 (function(){
   function ready(f){ if(window.KV_TELEMETRY) return f(window.KV_TELEMETRY); var n=0, t=setInterval(function(){ if(window.KV_TELEMETRY||++n>100){ clearInterval(t); if(window.KV_TELEMETRY) f(window.KV_TELEMETRY); } },100); }

@@ -19,13 +19,13 @@
       {href:'qotw.html', name:'Problem of the week', note:'One hard problem for everyone'},
       {href:'/cevian/', name:'Cevian', note:'Ranked contest problems'},
       {href:'progress.html', name:'My progress', note:'Scores, mistakes to review, rewards'},
-      {href:'compete.html', name:'Everything else', note:'Games, tools and the shop'}]}
+      {href:'classes.html', name:'Classes', note:'Join a class, or set work for one'}]}
   ];
   var FOOT='<div class="foot-grid">'
     +'<div><b>Pathways</b><a href="pathways.html">All levels</a><a href="pathways.html#start">Find your level</a><a href="olympiad.html">Olympiad library</a><a href="geometry.html">Geometry Lab</a></div>'
     +'<div><b>Calendar</b><a href="calendar.html">Competition dates</a><a href="calendar.html#all-h">Entry deadlines</a></div>'
     +'<div><b>Admissions</b><a href="admissions.html">Admissions plan</a><a href="tmua.html">TMUA</a><a href="esat.html">ESAT</a><a href="interviews.html">Mock interviews</a></div>'
-    +'<div><b>Extras</b><a href="compete.html">All extras</a><a href="qotw.html">Problem of the week</a><a href="/cevian/">Cevian</a><a href="progress.html">My progress</a></div>'
+    +'<div><b>Extras</b><a href="qotw.html">Problem of the week</a><a href="/cevian/">Cevian</a><a href="progress.html">My progress</a><a href="classes.html">Classes</a><a href="compete.html">Everything else</a></div>'
     +'<div><b>About</b><a href="how-it-works.html">How it works</a><a href="how-it-works.html#difficulty">Difficulty scale</a><a href="how-it-works.html#access">Free and locked papers</a><a href="book.html">Beyond the Incenter</a><a href="privacy.html">Privacy</a><a href="terms.html">Terms of use</a></div>'
     +'</div><p>&copy; 2026 Kevin Hu. All rights reserved, except that the HU Collection handout PDFs may be shared unchanged under <a href="terms.html#licence">CC BY-NC-ND 4.0</a>.</p><p>Kevinvariant is written and run by Kevin Hu. Contact: <a href="https://www.instagram.com/kevinvariant/" target="_blank" rel="noopener">@kevinvariant on Instagram</a>. Scores and progress stay in your browser unless you sign in to sync them, or choose to share answers anonymously. <a href="privacy.html">Privacy</a> &middot; <a href="terms.html">Terms of use</a></p>';
   var here=(location.pathname.split('/').pop()||'index.html').toLowerCase();
@@ -94,7 +94,7 @@
     loadScript('auth-config.js?v=20260927').catch(function(){}).then(function(){
       var c=window.HU_AUTH_CONFIG||{};
       var lib=(c.url&&c.anonKey)?loadScript('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js').catch(function(){}):Promise.resolve();
-      return lib.then(function(){ return loadScript('account.js?v=20261023'); });
+      return lib.then(function(){ return loadScript('account.js?v=20261114a'); });
     }).catch(function(){});
   }
   /* Installable app: service worker for offline use, plus an "Install app" offer where the browser supports it.

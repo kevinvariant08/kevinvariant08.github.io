@@ -59,6 +59,7 @@
     <h1>Progress</h1>
     <p class="lead">Everything you have done on this site, in one place: drill accuracy by technique, how long questions take you, how your interview scores are moving, and what to do next. It is read from this browser, and synced to your account if you are signed in.</p>
     <p><a href="review.html">Review your mistakes</a> (they come back after 1, 3 and 7 days) &middot; <a href="rewards.html">Rewards</a> &middot; <a href="results.html">How your scores compare</a></p>
+    <section id="classSet" aria-labelledby="classSetH" hidden></section>
     <div id="body"></div>
   </main>
 
@@ -193,6 +194,25 @@ function paintConfWeek(){ var p=document.getElementById('confweek'), H=window.HU
 paintConf();
 window.addEventListener('hu-rewards',function(){ if(!confWeekShown) paintConfWeek(); });
 </script>
-<script src="site.js?v=20261113a"></script>
+<script src="site.js?v=20261114a"></script>
+<script src="classes.js?v=20261114a"></script>
+<script>
+// Set by your class: work set in the classes this student has joined (classes.html), not yet done first
+(function(){ var K=window.KV_CLASSES, el=document.getElementById('classSet'); if(!K||!el) return;
+  var shown=false;
+  function paint(cls){
+    var items=[]; cls.forEach(function(c){ c.assignments.forEach(function(a){ items.push({c:c,a:a,d:K.describe(a)}); }); });
+    if(!items.length){ el.hidden=true; return; }
+    items.sort(function(x,y){ return (x.d.done-y.d.done)||((x.a.due_date||'9999')<(y.a.due_date||'9999')?-1:(x.a.due_date||'9999')>(y.a.due_date||'9999')?1:0); });
+    var left=items.filter(function(i){ return !i.d.done; }).length, multi=cls.length>1;
+    el.innerHTML='<h3 id="classSetH">Set by your class</h3><p class="tally">'+(left?left+' of '+items.length+' still to do.':'All '+items.length+' done.')+' <a href="classes.html">See your classes</a></p>'
+      +'<table><tr><th>Work</th>'+(multi?'<th>Class</th>':'')+'<th>Due</th><th>Status</th></tr>'+items.slice(0,6).map(function(i){ var late=!i.d.done&&K.overdue(i.a.due_date);
+        return '<tr><td><a href="'+i.d.href+'">'+K.esc(i.d.title)+'</a></td>'+(multi?'<td>'+K.esc(i.c.name)+'</td>':'')+'<td'+(late?' class="bad"':'')+'>'+(i.a.due_date?K.esc(K.due(i.a.due_date)):'')+'</td><td class="'+(i.d.done?'ok':'')+'">'+K.esc(i.d.state)+'</td></tr>'; }).join('')+'</table>'
+      +(items.length>6?'<p class="tally"><a href="classes.html">'+(items.length-6)+' more on the Classes page</a></p>':'');
+    el.hidden=false; }
+  K.session(function(A,u){ if(!A||!u) return;
+    K.ensurePath().then(function(){ return K.myClasses(A,u); }).then(function(c){ paint(c); }).catch(function(e){ console.error(e); }); });
+})();
+</script>
 </body>
 </html>

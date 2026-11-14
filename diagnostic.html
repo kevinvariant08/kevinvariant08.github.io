@@ -24,7 +24,7 @@
     <div id="app"></div>
   </main>
 
-  <script src="path.js?v=20261108e"></script>
+  <script src="path.js?v=20261114a"></script>
   <script src="pathways-data.js?v=20261112c"></script>
   <script src="diagnostic-data.js?v=20261109a"></script>
   <script>
@@ -35,7 +35,7 @@
     function lvl(){ var m=/^#l([1-5])$/.exec(location.hash); return m?+m[1]:(P.level()||1); }
     function unitOf(id){ var r=null; D.levels.forEach(function(L){ L.units.forEach(function(u){ if(u.id===id) r=u; }); }); return r; }
     function store(){ try{ return JSON.parse(localStorage.getItem('kv_diag')||'{}'); }catch(e){ return {}; } }
-    function keep(n,rec){ var o=store(); o[n]=rec; try{ localStorage.setItem('kv_diag',JSON.stringify(o)); }catch(e){} }
+    function keep(n,rec){ var o=store(); o[n]=rec; try{ localStorage.setItem('kv_diag',JSON.stringify(o)); }catch(e){} if(window.HU_AUTH&&window.HU_AUTH.syncSoon) window.HU_AUTH.syncSoon(); }
     function fitWide(){ document.querySelectorAll('main mjx-container:not([display])').forEach(function(c){ var p=c.parentElement.closest('p,li,div,section'); if(!p||!p.clientWidth) return; var w=c.classList.contains('mj-wide')?c.scrollWidth:c.getBoundingClientRect().width; c.classList.toggle('mj-wide', w>p.clientWidth-4); }); }
     var fitT; window.addEventListener('resize',function(){ clearTimeout(fitT); fitT=setTimeout(fitWide,80); });
     document.addEventListener('click',function(){ setTimeout(fitWide,30); });
@@ -86,7 +86,7 @@
         var by={}, miss=[], score=0;
         Q.forEach(function(q,i){ var li=f.querySelector('[data-i="'+i+'"]'), ok=li.dataset.ok==='1'&&(!q.proof||document.getElementById('p'+i).checked);
           by[q.strand]=(by[q.strand]||0)+(ok?1:0); if(ok) score++; else if(miss.indexOf(q.unit)<0) miss.push(q.unit); });
-        keep(n,{score:score,t:Date.now()});
+        keep(n,{score:score,t:Date.now(),by:{NT:by.NT||0,AL:by.AL||0,CO:by.CO||0,GE:by.GE||0}});
         var next=D.levels[n], prev=D.levels[n-2], adv, act;
         if(score>=7){ adv=next?'You do not need Level '+n+'. Take the Level '+(n+1)+' check next to see whether you need that one.':'You are ready for the hardest problems in the course. Work through the Level 5 ladders and the extra units, and sit real BMO2, USAMO and IMO papers under time.';
           act=next?'<a class="btn" href="#l'+(n+1)+'">Take the Level '+(n+1)+' check</a> <button type="button" class="btn secondary" data-set="'+(n+1)+'">Make Level '+(n+1)+' my level</button>':'<button type="button" class="btn" data-set="5">Make Level 5 my level</button>'; }
@@ -108,6 +108,6 @@
     render();
   })();
   </script>
-  <script src="site.js?v=20261113a" defer></script>
+  <script src="site.js?v=20261114a" defer></script>
 </body>
 </html>
