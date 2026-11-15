@@ -109,7 +109,7 @@
         <div id="maybe"><div class="empty">Nothing yet.</div></div>
         <h4>Measurements</h4>
         <div id="meas"><div class="empty">Use the measure tools.</div></div>
-        <p style="font-size:.82rem;color:var(--faint);margin-top:1rem">A relation that survives twenty random nudges of every free point is a consequence of the construction. One that does not is an accident of placement, which tells you what to construct next. Relations that hold by construction are not listed.</p>
+        <p style="font-size:.82rem;color:var(--faint);margin-top:1rem">A relation listed as holding is exact, not just close: it is re-checked to about one part in ten million in twelve randomly nudged copies of the figure, and has to hold in most of them. One that does not is an accident of placement, which tells you what to construct next. Lengths between any two named points are compared too, so relations such as BX = AX + CX appear even when no segment is drawn. Relations that hold by construction are not listed.</p>
       </div>
     </div>
   </main>
@@ -315,20 +315,48 @@ function tanByConstruction(l,c){
 function ln(l){ if(l.name) return l.name; return l.kind==='two'?byId(l.a).label+byId(l.b).label:l.label; }
 function cn(c){ return c.kind==='cp'?'circle centre '+byId(c.c).label:(c.kind==='circum'?'circle ':'incircle ')+c.of.map(function(id){return byId(id).label;}).join(''); }
 
-function relations(){
+/* Relations. With strict=false the tolerance is visual (what looks true right now); with strict=true
+   it is numerical (about one part in ten million of the figure), so only exact relations survive.
+   A relation "holds under perturbation" when it survives strict checking in every perturbed copy. */
+function lenTrivial(Q,X,Y){ /* QX = QY for a reason built into the construction */
+  if(Q.kind==='mid'&&sameSet(Q.of,[X.id,Y.id])) return true;
+  if(Q.kind==='ccen'&&Q.of.indexOf(X.id)>=0&&Q.of.indexOf(Y.id)>=0) return true;
+  if((Y.kind==='reflp'&&Y.of[0]===X.id&&Y.of[1]===Q.id)||(X.kind==='reflp'&&X.of[0]===Y.id&&X.of[1]===Q.id)) return true;
+  var onl=function(lid){ var l=byId(lid); return l&&onLineByConstruction(Q,l); };
+  if((Y.kind==='refl'&&Y.of[0]===X.id&&onl(Y.of[1]))||(X.kind==='refl'&&X.of[0]===Y.id&&onl(X.of[1]))) return true;
+  if(X.kind==='tanpt'&&Y.kind==='tanpt'&&X.of[0]===Q.id&&Y.of[0]===Q.id) return true;
+  return objs.some(function(o){
+    if(o.type==='circle'){
+      var cen=o.kind==='cp'?o.c:null; if(o.kind==='circum') objs.forEach(function(z){ if(z.type==='point'&&z.kind==='ccen'&&sameSet(z.of,o.of)) cen=z.id; });
+      return cen===Q.id&&onCircleByConstruction(X,o)&&onCircleByConstruction(Y,o);
+    }
+    return o.type==='line'&&o.kind==='pbis'&&sameSet(o.of,[X.id,Y.id])&&onLineByConstruction(Q,o);
+  });
+}
+/* An intersection point lands on a point that already lies on both objects: the construction forces that. */
+function sameByConstruction(p,q){
+  var f=function(x,y){ if(x.kind!=='ilc'&&x.kind!=='icc') return false;
+    return x.of.every(function(id){ var o=byId(id); return o.type==='line'?onLineByConstruction(y,o):onCircleByConstruction(y,o); }); };
+  return f(p,q)||f(q,p);
+}
+function relations(strict){
   var Pts=objs.filter(function(o){return o.type==='point'&&!o.hidden&&isFinite(o.g.x);}),
-      L=objs.filter(function(o){return o.type==='line'&&!o.invis&&isFinite(o.g.x1)&&isFinite(o.g.x2);}),
+      L=objs.filter(function(o){return o.type==='line'&&!o.invis&&isFinite(o.g.x1)&&isFinite(o.g.x2)&&Math.hypot(o.g.x2-o.g.x1,o.g.y2-o.g.y1)>1e-6;}),
       C=objs.filter(function(o){return o.type==='circle'&&!o.invis&&isFinite(o.g.r);});
   if(Pts.length<2) return {};
   var xs=Pts.map(function(p){return p.g.x;}),ys=Pts.map(function(p){return p.g.y;});
   var D=Math.max(30,Math.max.apply(null,xs)-Math.min.apply(null,xs),Math.max.apply(null,ys)-Math.min.apply(null,ys));
-  var tol=D*0.004, out={}, i,j,k,m;
+  var tol=strict?D*1e-7:D*0.004, out={}, i,j,k,m;
   var dup={};
   for(i=0;i<Pts.length;i++)for(j=i+1;j<Pts.length;j++){
     if(dup[Pts[j].id]) continue;
-    if(Math.hypot(Pts[i].g.x-Pts[j].g.x,Pts[i].g.y-Pts[j].g.y)<tol){ dup[Pts[j].id]=1; out['same:'+Pts[i].label+','+Pts[j].label]=Pts[j].label+' coincides with '+Pts[i].label; }
+    if(Math.hypot(Pts[i].g.x-Pts[j].g.x,Pts[i].g.y-Pts[j].g.y)<tol){ dup[Pts[j].id]=1; if(sameByConstruction(Pts[i],Pts[j])) continue; out['same:'+Pts[i].label+','+Pts[j].label]=Pts[j].label+' coincides with '+Pts[i].label; }
   }
   Pts=Pts.filter(function(p){return !dup[p.id];});
+  /* two line objects on the same line count once (BC drawn twice, or GA and AH through collinear G, A, H) */
+  var sameLine=function(l1,l2){ return distPL({x:l2.g.x1,y:l2.g.y1},l1.g)<tol&&distPL({x:l2.g.x2,y:l2.g.y2},l1.g)<tol; };
+  L=L.filter(function(l,idx){ return !L.slice(0,idx).some(function(e){return sameLine(e,l);}); });
+  var near=function(a,b){ return Math.hypot(a.x-b.x,a.y-b.y)<tol; };
   for(i=0;i<Pts.length;i++)for(j=0;j<L.length;j++){
     if(L[j].kind==='two'||onLineByConstruction(Pts[i],L[j])) continue;
     if(distPL(Pts[i].g,L[j].g)<tol) out['onl:'+Pts[i].label+':'+L[j].id]=Pts[i].label+' lies on '+ln(L[j]);
@@ -358,47 +386,94 @@ function relations(){
       if(!trivc) out['cyc:'+quad.map(function(p){return p.label;}).join(',')]=quad.map(function(p){return p.label;}).join(', ')+' are concyclic';
     }
   }
+  var onCirc=function(pt,cg){ return Math.abs(Math.hypot(pt.x-cg.cx,pt.y-cg.cy)-cg.r)<tol; };
   for(i=0;i<Pts.length;i++)for(j=0;j<C.length;j++){
     if(onCircleByConstruction(Pts[i],C[j])) continue;
-    if(Math.abs(Math.hypot(Pts[i].g.x-C[j].g.cx,Pts[i].g.y-C[j].g.cy)-C[j].g.r)<tol) out['onc:'+Pts[i].label+':'+C[j].id]=Pts[i].label+' lies on '+cn(C[j]);
+    if(onCirc(Pts[i].g,C[j].g)) out['onc:'+Pts[i].label+':'+C[j].id]=Pts[i].label+' lies on '+cn(C[j]);
   }
   for(i=0;i<L.length;i++)for(j=i+1;j<L.length;j++){
     var u=[L[i].g.x2-L[i].g.x1,L[i].g.y2-L[i].g.y1],v=[L[j].g.x2-L[j].g.x1,L[j].g.y2-L[j].g.y1];
-    var nu=Math.hypot(u[0],u[1]),nv=Math.hypot(v[0],v[1]); if(nu<1||nv<1) continue;
-    var cs=(u[0]*v[0]+u[1]*v[1])/(nu*nv), sn=(u[0]*v[1]-u[1]*v[0])/(nu*nv);
-    if(Math.abs(cs)<0.004&&!perpByConstruction(L[i],L[j])) out['perp:'+L[i].id+','+L[j].id]=ln(L[i])+' \u27C2 '+ln(L[j]);
-    if(Math.abs(sn)<0.004&&!parByConstruction(L[i],L[j])&&!(L[i].a===L[j].a||L[i].a===L[j].b||L[i].b===L[j].a||L[i].b===L[j].b)) out['par:'+L[i].id+','+L[j].id]=ln(L[i])+' \u2225 '+ln(L[j]);
-    if(L[i].kind==='two'&&L[j].kind==='two'){
-      if(Math.abs(nu-nv)<tol) out['eq:'+L[i].id+','+L[j].id]=ln(L[i])+' = '+ln(L[j]);
-      else if(Math.abs(nu-2*nv)<tol) out['r2:'+L[i].id+','+L[j].id]=ln(L[i])+' = 2\u00B7'+ln(L[j]);
-      else if(Math.abs(nv-2*nu)<tol) out['r2:'+L[j].id+','+L[i].id]=ln(L[j])+' = 2\u00B7'+ln(L[i]);
-    }
+    var nu=Math.hypot(u[0],u[1]),nv=Math.hypot(v[0],v[1]);
+    var cs=(u[0]*v[0]+u[1]*v[1])/(nu*nv), sn=(u[0]*v[1]-u[1]*v[0])/(nu*nv), at=strict?1e-9:0.004;
+    if(Math.abs(cs)<at&&!perpByConstruction(L[i],L[j])) out['perp:'+L[i].id+','+L[j].id]=ln(L[i])+' ⟂ '+ln(L[j]);
+    if(Math.abs(sn)<at&&!parByConstruction(L[i],L[j])) out['par:'+L[i].id+','+L[j].id]=ln(L[i])+' ∥ '+ln(L[j]);
   }
+  /* tangency: a line through two different points of the circle is a secant, however close it looks */
   for(i=0;i<L.length;i++)for(j=0;j<C.length;j++){
     if(tanByConstruction(L[i],C[j])) continue;
-    if(Math.abs(distPL({x:C[j].g.cx,y:C[j].g.cy},L[i].g)-C[j].g.r)<tol) out['tan:'+L[i].id+','+C[j].id]=ln(L[i])+' is tangent to '+cn(C[j]);
+    var cg=C[j].g, dl=distPL({x:cg.cx,y:cg.cy},L[i].g);
+    if(Math.abs(dl-cg.r)>=Math.min(tol,cg.r*(strict?1e-7:0.003))) continue;
+    var hits=Pts.filter(function(p){return distPL(p.g,L[i].g)<tol&&onCirc(p.g,cg);});
+    if(hits.length>=2) continue;
+    out['tan:'+L[i].id+','+C[j].id]=ln(L[i])+' is tangent to '+cn(C[j]);
   }
-    /* circle-circle tangency, internal or external (a circle touching another) */
   for(var ci=0;ci<C.length;ci++) for(var cj=ci+1;cj<C.length;cj++){ var g1=C[ci].g,g2=C[cj].g,dd=Math.hypot(g1.cx-g2.cx,g1.cy-g2.cy);
     if(dd>1e-6&&(Math.abs(dd-(g1.r+g2.r))<tol||Math.abs(dd-Math.abs(g1.r-g2.r))<tol)) out['tcc:'+C[ci].id+','+C[cj].id]=cn(C[ci])+' is tangent to '+cn(C[cj]); }
+  if(strict) lengthRelations(Pts,tol,out);
   return out;
+}
+/* Lengths between any two named points, drawn or not: equal lengths, one length the sum of two others
+   (BX = AX + CX), and one length twice another. Only checked strictly, since near-misses are everywhere. */
+function lengthRelations(Pts,tol,out){
+  if(Pts.length>18) return;
+  var S=[],i,j;
+  for(i=0;i<Pts.length;i++)for(j=i+1;j<Pts.length;j++) S.push({p:Pts[i],q:Pts[j],n:Pts[i].label+Pts[j].label,v:Math.hypot(Pts[i].g.x-Pts[j].g.x,Pts[i].g.y-Pts[j].g.y)});
+  S.sort(function(a,b){return a.v-b.v;});
+  var share=function(s,t){ return s.p===t.p||s.p===t.q?s.p:(s.q===t.p||s.q===t.q?s.q:null); };
+  var other=function(s,x){ return s.p===x?s.q:s.p; };
+  /* equal lengths, grouped into classes; an equality the construction forces does not join a class */
+  /* cls: equalities worth reporting; all: every equality, including the ones the construction forces */
+  var mk=function(){ var c=S.map(function(_,i){return i;}); return function(x,y){ var f=function(z){ while(c[z]!==z) z=c[z]=c[c[z]]; return z; }; if(y!==undefined) c[f(y)]=f(x); return f(x); }; };
+  var find=mk(), findAll=mk();
+  for(i=0;i<S.length;i++)for(j=i+1;j<S.length&&S[j].v-S[i].v<tol;j++){
+    findAll(i,j);
+    var q=share(S[i],S[j]); if(q&&lenTrivial(q,other(S[i],q),other(S[j],q))) continue;
+    find(i,j);
+  }
+  var groups={}; S.forEach(function(s,i){ var r=find(i); (groups[r]=groups[r]||[]).push(s); });
+  Object.keys(groups).forEach(function(r){ var g=groups[r]; if(g.length<2) return;
+    var names=g.map(function(s){return s.n;}).sort(); out['eq:'+names.join(',')]=names.join(' = '); });
+  var all={}; S.forEach(function(s,i){ var r=findAll(i); (all[r]=all[r]||[]).push(s); });
+  var rep=function(s){ return all[findAll(S.indexOf(s))][0].n; };
+  var members=function(s){ return all[findAll(S.indexOf(s))]; };
+  /* a sum is trivial when, swapping in equal lengths, it is three collinear points: DX = DI + IX with DI = DA */
+  var sumTrivial=function(s,a,b){ return members(s).some(function(s2){ return members(a).some(function(a2){ return members(b).some(function(b2){ return pts3(s2,a2,b2)<=3; }); }); }); };
+  var pts3=function(a,b,c){ var u={}; [a,b,c].forEach(function(s){u[s.p.id]=1;u[s.q.id]=1;}); return Object.keys(u).length; };
+  var seen={};
+  var look=function(val){ var lo=0,hi=S.length; while(lo<hi){ var md=(lo+hi)>>1; if(S[md].v<val-tol) lo=md+1; else hi=md; } var r=[]; for(var t=lo;t<S.length&&S[t].v<val+tol;t++) r.push(S[t]); return r; };
+  for(i=0;i<S.length;i++){ if(S[i].v<tol) continue;
+    for(j=i;j<S.length;j++){
+      look(S[i].v+S[j].v).forEach(function(s){
+        if(s===S[i]||s===S[j]||sumTrivial(s,S[i],S[j])) return;
+        var a=rep(S[i]),b=rep(S[j]); if(a===b) return; if(a>b){ var t=a;a=b;b=t; } var key='sum:'+rep(s)+'='+a+'+'+b; if(seen[key]) return; seen[key]=1;
+        out[key]=s.n+' = '+S[i].n+' + '+S[j].n; });
+    }
+    look(2*S[i].v).forEach(function(s){
+      var q=share(s,S[i]); if(q){ var m=[S[i].p,S[i].q].filter(function(x){return x!==q;})[0], e=other(s,q); if(m.kind==='mid'&&m.of.indexOf(q.id)>=0&&m.of.indexOf(e.id)>=0) return; }
+      var key='r2:'+rep(s)+'='+rep(S[i]); if(seen[key]) return; seen[key]=1;
+      out[key]=s.n+' = 2·'+S[i].n; });
+  }
 }
 function perturbTest(){
   var free=objs.filter(function(o){return o.type==='point'&&o.kind==='free';});
   var semi=objs.filter(function(o){return o.type==='point'&&(o.kind==='onl'||o.kind==='onc');});
-  compute(); var keep=Object.keys(relations());
+  compute(); var cur=relations(true), keep=Object.keys(cur);
   if(!free.length&&!semi.length){ stableSet={}; return; }
   var saved=free.map(function(p){return [p.x,p.y];}), savedS=semi.map(function(p){return p.kind==='onl'?p.t:p.ang;});
   var xs=free.map(function(p){return p.x;}),ys=free.map(function(p){return p.y;});
   var D=free.length?Math.max(60,Math.max.apply(null,xs)-Math.min.apply(null,xs),Math.max.apply(null,ys)-Math.min.apply(null,ys)):200;
-  for(var t=0;t<20&&keep.length;t++){
-    free.forEach(function(p,i){ var a=Math.random()*6.283, r=D*0.02*(0.5+Math.random()); p.x=saved[i][0]+r*Math.cos(a); p.y=saved[i][1]+r*Math.sin(a); });
-    semi.forEach(function(p,i){ if(p.kind==='onl') p.t=savedS[i]+(Math.random()-0.5)*0.08; else p.ang=savedS[i]+(Math.random()-0.5)*0.12; });
-    compute(); var now=relations(); keep=keep.filter(function(k){return now[k];});
+  /* a coincidence almost never survives strict checking in even one perturbed copy, so asking for half of them
+     still rejects coincidences, while keeping theorems that need a condition near its edge (AB > AC with AB close to AC) */
+  var hits={}, runs=12; keep.forEach(function(k){hits[k]=0;});
+  for(var t=0;t<runs&&keep.length;t++){
+    free.forEach(function(p,i){ var a=Math.random()*6.283, r=D*0.03*(0.5+Math.random()); p.x=saved[i][0]+r*Math.cos(a); p.y=saved[i][1]+r*Math.sin(a); });
+    semi.forEach(function(p,i){ if(p.kind==='onl') p.t=savedS[i]+(Math.random()-0.5)*0.1; else p.ang=savedS[i]+(Math.random()-0.5)*0.15; });
+    compute(); var now=relations(true); keep.forEach(function(k){ if(now[k]) hits[k]++; });
   }
+  keep=keep.filter(function(k){return hits[k]*2>=runs;});
   free.forEach(function(p,i){ p.x=saved[i][0]; p.y=saved[i][1]; });
   semi.forEach(function(p,i){ if(p.kind==='onl') p.t=savedS[i]; else p.ang=savedS[i]; });
-  compute(); stableSet={}; keep.forEach(function(k){stableSet[k]=1;});
+  compute(); stableSet={}; keep.forEach(function(k){stableSet[k]=cur[k];});
 }
 
 var svg=document.getElementById('cv');
@@ -453,14 +528,12 @@ function condense(now,keys){ var col=keys.filter(function(k){return k.indexOf('c
   var seen={}, out=mergeSets(col,'col:',2,'collinear').concat(mergeSets(cyc,'cyc:',3,'concyclic'));
   rest.forEach(function(k){ if(!seen[now[k]]){ seen[now[k]]=1; out.push(now[k]); } }); return out; }
 function renderRelations(){
-  var now=relations(),a='',b='';
-  var ks=Object.keys(now), st=ks.filter(function(k){return stableSet&&stableSet[k];}), mb=ks.filter(function(k){return !(stableSet&&stableSet[k]);});
-  condense(now,st).forEach(function(t){ a+='<div class="rel stable">'+subHTML(t)+'</div>'; });
-  condense(now,mb).forEach(function(t){ b+='<div class="rel maybe">'+subHTML(t)+'</div>'; });
-  document.getElementById('stable').innerHTML=a||'<div class="empty">Nothing yet.</div>';
-  document.getElementById('maybe').innerHTML=b||'<div class="empty">Nothing yet.</div>';
-  return;
-  Object.keys(now).forEach(function(k){ if(stableSet&&stableSet[k]) a+='<div class="rel stable">'+subHTML(now[k])+'</div>'; else b+='<div class="rel maybe">'+subHTML(now[k])+'</div>'; });
+  var now=relations(false),a='',b='', st={}, exact=stableSet?relations(true):{};
+  if(stableSet) Object.keys(stableSet).forEach(function(k){ st[k]=exact[k]||stableSet[k]; });   /* current labels */
+  var sk=Object.keys(st), mb=Object.keys(now).filter(function(k){return !st[k];});
+  var all={}; sk.forEach(function(k){all[k]=st[k];}); mb.forEach(function(k){all[k]=now[k];});
+  condense(all,sk).forEach(function(t){ a+='<div class="rel stable">'+subHTML(t)+'</div>'; });
+  condense(all,mb).forEach(function(t){ b+='<div class="rel maybe">'+subHTML(t)+'</div>'; });
   document.getElementById('stable').innerHTML=a||'<div class="empty">Nothing yet.</div>';
   document.getElementById('maybe').innerHTML=b||'<div class="empty">Nothing yet.</div>';
 }
@@ -626,7 +699,7 @@ function smartPoint(pt){
 svg.addEventListener('pointerup',function(){ if(drag){ drag=null; perturbTest(); renderRelations(); } });
 document.getElementById('undo').addEventListener('click',function(){ if(!groups.length) return; var n=groups.pop(); for(var i=0;i<n;i++){ var o=objs.pop(); if(o.type==='point'&&!o.hidden) labels--; } picks=[]; stableSet=null; draw(); perturbTest(); renderRelations(); });
 document.getElementById('clear').addEventListener('click',function(){ hideFigInfo(); setVB({x:0,y:0,w:W,h:H}); objs=[]; labels=0; picks=[]; groups=[]; stableSet=null; nextId=1; draw(); });
-document.getElementById('test').addEventListener('click',function(){ perturbTest(); renderRelations(); setStatus('Tested against 20 perturbations.'); });
+document.getElementById('test').addEventListener('click',function(){ perturbTest(); renderRelations(); setStatus('Tested against 12 perturbations.'); });
 document.getElementById('copy').addEventListener('click',function(){ var t=document.getElementById('tex'); t.select(); try{ navigator.clipboard.writeText(t.value); document.getElementById('copied').textContent='Copied.'; }catch(e){ document.execCommand('copy'); } setTimeout(function(){document.getElementById('copied').textContent='';},1500); });
 
 function reset(){ setVB({x:0,y:0,w:W,h:H}); objs=[]; labels=0; picks=[]; groups=[]; stableSet=null; nextId=1; }
