@@ -36,7 +36,8 @@ const CONFIG = {
   maxChars: 60000,             // reject oversized payloads (long written proofs are fine)
 };
 
-const PAPERS = { "setA-p1": 20, "setA-p2": 20, "setB-p1": 20, "setB-p2": 20, "setC-p1": 20, "setC-p2": 20, "setD-p1": 20, "setD-p2": 20, "setE-p1": 20, "setE-p2": 20, "setF-p1": 20, "setF-p2": 20, "setG-p1": 20, "setG-p2": 20, "setH-p1": 20, "setH-p2": 20, "setK-p1": 20, "setK-p2": 20, "setL-p1": 20, "setL-p2": 20 }; // id -> max score
+// Every paper has 20 questions, so any id of the form setX-p1 or setX-p2 is a paper; a new set needs no edit here.
+const maxScore = (id) => (typeof id === "string" && /^set[A-Z]-p[12]$/.test(id) ? 20 : 0); // id -> max score, 0 if not a paper
 const SCORES_PER_IP_PER_DAY = 8;
 
 const DAY = () => new Date().toISOString().slice(0, 10);
@@ -198,9 +199,9 @@ async function handle(request, env) {
     // ---- score distribution (read) ----
     if (request.method === "GET" && path === "/stats") {
       const paper = new URL(request.url).searchParams.get("paper");
-      if (!PAPERS[paper]) return refuse(400, "Unknown paper.", cors);
+      if (!maxScore(paper)) return refuse(400, "Unknown paper.", cors);
       const raw = await env.IV.get(`stats:${paper}`);
-      const counts = raw ? JSON.parse(raw) : new Array(PAPERS[paper] + 1).fill(0);
+      const counts = raw ? JSON.parse(raw) : new Array(maxScore(paper) + 1).fill(0);
       return new Response(JSON.stringify({ paper, counts }), { headers: { ...cors, "content-type": "application/json", "cache-control": "no-store" } });
     }
 
@@ -211,7 +212,7 @@ async function handle(request, env) {
     if (path === "/score") {
       let sb;
       try { sb = await request.json(); } catch { return refuse(400, "Malformed request.", cors); }
-      const max = PAPERS[sb.paper];
+      const max = maxScore(sb.paper);
       const s = Number(sb.score);
       if (!max) return refuse(400, "Unknown paper.", cors);
       if (!Number.isInteger(s) || s < 0 || s > max) return refuse(400, "Score out of range.", cors);

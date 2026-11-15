@@ -252,15 +252,6 @@
   });
 })();
 </script>
-<script src="locks.js?v=20260929"></script>
-<script>
-/* Flip the Set K and Set L cards to "Unlocked" for accounts that have redeemed them. */
-(async function(){ if(!window.HU_LOCKS) return; var sc=[]; try{ sc=await HU_LOCKS.scopes(); }catch(e){ return; }
-  document.querySelectorAll('[data-lock]').forEach(function(a){ var p=a.dataset.lock; if(sc.indexOf('*')<0&&sc.indexOf(p)<0) return;
-    a.textContent='Sit Paper 1 timed'; a.href='drill.html?paper='+p;
-    var b=document.querySelector('[data-badge="'+p+'"]'); if(b){ b.textContent='Unlocked'; b.classList.remove('locked'); b.classList.add('open'); }
-    var l=document.querySelector('[data-lockline="'+p+'"]'); if(l) l.innerHTML='<a href="tmua.html#set-'+p.charAt(0).toLowerCase()+'">Both papers and solutions</a>'; }); })();
-</script>
 <script>
 /* Old homepage anchors moved to their own pages; keep old links working. */
 (function(){ var m={'#archive':'tmua.html#sets','#friends':'#recommended'}; var t=m[location.hash]; if(t){ if(t.charAt(0)==='#') location.hash=t; else location.replace(t); } })();
