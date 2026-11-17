@@ -103,11 +103,11 @@ PRE = r'''\documentclass[10.5pt,a4paper]{article}
 \linespread{1.05}\setlength{\parindent}{0pt}\setlength{\parskip}{0.55em}
 \setlist{itemsep=0.25em,topsep=0.3em}
 \newtcolorbox{keybox}{enhanced,breakable,colback=cF2F7F5,colframe=cB4D0C3,boxrule=0.4pt,leftrule=2.6pt,arc=0pt,
-  left=8pt,right=8pt,top=5pt,bottom=5pt,before skip=0.9em,after skip=0.9em,borderline west={2.6pt}{0pt}{kvgreen}}
+  left=8pt,right=8pt,top=5pt,bottom=5pt,before skip=0.9em,after skip=0.9em,before upper={\setlength{\parskip}{0.5em}},borderline west={2.6pt}{0pt}{kvgreen}}
 \newtcolorbox{egbox}{enhanced,breakable,colback=cF7F7FC,colframe=cB8BCE0,boxrule=0.4pt,leftrule=2.6pt,arc=0pt,
-  left=8pt,right=8pt,top=5pt,bottom=5pt,before skip=0.9em,after skip=0.9em,borderline west={2.6pt}{0pt}c7C82C8}
+  left=8pt,right=8pt,top=5pt,bottom=5pt,before skip=0.9em,after skip=0.9em,before upper={\setlength{\parskip}{0.5em}},borderline west={2.6pt}{0pt}c7C82C8}
 \newtcolorbox{warnbox}{enhanced,breakable,colback=cFCF6F8,colframe=cE8B7C4,boxrule=0.4pt,leftrule=2.6pt,arc=0pt,
-  left=8pt,right=8pt,top=5pt,bottom=5pt,before skip=0.9em,after skip=0.9em,borderline west={2.6pt}{0pt}cC9677F}
+  left=8pt,right=8pt,top=5pt,bottom=5pt,before skip=0.9em,after skip=0.9em,before upper={\setlength{\parskip}{0.5em}},borderline west={2.6pt}{0pt}cC9677F}
 \newtcolorbox{sumbox}{enhanced,colback=cF8F8F9,colframe=cDDDEE5,boxrule=0.4pt,arc=0pt,left=10pt,right=10pt,top=7pt,bottom=7pt}
 \titleformat{\section}{\sffamily\large\bfseries\color{kvink}}{\colorbox{kvgreen}{\makebox[1.1em]{\color{white}\thesection}}}{0.6em}{}[\vspace{1pt}{\color{kvgreen}\titlerule[0.6pt]}]
 \titleformat{\subsection}{\sffamily\normalsize\bfseries\color{kvink}}{\color{kvgreen}\thesubsection}{0.6em}{}
