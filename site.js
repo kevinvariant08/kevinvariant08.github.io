@@ -15,6 +15,7 @@
       {href:'tmua.html', name:'TMUA', note:'Mock papers, drills and the question bank'},
       {href:'esat.html', name:'ESAT', note:'Mock papers and drills'},
       {href:'interviews.html', name:'Mock interviews', note:'With an AI interviewer or a partner'}]},
+    {label:'Library', sec:'book', href:'library.html'},
     {label:'Extras', sec:'play', items:[
       {href:'qotw.html', name:'Problem of the week', note:'One hard problem for everyone'},
       {href:'/cevian/', name:'Cevian', note:'Ranked contest problems'},
@@ -26,7 +27,7 @@
     +'<div><b>Calendar</b><a href="calendar.html">Competition dates</a><a href="calendar.html#all-h">Entry deadlines</a></div>'
     +'<div><b>Admissions</b><a href="admissions.html">Admissions plan</a><a href="tmua.html">TMUA</a><a href="esat.html">ESAT</a><a href="interviews.html">Mock interviews</a></div>'
     +'<div><b>Extras</b><a href="qotw.html">Problem of the week</a><a href="/cevian/">Cevian</a><a href="progress.html">My progress</a><a href="classes.html">Classes</a><a href="compete.html">Everything else</a></div>'
-    +'<div><b>About</b><a href="how-it-works.html">How it works</a><a href="how-it-works.html#difficulty">Difficulty scale</a><a href="how-it-works.html#access">Free and locked papers</a><a href="book.html">Beyond the Incenter</a><a href="privacy.html">Privacy</a><a href="terms.html">Terms of use</a></div>'
+    +'<div><b>About</b><a href="library.html">Library</a><a href="how-it-works.html">How it works</a><a href="how-it-works.html#difficulty">Difficulty scale</a><a href="how-it-works.html#access">Free and locked papers</a><a href="book.html">Beyond the Incenter</a><a href="privacy.html">Privacy</a><a href="terms.html">Terms of use</a></div>'
     +'</div><p>&copy; 2026 Kevin Hu. All rights reserved, except that the HU Collection handout PDFs may be shared unchanged under <a href="terms.html#licence">CC BY-NC-ND 4.0</a>.</p><p>Kevinvariant is written and run by Kevin Hu. Contact: <a href="https://www.instagram.com/kevinvariant/" target="_blank" rel="noopener">@kevinvariant on Instagram</a>. Scores and progress stay in your browser unless you sign in to sync them, or choose to share answers anonymously. <a href="privacy.html">Privacy</a> &middot; <a href="terms.html">Terms of use</a></p>';
   var here=(location.pathname.split('/').pop()||'index.html').toLowerCase();
   var MOON='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>',

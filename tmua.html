@@ -12,7 +12,7 @@
   <meta name="theme-color" content="#FFFFFF">
   <link rel="stylesheet" href="style.css?v=20261111a">
   <script>try{if(localStorage.getItem('kv_mode')==='dark')document.documentElement.setAttribute('data-mode','dark')}catch(e){}</script>
-  <style>.lockline{color:var(--ink-faint);font-size:.9rem}.page .tool{grid-template-columns:1fr}</style>
+  <style>.lockline{color:var(--ink-faint);font-size:.9rem}.page .tool{grid-template-columns:1fr}.notes-grp{font-family:var(--display);font-size:.8rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint);margin:1.6rem 0 .2rem}</style>
 </head>
 <body data-theme-v2>
   <nav id="sitenav"><div class="nav-links"><a href="index.html">Home</a> <a href="tmua.html">TMUA</a> <a href="esat.html">ESAT</a> <a href="olympiad.html">Olympiad</a> <a href="compete.html">Practise and compete</a> <a href="book.html">Book</a></div></nav>
@@ -27,6 +27,7 @@
         <li><a href="#notes">Topic notes</a></li>
         <li><a href="#tools">Practice tools</a></li>
         <li><a href="how-it-works.html#start">Where to start</a></li>
+        <li><a href="library.html?exam=tmua">Library: everything in one list</a></li>
       </ul>
     </header>
 
@@ -122,16 +123,23 @@
     <section id="notes" aria-labelledby="notes-h">
       <h2 id="notes-h">Topic notes</h2>
       <p>Notes on the main TMUA topics, written for the test rather than for A-level. Each set covers the question types that come up, quick methods and common mistakes, with worked examples and practice problems up to the level of the hardest questions. Every problem has a full solution.</p>
-      <div class="tools" id="notes-list">
-        <a class="tool" href="notes/TMUA_Notes_Graphs.pdf?v=3" target="_blank" rel="noopener">
-          <div><h3>Graphs and sketching</h3><p>Derivatives and the nature of stationary points, asymptotes, transformations, trigonometric graphs, modulus, counting solutions, the cubic test, and seventeen practice problems. Specification MM8.</p></div>
-        </a>
-        <a class="tool" href="notes/TMUA_Notes_Calculus.pdf?v=1" target="_blank" rel="noopener">
-          <div><h3>Tangents, integration and area</h3><p>Differentiating powers, tangents and normals, integrals against areas, the Fundamental Theorem in both forms, transformed integrals, the inverse function rectangle and the trapezium rule, with seventeen practice problems. Specification MM6 and MM7.</p></div>
+      <p class="notes-grp">Mathematical knowledge, for both papers, in specification order</p>
+      <div class="tools" data-group="knowledge">
+        <a class="tool" href="notes/TMUA_Notes_Algebra.pdf?v=1" target="_blank" rel="noopener">
+          <div><h3>Quadratics, polynomials and inequalities</h3><p>Indices and surds, completing the square, the discriminant, inequalities with unknown signs, equations that reduce to quadratics, the factor and remainder theorems, roots and coefficients, and where the roots of a quadratic lie, with seventeen practice problems. Specification MM1.</p></div>
         </a>
         <a class="tool" href="notes/TMUA_Notes_Trigonometry.pdf?v=1" target="_blank" rel="noopener">
           <div><h3>Trigonometry</h3><p>Exact values and the unit circle, the two identities, equations on an interval and all their solutions, ranges of trigonometric expressions, the ambiguous case, segments and sectors, and three-dimensional problems, with seventeen practice problems. Specification MM4.</p></div>
         </a>
+        <a class="tool" href="notes/TMUA_Notes_Calculus.pdf?v=1" target="_blank" rel="noopener">
+          <div><h3>Tangents, integration and area</h3><p>Differentiating powers, tangents and normals, integrals against areas, the Fundamental Theorem in both forms, transformed integrals, the inverse function rectangle and the trapezium rule, with seventeen practice problems. Specification MM6 and MM7.</p></div>
+        </a>
+        <a class="tool" href="notes/TMUA_Notes_Graphs.pdf?v=3" target="_blank" rel="noopener">
+          <div><h3>Graphs and sketching</h3><p>Derivatives and the nature of stationary points, asymptotes, transformations, trigonometric graphs, modulus, counting solutions, the cubic test, and seventeen practice problems. Specification MM8.</p></div>
+        </a>
+      </div>
+      <p class="notes-grp">Logic and proof, for Paper 2</p>
+      <div class="tools" data-group="reasoning">
         <a class="tool" href="notes/TMUA_Notes_Logic.pdf?v=1" target="_blank" rel="noopener">
           <div><h3>Logic for Paper 2</h3><p>And, or and not, implication and the forms of &ldquo;if&rdquo;, converse and contrapositive, necessary and sufficient conditions, quantifiers and their order, and negating statements, with seventeen practice problems. Specification Arg1 to Arg4.</p></div>
         </a>
@@ -167,7 +175,7 @@
     </section>
   </main>
 
-<script src="site.js?v=20261114a"></script>
+<script src="site.js?v=20261118a"></script>
 <script src="locks.js?v=20260929"></script>
 <script>
 /* Flip locked cards to "Unlocked" for accounts that have redeemed them. */
