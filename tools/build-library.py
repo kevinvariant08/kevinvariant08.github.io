@@ -85,7 +85,7 @@ ol_hu = from_rows(ol, "hu", "olympiad", "notes", "olympiad.html")
 n_notes = sum(len(r) for _, r in tm_notes)
 sections = [
     ("tmua-mocks", "TMUA mock papers",
-     f'{len(tm_mocks)} sets, newest first. Sets A to D are free, and later sets unlock with a code or with coins. The numbers are <a href="how-it-works.html#difficulty">difficulty ratings</a> on the 4.5 to 9.0 scale.',
+     f'{len(tm_mocks)} sets, newest first. Sets A to H are free, and Sets I onwards unlock with a code or with coins. The numbers are <a href="how-it-works.html#difficulty">difficulty ratings</a> on the 4.5 to 9.0 scale.',
      tm_mocks, None),
     ("tmua-notes", "TMUA topic notes",
      f'{n_notes} sets of notes, each with worked examples, harder questions and seventeen practice problems with full solutions.',
@@ -117,7 +117,7 @@ PAGE = f'''<!DOCTYPE html>
   <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=4">
   <link rel="manifest" href="/site.webmanifest?v=5">
   <meta name="theme-color" content="#FFFFFF">
-  <link rel="stylesheet" href="style.css?v=20261111a">
+  <link rel="stylesheet" href="style.css?v=20261118a">
   <script>try{{if(localStorage.getItem('kv_mode')==='dark')document.documentElement.setAttribute('data-mode','dark')}}catch(e){{}}</script>
   <style>
     .lockline{{color:var(--ink-faint);font-size:.9rem}}
@@ -158,8 +158,8 @@ PAGE = f'''<!DOCTYPE html>
     <p style="margin-top:1.2rem">Have a code for a locked paper? <a href="unlock.html">Redeem a code</a>.</p>
   </main>
 
-<script src="site.js?v=20261114a"></script>
-<script src="locks.js?v=20260929"></script>
+<script src="site.js?v=20261118b"></script>
+<script src="locks.js?v=20261118b"></script>
 <script>
 /* Flip locked entries to "Unlocked" for accounts that have redeemed them. */
 (async function(){{ if(!window.HU_LOCKS) return; var sc=[]; try{{ sc=await HU_LOCKS.scopes(); }}catch(e){{ return; }}

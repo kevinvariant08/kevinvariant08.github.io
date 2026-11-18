@@ -119,13 +119,13 @@
     <section aria-labelledby="how-h">
       <h2 id="how-h">How it works</h2>
       <p>Smart Practice uses item response theory, the standard method behind adaptive tests such as the GMAT. Every question has a difficulty, and after each answer your estimated level is updated. The next question is one that tells us most about you at that level, with topics rotated and an easier one now and then. Difficulties start from the site's ratings and are recalculated each week from answers students choose to <a href="privacy.html">share anonymously</a>, so the estimates sharpen over time.</p>
-      <p>Free questions come from Sets B to D. Papers you have <a href="how-it-works.html#access">unlocked</a> join automatically when you are signed in.</p>
+      <p>Free questions come from Sets B to H. Papers you have <a href="how-it-works.html#access">unlocked</a> join automatically when you are signed in.</p>
     </section>
   </main>
 
 <script src="questions.js?v=20261031"></script>
-<script src="locks.js?v=20261118a"></script>
-<script src="smart.js?v=20261024"></script>
+<script src="locks.js?v=20261118b"></script>
+<script src="smart.js?v=20261118a"></script>
 <script src="site.js?v=20261118b"></script>
 <script>
 (function(){
@@ -139,7 +139,7 @@
   function esc(s){ return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
   function typeset(el){ if(window.MathJax&&MathJax.typesetPromise) MathJax.typesetPromise([el]).catch(function(){}); }
   function rnd(){ var a=new Uint32Array(1); crypto.getRandomValues(a); return a[0]/4294967296; }
-  function allowed(p){ return !META[p]||scopes.indexOf('*')>=0||scopes.indexOf(p)>=0; }
+  function allowed(p){ return !META[p]||(window.HU_LOCKS&&HU_LOCKS.isFree(p))||scopes.indexOf('*')>=0||scopes.indexOf(p)>=0; }
   function val(name){ var x=document.querySelector('input[name="'+name+'"]:checked'); return x?x.value:null; }
   function fitted(){ return params&&params.model!=='prior'&&params.responses>0; }
 
@@ -151,8 +151,9 @@
   }
   var sess0={suggest:null};
   function note(){
-    var n=pool().length, extra=unlocked.length?' including '+(unlocked.length/20)+' unlocked paper'+(unlocked.length>20?'s':''):'';
-    $('pool-note').textContent=n+' questions available'+extra+'.'+(unlocked.length?'':' Sign in and unlock papers to add more.');
+    var n=pool().length, np=unlocked.length/20, nl=unlocked.filter(function(q){ return !(window.HU_LOCKS&&HU_LOCKS.isFree(q.paper)); }).length/20;
+    var extra=np?' including '+np+' paper'+(np>1?'s':'')+' from Sets E onwards':'';
+    $('pool-note').textContent=n+' questions available'+extra+'.'+(nl?'':' Sign in and unlock Sets I to L to add more.');
   }
 
   /* ------------------------------------------------------------ session */
@@ -261,7 +262,7 @@
       $('start').disabled=false; $('start').textContent='Start the session'; note(); drawHistory();
       /* Locked papers: only those this account has unlocked, through HU_LOCKS (server-checked). */
       return timeout(window.HU_LOCKS?HU_LOCKS.scopes().catch(function(){ return []; }):Promise.resolve([]),8000).then(function(sc){
-        scopes=sc||[]; if(!scopes.length) return;
+        scopes=sc||[];
         return S.loadUnlocked(HU_LOCKS).then(function(qs){ unlocked=qs; note(); });
       });
     })

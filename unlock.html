@@ -40,7 +40,7 @@
 <main class="wrap">
   <section class="panel hero lk-hero">
     <h1>Locked papers</h1>
-    <p>TMUA mock Sets E onwards are locked. Challenges are posted from time to time, and winners get a code that unlocks a paper. Every locked set except Set J can also be unlocked with coins in the <a href="shop.html">Shop</a>. Once you unlock a paper it stays unlocked on your account, on every device. <a href="how-it-works.html#access">How access works</a>.</p>
+    <p>TMUA mock Sets A to H are free on the <a href="tmua.html#sets">TMUA page</a>. Sets I onwards are locked. Challenges are posted from time to time, and winners get a code that unlocks a paper. Every locked set except Set J can also be unlocked with coins in the <a href="shop.html">Shop</a>. Once you unlock a paper it stays unlocked on your account, on every device. <a href="how-it-works.html#access">How access works</a>.</p>
     <p id="social">Challenges are posted on Instagram: <a id="socialLink" href="https://www.instagram.com/kevinvariant/" target="_blank" rel="noopener">@kevinvariant</a>.</p>
   </section>
 
@@ -72,7 +72,7 @@
 </main>
 <script src="questions.js?v=20261031"></script>
 <script src="site.js?v=20261118b"></script>
-<script src="locks.js?v=20261118a"></script>
+<script src="locks.js?v=20261118b"></script>
 <script>
 /* Your challenge account, shown on this page once filled in. */
 var SOCIAL={label:'@kevinvariant',url:'https://www.instagram.com/kevinvariant/'};
@@ -84,7 +84,7 @@ function say(t,ok){ msg.textContent=t; msg.className='msg '+(ok?'ok':'err'); }
 function setNum(n){ return n.replace(/^[A-Z]/,function(c){return 'Set '+c+' Paper ';}).replace(/Paper (\d)$/,'Paper $1'); }
 
 async function paint(){
-  var meta=HU_LOCKS.meta, keys=Object.keys(meta), sc=[];
+  var meta=HU_LOCKS.meta, keys=Object.keys(meta).filter(function(k){ return HU_LOCKS.isLocked(k); }), sc=[];
   try{ sc=await HU_LOCKS.scopes(true); }catch(e){}
   var html='';
   keys.forEach(function(k){ var m=meta[k], open=sc.indexOf('*')>=0||sc.indexOf(k)>=0;
@@ -119,6 +119,7 @@ document.getElementById('codeForm').addEventListener('submit',async function(e){
   if(!HU_LOCKS.configured()){ document.getElementById('noacct').hidden=false; document.getElementById('go').disabled=true; }
   else if(!(await HU_LOCKS.session())) document.getElementById('signin').hidden=false;
   paint();
+  if(focusPaper&&HU_LOCKS.isFree(focusPaper)) say(HU_LOCKS.meta[focusPaper].title+' is free now: open it from the TMUA page, with no code needed.',true);
   if(window.HU_AUTH&&HU_AUTH.onChange) HU_AUTH.onChange(function(){ document.getElementById('signin').hidden=!!(HU_AUTH.user&&HU_AUTH.user()); paint(); });
 })();
 </script>

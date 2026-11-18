@@ -129,11 +129,12 @@
     };
   }
 
-  /* Loads locked papers only for papers the visitor has unlocked. locks: window.HU_LOCKS. Returns [questions]. */
+  /* Loads the bucket papers this visitor may use: the free ones for everyone, locked ones only once unlocked.
+     locks: window.HU_LOCKS. Returns [questions]. */
   function loadUnlocked(locks) {
     if (!locks || !locks.configured || !locks.configured()) return Promise.resolve([]);
     return locks.scopes().then(function (sc) {
-      var papers = Object.keys(locks.meta).filter(function (p) { return sc.indexOf('*') >= 0 || sc.indexOf(p) >= 0; });
+      var papers = Object.keys(locks.meta).filter(function (p) { return (locks.isFree && locks.isFree(p)) || sc.indexOf('*') >= 0 || sc.indexOf(p) >= 0; });
       return Promise.all(papers.map(function (p) {
         return locks.questions(p).then(function (qs) { return qs.filter(function (q) { return q.paper === p; }); }, function () { return []; });
       }));

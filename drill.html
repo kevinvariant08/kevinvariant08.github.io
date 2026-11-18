@@ -348,7 +348,7 @@ function finishDrill(){
 function paintDiff(){ var p=document.getElementById('paper').value, r=PAPER_RATING[p]; document.getElementById('paperdiff').textContent=r?('Difficulty '+r.rating.toFixed(1)+' out of 9: average question '+r.mean.toFixed(1)+', hardest five '+r.top5.toFixed(1)+', hardest single question '+r.max.toFixed(1)+'.'):''; }
 document.getElementById('paper').addEventListener('change',paintDiff);
 document.getElementById('startPaper').addEventListener('click',async function(){ var p=document.getElementById('paper').value, lim=parseInt(document.getElementById('timing').value,10); save('hu_drill_timing',lim);
-  if(window.HU_LOCKS&&HU_LOCKS.isLocked(p)&&!QUESTIONS.some(function(q){return q.paper===p;})){
+  if(window.HU_LOCKS&&HU_LOCKS.isRemote(p)&&!QUESTIONS.some(function(q){return q.paper===p;})){
     var btn=this; btn.disabled=true; var old=btn.textContent; btn.textContent='Opening the paper…';
     try{ if(!(await HU_LOCKS.has(p))) throw new Error('locked'); var qs=await HU_LOCKS.questions(p); qs.forEach(function(q){ QUESTIONS.push(q); }); }
     catch(e){ location.href='unlock.html?paper='+p; return; }
@@ -387,6 +387,6 @@ function trapResult(T,c,n){ var H=window.HU_REWARDS, need=n>=5?n-1:n;
   go(); })();
 </script>
 <script src="site.js?v=20261118b"></script>
-<script src="locks.js?v=20261118a"></script>
+<script src="locks.js?v=20261118b"></script>
 </body>
 </html>
