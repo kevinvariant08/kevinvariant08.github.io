@@ -37,7 +37,7 @@
   function paintMode(b){ var d=isDark(); b.innerHTML=d?SUN:MOON; b.setAttribute('aria-label',d?'Switch to light mode':'Switch to dark mode'); b.title=b.getAttribute('aria-label'); }
   function caret(){return '<svg class="caret" viewBox="0 0 10 10" aria-hidden="true"><path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>';}
   function build(nav){
-    var h='<div class="bar"><a class="brand" href="index.html">'+LOGO+'<span>Kevinvariant</span></a>'
+    var h='<div class="nav-bar"><a class="brand" href="index.html">'+LOGO+'<span>Kevinvariant</span></a>'
       +'<button class="mode" type="button"></button><button class="toggle" type="button" aria-expanded="false" aria-controls="navlinks">Menu</button><ul class="links" id="navlinks">';
     GROUPS.forEach(function(g,i){
       if(g.href){ h+='<li class="sec-'+g.sec+'"><a href="'+g.href+'"'+(g.href===here?' aria-current="page"':'')+'>'+g.label+'</a></li>'; return; }

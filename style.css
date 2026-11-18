@@ -89,7 +89,7 @@ code{font-size:.92em;background:var(--bg-deep);padding:.1em .35em;border-radius:
 
 /* ----------------------------------------------------------- navigation */
 .site-nav{position:sticky;top:0;z-index:50;background:var(--surface);border-bottom:1px solid var(--line-soft)}
-.site-nav .bar{max-width:74rem;margin:0 auto;padding:.55rem 1.4rem;display:flex;align-items:center;gap:1.2rem}
+.site-nav .nav-bar{max-width:74rem;margin:0 auto;padding:.55rem 1.4rem;display:flex;align-items:center;gap:1.2rem}
 .site-nav .brand{display:flex;align-items:center;gap:.6rem;text-decoration:none;color:var(--ink);font-family:var(--heading);font-weight:600;font-size:1.1rem;letter-spacing:-.01em;margin-right:auto}
 .site-nav .brand svg{width:34px;height:34px;flex:none}
 .site-nav .links{display:flex;align-items:center;gap:.2rem;list-style:none;margin:0;padding:0}
