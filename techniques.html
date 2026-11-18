@@ -45,8 +45,9 @@
 
   <main class="container tx">
     <h1>Technique index</h1>
-    <p class="lead">Every question in TMUA Sets A to D and the mock interview problems, filed by the method that cracks it. Pick a technique to see each question that uses it, then open the paper at that question. The notes name the idea without giving the answer.</p>
+    <p class="lead">Every question in TMUA Sets A to H and the mock interview problems, filed by the method that cracks it. Pick a technique to see each question that uses it, then open the paper at that question. The notes name the idea without giving the answer.</p>
 
+    <p class="count" id="loadnote" hidden></p>
     <div class="layout">
       <div>
         <label for="q" class="visually-hidden">Search techniques or notes</label><input type="search" id="q" placeholder="Search techniques or notes">
@@ -56,6 +57,7 @@
     </div>
   </main>
 
+<script src="locks.js?v=20261118b"></script>
 <script>
 /* ---------------------------------------------------------------- data
    Each entry: paper key, question, one-line note (idea, not answer), tags.
@@ -288,13 +290,35 @@ function render(){
     var rows=Q.filter(function(e){ return e[3].indexOf(k)>=0 && (!ql || (TECH[k].name+' '+TECH[k].desc+' '+e[2]+' '+PAPERS[e[0]].name).toLowerCase().indexOf(ql)>=0); });
     if(!rows.length) return; total+=rows.length;
     html+='<div class="tech"><h3>'+esc(TECH[k].name)+'</h3><p class="desc">'+esc(TECH[k].desc)+'</p><table>';
-    rows.forEach(function(e){ var p=PAPERS[e[0]]; html+='<tr><td class="q"><a href="'+p.url+'" target="_blank">'+esc(p.name)+'</a> &nbsp;Q'+esc(e[1])+'</td><td class="note">'+esc(e[2])+'</td></tr>'; });
+    rows.forEach(function(e){ var p=PAPERS[e[0]], a=p.open?'<a href="#" data-open-pdf="'+p.open+'">':'<a href="'+p.url+'" target="_blank">'; html+='<tr><td class="q">'+a+esc(p.name)+'</a> &nbsp;Q'+esc(e[1])+'</td><td class="note">'+esc(e[2])+'</td></tr>'; });
     html+='</table></div>';
   });
   out.innerHTML='<p class="count">'+total+' question'+(total===1?'':'s')+'</p>'+(html||'<p class="desc" style="color:var(--faint)">Nothing matches.</p>');
 }
 document.getElementById('q').addEventListener('input',function(e){q=e.target.value;render();});
 render();
+
+/* Sets E to H are free but stored with the locked papers, so their questions load separately and join the index */
+(function(){
+  if(!window.HU_LOCKS) return;
+  var free=Object.keys(HU_LOCKS.meta).filter(function(p){ return HU_LOCKS.isFree(p); }).sort(), note=document.getElementById('loadnote'), done=false;
+  free.forEach(function(p){ PAPERS[p]={name:HU_LOCKS.meta[p].title,open:p+'/paper'}; });
+  note.textContent='Loading Sets E to H…'; note.hidden=false;
+  var slow=setTimeout(function(){ if(!done) note.textContent='Sets E to H are taking a while to load, so only Sets A to D are listed so far.'; },12000);
+  function stem(h){
+    var t=document.createElement('textarea'); t.innerHTML=String(h).replace(/\\\[[\s\S]*?\\\]/g,' ').replace(/<[^>]+>/g,' '); var x=t.value.replace(/\s+/g,' ').trim();
+    if(x.length<=96) return x; x=x.slice(0,96); return x.slice(0,x.lastIndexOf(' '))+'...';
+  }
+  Promise.all(free.map(function(p){ return HU_LOCKS.questions(p).then(function(qs){ return qs.filter(function(x){ return x.paper===p; }); },function(){ return null; }); })).then(function(lists){
+    done=true; clearTimeout(slow);
+    var missing=free.filter(function(p,i){ return !lists[i]; }), at=Q.findIndex(function(e){ return e[0]==='IV'; });
+    if(at<0) at=Q.length;
+    var add=[]; lists.forEach(function(l){ (l||[]).forEach(function(x){ var tags=(x.tags||[]).filter(function(t){ return TECH[t]; }); if(tags.length) add.push([x.paper,x.n,stem(x.q),tags]); }); });
+    Array.prototype.splice.apply(Q,[at,0].concat(add));
+    render();
+    if(missing.length) note.textContent=missing.map(function(p){ return PAPERS[p].name; }).join(', ')+' could not be loaded. Reload the page to try again.'; else note.hidden=true;
+  });
+})();
 </script>
 <script src="site.js?v=20261118b"></script>
 </body>

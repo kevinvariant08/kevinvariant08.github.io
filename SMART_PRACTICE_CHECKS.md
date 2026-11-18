@@ -33,7 +33,7 @@ cd tools && npm install && cd .. && node tools/test_attempts_sql.mjs
 17. Footer shows the Privacy link on every page.
 
 ## Smart Practice
-18. Signed out: only Sets B to D appear; no request for any locked paper's files.
+18. Signed out: Sets B to H appear (E to H load from the bucket); no request for the files of Sets I to L.
 19. Signed in without unlocks: same as 18.
 20. Signed in with an unlocked paper: its questions can appear; others still cannot.
 21. Paper 1, Paper 2 and mixed each serve only that paper type.

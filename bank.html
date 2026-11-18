@@ -71,7 +71,8 @@
   <nav id="sitenav"><div class="nav-links"><a href="index.html">Home</a> <a href="drill.html">Drill</a> <a href="arena.html">Arena</a></div></nav>
   <main class="container qb">
     <h1>Question bank</h1>
-    <p class="lede">All 120 questions from the free TMUA Sets B to D, ranked from the most accessible to the hardest. Ratings run from 4.5 to 9.0, and one question here is rated 9.0. Open any question to answer it on the spot.</p>
+    <p class="lede">All 280 questions from the free TMUA Sets B to H, ranked from the most accessible to the hardest. Ratings run from 4.5 to 9.0, and one question here is rated 9.0. Open any question to answer it on the spot.</p>
+    <p class="count" id="loadnote" hidden></p>
 
     <div class="hist" id="hist" role="group" aria-label="Filter by rating band"></div>
     <div class="histax"><span>4.5</span><span>6.0</span><span>7.5</span><span>9.0</span></div>
@@ -91,12 +92,14 @@
 
 <script src="site.js?v=20261118b"></script>
 <script src="questions.js?v=20261031"></script>
+<script src="locks.js?v=20261118b"></script>
 <script src="traps.js?v=20261023"></script>
 <script src="trap-map.js?v=20261023"></script>
 <script src="confidence.js?v=20261024"></script>
 <script>
 (function(){
-  var Q=window.HU_QUESTIONS, TECH=window.HU_TECH, PAPERS=window.HU_PAPERS;
+  var Q=window.HU_QUESTIONS.slice(), TECH=window.HU_TECH, PAPERS=window.HU_PAPERS, LOCAL={};
+  Q.forEach(function(q){ LOCAL[q.id]=1; });
   function load(k,d){ try{ return JSON.parse(localStorage.getItem(k)||'null')||d; }catch(e){ return d; } }
   function save(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} }
   function esc(s){ return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
@@ -106,15 +109,26 @@
   function status(){ var st={}; load('hu_drill_log',[]).forEach(function(e){ st[e.id]=e.correct?'ok':'bad'; }); return st; }
 
   var sel={band:null};
-  Object.keys(PAPERS).forEach(function(k){ var o=document.createElement('option'); o.value=k; o.textContent=PAPERS[k]; document.getElementById('fpaper').appendChild(o); });
-  var used={}; Q.forEach(function(q){ q.tags.forEach(function(t){ used[t]=1; }); });
-  Object.keys(used).sort(function(a,b){return TECH[a].localeCompare(TECH[b]);}).forEach(function(k){ var o=document.createElement('option'); o.value=k; o.textContent=TECH[k]; document.getElementById('ftech').appendChild(o); });
+  /* the paper and technique menus list only what is in the bank, so they are rebuilt when Sets E to H arrive */
+  function fillMenus(){
+    var fp=document.getElementById('fpaper'), ft=document.getElementById('ftech'), vp=fp.value, vt=ft.value, have={}, used={};
+    Q.forEach(function(q){ have[q.paper]=1; q.tags.forEach(function(t){ if(TECH[t]) used[t]=1; }); });
+    fp.length=1; Object.keys(PAPERS).filter(function(k){ return have[k]; }).sort().forEach(function(k){ var o=document.createElement('option'); o.value=k; o.textContent=PAPERS[k]; fp.appendChild(o); });
+    ft.length=1; Object.keys(used).sort(function(a,b){return TECH[a].localeCompare(TECH[b]);}).forEach(function(k){ var o=document.createElement('option'); o.value=k; o.textContent=TECH[k]; ft.appendChild(o); });
+    fp.value=vp; ft.value=vt;
+  }
 
   /* histogram in half-point bins */
   var bins=[]; for(var b=4.5;b<9.01;b+=0.5) bins.push(Math.round(b*10)/10);
-  var hist=document.getElementById('hist'), counts=bins.map(function(b){ return Q.filter(function(q){ return q.rating>=b&&q.rating<b+0.5; }).length; }), mx=Math.max.apply(null,counts);
-  bins.forEach(function(b,i){ var btn=document.createElement('button'); btn.type='button'; btn.style.height=Math.max(6,counts[i]/mx*100)+'%'; btn.style.background=band(b); btn.title=b.toFixed(1)+' to '+(b+0.4).toFixed(1)+': '+counts[i]+' questions'; btn.setAttribute('aria-label',btn.title); btn.innerHTML='<span>'+counts[i]+'</span>';
-    btn.addEventListener('click',function(){ sel.band=(sel.band===b)?null:b; hist.querySelectorAll('button').forEach(function(x){x.classList.remove('on');}); if(sel.band!==null) btn.classList.add('on'); render(); }); hist.appendChild(btn); });
+  var hist=document.getElementById('hist');
+  function buildHist(){
+    var counts=bins.map(function(b){ return Q.filter(function(q){ return q.rating>=b&&q.rating<b+0.5; }).length; }), mx=Math.max.apply(null,counts);
+    hist.innerHTML='';
+    bins.forEach(function(b,i){ var btn=document.createElement('button'); btn.type='button'; btn.style.height=Math.max(6,counts[i]/mx*100)+'%'; btn.style.background=band(b); btn.title=b.toFixed(1)+' to '+(b+0.4).toFixed(1)+': '+counts[i]+' questions'; btn.setAttribute('aria-label',btn.title); btn.innerHTML='<span>'+counts[i]+'</span>';
+      if(sel.band===b) btn.classList.add('on');
+      btn.addEventListener('click',function(){ sel.band=(sel.band===b)?null:b; hist.querySelectorAll('button').forEach(function(x){x.classList.remove('on');}); if(sel.band!==null) btn.classList.add('on'); render(); }); hist.appendChild(btn); });
+  }
+  fillMenus(); buildHist();
 
   function render(){
     var term=document.getElementById('q').value.trim().toLowerCase(), fp=document.getElementById('fpaper').value, ft=document.getElementById('ftech').value, fs=document.getElementById('fstate').value, desc=document.getElementById('fsort').value==='desc', st=status();
@@ -143,7 +157,7 @@
   function build(q,body,li){
     body.dataset.built='1'; var t0=Date.now();
     body.innerHTML='<div class="qtext">'+q.q+'</div><ul class="opts">'+q.opts.map(function(o,k){ var L='ABCDEFGH'[k]; return '<li><button class="opt" type="button" data-l="'+L+'"><span class="L">'+L+'</span><span>'+o+'</span></button></li>'; }).join('')+'</ul><div class="confslot"></div>'
-      +'<div class="actions"><span class="verdict" aria-live="polite"></span><button class="btn ghost" type="button" data-act="sol">Show the solution</button><a class="btn secondary" href="arena.html?q='+encodeURIComponent(q.id)+'">Race a bot on this one</a></div><div class="trapslot" aria-live="polite"></div><div class="sol" hidden>'+q.sol+'</div>';
+      +'<div class="actions"><span class="verdict" aria-live="polite"></span><button class="btn ghost" type="button" data-act="sol">Show the solution</button>'+(LOCAL[q.id]?'<a class="btn secondary" href="arena.html?q='+encodeURIComponent(q.id)+'">Race a bot on this one</a>':'')+'</div><div class="trapslot" aria-live="polite"></div><div class="sol" hidden>'+q.sol+'</div>';
     typeset(body);
     function submit(L,conf){ var b=body.querySelector('.opt[data-l="'+L+'"]'), ok=L===q.ans, secs=Math.round((Date.now()-t0)/1000);
       body.querySelectorAll('.opt').forEach(function(x){ x.disabled=true; x.classList.remove('sel'); x.removeAttribute('aria-pressed'); if(x.dataset.l===q.ans) x.classList.add('right'); });
@@ -166,6 +180,20 @@
   ['q','fpaper','ftech','fstate','fsort'].forEach(function(id){ document.getElementById(id).addEventListener(id==='q'?'input':'change',render); });
   var ac=document.getElementById('askconf'); if(ac&&window.HU_CONF){ ac.checked=HU_CONF.on(); ac.addEventListener('change',function(){ HU_CONF.set(ac.checked); }); } else if(ac) ac.parentNode.hidden=true;
   render();
+
+  /* Sets E to H are free but stored with the locked papers, so they load separately; Sets B to D show at once */
+  if(window.HU_LOCKS){
+    var note=document.getElementById('loadnote'), done=false, free=Object.keys(HU_LOCKS.meta).filter(function(p){ return HU_LOCKS.isFree(p); }).sort();
+    note.textContent='Loading Sets E to H…'; note.hidden=false;
+    var slow=setTimeout(function(){ if(!done) note.textContent='Sets E to H are taking a while to load, so only Sets B to D are listed so far.'; },12000);
+    Promise.all(free.map(function(p){ return HU_LOCKS.questions(p).then(function(qs){ return qs.filter(function(q){ return q.paper===p; }); },function(){ return null; }); })).then(function(lists){
+      done=true; clearTimeout(slow);
+      var missing=free.filter(function(p,i){ return !lists[i]; });
+      lists.forEach(function(l){ (l||[]).forEach(function(q){ if(!LOCAL[q.id]&&q.tags&&typeof q.rating==='number') Q.push(q); }); });
+      fillMenus(); buildHist(); render();
+      if(missing.length){ note.textContent=missing.map(function(p){ return PAPERS[p]; }).join(', ')+' could not be loaded. Reload the page to try again.'; } else note.hidden=true;
+    });
+  }
 })();
 </script>
 </body>
