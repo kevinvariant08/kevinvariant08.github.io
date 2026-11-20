@@ -76,6 +76,7 @@ function textSize(body) {
 
 // Count a request against a KV counter that expires at the end of the day.
 async function bump(kv, key, limit) {
+  if (!kv) return true; // without KV storage the limits cannot be counted; Workers AI still enforces its own daily quota
   const current = parseInt((await kv.get(key)) || "0", 10);
   if (current >= limit) return false;
   await kv.put(key, String(current + 1), { expirationTtl: 60 * 60 * 26 });
@@ -191,10 +192,11 @@ async function handle(request, env) {
   {
     const origin = request.headers.get("Origin") || "";
     const cors = corsFor(origin);
-    if (!env.IV) return refuse(500, "The interviewer service is missing its KV storage. Set the namespace id in wrangler.toml and redeploy.", cors);
-
-    if (request.method === "OPTIONS") return new Response(null, { headers: cors });
+    // Answer the CORS preflight before anything else, so a storage problem can never block the browser.
+    if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: cors });
     const path = new URL(request.url).pathname;
+    // Without KV storage the chat still works (unmetered by us); only the score statistics need storage.
+    if (!env.IV && (path === "/stats" || path === "/score")) return refuse(503, "Score statistics are unavailable right now.", cors);
 
     // ---- score distribution (read) ----
     if (request.method === "GET" && path === "/stats") {

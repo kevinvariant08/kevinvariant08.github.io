@@ -1440,11 +1440,12 @@ async function callAI(system, messages, maxTokens){
     headers['anthropic-version'] = '2023-06-01';
     headers['anthropic-dangerous-direct-browser-access'] = 'true';
   }
-  var res;
-  try{ res = await fetch(url, {method:'POST', headers:headers, body:JSON.stringify(body)}); }
-  catch(e){ throw new Error(cfg.mode === 'free'
+  var res, opts = {method:'POST', headers:headers, body:JSON.stringify(body)};
+  try{ res = await fetch(url, opts); }
+  catch(e0){ await new Promise(function(r){ setTimeout(r, 2500); }); try{ res = await fetch(url, opts); }   // one quiet retry for a dropped connection
+  catch(e){ var off = new Error(cfg.mode === 'free'
     ? 'The free AI interviewer could not be reached just now. Your work is safe. Try Send again in a minute, or switch to self-guided in the settings above, which works offline with the same hints.'
-    : 'Could not reach the AI service. Check your connection, your key or proxy URL, then try Send again.'); }
+    : 'Could not reach the AI service. Check your connection, your key or proxy URL, then try Send again.'); off.offline = true; throw off; } }
   if(res.status === 429){
     var msg = 'The free interviewer has reached its limit for now. Switch to self-guided in settings, or add your own key to carry on.';
     try{ var j429 = await res.json(); if(j429 && j429.message) msg = j429.message; }catch(e){}
@@ -1802,9 +1803,23 @@ async function converse(userText, kind){
       if(st.p.deeper && st.p.deeper.length){ st.phase = 'deeper'; st.dir = 0; sysMsg('That was the last part. The interviewer may take you further; end the session when you are ready for the debrief.'); chain = true; }
       else sysMsg('That was the last part. End the session when you are ready for the debrief.');
     }
-  }catch(e){ errEl.textContent = e.message; }
+  }catch(e){
+    if(e.offline && cfg.mode === 'free' && !st.ended){ busy.disabled=false; goSelfGuided(); return; }
+    errEl.textContent = e.message;
+  }
   busy.disabled=false;
   if(chain && !st.ended) await converse('', 'deeper');
+}
+// If the free interviewer cannot be reached even after a retry, carry on self-guided rather than leaving the candidate stuck.
+function goSelfGuided(){
+  st.ai = false;
+  try{ stopListening(); }catch(_){}
+  document.getElementById('send').classList.add('hidden');
+  inputEl.classList.add('hidden');
+  document.getElementById('mic').classList.add('hidden');
+  errEl.textContent = '';
+  noteEl.textContent = 'Paper and pen. Speak every thought aloud, ideally recording yourself.';
+  sysMsg('The free AI interviewer could not be reached, so this session has switched to self-guided. Your clock and progress are kept. Keep working aloud; Nudge now gives the written hints, and you mark yourself at the end.');
 }
 document.getElementById('send').addEventListener('click', function(){
   var t = inputEl.value.trim(); if(!t||!st||st.ended) return;
