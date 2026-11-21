@@ -1486,7 +1486,23 @@ function tolerantJSON(txt){
   while(stack.length) tail+=(stack.pop()==='{')?'}':']';
   return tryParse(tail);
 }
-function parseJSON(txt){ return tolerantJSON(txt); }
+function parseJSON(txt){
+  // The free model sometimes writes bare labels such as [M1, M2] inside the JSON; turn them into numbers first.
+  var t = String(txt||'').replace(/([\[,]\s*)"?[A-Za-z]{1,2}(\d+)"?(?=\s*[,\]])/g, '$1$2');
+  var j = tolerantJSON(t);
+  if(j) return j;
+  // Last resort: pull the fields out one by one, so raw JSON never reaches the candidate.
+  var say = /"say"\s*:\s*"((?:[^"\\]|\\.)*)"/.exec(t);
+  if(!say) return null;
+  var f = function(k){ var m = new RegExp('"'+k+'"\\s*:\\s*(true|false)').exec(t); return !!(m && m[1] === 'true'); };
+  var cov = /"covered"\s*:\s*\[([^\]]*)\]/.exec(t), dir = /"direction"\s*:\s*(\d+)/.exec(t);
+  var sayText; try{ sayText = JSON.parse('"'+say[1]+'"'); }catch(e){ sayText = say[1]; }
+  return {say:sayText, advance:f('advance'), hinted:f('hinted'), covered:cov ? cov[1].split(',') : [], note:'', direction:dir ? +dir[1] : undefined};
+}
+// The candidate never sees the internal labels (M1, T2, P3); they appear only in the debrief.
+function cleanSay(s){
+  return String(s||'').replace(/\s*\((?:\s*[MTP]\d+\s*,?)+\)/g, '').replace(/\b[MTP]\d+\b,?\s*/g, '').replace(/\s{2,}/g, ' ').trim();
+}
 /* The free interviewer runs on a small model, so the mathematical judgement is prepared in advance.
    For the current part only, the prompt carries what a full answer must contain (must), the usual
    mistakes with the question that exposes each (traps), follow-ups for a right but loose answer
@@ -1785,7 +1801,11 @@ async function converse(userText, kind){
   var system = interviewerSystem(st.p, st), chain = false;
   try{
     var raw = await callAI(system, trimHistory(system, msgs), 500);
-    var j = parseJSON(raw) || {say: raw.slice(0,600), advance:false, hinted:kind === 'hint', note:''};
+    var j = parseJSON(raw);
+    if(!j){ var plain = String(raw).trim(); j = {say: plain.charAt(0) === '{' ? 'Carry on. Tell me what you are trying.' : plain.slice(0,600), advance:false, hinted:kind === 'hint', note:''}; }
+    j.say = cleanSay(j.say) || 'Carry on.';
+    // The interviewer closes a part with a short line such as "That settles it"; treat that as the move on, even if the flag was missed.
+    if(!deeper && /\b(that settles it|that settles the part|let's move on|moving on to the next part)\b/i.test(j.say)) j.advance = true;
     tutorMsg(j.say); st.transcript.push({role:'assistant', text:j.say}); speak(j.say);
     if(j.note && String(j.note).trim()) st.transcript.push({role:'note', text:String(j.note).trim()});
     toIdx(j.covered, item.must.length).forEach(function(k){ if(cov.indexOf(k) < 0) cov.push(k); });
@@ -1798,7 +1818,7 @@ async function converse(userText, kind){
       st.posed[st.dir] = true;
       var d = parseInt(j.direction,10);
       if(d >= 1 && d <= st.p.deeper.length && d-1 !== st.dir){ st.dir = d-1; st.posed[st.dir] = true; }
-    } else if(j.advance && st.idx < st.p.parts.length-1){ st.idx++; showPart(st.idx); }
+    } else if(j.advance && st.idx < st.p.parts.length-1){ st.idx++; showPart(st.idx); sysMsg('Part '+st.p.parts[st.idx].label+' is up. Carry on whenever you are ready.'); }
     else if(j.advance){
       if(st.p.deeper && st.p.deeper.length){ st.phase = 'deeper'; st.dir = 0; sysMsg('That was the last part. The interviewer may take you further; end the session when you are ready for the debrief.'); chain = true; }
       else sysMsg('That was the last part. End the session when you are ready for the debrief.');
