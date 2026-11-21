@@ -5,7 +5,7 @@ compatibility_date = "2026-09-20"
 # wrangler kv namespace create IV   →   paste the returned id below
 [[kv_namespaces]]
 binding = "IV"
-id = "9d0664d329554a72b74808cee76bab47"
+id = "5c06a9a355754162b5cbae0dd124bc8f"
 
 [ai]
 binding = "AI"
