@@ -51,6 +51,14 @@
     .sb .rel{font-family:var(--serif);padding:.2rem 0;border-bottom:1px dashed var(--rule)}
     .sb .rel.stable{color:var(--stable)} .sb .rel.maybe{color:var(--maybe)} .sb .rel.meas{color:var(--ink)}
     .sb .empty{color:var(--faint);font-style:italic}
+    .sb .simnote{font-family:var(--sans);font-size:.75rem;color:var(--faint)}
+    .sb details summary{cursor:pointer;font-size:.82rem;color:var(--faint);padding:.3rem 0}
+    .sb .auxlab{display:block;font-size:.82rem;color:var(--soft);margin-bottom:.3rem}
+    .sb #aim{width:100%;font:inherit;font-size:.88rem;padding:.35rem;border:1px solid var(--rule);background:var(--well);color:var(--ink)}
+    .sb .aux{padding:.55rem 0;border-bottom:1px dashed var(--rule)}
+    .sb .aux .what{font-weight:600}
+    .sb .aux ul{margin:.25rem 0 .35rem 1.1rem;padding:0;font-family:var(--serif);color:var(--stable)}
+    .sb .aux .btn2{padding:.25rem .6rem;font-size:.8rem}
     .sb .btn2{font-family:var(--sans);font-size:.9rem;font-weight:500;color:var(--ink);background:transparent;border:1px solid var(--ink);border-radius:2px;padding:.45rem .9rem;cursor:pointer}
     .sb .btn2:hover{background:var(--ink);color:var(--onink)}
     .sb .btn2.quiet{border-color:var(--rule);color:var(--soft);font-weight:400}
@@ -105,11 +113,20 @@
         <h3>Observations</h3>
         <h4>Hold under perturbation</h4>
         <div id="stable"><div class="empty">Nothing yet.</div></div>
+        <h4>Similar triangles</h4>
+        <div id="sims"><div class="empty">Nothing yet.</div></div>
         <h4>True right now only</h4>
         <div id="maybe"><div class="empty">Nothing yet.</div></div>
+        <h4>Auxiliary constructions</h4>
+        <div class="auxbox">
+          <label for="aim" class="auxlab">What are you trying to prove?</label>
+          <select id="aim"><option value="">Anything useful</option></select>
+          <div class="row" style="margin-top:.5rem"><button class="btn2" id="suggest">Suggest constructions</button></div>
+          <div id="auxout"></div>
+        </div>
         <h4>Measurements</h4>
         <div id="meas"><div class="empty">Use the measure tools.</div></div>
-        <p style="font-size:.82rem;color:var(--faint);margin-top:1rem">A relation listed as holding is exact, not just close: it is re-checked to about one part in ten million in twelve randomly nudged copies of the figure, and has to hold in most of them. One that does not is an accident of placement, which tells you what to construct next. Lengths between any two named points are compared too, so relations such as BX = AX + CX appear even when no segment is drawn. Relations that hold by construction are not listed.</p>
+        <p style="font-size:.82rem;color:var(--faint);margin-top:1rem">A relation listed as holding is exact, not just close: it is re-checked to about one part in ten million in twelve randomly nudged copies of the figure, and has to hold in most of them. One that does not is an accident of placement, which tells you what to construct next. Lengths between any two named points are compared too, so relations such as BX = AX + CX appear even when no segment is drawn. Relations that hold by construction are not listed. Similar triangles are found among all named points, drawn or not, and grouped into chains with matching vertex order. Suggest constructions tries every natural extra point or line (feet, midpoints, circumcentres, orthocentres, reflections, intersections, second intersections, antipodes) and lists those that create exact relations, ranked for what you are trying to prove. A construction that lands on a point already in the figure is usually the key step.</p>
       </div>
     </div>
   </main>
@@ -218,8 +235,8 @@ function compute(){
         case 'foot': o.g=footOf(P(o.of[0]),P(o.of[1])); break;
         case 'refl': pt=P(o.of[0]); var f=footOf(pt,P(o.of[1])); o.g={x:2*f.x-pt.x,y:2*f.y-pt.y}; break;
         case 'reflp': pt=P(o.of[0]); c=P(o.of[1]); o.g={x:2*c.x-pt.x,y:2*c.y-pt.y}; break;
-        case 'ilc': o.g=lineCircle(P(o.of[0]),P(o.of[1]),o.idx); break;
-        case 'icc': o.g=circleCircle(P(o.of[0]),P(o.of[1]),o.idx); break;
+        case 'ilc': o.g=secondHit(o,function(i){ return lineCircle(P(o.of[0]),P(o.of[1]),i); }); break;
+        case 'icc': o.g=secondHit(o,function(i){ return circleCircle(P(o.of[0]),P(o.of[1]),i); }); break;
         case 'inc': tri=incentre(P(o.of[0]),P(o.of[1]),P(o.of[2])); o.g={x:tri.x,y:tri.y}; break;
         case 'ccen': cr=circum(P(o.of[0]),P(o.of[1]),P(o.of[2])); o.g={x:cr.cx,y:cr.cy}; break;
         case 'cent': a=P(o.of[0]); b=P(o.of[1]); c=P(o.of[2]); o.g={x:(a.x+b.x+c.x)/3,y:(a.y+b.y+c.y)/3}; break;
@@ -255,6 +272,22 @@ function compute(){
   });
 }
 
+/* When a point of the figure already lies on both objects by construction (A on line BA and on circle AOC),
+   the other intersection is the root away from it. Choosing by that role, not by the order of the roots,
+   keeps M from swapping with A when the figure is dragged or perturbed. */
+function secondHit(o,root){
+  var r0=root(0), r1=root(1);
+  if(o._known===undefined){ o._known=null;
+    for(var i=0;i<objs.length&&objs[i]!==o;i++){ var q=objs[i];
+      if(q.type!=='point'||(q.kind===o.kind&&sameSet(q.of,o.of))) continue;
+      var both=o.of.every(function(id){ var ob=byId(id); return ob.type==='line'?onLineByConstruction(q,ob):onCircleByConstruction(q,ob); });
+      if(both){ o._known=q.id; break; } } }
+  if(o._known===null||!isFinite(r0.x)||!isFinite(r1.x)) return o.idx?r1:r0;
+  var K=byId(o._known); if(!K||!K.g||!isFinite(K.g.x)) return o.idx?r1:r0;
+  var d0=Math.hypot(r0.x-K.g.x,r0.y-K.g.y), d1=Math.hypot(r1.x-K.g.x,r1.y-K.g.y);
+  if(o._far===undefined){ var mine=o.idx?d1:d0, other=o.idx?d0:d1; o._far=mine>=other; }
+  return (d0>d1)===o._far?r0:r1;
+}
 function sameSet(u,v){ if(u.length!==v.length) return false; var s=u.slice().sort(),t=v.slice().sort(); for(var i=0;i<s.length;i++) if(s[i]!==t[i]) return false; return true; }
 function pointParents(p){
   var l;
@@ -272,6 +305,7 @@ function onLineByConstruction(p,l){
   if(p.kind==='ilc'&&p.of[0]===l.id) return true;
   if(p.kind==='foot'&&p.of[1]===l.id) return true;
   if(p.kind==='mid'&&sameSet(p.of,[l.a,l.b])) return true;
+  if(p.kind==='mid'&&p.of.every(function(id){ var q=byId(id); return q&&q.id!==p.id&&q.kind!=='mid'&&onLineByConstruction(q,l); })) return true;
   if(l.kind==='pbis'){
     if(p.kind==='mid'&&sameSet(p.of,l.of)) return true;
     if(p.kind==='ccen'&&l.of.every(function(id){return p.of.indexOf(id)>=0;})) return true;
@@ -295,6 +329,9 @@ function onCircleByConstruction(p,c){
   if(p.kind==='ilc'&&p.of[1]===c.id) return true;
   if(p.kind==='icc'&&p.of.indexOf(c.id)>=0) return true;
   if(p.kind==='tanpt'&&p.of[1]===c.id) return true;
+  if(p.kind==='reflp'){ var src=byId(p.of[0]), cen=c.kind==='cp'?c.c:null;
+    if(c.kind==='circum') objs.forEach(function(z){ if(z.type==='point'&&z.kind==='ccen'&&sameSet(z.of,c.of)) cen=z.id; });
+    if(cen===p.of[1]&&src&&onCircleByConstruction(src,c)) return true; }
   return false;
 }
 function perpByConstruction(l1,l2){
@@ -334,10 +371,28 @@ function lenTrivial(Q,X,Y){ /* QX = QY for a reason built into the construction 
   });
 }
 /* An intersection point lands on a point that already lies on both objects: the construction forces that. */
+function lineSameByConstruction(l1,l2){
+  if(!l1||!l2) return false; if(l1.id===l2.id) return true;
+  var on=function(a,b){ return a.kind==='two'&&onLineByConstruction(byId(a.a),b)&&onLineByConstruction(byId(a.b),b); };
+  return on(l1,l2)||on(l2,l1);
+}
 function sameByConstruction(p,q){
   var f=function(x,y){ if(x.kind!=='ilc'&&x.kind!=='icc') return false;
     return x.of.every(function(id){ var o=byId(id); return o.type==='line'?onLineByConstruction(y,o):onCircleByConstruction(y,o); }); };
-  return f(p,q)||f(q,p);
+  /* a circumcentre of three points on a circle is that circle's centre; reflecting twice in the same line or point returns the start */
+  var g=function(x,y){
+    if(x.kind==='ccen'&&objs.some(function(c){ if(c.type!=='circle') return false; var cen=c.kind==='cp'?c.c:null;
+        if(c.kind==='circum') objs.forEach(function(z){ if(z.type==='point'&&z.kind==='ccen'&&sameSet(z.of,c.of)) cen=z.id; });
+        return cen===y.id&&x.of.every(function(id){ return onCircleByConstruction(byId(id),c); }); })) return true;
+    if((x.kind==='refl'||x.kind==='reflp')&&y.kind===x.kind&&x.of[0]===y.id&&byId(x.of[0]).of&&byId(x.of[0]).of[1]===x.of[1]) return true;
+    if((x.kind==='refl'||x.kind==='reflp')&&byId(x.of[0]).kind===x.kind&&byId(x.of[0]).of[0]===y.id&&byId(x.of[0]).of[1]===x.of[1]) return true;
+    /* the foot or mirror image of the same point on the same line, drawn twice (BC and CD with D on BC) */
+    if((x.kind==='foot'||x.kind==='refl')&&y.kind===x.kind&&x.of[0]===y.of[0]&&lineSameByConstruction(byId(x.of[1]),byId(y.of[1]))) return true;
+    /* the foot of X on a line l is Y when XY lies on a line built perpendicular to l */
+    if(x.kind==='foot'){ var X=byId(x.of[0]), l=byId(x.of[1]);
+      if(objs.some(function(m){ return m.type==='line'&&onLineByConstruction(X,m)&&onLineByConstruction(y,m)&&perpByConstruction(l,m); })) return true; }
+    return false; };
+  return f(p,q)||f(q,p)||g(p,q)||g(q,p);
 }
 function relations(strict){
   var Pts=objs.filter(function(o){return o.type==='point'&&!o.hidden&&isFinite(o.g.x);}),
@@ -409,7 +464,7 @@ function relations(strict){
   }
   for(var ci=0;ci<C.length;ci++) for(var cj=ci+1;cj<C.length;cj++){ var g1=C[ci].g,g2=C[cj].g,dd=Math.hypot(g1.cx-g2.cx,g1.cy-g2.cy);
     if(dd>1e-6&&(Math.abs(dd-(g1.r+g2.r))<tol||Math.abs(dd-Math.abs(g1.r-g2.r))<tol)) out['tcc:'+C[ci].id+','+C[cj].id]=cn(C[ci])+' is tangent to '+cn(C[cj]); }
-  if(strict) lengthRelations(Pts,tol,out);
+  if(strict){ lengthRelations(Pts,tol,out); simRelations(Pts,D,out); }
   return out;
 }
 /* Lengths between any two named points, drawn or not: equal lengths, one length the sum of two others
@@ -453,6 +508,64 @@ function lengthRelations(Pts,tol,out){
       var key='r2:'+rep(s)+'='+rep(S[i]); if(seen[key]) return; seen[key]=1;
       out[key]=s.n+' = 2·'+S[i].n; });
   }
+}
+/* Similar triangles among all named points, drawn or not. Each triangle is written with its longest side first,
+   so z = (C - A)/(B - A) has |z| <= 1 and two triangles are directly similar exactly when their z agree, and
+   oppositely similar when one z is the conjugate of the other. Only checked strictly, like lengths. */
+var SIM_PERMS=[[0,1,2],[1,0,2],[0,2,1],[2,0,1],[1,2,0],[2,1,0]];
+function simRelations(Pts,D,out){
+  if(Pts.length>16||Pts.length<4) return;
+  var T=[],E=[],i,j,k,eps=1e-6;
+  for(i=0;i<Pts.length;i++)for(j=i+1;j<Pts.length;j++)for(k=j+1;k<Pts.length;k++){
+    var a=Pts[i].g,b=Pts[j].g,c=Pts[k].g, s0=Math.hypot(b.x-c.x,b.y-c.y), s1=Math.hypot(a.x-c.x,a.y-c.y), s2=Math.hypot(a.x-b.x,a.y-b.y), mx=Math.max(s0,s1,s2);
+    if(Math.abs((b.x-a.x)*(c.y-a.y)-(b.y-a.y)*(c.x-a.x))<mx*mx*2e-3) continue;   /* flat triangles say nothing */
+    T.push({v:[Pts[i],Pts[j],Pts[k]],side:[s0,s1,s2],mx:mx});
+  }
+  T.forEach(function(t,ti){
+    SIM_PERMS.forEach(function(p){
+      if(t.side[p[2]]<t.mx*(1-1e-6)) return;            /* side opposite the third vertex must be a longest side */
+      var A=t.v[p[0]].g,B=t.v[p[1]].g,C=t.v[p[2]].g, ux=B.x-A.x,uy=B.y-A.y,vx=C.x-A.x,vy=C.y-A.y,d=ux*ux+uy*uy;
+      var re=(vx*ux+vy*uy)/d, im=(vy*ux-vx*uy)/d;
+      E.push({ti:ti,p:p,f:0,re:re,im:im}); E.push({ti:ti,p:p,f:1,re:re,im:-im});
+    });
+  });
+  E.sort(function(x,y){return x.re-y.re;});
+  for(i=0;i<E.length;i++){ var e1=E[i]; if(e1.f) continue;
+    for(j=i+1;j<E.length&&E[j].re-e1.re<eps;j++){ var e2=E[j];
+      if(e2.ti===e1.ti||Math.abs(e2.im-e1.im)>=eps) continue;
+      var lo=e1.ti<e2.ti?e1:e2, hi=lo===e1?e2:e1;
+      /* lo with f=0 must face hi; if lo carries the conjugate, flip both, which describes the same pair */
+      var A=lo.p.map(function(q){return T[lo.ti].v[q];}), B=hi.p.map(function(q){return T[hi.ti].v[q];}), opp=e1.f!==e2.f;
+      if(simTrivial(A,B)) continue;
+      var ord=[0,1,2].sort(function(x,y){return A[x].label<A[y].label?-1:1;});
+      A=ord.map(function(q){return A[q];}); B=ord.map(function(q){return B[q];});
+      var la=A.map(function(x){return x.label;}), lb=B.map(function(x){return x.label;});
+      out['sim:'+la.join(',')+'|'+lb.join(',')+'|'+(opp?'o':'d')]='△'+la.join('')+' ∼ △'+lb.join('');
+    }
+  }
+}
+/* A similarity the construction forces: a reflected copy, or a triangle cut off by a constructed parallel or midline. */
+function simTrivial(A,B){
+  var fixed=[],moved=[]; for(var i=0;i<3;i++) (A[i]===B[i]?fixed:moved).push(i);
+  var isRefl=function(x,y,test){ return (y.kind==='refl'&&y.of[0]===x.id&&test(y.of[1],'l'))||(x.kind==='refl'&&x.of[0]===y.id&&test(x.of[1],'l'))
+                                      ||(y.kind==='reflp'&&y.of[0]===x.id&&test(y.of[1],'p'))||(x.kind==='reflp'&&x.of[0]===y.id&&test(x.of[1],'p')); };
+  var mirrors={};
+  moved.forEach(function(i){ isRefl(A[i],B[i],function(id,t){ mirrors[t+id]=1; return true; }); });
+  var m=Object.keys(mirrors);
+  if(m.length&&m.some(function(key){
+      var t=key[0], id=+key.slice(1);
+      return moved.every(function(i){ return isRefl(A[i],B[i],function(x,tt){ return tt===t&&x===id; }); })
+          && fixed.every(function(i){ return t==='l'?onLineByConstruction(A[i],byId(id)):A[i].id===id; });
+    })) return true;
+  if(fixed.length===1&&moved.length===2){
+    var X=A[fixed[0]], Y=A[moved[0]], Z=A[moved[1]], Y2=B[moved[0]], Z2=B[moved[1]];
+    var midOf=function(P,Q){ return P.kind==='mid'&&sameSet(P.of,[X.id,Q.id]); };
+    if((midOf(Y2,Y)||midOf(Y,Y2))&&(midOf(Z2,Z)||midOf(Z,Z2))) return true;
+    var lineThrough=function(P,Q){ return objs.filter(function(l){ return l.type==='line'&&onLineByConstruction(P,l)&&onLineByConstruction(Q,l); }); };
+    var par=lineThrough(Y,Z).some(function(l1){ return lineThrough(Y2,Z2).some(function(l2){ return parByConstruction(l1,l2); }); });
+    if(par) return true;
+  }
+  return false;
 }
 function perturbTest(){
   var free=objs.filter(function(o){return o.type==='point'&&o.kind==='free';});
@@ -530,12 +643,43 @@ function condense(now,keys){ var col=keys.filter(function(k){return k.indexOf('c
 function renderRelations(){
   var now=relations(false),a='',b='', st={}, exact=stableSet?relations(true):{};
   if(stableSet) Object.keys(stableSet).forEach(function(k){ st[k]=exact[k]||stableSet[k]; });   /* current labels */
-  var sk=Object.keys(st), mb=Object.keys(now).filter(function(k){return !st[k];});
+  var simk=Object.keys(st).filter(function(k){return k.indexOf('sim:')===0;});
+  var sk=Object.keys(st).filter(function(k){return k.indexOf('sim:')!==0;}), mb=Object.keys(now).filter(function(k){return !st[k];});
+  renderSims(simk); fillAims(sk,st);
   var all={}; sk.forEach(function(k){all[k]=st[k];}); mb.forEach(function(k){all[k]=now[k];});
   condense(all,sk).forEach(function(t){ a+='<div class="rel stable">'+subHTML(t)+'</div>'; });
   condense(all,mb).forEach(function(t){ b+='<div class="rel maybe">'+subHTML(t)+'</div>'; });
   document.getElementById('stable').innerHTML=a||'<div class="empty">Nothing yet.</div>';
   document.getElementById('maybe').innerHTML=b||'<div class="empty">Nothing yet.</div>';
+}
+/* Similar triangles grouped into classes: a chain of similarities with each triangle written in matching order. */
+function renderSims(keys){
+  var adj={}, info=[];
+  keys.forEach(function(k){ var q=k.slice(4).split('|'), a=q[0].split(','), b=q[1].split(','), o=q[2]==='o';
+    var ka=a.slice().sort().join(','), kb=b.slice().sort().join(',');
+    (adj[ka]=adj[ka]||[]).push({to:kb,from:a,dest:b,o:o}); (adj[kb]=adj[kb]||[]).push({to:ka,from:b,dest:a,o:o}); });
+  var seen={}, classes=[];
+  Object.keys(adj).sort().forEach(function(root){ if(seen[root]) return;
+    var ord={}; ord[root]={v:root.split(','),o:false}; seen[root]=1; var queue=[root], members=[root];
+    while(queue.length){ var u=queue.shift();
+      adj[u].forEach(function(e){ if(seen[e.to]) return;
+        var map={}; e.from.forEach(function(x,i){ map[x]=e.dest[i]; });
+        ord[e.to]={v:ord[u].v.map(function(x){return map[x];}),o:ord[u].o!==e.o}; seen[e.to]=1; queue.push(e.to); members.push(e.to); });
+    }
+    var drawn=0; members.forEach(function(m){ var v=ord[m].v; for(var i=0;i<3;i++) if(sideDrawn(v[i],v[(i+1)%3])) drawn++; });
+    var shared=members.length>1&&members.some(function(m,i){ return members.slice(i+1).some(function(n){ return ord[m].v.some(function(x){return ord[n].v.indexOf(x)>=0;}); }); });
+    classes.push({t:members.map(function(m){return '△'+ord[m].v.join('');}).join(' ∼ '), opp:members.some(function(m){return ord[m].o;}), score:drawn/members.length+(shared?1:0)});
+  });
+  classes.sort(function(x,y){return y.score-x.score;});
+  var row=function(c){ return '<div class="rel stable">'+subHTML(c.t)+(c.opp?' <span class="simnote">(some pairs mirror-image)</span>':'')+'</div>'; };
+  var html=classes.slice(0,8).map(row).join('');
+  if(classes.length>8) html+='<details><summary>'+(classes.length-8)+' more</summary>'+classes.slice(8).map(row).join('')+'</details>';
+  var el=document.getElementById('sims'); if(el) el.innerHTML=html||'<div class="empty">'+(stableSet?'None found.':'Nothing yet.')+'</div>';
+}
+function sideDrawn(x,y){
+  var X=objs.filter(function(o){return o.type==='point'&&o.label===x;})[0], Y=objs.filter(function(o){return o.type==='point'&&o.label===y;})[0];
+  if(!X||!Y) return false;
+  return objs.some(function(l){ return l.type==='line'&&!l.invis&&isFinite(l.g.x1)&&distPL(X.g,l.g)<0.5&&distPL(Y.g,l.g)<0.5; });
 }
 function renderMeas(){
   var s='';
@@ -547,6 +691,13 @@ function renderMeas(){
   document.getElementById('meas').innerHTML=s||'<div class="empty">Use the measure tools.</div>';
 }
 
+/* Name the two intersection points in the order of the roots as they stand now, since a point keeps its role
+   (the second intersection) rather than its root number when the figure moves. */
+function rootOrder(pair,r0){
+  if(pair.length<2||!isFinite(r0.x)) return pair;
+  var d=function(q){ return Math.hypot(q.g.x-r0.x,q.g.y-r0.y); };
+  return d(pair[0])<=d(pair[1])?pair:[pair[1],pair[0]];
+}
 function exportTex(){
   var sc=60,out=['\\begin{tikzpicture}[scale=1]'],done={};
   var fx=function(v){return (v/sc).toFixed(2);},fy=function(v){return ((H-v)/sc).toFixed(2);};
@@ -572,9 +723,9 @@ function exportTex(){
             if(cc0.kind==='cp') out.push('\\tkzDefPointOnCircle[angle='+deg+',center='+lab(cc0.c)+',through='+lab(cc0.t)+'] \\tkzGetPoint{'+o.label+'}');
             else if(cc0.kind==='circum') out.push('\\tkzDefPointOnCircle[angle='+deg+',center=O'+cc0.id+',through='+lab(cc0.of[0])+'] \\tkzGetPoint{'+o.label+'}');
             else out.push('\\tkzDefPointOnCircle[angle='+deg+',center=I'+cc0.id+',radius=\\rIn'+cc0.id+' pt] \\tkzGetPoint{'+o.label+'}'); break; }
-        case 'ilc': { var key='ilc'+o.of.join('-'); if(!done[key]){ var pair=objs.filter(function(q){return q.kind==='ilc'&&q.of[0]===o.of[0]&&q.of[1]===o.of[1];}); var ca=circArgs(byId(o.of[1]));
+        case 'ilc': { var key='ilc'+o.of.join('-'); if(!done[key]){ var pair=rootOrder(objs.filter(function(q){return q.kind==='ilc'&&q.of[0]===o.of[0]&&q.of[1]===o.of[1];}),lineCircle(P(o.of[0]),P(o.of[1]),0)); var ca=circArgs(byId(o.of[1]));
             out.push('\\tkzInterLC'+(ca.R?'[R]':'')+'('+linePts(byId(o.of[0]))+')('+ca.args+') \\tkzGetPoints{'+(pair[0]?pair[0].label:'tmp1')+'}{'+(pair[1]?pair[1].label:'tmp2')+'}'); done[key]=1; } break; }
-        case 'icc': { var key2='icc'+o.of.join('-'); if(!done[key2]){ var pair2=objs.filter(function(q){return q.kind==='icc'&&q.of[0]===o.of[0]&&q.of[1]===o.of[1];}); var c1=circArgs(byId(o.of[0])),c2=circArgs(byId(o.of[1]));
+        case 'icc': { var key2='icc'+o.of.join('-'); if(!done[key2]){ var pair2=rootOrder(objs.filter(function(q){return q.kind==='icc'&&q.of[0]===o.of[0]&&q.of[1]===o.of[1];}),circleCircle(P(o.of[0]),P(o.of[1]),0)); var c1=circArgs(byId(o.of[0])),c2=circArgs(byId(o.of[1]));
             out.push('\\tkzInterCC'+((c1.R||c2.R)?'[R]':'')+'('+c1.args+')('+c2.args+') \\tkzGetPoints{'+(pair2[0]?pair2[0].label:'tmp1')+'}{'+(pair2[1]?pair2[1].label:'tmp2')+'}'); done[key2]=1; } break; }
       }
     } else if(o.type==='line'&&o.kind!=='two'){
@@ -699,6 +850,152 @@ function smartPoint(pt){
 svg.addEventListener('pointerup',function(){ if(drag){ drag=null; perturbTest(); renderRelations(); } });
 document.getElementById('undo').addEventListener('click',function(){ if(!groups.length) return; var n=groups.pop(); for(var i=0;i<n;i++){ var o=objs.pop(); if(o.type==='point'&&!o.hidden) labels--; } picks=[]; stableSet=null; draw(); perturbTest(); renderRelations(); });
 document.getElementById('clear').addEventListener('click',function(){ hideFigInfo(); setVB({x:0,y:0,w:W,h:H}); objs=[]; labels=0; picks=[]; groups=[]; stableSet=null; nextId=1; draw(); });
+/* ---------- Auxiliary constructions ----------
+   Try every natural extra object (intersections of drawn lines, feet, midpoints, circumcentres,
+   orthocentres, reflections, second intersections with circles, lines joining two points), keep the
+   relations it creates that survive the perturbation test, and rank them. A coincidence with a point
+   already in the figure is worth the most, since it usually names the key step of a proof. */
+function fillAims(keys,st){
+  var sel=document.getElementById('aim'); if(!sel) return; var cur=sel.value, html='<option value="">Anything useful</option>';
+  keys.forEach(function(k){ if(/^(sum|r2):/.test(k)) return; html+='<option value="'+esc(k)+'"'+(k===cur?' selected':'')+'>'+esc(st[k])+'</option>'; });
+  sel.innerHTML=html;
+}
+function freeLabel(){ var used={}; objs.forEach(function(o){ if(o.label) used[o.label]=1; });
+  var s='PQRSTXYZDEFGHUVWJ'; for(var i=0;i<s.length;i++) if(!used[s[i]]) return s[i];
+  for(var n=1;;n++) if(!used['X'+n]) return 'X'+n; }
+function auxCandidates(){
+  compute();
+  var Pts=objs.filter(function(o){return o.type==='point'&&!o.hidden&&isFinite(o.g.x);}),
+      L=objs.filter(function(o){return o.type==='line'&&!o.invis&&isFinite(o.g.x1)&&Math.hypot(o.g.x2-o.g.x1,o.g.y2-o.g.y1)>1e-6;}),
+      C=objs.filter(function(o){return o.type==='circle'&&!o.invis&&isFinite(o.g.r);});
+  var lab=function(id){ return byId(id).label; }, out=[], i,j,k;
+  var xs=Pts.map(function(p){return p.g.x;}), ys=Pts.map(function(p){return p.g.y;});
+  var cx=(Math.min.apply(null,xs)+Math.max.apply(null,xs))/2, cy=(Math.min.apply(null,ys)+Math.max.apply(null,ys))/2;
+  var D=Math.max(60,Math.max.apply(null,xs)-Math.min.apply(null,xs),Math.max.apply(null,ys)-Math.min.apply(null,ys));
+  var at=function(g){ return Pts.some(function(p){return Math.hypot(p.g.x-g.x,p.g.y-g.y)<D*1e-6;}); };
+  var inView=function(g){ return isFinite(g.x)&&Math.hypot(g.x-cx,g.y-cy)<2.5*D; };
+  var same=function(kind,of){ return objs.some(function(o){return o.type==='point'&&o.kind===kind&&sameSet(o.of||[],of);}); };
+  var pt=function(kind,of,what,extra){ if(same(kind,of)) return; out.push({type:'point',kind:kind,of:of,what:what,extra:extra||{}}); };
+  /* the triangles worth building centres of: every triple with at least one drawn side */
+  var drawnPair=function(a,b){ return L.some(function(l){return onLineByConstruction(a,l)&&onLineByConstruction(b,l);}); };
+  for(i=0;i<L.length;i++)for(j=i+1;j<L.length;j++){ if(nearPar(L[i].g,L[j].g)) continue;
+    var X=lineLine(L[i].g,L[j].g); if(!inView(X)||at(X)) continue;
+    pt('inter',[L[i].id,L[j].id],'the intersection of '+ln(L[i])+' and '+ln(L[j])); }
+  Pts.forEach(function(p){ L.forEach(function(l){ if(onLineByConstruction(p,l)||distPL(p.g,l.g)<D*1e-6) return;
+    pt('foot',[p.id,l.id],'the foot of the perpendicular from '+p.label+' to '+ln(l));
+    pt('refl',[p.id,l.id],'the reflection of '+p.label+' in '+ln(l)); }); });
+  for(i=0;i<Pts.length;i++)for(j=i+1;j<Pts.length;j++){
+    pt('mid',[Pts[i].id,Pts[j].id],'the midpoint of '+Pts[i].label+Pts[j].label);
+    if(!drawnPair(Pts[i],Pts[j])) out.push({type:'line',a:Pts[i].id,b:Pts[j].id,what:'the line '+Pts[i].label+Pts[j].label});
+  }
+  for(i=0;i<Pts.length;i++)for(j=i+1;j<Pts.length;j++)for(k=j+1;k<Pts.length;k++){
+    var a=Pts[i],b=Pts[j],c=Pts[k];
+    if(Math.abs((b.g.x-a.g.x)*(c.g.y-a.g.y)-(b.g.y-a.g.y)*(c.g.x-a.g.x))<D*D*1e-3) continue;
+    if(!(drawnPair(a,b)||drawnPair(b,c)||drawnPair(a,c))) continue;
+    var nm=a.label+b.label+c.label;
+    pt('ccen',[a.id,b.id,c.id],'the circumcentre of '+nm);
+    pt('orth',[a.id,b.id,c.id],'the orthocentre of '+nm);
+  }
+  /* second intersections: a line through a point of the figure meets a circle again */
+  L.forEach(function(l){ C.forEach(function(c){ for(var x=0;x<2;x++){ var g=lineCircle(l.g,c.g,x); if(!inView(g)||at(g)) continue;
+    pt('ilc',[l.id,c.id],'where '+ln(l)+' meets '+cn(c)+' again',{idx:x}); } }); });
+  /* antipodes on circles whose centre is a named point */
+  C.forEach(function(c){ var cen=c.kind==='cp'?byId(c.c):null;
+    if(c.kind==='circum') cen=Pts.filter(function(p){return p.kind==='ccen'&&sameSet(p.of,c.of);})[0]||null;
+    if(!cen) return; Pts.forEach(function(p){ if(onCircleByConstruction(p,c)) pt('reflp',[p.id,cen.id],'the antipode of '+p.label+' on '+cn(c)); }); });
+  return out;
+}
+/* Add one candidate for a moment; returns a function that takes it away again. */
+function auxPush(c,label){
+  var n=objs.length;
+  if(c.type==='point'){ var o={type:'point',kind:c.kind,of:c.of.slice(),label:label}; for(var k in c.extra) o[k]=c.extra[k]; add(o); }
+  else add({type:'line',kind:'two',style:'line',a:c.a,b:c.b,name:c.what.replace('the line ','')});
+  return function(){ objs.length=n; nextId=objs.reduce(function(m,o){return Math.max(m,o.id);},0)+1; };
+}
+var AUX_WEIGHT={same:10,col:3,cyc:3,onc:3,onl:3,perp:3,par:3,con:3,tan:3,tcc:3,eq:2,sim:1,sum:1,r2:1};
+function suggestAux(){
+  var outEl=document.getElementById('auxout'), btn=document.getElementById('suggest');
+  if(!objs.some(function(o){return o.type==='point';})){ outEl.innerHTML='<div class="empty">Build a figure first.</div>'; return; }
+  if(!stableSet) perturbTest();
+  var aim=document.getElementById('aim').value, aimText=aim&&stableSet[aim]?stableSet[aim]:'';
+  var aimLabels={}; objs.forEach(function(o){ if(o.type==='point'&&o.label&&aimText&&new RegExp('(^|[^a-z0-9_])'+o.label.replace(/[^A-Za-z0-9]/g,'')+'(?![a-z0-9_])').test(aimText)) aimLabels[o.label]=1; });
+  var cands=auxCandidates(), label=freeLabel();
+  if(cands.length>700) cands=cands.slice(0,700);
+  btn.disabled=true; outEl.innerHTML='<div class="empty">Trying '+cands.length+' constructions …</div>';
+  var free=objs.filter(function(o){return o.type==='point'&&o.kind==='free';}), semi=objs.filter(function(o){return o.type==='point'&&(o.kind==='onl'||o.kind==='onc');});
+  var saved=free.map(function(p){return [p.x,p.y];}), savedS=semi.map(function(p){return p.kind==='onl'?p.t:p.ang;});
+  var xs=free.map(function(p){return p.x;}), ys=free.map(function(p){return p.y;});
+  var D=free.length?Math.max(60,Math.max.apply(null,xs)-Math.min.apply(null,xs),Math.max.apply(null,ys)-Math.min.apply(null,ys)):200;
+  var runs=8, seeds=[]; for(var r=0;r<runs;r++) seeds.push({f:free.map(function(){ var a=Math.random()*6.283, d=D*0.03*(0.5+Math.random()); return [d*Math.cos(a),d*Math.sin(a)]; }), s:semi.map(function(p){ return (Math.random()-0.5)*(p.kind==='onl'?0.1:0.15); })});
+  var setRun=function(r){ free.forEach(function(p,i){ p.x=saved[i][0]+(r<0?0:seeds[r].f[i][0]); p.y=saved[i][1]+(r<0?0:seeds[r].f[i][1]); });
+    semi.forEach(function(p,i){ var d=r<0?0:seeds[r].s[i]; if(p.kind==='onl') p.t=savedS[i]+d; else p.ang=savedS[i]+d; }); compute(); };
+  /* stage 1: at the figure as drawn, which relations does each candidate add? */
+  setRun(-1); var base=relations(true);
+  cands.forEach(function(c){ var undo=auxPush(c,label); compute(); var now=relations(true); undo();
+    c.fresh={}; Object.keys(now).forEach(function(k){ if(!base[k]) c.fresh[k]=now[k]; }); c.hits={}; });
+  cands=cands.filter(function(c){ return Object.keys(c.fresh).length; });
+  /* stage 2: keep only what survives every perturbed copy but at most one */
+  var r=0;
+  (function step(){
+    if(r<runs){
+      setRun(r); var bk=relations(true);
+      cands.forEach(function(c){ var undo=auxPush(c,label); compute(); var now=relations(true); undo();
+        Object.keys(c.fresh).forEach(function(k){ if(now[k]&&!bk[k]) c.hits[k]=(c.hits[k]||0)+1; }); });
+      r++; outEl.innerHTML='<div class="empty">Testing under perturbation, '+r+' of '+runs+' …</div>'; setTimeout(step,0); return;
+    }
+    setRun(-1); draw();
+    var res=[];
+    cands.forEach(function(c){
+      var keep=Object.keys(c.fresh).filter(function(k){ return (c.hits[k]||0)>=runs-1; });
+      if(!keep.length) return;
+      /* landing on a point already in the figure is the headline; everything else follows from it */
+      var hit=keep.filter(function(k){return k.indexOf('same:')===0;}); if(hit.length) keep=hit;
+      /* "P lies on circle AOC" already says every concyclicity of P with points of that circle */
+      if(keep.some(function(k){return k.indexOf('onc:')===0;})) keep=keep.filter(function(k){return k.indexOf('cyc:')!==0;});
+      /* one line per pair of similar triangles (an isosceles triangle can match in two orders) */
+      var pairSeen={}; keep=keep.filter(function(k){ if(k.indexOf('sim:')!==0) return true; var q=k.slice(4).split('|');
+        var id=[q[0].split(',').sort().join(''),q[1].split(',').sort().join('')].sort().join('/'); if(pairSeen[id]) return false; pairSeen[id]=1; return true; });
+      var score=hit.length?50:0, facts=[];
+      keep.forEach(function(k){ var t=c.fresh[k], w=AUX_WEIGHT[k.split(':')[0]]||1, g=0;
+        var hay=t+' '+c.what.replace(/^the [a-z ]+? (of|from|in) /,'');
+        Object.keys(aimLabels).forEach(function(l){ if(hay.indexOf(l)>=0) g++; });
+        score+=w*(1+g*0.6); facts.push({t:t,w:w*(1+g*0.6)}); });
+      facts.sort(function(x,y){return y.w-x.w;});
+      score/=Math.sqrt(keep.length);       /* a flood of minor facts is not a reason to rank high */
+      if(c.type==='line') score*=0.8;
+      if(hit.length){ var mm=/^same:([^,]+),/.exec(hit[0]); c.sameAs=mm?mm[1]:null; }
+      res.push({c:c,score:score,facts:facts});
+    });
+    res.sort(function(x,y){return y.score-x.score;});
+    renderAux(res.slice(0,6),label,aimText);
+    btn.disabled=false;
+  })();
+}
+function renderAux(res,label,aimText){
+  var el=document.getElementById('auxout');
+  if(!res.length){ el.innerHTML='<div class="empty">Nothing exact turned up. Try a different aim, or add a point you suspect matters.</div>'; return; }
+  window.__aux=res.map(function(r){return r.c;});
+  el.innerHTML=(aimText?'<p style="font-size:.82rem;color:var(--faint);margin:.5rem 0 0">Ranked for: '+subHTML(aimText)+'</p>':'')+res.map(function(r,i){
+    var c=r.c, name=c.type==='point'?'Let '+label+' be '+c.what+'.':'Draw '+c.what+'.';
+    r.facts.forEach(function(f){ var m=/^(\S+) coincides with (\S+)$/.exec(f.t); if(m&&m[1]===label) f.t='Then '+label+' is the point '+m[2]+' already in the figure.'; });
+    return '<div class="aux"><div class="what">'+subHTML(name)+'</div><ul>'+r.facts.slice(0,4).map(function(f){return '<li>'+subHTML(f.t)+'</li>';}).join('')+'</ul><button class="btn2 quiet" data-aux="'+i+'">'+(c.sameAs?(c.kind==='ccen'?'Draw the circle':c.kind==='orth'?'Draw the altitudes':'Highlight it'):'Add to figure')+'</button></div>';
+  }).join('');
+  el.querySelectorAll('[data-aux]').forEach(function(b){ b.addEventListener('click',function(){
+    var c=window.__aux[+b.getAttribute('data-aux')], lab=freeLabel(), n=objs.length;
+    if(c.sameAs){   /* nothing new to name: draw what makes the coincidence visible instead */
+      var Q=objs.filter(function(o){return o.type==='point'&&o.label===c.sameAs;})[0];
+      if(c.kind==='ccen'){ add({type:'circle',kind:'circum',of:c.of.slice(),accent:true}); }
+      else if(c.kind==='orth'){ c.of.forEach(function(id){ var V=byId(id); if(Q&&V&&Math.hypot(V.g.x-Q.g.x,V.g.y-Q.g.y)>1e-6&&!objs.some(function(l){return l.type==='line'&&onLineByConstruction(V,l)&&onLineByConstruction(Q,l);}))
+          add({type:'line',kind:'two',style:'line',a:id,b:Q.id,faint:true}); }); }
+      if(Q) Q.accent=true;
+      finish(objs.length-n); setStatus(c.what.charAt(0).toUpperCase()+c.what.slice(1)+' is '+c.sameAs+'.'); el.innerHTML=''; return;
+    }
+    auxPush(c,lab); var o=objs[objs.length-1]; o.accent=true;
+    finish(objs.length-n); setStatus((c.type==='point'?lab+' is '+c.what:'Added '+c.what)+'. Suggest again to look one step further.');
+    el.innerHTML='';
+  }); });
+}
+document.getElementById('suggest').addEventListener('click',suggestAux);
 document.getElementById('test').addEventListener('click',function(){ perturbTest(); renderRelations(); setStatus('Tested against 12 perturbations.'); });
 document.getElementById('copy').addEventListener('click',function(){ var t=document.getElementById('tex'); t.select(); try{ navigator.clipboard.writeText(t.value); document.getElementById('copied').textContent='Copied.'; }catch(e){ document.execCommand('copy'); } setTimeout(function(){document.getElementById('copied').textContent='';},1500); });
 
