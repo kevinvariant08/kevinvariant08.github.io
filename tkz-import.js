@@ -27,7 +27,8 @@ window.TKZ=(function(){
     reset();
     var P={}, unsupported=[], vars={}, labelled={}, lineMap={}, drawnSeg=[], drawnCirc=[];
     var pt=function(n){ var id=P[norm(n)]; if(id===undefined) throw 'unknown point '+n; return id; };
-    var name=function(o,n){ o.label=norm(n); P[norm(n)]=o.id; };
+    /* matching ignores braces and underscores; the label keeps the underscore so O_1 still shows as a subscript */
+    var name=function(o,n){ o.label=String(n).replace(/\\prime/g,"'").replace(/[{}\\ $]/g,''); P[norm(n)]=o.id; };
     var lineFor=function(a,b){ var k1=norm(a)+'|'+norm(b), k2=norm(b)+'|'+norm(a); if(lineMap[k1]) return lineMap[k1]; if(lineMap[k2]) return lineMap[k2];
       var A=pt(a),B=pt(b); var ex=objs.filter(function(o){return o.type==='line'&&o.kind==='two'&&sameSet([o.a,o.b],[A,B]);})[0]; if(ex) return ex.id;
       var o=add({type:'line',kind:'two',style:'line',a:A,b:B,invis:true}); return o.id; };
@@ -47,14 +48,14 @@ window.TKZ=(function(){
       else if(named.length===1){ /* one new name: it belongs to the root that is not already a point of the figure */
         var slot=names[0]?0:1, other=1-slot;
         if(e0&&!e1) ord=slot===0?[p1,p0]:[p0,p1]; else if(e1&&!e0) ord=slot===0?[p0,p1]:[p1,p0]; }
-      else if(e0&&!e1&&norm(names[0]||'')===e0.label) ord=[p0,p1]; else if(e1&&!e0&&norm(names[0]||'')===e1.label) ord=[p1,p0];
+      else if(e0&&!e1&&norm(names[0]||'')===norm(e0.label)) ord=[p0,p1]; else if(e1&&!e0&&norm(names[0]||'')===norm(e1.label)) ord=[p1,p0];
       else if(opts&&opts.first!==undefined){ /* tkz-euclide lists line-circle roots from the line's first point */
         var F0=byId(opts.first).g, d0=Math.hypot(p0.g.x-F0.x,p0.g.y-F0.y), d1=Math.hypot(p1.g.x-F0.x,p1.g.y-F0.y); ord=d0<=d1?[p0,p1]:[p1,p0]; }
       else if(opts&&opts.c1!==undefined){ /* tkz-euclide lists circle-circle roots with the first to the left of the line of centres */
         var O1=byId(opts.c1).g, O2=byId(opts.c2).g, side=function(p){ return (O2.x-O1.x)*(p.g.y-O1.y)-(O2.y-O1.y)*(p.g.x-O1.x); };
         ord=side(p0)<side(p1)?[p0,p1]:[p1,p0]; }   /* canvas y points down, so "left" has the smaller cross product */
       else if(e0&&!e1) ord=[p1,p0];
-      names.forEach(function(n,i){ if(!n) return; var e=existing(ord[i]); if(e&&e.label===norm(n)){ ord[i].hidden=true; return; } name(ord[i],n); });
+      names.forEach(function(n,i){ if(!n) return; var e=existing(ord[i]); if(e&&norm(e.label)===norm(n)){ ord[i].hidden=true; return; } name(ord[i],n); });
       ord.slice(names.length).forEach(function(p){ p.hidden=true; });
       ord.forEach(function(p){ if(!p.label) p.hidden=true; });
     };
@@ -161,7 +162,7 @@ window.TKZ=(function(){
       var id=circleFor(c.c,c.t); var co=byId(id); co.invis=false; dress(co,c.sty); }catch(e){} });
     /* points the book never labels are helpers */
     var anyLab=Object.keys(labelled).length>0;   /* figures labelled with TikZ nodes instead: keep every named point */
-    objs.forEach(function(o){ if(o.type==='point'&&o.label&&anyLab&&!labelled[o.label]) o.hidden=true; if(o.type==='point'&&!o.label) o.hidden=true; });
+    objs.forEach(function(o){ if(o.type==='point'&&o.label&&anyLab&&!labelled[norm(o.label)]) o.hidden=true; if(o.type==='point'&&!o.label) o.hidden=true; });
     compute();
     groups=[objs.length]; picks=[];
     var bad=objs.filter(function(o){ return o.type==='point'&&!o.hidden&&(!o.g||!isFinite(o.g.x)); }).map(function(o){return o.label;});
