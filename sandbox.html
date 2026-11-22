@@ -1146,22 +1146,73 @@ function goalLabels(r){
   return out; }
 function goalOverlap(r,f){ var g=goalLabels(r); return factPts(r,f).filter(function(l){ return g.indexOf(l)>=0; }).length; }
 function nudgeOf(r){
-  if(r.aux) return 'One extra point opens this up. Think about '+r.aux.what+'.';
+  if(r.aux) return 'One extra point helps here. Think about '+r.aux.what+'.';
   var pri={centre:6,sim:5,cyc:4,cong:3,perp:2,para:2,coll:1};
   /* the most telling step: one that shares points with the claim, then the more striking kind, then the later step */
-  var key=r.proof.map(function(f,i){ return {f:f,s:goalOverlap(r,f)*10+(pri[f.type]||0)+i*0.01}; }).sort(function(a,b){ return b.s-a.s; }).map(function(x){return x.f;})[0];
+  /* steps that need real work beat facts the construction hands over, and a circle already on the page is no hint */
+  var key=(r.shown||r.proof).map(function(f,i){ var circ=(f.type==='centre'||f.type==='cyc'), drawn=circ&&circleDrawn(factPts(r,f).slice(f.type==='centre'?1:0));
+    return {f:f,s:goalOverlap(r,f)*10+(pri[f.type]||0)+(basicStep(r,f)?0:5)-(drawn?12:0)+i*0.01}; }).sort(function(a,b){ return b.s-a.s; }).map(function(x){return x.f;})[0];
   if(!key){ var u=keyGivens(r.engine.finalUsing||[]);
-    return u.length?'Use the given facts: '+u.slice(0,3).join('; ')+'.':'Nothing new is needed: chase angles through the construction.'; }
+    return u.length?'Start from what the construction gives us. '+u.slice(0,3).map(function(t){ return t.charAt(0).toUpperCase()+t.slice(1)+'.'; }).join(' '):'Nothing new is needed. Chase angles through the construction.'; }
   var d=factLabels(r,key);
   switch(key.type){
-    case 'centre': return 'Which point is the same distance from '+d.S.join(', ')+'?';
-    case 'sim': return 'Look for a triangle similar to '+d.A+'.';
+    case 'centre': return 'Which point is the same distance from '+andList(d.S)+'?';
+    case 'sim': return 'Is there a triangle similar to '+d.A.replace('\u25B3','')+'?';
     case 'cyc': { var sh=d.t.filter(function(l){ return goalLabels(r).indexOf(l)>=0; });
-      return sh.length>=2?'Look for a circle through '+sh.slice(0,2).join(' and ')+' and two other points of the figure.':'Look for four points on one circle. One of them is '+(sh[0]||d.t[0])+'.'; }
-    case 'cong': return 'Compare the lengths '+d.s+' and '+d.t+'.';
-    case 'perp': case 'para': return 'Look at the direction of '+d.u+'.';
-    case 'coll': return 'Show first that '+d.t.join(', ')+' lie on one line.';
+      return sh.length>=2?'Can you find a circle through '+sh[0]+', '+sh[1]+' and two more points of the figure?':'Look for four points on one circle, with '+(sh[0]||d.t[0])+' among them.'; }
+    case 'cong': return 'Try comparing '+d.s+' with '+d.t+'.';
+    case 'perp': case 'para': return 'What can we say about the direction of '+d.u+'?';
+    case 'coll': return 'First show that '+andList(d.t)+' lie on one line.';
   } return 'Chase angles through the construction.'; }
+/* ---- hint text in a teacher's voice: statements and reasons as short sentences ---- */
+function andList(a){ a=a.slice(); return a.length<2?a.join(''):a.slice(0,-1).join(', ')+' and '+a[a.length-1]; }
+function sayFact(t){ t=String(t);
+  var m=/^(.*) are (concyclic|collinear)$/.exec(t); if(m) return andList(m[1].split(', '))+' lie on one '+(m[2]==='concyclic'?'circle':'line');
+  m=/^(\S+) is the centre of the circle through (.*)$/.exec(t); if(m) return m[1]+' is the centre of the circle through '+andList(m[2].split(', '));
+  m=/^△(\S+) ∼ △(\S+)$/.exec(t); if(m) return 'Triangles '+m[1]+' and '+m[2]+' are similar';
+  m=/^(\S+) lies on circle centre (\S+)$/.exec(t); if(m) return m[1]+' lies on the circle centred '+m[2];
+  m=/^⟂ through (\S+) is perpendicular to (\S+)$/.exec(t); if(m) return 'the line through '+m[1]+' is perpendicular to '+m[2];
+  m=/^(.*) lie on (circle .*)$/.exec(t); if(m&&m[1].indexOf(', ')>0) return andList(m[1].split(', '))+' lie on '+m[2];
+  return t; }
+function cap(t){ return t.charAt(0).toUpperCase()+t.slice(1); }
+/* an angle name back to its value, to spot right angles */
+function angDeg(r,name){ var e=r.engine, m=/^∠\((.+), (.+), (.+)\)$/.exec(name)||/^∠(.+)$/.exec(name); if(!m) return null;
+  var parts=m.length===4?[m[1],m[2],m[3]]:null;
+  if(!parts){ var names=e.pts.map(function(p){return p.label;}).filter(Boolean).sort(function(x,y){return y.length-x.length;}), w=m[1], k=0; parts=[];
+    while(k<w.length&&parts.length<4){ var hit=names.filter(function(n){ return w.substr(k,n.length)===n; })[0]; if(!hit) return null; parts.push(hit); k+=hit.length; } }
+  if(parts.length!==3) return null;
+  var ix=parts.map(function(l){ for(var i=0;i<e.pts.length;i++) if(e.pts[i].label===l) return i; return -1; }); if(ix.some(function(i){return i<0;})) return null;
+  var A=e.pts[ix[0]].g,V=e.pts[ix[1]].g,B=e.pts[ix[2]].g, a=Math.atan2(A.y-V.y,A.x-V.x)-Math.atan2(B.y-V.y,B.x-V.x);
+  a=Math.abs(a*180/Math.PI)%360; if(a>180) a=360-a; return {deg:a,ends:[parts[0],parts[2]]}; }
+function sayStep(r,f){
+  var d=factLabels(r,f), why=String(f.reason||''), st=sayFact(f.text), m;
+  if(f.type==='cyc'){ var pts=andList(d.t);
+    if((m=/^angles on the same chord: (.+) = (.+)$/.exec(why))){ var a1=angDeg(r,m[1]), a2=angDeg(r,m[2]);
+      if(a1&&a2&&Math.abs(a1.deg-90)<1e-6&&Math.abs(a2.deg-90)<1e-6) return m[1]+' = '+m[2]+' = 90°, so '+pts+' lie on the circle with diameter '+a1.ends.join('')+'.';
+      return 'Since '+m[1]+' = '+m[2]+', the points '+pts+' lie on one circle.'; }
+    if((m=/^opposite angles: (.+)$/.exec(why))) return 'Since '+m[1]+', the points '+pts+' lie on one circle.'; }
+  if(f.type==='cong'){ var eq=d.s+' = '+d.t, inc=(f.using||[]).map(function(u){ return /^(\S+) is the incentre of/.exec(u); }).filter(Boolean)[0];
+    if(inc&&d.s.indexOf(inc[1])===0&&d.t.indexOf(inc[1])===0) return d.s+' and '+d.t+' are both radii of the incircle, so '+eq+'.';
+    if((m=/^equal base angles (.+) = (.+)$/.exec(why))) return 'Since '+m[1]+' = '+m[2]+', we get '+eq+'.';
+    return 'Chasing lengths, we get '+eq+'.'; }
+  if(f.type==='sim'){ var c=why.indexOf(', '); return 'Since '+(c>=0?why.slice(c+2):why)+', '+st.charAt(0).toLowerCase()+st.slice(1)+'.'; }
+  if(f.type==='centre') return why==='angle at the centre'?'The angle at '+d.x+' is twice the angle on the circle, so '+st+'.'
+                                                             :d.x+' is equally far from '+andList(d.S)+', so '+d.x+' is their centre.';
+  if((m=/^both equidistant from (\S+) and (\S+)$/.exec(why))) return 'Both ends of '+(d.u||'')+' are equidistant from '+m[1]+' and '+m[2]+', so '+st+'.';
+  return 'Chasing angles, we get '+(st.indexOf(' lie on ')>=0?'that '+st:st)+'.'; }
+/* helper points the page hides still need a sentence when the hints use them */
+function helperNotes(r,labels){ var e=r.engine, out=[];
+  labels.forEach(function(l){ var o=objs.filter(function(q){return q.type==='point'&&q.label===l;})[0]; if(!o||!o.hidden) return;
+    var hs=(e.facts||[]).filter(function(f){ return f.hyp&&typeof f.text==='string'&&f.text.indexOf(l+' is ')===0; });
+    var h=hs.filter(function(f){ return f.text.indexOf('centre of the circle')<0; })[0]||hs[0];
+    if(h&&out.indexOf(h.text)<0) out.push(h.text); });
+  return out.length?['Here '+andList(out)+'.']:[]; }
+/* a step that needs nothing but the construction */
+function basicStep(r,f){ var F=r.engine.facts||[]; return (f.deps||[]).every(function(id){ return F[id]&&F[id].hyp; }); }
+/* circles that are already on the page do not need drawing again */
+function circleDrawn(labels){ var P0=labels.map(function(l){ return objs.filter(function(q){return q.type==='point'&&q.label===l;})[0]; }).filter(Boolean);
+  return objs.some(function(c){ if(c.type!=='circle'||c.hidden||!c.g||!isFinite(c.g.r)) return false;
+    return P0.filter(function(q){ return Math.abs(Math.hypot(q.g.x-c.g.cx,q.g.y-c.g.cy)-c.g.r)<1e-6*Math.max(1,c.g.r); }).length>=3; }); }
 /* the points a step is about, to light them up in the figure */
 function factPts(r,f){ var e=r.engine, out=[], add=function(i){ if(typeof i==='number'&&e.pts[i]) out.push(e.lab(i)); };
   (function walk(x){ if(x==null) return; if(typeof x==='number') add(x); else if(Array.isArray(x)) x.forEach(walk); else if(typeof x==='object'){ if('i' in x) add(x.i); if('j' in x) add(x.j); } })(f.args);
@@ -1175,36 +1226,47 @@ function renderHint(){
   var out=document.getElementById('hintout'); if(!out) return; var r=HINT.res;
   if(HILITE.length) hilite([]);
   if(!r){ out.innerHTML=''; return; }
-  if(r.unsupported){ out.innerHTML='<div class="hc-status"><span class="hc-chip no">Not readable yet</span>The prover cannot read this kind of statement. Try another one, or explore extra constructions below.</div>'; return; }
-  if(r.none){ out.innerHTML='<div class="hc-status"><span class="hc-chip no">No proof found</span>Angle and length chasing did not finish, even with one extra point. The explorer below lists constructions that create exact relations; one may start a proof.</div>'; document.getElementById('explore').open=true; return; }
-  var pf=r.proof, pre=r.pre?'Let '+r.pre.label+' be '+r.pre.what+'; we show '+r.pre.label+' lies on the third line. ':'';
+  if(r.unsupported){ out.innerHTML='<div class="hc-status"><span class="hc-chip no">Not readable yet</span>The prover cannot read this kind of statement yet. Try another one, or look through the extra constructions below.</div>'; return; }
+  if(r.none){ out.innerHTML='<div class="hc-status"><span class="hc-chip no">No proof found</span>Chasing angles and lengths did not get there, even with one extra point. The constructions below create exact relations in the figure, and one of them may start a proof.</div>'; document.getElementById('explore').open=true; return; }
+  var pf=r.proof, pre=r.pre?'Let '+r.pre.label+' be '+r.pre.what+'. We show that '+r.pre.label+' lies on the third line. ':'';
   /* the claim itself is the last line of the outline, not a key step */
   var sameClaim=function(t){ var k=function(x){ return String(x).split(/ = | ∥ | ⟂ /).map(function(y){return y.trim();}).sort().join('|'); }; return k(t)===k(r.goal.text); };
-  pf=pf.filter(function(f,i){ return !(i===pf.length-1&&sameClaim(f.text)); });
+  /* a last step that contains the claim (the circle through all the points, say) says the claim again */
+  var gl=goalLabels(r), holds=function(f){ if(f.type!=='centre'&&f.type!=='cyc') return false; var q=factPts(r,f); return gl.length>=2&&gl.every(function(l){ return q.indexOf(l)>=0; }); };
+  pf=pf.filter(function(f,i){ return !(i===pf.length-1&&(sameClaim(f.text)||holds(f))); });
   /* the circle worth drawing is the one closest to the claim */
-  var circ=pf.map(function(f,i){ return {f:f,s:(f.type==='centre'||f.type==='cyc')?goalOverlap(r,f)*10+(f.type==='centre'?1:0)+i*0.01:-1}; }).filter(function(x){return x.s>=0;}).sort(function(a,b){ return b.s-a.s; }).map(function(x){return x.f;})[0];
+  var circ=pf.map(function(f,i){ var ok=(f.type==='centre'||f.type==='cyc')&&!circleDrawn(factPts(r,f).slice(f.type==='centre'?1:0));
+    return {f:f,s:ok?goalOverlap(r,f)*10+(f.type==='centre'?1:0)+(basicStep(r,f)?0:5)+i*0.01:-1}; }).filter(function(x){return x.s>=0;}).sort(function(a,b){ return b.s-a.s; }).map(function(x){return x.f;})[0];
+  r.shown=pf;
   var centre=circ&&circ.type==='centre'?circ:null, cycl=circ&&circ.type==='cyc'?circ:null;
-  var how=(r.goal.l&&r.goal.l.length)?'chasing lengths':'chasing angles';
+  var how=(r.goal.l&&r.goal.l.length)?'length':'angle';
+  var allPts=[]; pf.forEach(function(f){ factPts(r,f).forEach(function(l){ if(allPts.indexOf(l)<0) allPts.push(l); }); });
+  var notes=helperNotes(r,allPts), noteHTML=notes.length?'<p class="hc-small">'+subHTML(notes.join(' '))+'</p>':'';
+  var circPts=circ?factPts(r,circ):[], cn2=helperNotes(r,circPts), circNote=cn2.length?'<p class="hc-small">'+subHTML(cn2.join(' '))+'</p>':'';
   var lvl=Math.min(HINT.level,4), view=Math.min(HINT.view==null?lvl:HINT.view,lvl);
   var body='';
-  if(view===0) body='<p class="hc-small">Each hint gives away a little more: a nudge, the construction, the key steps, then the full outline. Stop as soon as you can finish on your own.</p>';
+  if(view===0) body='<p class="hc-small">Each hint gives away a little more than the last. Start with the nudge, and stop as soon as you can finish the proof yourself.</p>';
   if(view===1) body='<p class="hc-big">'+subHTML(pre+nudgeOf(r))+'</p>';
   if(view===2){ var con, btn='';
     if(r.aux){ con='Let '+r.label+' be '+r.aux.what+'.'; btn='<button class="btn2 quiet" id="hintdraw">Add '+esc(r.label)+' to the figure</button>'; }
     else if(centre){ var d=factLabels(r,centre); con='Draw the circle centred '+d.x+' through '+d.S.join(', ')+'.'; btn='<button class="btn2 quiet" id="hintdraw">Draw the circle</button>'; }
-    else if(cycl){ var dc=factLabels(r,cycl); con='Nothing new to construct, but draw the circle through '+dc.t.join(', ')+': the proof runs through it.'; btn='<button class="btn2 quiet" id="hintdraw">Draw the circle</button>'; }
-    else con='No extra construction is needed: everything happens in the figure as drawn.';
-    body='<p class="hc-big">'+subHTML(con)+'</p>'+btn; }
-  if(view===3) body=pf.length?'<ol class="hc-list">'+pf.map(function(f,i){ return '<li tabindex="0" data-step="'+i+'">'+subHTML(f.text)+'</li>'; }).join('')+'</ol><p class="hc-small">Point at a step to see its points in the figure.</p>'
-                            :'<p class="hc-big">None: the statement follows from the construction directly.</p>';
-  if(view===4){ var giv=function(list){ var k=keyGivens(list||[]); return k.length?'<details><summary>Givens used</summary>'+esc(k.join('; '))+'</details>':''; };
-    body='<ol class="hc-outline">'+pf.map(function(f,i){ return '<li tabindex="0" data-step="'+i+'">'+subHTML(f.text)+'<span class="why">'+esc(f.reason||'')+'</span>'+giv(f.using)+'</li>'; }).join('')
-      +'<li class="concl" tabindex="0" data-step="goal">'+subHTML((pf.length?'From these, ':'')+r.goal.text+', by '+how+'.')+giv(r.engine.finalUsing)+'</li></ol>'; }
+    else if(cycl){ var dc=factLabels(r,cycl); con='Nothing new to construct. Draw the circle through '+andList(dc.t)+', though, because the proof runs through that circle.'; btn='<button class="btn2 quiet" id="hintdraw">Draw the circle</button>'; }
+    else con='No extra construction is needed. Everything happens in the figure as drawn.';
+    if(centre) con='Draw the circle centred '+factLabels(r,centre).x+' through '+andList(factLabels(r,centre).S)+'.';
+    body='<p class="hc-big">'+subHTML(con)+'</p>'+btn+(r.aux?'':circNote); }
+  var easy=pf.filter(function(f){ return basicStep(r,f); }), hard=pf.filter(function(f){ return !basicStep(r,f); });
+  if(!hard.length){ hard=easy; easy=[]; }
+  if(view===3) body=pf.length?noteHTML+(easy.length?'<p class="hc-small">Straight from the construction, '+subHTML(andList(easy.map(function(f){ return sayFact(f.text); })))+'.</p>':'')
+      +'<p class="hc-small">The real work is in these steps. Prove them in order, and the claim follows. Hover over a step to see its points.</p><ol class="hc-list">'+hard.map(function(f){ return '<li tabindex="0" data-step="'+pf.indexOf(f)+'">'+subHTML(cap(sayFact(f.text)))+'.</li>'; }).join('')+'</ol>'
+                            :'<p class="hc-big">There are no intermediate steps. The claim follows from the construction directly.</p>';
+  if(view===4){ var giv=function(list){ var k=keyGivens(list||[]); return k.length?'<details><summary>From the construction</summary>'+subHTML(k.map(function(t){ return cap(sayFact(t))+'.'; }).join(' '))+'</details>':''; };
+    body=noteHTML+'<ol class="hc-outline">'+pf.map(function(f,i){ return '<li tabindex="0" data-step="'+i+'">'+subHTML(cap(sayStep(r,f)))+giv(f.using)+'</li>'; }).join('')
+      +'<li class="concl" tabindex="0" data-step="goal">'+subHTML(pf.length?'Putting these together, a short '+how+' chase shows that '+sayFact(r.goal.text).replace(/^Triangles/,'triangles')+'.':cap(sayFact(r.goal.text))+' follows from the construction by a short '+how+' chase.')+giv(r.engine.finalUsing)+'</li></ol>'; }
   var track='<ol class="hc-track" aria-label="Hint steps">'+HSTEPS.map(function(t,i){ var k=i+1;
     return '<li><button type="button" data-v="'+k+'" aria-current="'+(k===view?'step':'false')+'" class="'+(k===view?'now':k<=lvl?'seen':'')+'"'+(k>lvl?' disabled':'')+'><b>'+k+'</b>'+t+'</button></li>'; }).join('')+'</ol>';
   var next=lvl<4?'<button class="btn2" id="hintnext">'+(lvl===0?'Show hint 1: nudge':'Reveal hint '+(lvl+1)+': '+HSTEPS[lvl].toLowerCase())+'</button>':'';
   var back=view>1?'<button class="btn2 quiet" id="hintback">Back</button>':'';
-  out.innerHTML='<div class="hc-status"><span class="hc-chip ok">Proof found</span>'+pf.length+' step'+(pf.length===1?'':'s')+' · '+(r.aux?'one extra construction':'uses the figure as drawn')+'</div>'
+  out.innerHTML='<div class="hc-status"><span class="hc-chip ok">Proof found</span>'+pf.length+' step'+(pf.length===1?'':'s')+' · '+(r.aux?'one extra point':'no new points needed')+'</div>'
     +track+((back||next)?'<div class="hc-nav">'+back+next+'</div>':'')+'<div class="hc-body">'+body+'</div>';   /* buttons sit above the hint, so they never move with its length */
   out.querySelectorAll('.hc-track button').forEach(function(bt){ bt.addEventListener('click',function(){ HINT.view=+bt.dataset.v; renderHint(); }); });
   /* no scrolling on a reveal: the button just pressed stays under the pointer */
@@ -1220,7 +1282,7 @@ function renderHint(){
     if(r.pre&&!objs.some(function(o){return o.label===r.pre.label;})) auxPush(r.pre,r.pre.label);
     if(r.aux){ var lab=r.label; if(objs.some(function(o){return o.label===lab;})) lab=freeLabel(); auxPush(r.aux,lab); objs[objs.length-1].accent=true; }
     else if(centre||cycl){ var d2=factLabels(r,centre||cycl), pts3=(centre?d2.S:d2.t).slice(0,3), ids=pts3.map(function(l){ var q=objs.filter(function(o){return o.type==='point'&&o.label===l;})[0]; return q&&q.id; });
-      if(ids.every(function(x){return x!=null;})) add({type:'circle',kind:'circum',of:ids,accent:true}); }
+      if(ids.every(function(x){return x!=null;})){ ids.forEach(function(id){ var q=byId(id); if(q&&q.hidden) q.hidden=false; }); add({type:'circle',kind:'circum',of:ids,accent:true}); } }
     var keep=HINT.res, lv=HINT.level, vw=HINT.view; finish(objs.length-n); HINT.res=keep; HINT.level=lv; HINT.view=vw; HINT.n=objs.length; renderHint(); });
 }
 document.querySelectorAll('#hintsw button').forEach(function(b){ b.addEventListener('click',function(){ setHints(b.getAttribute('data-h')==='on'); }); });
