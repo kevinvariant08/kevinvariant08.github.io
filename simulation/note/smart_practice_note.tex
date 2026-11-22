@@ -1,24 +1,14 @@
 \documentclass[11pt,a4paper]{article}
-\usepackage[margin=2.3cm]{geometry}
-\usepackage{amsmath,amssymb}
-\usepackage{graphicx}
+\usepackage{kevinvariant}
 \usepackage{booktabs}
-\usepackage[hidelinks]{hyperref}
-\usepackage{microtype}
 \graphicspath{{../figures/}}
-\setlength{\parskip}{0.45em}
-\setlength{\parindent}{0pt}
-
-\title{Adaptive TMUA practice from a small, cold-start question bank:\\ a simulation study of Kevinvariant Smart Practice}
-\author{Kevin Hu}
-\date{October 2026}
+\kvset{Smart Practice}{Simulation study}{}
 
 \begin{document}
-\maketitle
-
-\begin{abstract}
+\kvtitle{KEVINVARIANT}{Adaptive TMUA practice from a small, cold-start question bank}{Research note}{A simulation study of Kevinvariant Smart Practice}{October 2026}
+\begin{kvintro}\kvminihead{Abstract}
 Smart Practice is an adaptive practice mode on Kevinvariant, my free TMUA preparation website. It uses item response theory (IRT), the standard method behind adaptive tests such as the GMAT; the method is not new. What is unusual is the setting: 440 original questions, no response data at launch, and a static website with no server of its own. Before any real data exist, I tested the system by simulation. Calibration recovers question difficulty steadily as answers accumulate, and never does worse than the author's ratings it starts from (difficulty error 0.40 with ratings alone, 0.21 at about 145 answers per question). Adaptive selection reaches a standard error of 0.4 on the ability scale (about 0.8 TMUA points) after 11 questions, against 30 for random selection, once the questions are calibrated; on launch day, with ratings only, it needs 23 against more than 30.
-\end{abstract}
+\end{kvintro}
 
 \section{The system}
 

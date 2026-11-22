@@ -114,7 +114,7 @@ PRE = r'''\documentclass[10.5pt,a4paper]{article}
 \titlespacing*{\section}{0pt}{1.6em}{0.8em}\titlespacing*{\subsection}{0pt}{1.2em}{0.4em}
 \pagestyle{fancy}\fancyhf{}
 \renewcommand{\headrulewidth}{0.5pt}\renewcommand{\headrule}{{\color{kvink}\hrule height 0.5pt}}
-\fancyhead[L]{\small\sffamily{\color{kvgreen}\textbf{HU Collection}}\color{kvgrey}\ $\cdot$ Kevinvariant Pathways}
+\fancyhead[L]{\small\sffamily{\color{kvgreen}\textbf{Kevinvariant}}\color{kvgrey}\ $\cdot$ Pathways}
 \fancyhead[R]{\small\sffamily\color{kvgrey}<<LEVEL>> $\cdot$ <<STRAND>>}
 \fancyfoot[L]{\scriptsize\sffamily\color{kvgrey}<<ID>> $\cdot$ \copyright\ <<YEAR>> Kevin Hu $\cdot$ kevinvariant08.github.io $\cdot$ CC BY-NC-ND 4.0}
 \fancyfoot[R]{\scriptsize\sffamily\color{kvgrey}\thepage\,/\,\pageref{LastPage}}
@@ -141,7 +141,7 @@ def build(uid, out_dir=None):
     chip = 'Level %d %s $\\cdot$ %s' % (u['level'], level['name'], strand) + (' $\\cdot$ Beyond the textbook' if extra else '')
     logo = os.path.join(ROOT, 'apple-touch-icon.png')
     t = [pre, r'\thispagestyle{first}',
-         r'\noindent\begin{minipage}[t]{0.7\linewidth}\vspace{0pt}{\scriptsize\sffamily\color{kvgreen}\textbf{HU COLLECTION}\color{kvgrey}\ $\cdot$ KEVINVARIANT PATHWAYS}\\[12pt]'
+         r'\noindent\begin{minipage}[t]{0.7\linewidth}\vspace{0pt}{\scriptsize\sffamily\color{kvgreen}\textbf{KEVINVARIANT}\color{kvgrey}\ $\cdot$ PATHWAYS}\\[12pt]'
          r'{\raggedright\sffamily\fontsize{20}{25}\selectfont\bfseries\color{kvink} %s\par}\vspace{6pt}'
          r'{\scriptsize\sffamily\colorbox{kvink}{\color{white}\,%s\,}\ \ \color{kvgrey}%s}\end{minipage}\hfill'
          r'\begin{minipage}[t]{0.25\linewidth}\vspace{0pt}\raggedleft\includegraphics[width=1.25cm]{%s}\\[5pt]{\small Kevin Hu}\\{\small\color{kvgrey}%s}\end{minipage}\par\vspace{14pt}'

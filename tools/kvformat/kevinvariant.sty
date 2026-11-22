@@ -1,0 +1,64 @@
+% kevinvariant.sty -- the Kevinvariant handout format.
+% Used by every PDF handout on kevinvariant08.github.io: mock papers, worked solutions,
+% Pathways units, topic notes and olympiad solution sets.
+%
+%   \kvset{series}{running head, right}{footer id, may be empty}
+%   \kvtitle{kicker}{title}{chip}{chip text}{date}
+%   environments: kvintro, kvstatement, keybox, egbox, warnbox
+%   \kvq{n} question number, \kvdone end of a solution
+%
+% (c) 2026 Kevin Hu, Kevinvariant.
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{kevinvariant}[2026/11/23 Kevinvariant handout format]
+\RequirePackage[a4paper,margin=2.2cm,top=2.3cm,bottom=2.3cm,headheight=14pt]{geometry}
+\RequirePackage[T1]{fontenc}
+\RequirePackage{mathpazo}
+\RequirePackage[scaled=0.92]{helvet}
+\RequirePackage{amsmath,amssymb,graphicx,xcolor}
+\RequirePackage[export]{adjustbox}
+\RequirePackage[most]{tcolorbox}
+\RequirePackage{titlesec,fancyhdr,enumitem,lastpage,array,tabularx,needspace}
+\RequirePackage[expansion=false]{microtype}
+\RequirePackage[hidelinks]{hyperref}
+\definecolor{kvink}{HTML}{1B1E33}\definecolor{kvgreen}{HTML}{2A7A54}\definecolor{kvgrey}{HTML}{6B7084}
+\definecolor{kvlink}{HTML}{2F3FA8}\definecolor{kvrule}{HTML}{DDDEE5}
+\definecolor{kvintrobg}{HTML}{F8F8F9}\definecolor{kvstmtbg}{HTML}{F7F7FC}\definecolor{kvstmtline}{HTML}{B8BCE0}\definecolor{kvstmtbar}{HTML}{7C82C8}
+\definecolor{kvkeybg}{HTML}{F2F7F5}\definecolor{kvkeyline}{HTML}{B4D0C3}
+\definecolor{kvwarnbg}{HTML}{FCF6F8}\definecolor{kvwarnline}{HTML}{E8B7C4}\definecolor{kvwarnbar}{HTML}{C9677F}
+\linespread{1.05}\setlength{\parindent}{0pt}\setlength{\parskip}{0.5em}
+\setlength{\emergencystretch}{3em}
+\setlist{itemsep=0.25em,topsep=0.3em}
+\tcbset{kvside/.style={enhanced,breakable,boxrule=0.4pt,leftrule=2.6pt,arc=0pt,left=8pt,right=8pt,top=5pt,bottom=5pt,
+  before skip=0.8em,after skip=0.8em,before upper={\setlength{\parskip}{0.45em}}}}
+\newtcolorbox{kvintro}{enhanced,colback=kvintrobg,colframe=kvrule,boxrule=0.4pt,arc=0pt,left=10pt,right=10pt,top=7pt,bottom=7pt,
+  fontupper=\small,before upper={\setlength{\parskip}{0.4em}}}
+\newtcolorbox{kvstatement}{kvside,colback=kvstmtbg,colframe=kvstmtline,borderline west={2.6pt}{0pt}{kvstmtbar}}
+\newtcolorbox{keybox}{kvside,colback=kvkeybg,colframe=kvkeyline,borderline west={2.6pt}{0pt}{kvgreen}}
+\newtcolorbox{egbox}{kvside,colback=kvstmtbg,colframe=kvstmtline,borderline west={2.6pt}{0pt}{kvstmtbar}}
+\newtcolorbox{warnbox}{kvside,colback=kvwarnbg,colframe=kvwarnline,borderline west={2.6pt}{0pt}{kvwarnbar}}
+\titleformat{\section}{\sffamily\large\bfseries\color{kvink}}{\colorbox{kvgreen}{\makebox[1.1em]{\color{white}\thesection}}}{0.6em}{}[\vspace{1pt}{\color{kvgreen}\titlerule[0.6pt]}]
+\titleformat{\subsection}{\sffamily\normalsize\bfseries\color{kvink}}{\color{kvgreen}\thesubsection}{0.6em}{}
+\titlespacing*{\section}{0pt}{1.6em}{0.8em}\titlespacing*{\subsection}{0pt}{1.2em}{0.4em}
+\def\kv@series{}\def\kv@head{}\def\kv@id{}
+\newcommand{\kvset}[3]{\def\kv@series{#1}\def\kv@head{#2}\def\kv@id{#3}}
+\newcommand{\kv@foot}{\scriptsize\sffamily\color{kvgrey}\ifx\kv@id\@empty\else\kv@id\ $\cdot$ \fi\copyright\ 2026 Kevin Hu $\cdot$ kevinvariant08.github.io $\cdot$ CC BY-NC-ND 4.0}
+\pagestyle{fancy}\fancyhf{}
+\renewcommand{\headrulewidth}{0.5pt}\renewcommand{\headrule}{{\color{kvink}\hrule height 0.5pt}}
+\fancyhead[L]{\small\sffamily{\color{kvgreen}\textbf{Kevinvariant}}\ifx\kv@series\@empty\else\color{kvgrey}\ $\cdot$ \kv@series\fi}
+\fancyhead[R]{\small\sffamily\color{kvgrey}\kv@head}
+\fancyfoot[L]{\kv@foot}
+\fancyfoot[R]{\scriptsize\sffamily\color{kvgrey}\thepage\,/\,\pageref{LastPage}}
+\fancypagestyle{first}{\fancyhf{}\renewcommand{\headrulewidth}{0pt}\renewcommand{\headrule}{}
+  \fancyfoot[L]{\kv@foot}\fancyfoot[R]{\scriptsize\sffamily\color{kvgrey}\thepage\,/\,\pageref{LastPage}}}
+\newcommand{\kvlogo}{kv-logo.png}
+% \kvtitle{kicker}{title}{chip}{chip text}{date}
+\newcommand{\kvtitle}[5]{\thispagestyle{first}%
+  \noindent\begin{minipage}[t]{0.72\linewidth}\vspace{0pt}{\scriptsize\sffamily\color{kvgreen}\textbf{#1}}\\[12pt]%
+  {\raggedright\sffamily\fontsize{20}{25}\selectfont\bfseries\color{kvink} #2\par}\vspace{6pt}%
+  {\scriptsize\sffamily\colorbox{kvink}{\color{white}\,#3\,}\ \ \color{kvgrey}#4}\end{minipage}\hfill
+  \begin{minipage}[t]{0.25\linewidth}\vspace{0pt}\raggedleft\IfFileExists{\kvlogo}{\includegraphics[width=1.25cm]{\kvlogo}}{}\\[5pt]%
+  {\small Kevin Hu}\\{\small\color{kvgrey}#5}\end{minipage}\par\vspace{14pt}}
+\newcommand{\kvq}[1]{\colorbox{kvgreen}{\makebox[1.3em]{\sffamily\bfseries\small\color{white}#1}}}
+\newcommand{\kvdone}{{\unskip\nobreak\hfil\penalty50\hskip2em\hbox{}\nobreak\hfil$\blacksquare$\parfillskip=0pt\finalhyphendemerits=0\par}}
+\newcommand{\kvminihead}[1]{\par\medskip{\sffamily\bfseries\color{kvink}#1}\par}
+\endinput
