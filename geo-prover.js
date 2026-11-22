@@ -425,10 +425,14 @@ E.goalFrom=function(key){
     g.text=k[1]+' lies on '+cn(c); return g; }
   /* tangency: the radius to the point of contact is perpendicular, or the tangent-chord angle when no centre is named */
   if(type==='tan'){ var ids3=k[1].split(','), lt=line(ids3[0]), ct=objs.filter(function(o){return o.type==='circle'&&o.id===+ids3[1];})[0]; if(!lt||!ct) return null;
-    var lm=this.members[lt.id]||[], cmm=this.cmembers[ct.id]||[], T=lm.filter(function(x){ return cmm.indexOf(x)>=0; })[0]; if(T===undefined) return null;
+    var lm=this.members[lt.id]||[], cmm=this.cmembers[ct.id]||[], T=lm.filter(function(x){ return cmm.indexOf(x)>=0; })[0];
     var cen2=null; if(ct.kind==='cp'&&ix[ct.c]!==undefined) cen2=ix[ct.c];
     if(ct.kind==='circum') objs.forEach(function(z){ if(z.type==='point'&&z.kind==='ccen'&&sameSet(z.of,ct.of)&&ix[z.id]!==undefined) cen2=ix[z.id]; });
     if(ct.kind==='inc') objs.forEach(function(z){ if(z.type==='point'&&z.kind==='inc'&&sameSet(z.of,ct.of)&&ix[z.id]!==undefined) cen2=ix[z.id]; });
+    /* the contact point built as the foot from the centre: the line is tangent when that foot is at the radius */
+    if(T===undefined&&cen2!==null){ var self2=this, ft=lm.filter(function(x){ var q=self2.pts[x]; return q.kind==='foot'&&ix[q.of[0]]===cen2&&onLineByConstruction(q,lt); })[0], on=cmm.filter(function(x){return x!==ft;})[0];
+      if(ft!==undefined&&on!==undefined){ g.l.push(this.rowLenEq(cen2,ft,cen2,on)); g.text=ln(lt)+' is tangent to '+cn(ct); return g; } }
+    if(T===undefined) return null;
     if(cen2!==null) g.a.push({v:vec([[1,this.d(cen2,T)],[-1,this.dl(lt)]]),c:0.5});
     else { var oth=cmm.filter(function(x){return x!==T;}); if(oth.length<2) return null;
       var v1=vec([[1,this.dl(lt)],[-1,this.d(T,oth[0])],[-1,this.d(oth[1],T)],[1,this.d(oth[1],oth[0])]]), v2=vec([[1,this.dl(lt)],[-1,this.d(T,oth[0])],[1,this.d(oth[1],T)],[-1,this.d(oth[1],oth[0])]]);

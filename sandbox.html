@@ -98,7 +98,7 @@
     .sb .hc-outline details{font-family:var(--sans);font-size:.78rem;color:var(--faint);margin-top:.1rem}
     .sb .hc-outline details summary{cursor:pointer}
     .sb .hc-outline li.concl{font-weight:600}
-    .sb .hc-nav{display:flex;gap:.5rem;justify-content:flex-end;margin-top:.5rem}
+    .sb .hc-nav{display:flex;gap:.5rem;justify-content:flex-end;margin:0 0 .5rem}
     .sb .btn2{font-family:var(--sans);font-size:.9rem;font-weight:500;color:var(--ink);background:transparent;border:1px solid var(--ink);border-radius:2px;padding:.45rem .9rem;cursor:pointer}
     .sb .btn2:hover{background:var(--ink);color:var(--onink)}
     .sb .btn2.quiet{border-color:var(--rule);color:var(--soft);font-weight:400}
@@ -230,7 +230,10 @@ var TOOLS=[
  {h:''},
  {id:'move',name:'Move',sub:'drag free points',need:[]}
 ];
-function nextLabel(){ var s='ABCDEFGHJKLMNPQRSTUVWXYZ'; var i=labels++; return i<s.length?s[i]:s[i%s.length]+Math.floor(i/s.length); }
+function nextLabel(){ var s='ABCDEFGHJKLMNPQRSTUVWXYZ', used={};
+  objs.forEach(function(o){ if(o.label) used[o.label]=1; });   /* a figure imported or built by hand may already use the next name */
+  for(var guard=0;guard<2000;guard++){ var i=labels++, l=i<s.length?s[i]:s[i%s.length]+Math.floor(i/s.length); if(!used[l]) return l; }
+  return 'P'+Date.now()%1000; }
 function labParts(l){ var m=/^([A-Za-z]+?)('*)(?:_?\{?([0-9]+|[A-Za-z]{1,3})\}?)?$/.exec(l||''); if(!m) return {b:l,p:'',s:''};
   var b=m[1],p=m[2],sub=m[3]||''; if(!sub){ var d=/^([A-Za-z])([0-9]+)$/.exec(l); if(d) return {b:d[1],p:'',s:d[2]}; }
   if(sub&&!/_/.test(l)&&!/^[0-9]+$/.test(sub)) return {b:l,p:'',s:''}; return {b:b,p:p,s:sub}; }
@@ -1202,10 +1205,10 @@ function renderHint(){
   var next=lvl<4?'<button class="btn2" id="hintnext">'+(lvl===0?'Show hint 1: nudge':'Reveal hint '+(lvl+1)+': '+HSTEPS[lvl].toLowerCase())+'</button>':'';
   var back=view>1?'<button class="btn2 quiet" id="hintback">Back</button>':'';
   out.innerHTML='<div class="hc-status"><span class="hc-chip ok">Proof found</span>'+pf.length+' step'+(pf.length===1?'':'s')+' · '+(r.aux?'one extra construction':'uses the figure as drawn')+'</div>'
-    +track+'<div class="hc-body">'+body+'</div><div class="hc-nav">'+back+next+'</div>';
+    +track+((back||next)?'<div class="hc-nav">'+back+next+'</div>':'')+'<div class="hc-body">'+body+'</div>';   /* buttons sit above the hint, so they never move with its length */
   out.querySelectorAll('.hc-track button').forEach(function(bt){ bt.addEventListener('click',function(){ HINT.view=+bt.dataset.v; renderHint(); }); });
-  var keepInView=function(){ var c=document.getElementById('hintcard'); if(c&&c.getBoundingClientRect().bottom>window.innerHeight) c.scrollIntoView({block:'end',behavior:reduceMo()?'auto':'smooth'}); };
-  var nx=document.getElementById('hintnext'); if(nx) nx.addEventListener('click',function(){ HINT.level=lvl+1; HINT.view=HINT.level; renderHint(); keepInView(); });
+  /* no scrolling on a reveal: the button just pressed stays under the pointer */
+  var nx=document.getElementById('hintnext'); if(nx) nx.addEventListener('click',function(){ HINT.level=lvl+1; HINT.view=HINT.level; renderHint(); });
   var bk=document.getElementById('hintback'); if(bk) bk.addEventListener('click',function(){ HINT.view=view-1; renderHint(); });
   /* steps light up their points */
   out.querySelectorAll('[data-step]').forEach(function(li){ var k=li.dataset.step;
@@ -1230,7 +1233,8 @@ document.getElementById('solve').addEventListener('click',function(){
   out.innerHTML='<div class="hc-status">Chasing angles and lengths …</div>';
   setTimeout(function(){
     proveGoal(key,function(r){ HINT.busy=false; btn.disabled=false; HINT.res=r; HINT.level=0; HINT.view=0; HINT.n=objs.length; renderHint();
-      var c=document.getElementById('hintcard'); if(c&&c.getBoundingClientRect().bottom>window.innerHeight) c.scrollIntoView({block:'end',behavior:reduceMo()?'auto':'smooth'}); },
+      /* after Find a proof, scroll only if the first hint button is out of sight, and only as far as that */
+      var st=document.querySelector('#hintout .hc-nav')||document.querySelector('#hintout .hc-status'); if(st&&st.getBoundingClientRect().bottom>window.innerHeight) st.scrollIntoView({block:'nearest',behavior:reduceMo()?'auto':'smooth'}); },
       function(i,n){ out.innerHTML='<div class="hc-status">Not provable from the figure as drawn. Trying extra constructions, '+i+' of '+n+' …</div>'; });
   },20);
 });
@@ -1347,7 +1351,7 @@ svg.addEventListener('pointerup',function(e){ if(!pan) return; pan=null; svg.sty
 renderTools(); draw();
 (function(){ var k=decodeURIComponent(location.hash.slice(1)); if(k&&DEMOS[k]){ DEMOS[k](); if(typeof fitView==='function') fitView(); } })();
 </script>
-<script src="geo-prover.js?v=20261122e"></script>
+<script src="geo-prover.js?v=20261123a"></script>
 <script src="tkz-import.js?v=20261122h"></script>
 <script src="site.js?v=20261118b"></script>
 </body>
