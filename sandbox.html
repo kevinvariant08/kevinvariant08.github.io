@@ -116,6 +116,11 @@
           <p style="font-size:.9rem;color:var(--soft)">Requires <code>\usepackage{tkz-euclide}</code>. Constructed objects come out as constructions, so the figure stays exact if you move a free point in LaTeX.</p>
           <textarea id="tex" readonly spellcheck="false"></textarea>
           <div class="row"><button class="btn2 quiet" id="copy">Copy code</button><span id="copied" style="font-size:.85rem;color:var(--faint)"></span></div>
+          <h2 style="font-size:1.1rem;margin:1.4rem 0 .4rem">Import from tkz-euclide</h2>
+          <p style="font-size:.9rem;color:var(--soft)">Paste a <code>tikzpicture</code> built with tkz-euclide. Midpoints, centres, feet, reflections, homotheties, rotations, perpendiculars, bisectors, tangents and intersections come in as constructions, so the page can drag the figure, find its relations and prove them. Points the code never labels stay as hidden helpers.</p>
+          <textarea id="texin" spellcheck="false" placeholder="\tkzDefPoint(0,0){B} \tkzDefPoint(6,0){C} \tkzDefPoint(2,4){A}&#10;\tkzDefTriangleCenter[ortho](A,B,C) \tkzGetPoint{H}&#10;..."></textarea>
+          <div class="row"><button class="btn2" id="texload">Load figure</button></div>
+          <div id="texnote" class="hintnote" aria-live="polite"></div>
         </div>
       </div>
 
@@ -1019,6 +1024,21 @@ function renderAux(res,label,aimText){
   }); });
 }
 document.getElementById('suggest').addEventListener('click',suggestAux);
+/* ---------- Import from tkz-euclide ---------- */
+document.getElementById('texload').addEventListener('click',function(){
+  var code=document.getElementById('texin').value, note=document.getElementById('texnote');
+  if(!/\\tkz|\\coordinate/.test(code)){ note.textContent='Paste tkz-euclide code first: it should contain commands such as \\tkzDefPoint.'; return; }
+  var r;
+  try{ r=TKZ.build(code); }catch(e){ note.textContent='Could not read that code: '+e; return; }
+  hideFigInfo(); document.getElementById('demo').value='';
+  stableSet=null; fitView(); draw(); perturbTest(); renderRelations();
+  var shown=objs.filter(function(o){return o.type==='point'&&!o.hidden;}).length;
+  var msg='Loaded '+shown+' labelled point'+(shown===1?'':'s')+'.';
+  if(r.nonfinite.length) msg+=' Could not place '+r.nonfinite.join(', ')+'.';
+  if(r.unsupported.length) msg+=' Skipped '+r.unsupported.length+' command'+(r.unsupported.length===1?'':'s')+' with no construction behind them: '+r.unsupported.slice(0,4).map(function(u){return u.replace(/\s+/g,' ');}).join('; ')+(r.unsupported.length>4?' \u2026':'')+'.';
+  note.textContent=msg;
+  setStatus('Imported from tkz-euclide. Drag the free points to test the figure.');
+});
 /* ---------- Hints: prove the chosen statement, then reveal the proof one layer at a time ----------
    The engine in geo-prover.js chases angles and lengths from what the construction says. If the figure as
    drawn is not enough, it tries one extra point at a time (feet, midpoints, centres, reflections,
@@ -1066,9 +1086,9 @@ function proveGoal(key,done,progress){
 function factLabels(r,f){ var e=r.engine, L=function(i){ return e.lab(i); };
   switch(f.type){
     case 'centre': return {x:L(f.args[0]),S:f.args.slice(1).map(L)};
-    case 'sim': return {A:f.args[0].map(L).join(''),B:f.args[1].map(L).join('')};
+    case 'sim': return {A:e.tri(f.args[0]),B:e.tri(f.args[1])};
     case 'cyc': return {t:f.args.map(L)};
-    case 'cong': return {s:L(f.args[0].i)+L(f.args[0].j),t:L(f.args[1].i)+L(f.args[1].j)};
+    case 'cong': return {s:e.seg(f.args[0].i,f.args[0].j),t:e.seg(f.args[1].i,f.args[1].j)};
     case 'perp': case 'para': return {u:e.dirName(f.args[0]),w:e.dirName(f.args[1])};
     case 'coll': return {t:f.args.map(L)};
   } return {}; }
@@ -1084,7 +1104,7 @@ function nudgeOf(r){
   var d=factLabels(r,key);
   switch(key.type){
     case 'centre': return 'Which point is the same distance from '+d.S.join(', ')+'?';
-    case 'sim': return 'Look for a triangle similar to △'+d.A+'.';
+    case 'sim': return 'Look for a triangle similar to '+d.A+'.';
     case 'cyc': return 'Look for four points on one circle. One of them is '+d.t[0]+'.';
     case 'cong': return 'Compare the lengths '+d.s+' and '+d.t+'.';
     case 'perp': case 'para': return 'Look at the direction of '+d.u+'.';
@@ -1244,7 +1264,8 @@ svg.addEventListener('pointerup',function(e){ if(!pan) return; pan=null; svg.sty
 renderTools(); draw();
 (function(){ var k=decodeURIComponent(location.hash.slice(1)); if(k&&DEMOS[k]){ DEMOS[k](); if(typeof fitView==='function') fitView(); } })();
 </script>
-<script src="geo-prover.js?v=20261122d"></script>
+<script src="geo-prover.js?v=20261122e"></script>
+<script src="tkz-import.js?v=20261122d"></script>
 <script src="site.js?v=20261118b"></script>
 </body>
 </html>

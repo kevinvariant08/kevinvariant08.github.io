@@ -65,6 +65,10 @@ function Engine(){
 }
 var E=Engine.prototype;
 E.lab=function(i){ return this.pts[i].label; };
+/* names longer than one letter (a book's helper points, say) are separated so the text stays readable */
+E.long=function(list){ var self=this; return list.some(function(i){ return (String(self.lab(i)).match(/[A-Za-z]/g)||[]).length>1; }); };
+E.tri=function(list){ var self=this, n=list.map(function(i){return self.lab(i);}); return this.long(list)?'△('+n.join(', ')+')':'△'+n.join(''); };
+E.seg=function(a,b){ return this.long([a,b])?this.lab(a)+'–'+this.lab(b):this.lab(a)+this.lab(b); };
 /* direction of the line through points i, j */
 E.d=function(i,j){ if(i>j){ var t=i; i=j; j=t; } var k='p'+i+'_'+j;
   if(this.av[k]===undefined){ var a=this.pts[i].g,b=this.pts[j].g; this.av[k]=this.aval.length; this.aval.push(mod1(Math.atan2(b.y-a.y,b.x-a.x)/Math.PI)); }
@@ -129,7 +133,7 @@ E.need=function(aRows,lRows){
 /* the angle at v between the rays to a and b, in degrees, and a phrase comparing two such angles */
 E.ang=function(a,v,b){ var A=this.pts[a].g,V=this.pts[v].g,B=this.pts[b].g, x1=A.x-V.x,y1=A.y-V.y,x2=B.x-V.x,y2=B.y-V.y;
   return Math.acos(Math.max(-1,Math.min(1,(x1*x2+y1*y2)/(Math.hypot(x1,y1)*Math.hypot(x2,y2)))))*180/Math.PI; };
-E.angName=function(a,v,b){ return '\u2220'+this.lab(a)+this.lab(v)+this.lab(b); };
+E.angName=function(a,v,b){ return this.long([a,v,b])?'\u2220('+this.lab(a)+', '+this.lab(v)+', '+this.lab(b)+')':'\u2220'+this.lab(a)+this.lab(v)+this.lab(b); };
 E.angEq=function(p,q){ var u=this.ang(p[0],p[1],p[2]), w=this.ang(q[0],q[1],q[2]);
   return Math.abs(u-w)<1e-6?this.angName(p[0],p[1],p[2])+' = '+this.angName(q[0],q[1],q[2]):this.angName(p[0],p[1],p[2])+' + '+this.angName(q[0],q[1],q[2])+' = 180\u00B0'; };
 E.names=function(list){ var self=this; return list.map(function(i){ return self.lab(i); }); };
@@ -239,7 +243,7 @@ E.centreFact=function(x,S,deps,reason){
     for(var k=0;k<S.length;k++){ if(k===i||k===j) continue; ar.push(this.rowCentre(x,S[i],S[j],S[k])); } }
   if(S.length>=4) for(var a=0;a<S.length;a++)for(var b=a+1;b<S.length;b++)for(var c=b+1;c<S.length;c++)for(var d=c+1;d<S.length;d++) ar=ar.concat(this.rowsCyc([S[a],S[b],S[c],S[d]]));
   this.centreOf[x]=S;
-  var txt=S.length>=3?this.lab(x)+' is the centre of the circle through '+this.names(S).join(', '):this.lab(x)+this.lab(S[0])+' = '+this.lab(x)+this.lab(S[1]);
+  var txt=S.length>=3?this.lab(x)+' is the centre of the circle through '+this.names(S).join(', '):this.seg(x,S[0])+' = '+this.seg(x,S[1]);
   return this.addFact({key:key,type:S.length>=3?'centre':'cong',hyp:reason==='hyp',args:[x].concat(S),aRows:ar,lRows:lr,deps:deps,reason:reason,text:txt});
 };
 
@@ -299,7 +303,7 @@ E.simCands=function(out){
 };
 
 /* ---------- saturation ---------- */
-E.dirName=function(d){ return d.l?ln(d.l):this.lab(d.i)+this.lab(d.j); };
+E.dirName=function(d){ return d.l?ln(d.l):this.seg(d.i,d.j); };
 E.tryCand=function(c){
   var self=this, s, f;
   switch(c.type){
@@ -331,7 +335,7 @@ E.tryCand=function(c){
       var lr=this.rowLenEq(a.i,a.j,b.i,b.j), shared=[a.i,a.j].filter(function(x){return x===b.i||x===b.j;})[0];
       var ar=[], x, p, q;
       if(shared!==undefined){ x=shared; p=a.i===x?a.j:a.i; q=b.i===x?b.j:b.i; ar.push(this.rowIso(x,p,q)); }
-      var txt=this.lab(a.i)+this.lab(a.j)+' = '+this.lab(b.i)+this.lab(b.j);
+      var txt=this.seg(a.i,a.j)+' = '+this.seg(b.i,b.j);
       s=this.need(null,[lr]);
       if(s){ f=this.addFact({key:key4,type:'cong',args:[a,b],aRows:ar,lRows:[lr],deps:Array.from(s),need:{l:[lr]},reason:'lengths',text:txt}); return !!f; }
       /* base angles say nothing when the three points are on one line */
@@ -353,9 +357,9 @@ E.tryCand=function(c){
       if(!why) return false;
       var A0=c.A, B0=c.B, det=[];
       needA.forEach(function(r){ var k=arS.indexOf(r); det.push(self.angEq([A0[(k+1)%3],A0[k],A0[(k+2)%3]],[B0[(k+1)%3],B0[k],B0[(k+2)%3]])); });
-      needL.forEach(function(r){ var k=lrS.indexOf(r); det.push(self.lab(A0[k])+self.lab(A0[(k+1)%3])+' : '+self.lab(A0[k])+self.lab(A0[(k+2)%3])+' = '+self.lab(B0[k])+self.lab(B0[(k+1)%3])+' : '+self.lab(B0[k])+self.lab(B0[(k+2)%3])); });
+      needL.forEach(function(r){ var k=lrS.indexOf(r); det.push(self.seg(A0[k],A0[(k+1)%3])+' : '+self.seg(A0[k],A0[(k+2)%3])+' = '+self.seg(B0[k],B0[(k+1)%3])+' : '+self.seg(B0[k],B0[(k+2)%3])); });
       why+=', '+det.join(' and ');
-      f=this.addFact({key:key5,type:'sim',args:[c.A,c.B,c.opp],aRows:arS,lRows:lrS,deps:Array.from(s),need:{a:needA,l:needL},reason:why,text:'△'+this.names(c.A).join('')+' ∼ △'+this.names(c.B).join('')});
+      f=this.addFact({key:key5,type:'sim',args:[c.A,c.B,c.opp],aRows:arS,lRows:lrS,deps:Array.from(s),need:{a:needA,l:needL},reason:why,text:this.tri(c.A)+' ∼ '+this.tri(c.B)});
       return !!f; }
   }
   return false;
@@ -386,7 +390,7 @@ E.tryRings=function(){
       var key='pb:'+Math.min(X,Y)+'_'+Math.max(X,Y)+':'+k; if(self.fkey[key]!==undefined) continue;
       var row={v:vec([[1,self.d(X,Y)],[-1,self.d(ab[0],ab[1])]]),c:0.5};
       if(!self.okA(row)) continue;
-      var f=self.addFact({key:key,type:'perp',args:[{i:X,j:Y},{i:ab[0],j:ab[1]}],aRows:[row],deps:[L[i].f,L[j].f],need:{l:[self.rowLenEq(X,ab[0],X,ab[1]),self.rowLenEq(Y,ab[0],Y,ab[1])],pb:{a:[row]}},reason:'both equidistant from '+self.lab(ab[0])+' and '+self.lab(ab[1]),text:self.lab(X)+self.lab(Y)+' ⟂ '+self.lab(ab[0])+self.lab(ab[1])});
+      var f=self.addFact({key:key,type:'perp',args:[{i:X,j:Y},{i:ab[0],j:ab[1]}],aRows:[row],deps:[L[i].f,L[j].f],need:{l:[self.rowLenEq(X,ab[0],X,ab[1]),self.rowLenEq(Y,ab[0],Y,ab[1])],pb:{a:[row]}},reason:'both equidistant from '+self.lab(ab[0])+' and '+self.lab(ab[1]),text:self.seg(X,Y)+' ⟂ '+self.seg(ab[0],ab[1])});
       if(f) any=true; } });
   return any;
 };
