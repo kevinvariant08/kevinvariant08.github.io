@@ -59,6 +59,16 @@
     .sb .aux .what{font-weight:600}
     .sb .aux ul{margin:.25rem 0 .35rem 1.1rem;padding:0;font-family:var(--serif);color:var(--stable)}
     .sb .aux .btn2{padding:.25rem .6rem;font-size:.8rem}
+    .sb .hintsw{display:inline-flex;border:1px solid var(--rule);margin-bottom:.6rem}
+    .sb .hintsw button{font:inherit;font-size:.82rem;padding:.3rem .9rem;border:0;background:transparent;color:var(--soft);cursor:pointer}
+    .sb .hintsw button.on{background:var(--ink);color:var(--bg)}
+    .sb .hint{padding:.55rem 0;border-bottom:1px dashed var(--rule)}
+    .sb .hint .lvl{font-family:var(--sans);font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--faint)}
+    .sb .hint p{margin:.2rem 0 .3rem;font-family:var(--serif)}
+    .sb .hint ol{margin:.25rem 0 .3rem 1.2rem;padding:0;font-family:var(--serif)}
+    .sb .hint ol .why{font-family:var(--sans);font-size:.78rem;color:var(--faint)}
+    .sb .hintnote{font-size:.85rem;color:var(--soft);margin:.5rem 0}
+    .sb #explore{margin-top:.8rem}
     .sb .btn2{font-family:var(--sans);font-size:.9rem;font-weight:500;color:var(--ink);background:transparent;border:1px solid var(--ink);border-radius:2px;padding:.45rem .9rem;cursor:pointer}
     .sb .btn2:hover{background:var(--ink);color:var(--onink)}
     .sb .btn2.quiet{border-color:var(--rule);color:var(--soft);font-weight:400}
@@ -117,16 +127,24 @@
         <div id="sims"><div class="empty">Nothing yet.</div></div>
         <h4>True right now only</h4>
         <div id="maybe"><div class="empty">Nothing yet.</div></div>
-        <h4>Auxiliary constructions</h4>
+        <h4>Hints</h4>
         <div class="auxbox">
-          <label for="aim" class="auxlab">What are you trying to prove?</label>
-          <select id="aim"><option value="">Anything useful</option></select>
-          <div class="row" style="margin-top:.5rem"><button class="btn2" id="suggest">Suggest constructions</button></div>
-          <div id="auxout"></div>
+          <div class="hintsw" id="hintsw" role="group" aria-label="Hints"><button type="button" data-h="off">Off</button><button type="button" data-h="on">On</button></div>
+          <div id="hintwrap" hidden>
+            <label for="aim" class="auxlab">What are you trying to prove?</label>
+            <select id="aim"><option value="">Choose a statement</option></select>
+            <div class="row" style="margin-top:.5rem"><button class="btn2" id="solve">Find a proof</button></div>
+            <div id="hintout"></div>
+            <details id="explore"><summary>Explore extra constructions</summary>
+              <p class="auxlab" style="margin-top:.4rem">Every extra point or line that creates an exact relation, whether or not it finishes a proof.</p>
+              <div class="row"><button class="btn2 quiet" id="suggest">Suggest constructions</button></div>
+              <div id="auxout"></div>
+            </details>
+          </div>
         </div>
         <h4>Measurements</h4>
         <div id="meas"><div class="empty">Use the measure tools.</div></div>
-        <p style="font-size:.82rem;color:var(--faint);margin-top:1rem">A relation listed as holding is exact, not just close: it is re-checked to about one part in ten million in twelve randomly nudged copies of the figure, and has to hold in most of them. One that does not is an accident of placement, which tells you what to construct next. Lengths between any two named points are compared too, so relations such as BX = AX + CX appear even when no segment is drawn. Relations that hold by construction are not listed. Similar triangles are found among all named points, drawn or not, and grouped into chains with matching vertex order. Suggest constructions tries every natural extra point or line (feet, midpoints, circumcentres, orthocentres, reflections, intersections, second intersections, antipodes) and lists those that create exact relations, ranked for what you are trying to prove. A construction that lands on a point already in the figure is usually the key step.</p>
+        <p style="font-size:.82rem;color:var(--faint);margin-top:1rem">A relation listed as holding is exact, not just close: it is re-checked to about one part in ten million in twelve randomly nudged copies of the figure, and has to hold in most of them. One that does not is an accident of placement, which tells you what to construct next. Lengths between any two named points are compared too, so relations such as BX = AX + CX appear even when no segment is drawn. Relations that hold by construction are not listed. Similar triangles are found among all named points, drawn or not, and grouped into chains with matching vertex order. Suggest constructions tries every natural extra point or line (feet, midpoints, circumcentres, orthocentres, reflections, intersections, second intersections, antipodes) and lists those that create exact relations, ranked for what you are trying to prove. A construction that lands on a point already in the figure is usually the key step. Hints, when switched on, go further: choose a statement and the page searches for a proof by chasing angles and lengths from what the construction says (never from the measurements), trying one extra point at a time if the figure as drawn is not enough. The proof is then revealed in four layers: a nudge, the construction, the key steps, and an outline with the angles behind each step.</p>
       </div>
     </div>
   </main>
@@ -645,7 +663,7 @@ function renderRelations(){
   if(stableSet) Object.keys(stableSet).forEach(function(k){ st[k]=exact[k]||stableSet[k]; });   /* current labels */
   var simk=Object.keys(st).filter(function(k){return k.indexOf('sim:')===0;});
   var sk=Object.keys(st).filter(function(k){return k.indexOf('sim:')!==0;}), mb=Object.keys(now).filter(function(k){return !st[k];});
-  renderSims(simk); fillAims(sk,st);
+  renderSims(simk); fillAims(sk.concat(simk),st);
   var all={}; sk.forEach(function(k){all[k]=st[k];}); mb.forEach(function(k){all[k]=now[k];});
   condense(all,sk).forEach(function(t){ a+='<div class="rel stable">'+subHTML(t)+'</div>'; });
   condense(all,mb).forEach(function(t){ b+='<div class="rel maybe">'+subHTML(t)+'</div>'; });
@@ -856,7 +874,8 @@ document.getElementById('clear').addEventListener('click',function(){ hideFigInf
    relations it creates that survive the perturbation test, and rank them. A coincidence with a point
    already in the figure is worth the most, since it usually names the key step of a proof. */
 function fillAims(keys,st){
-  var sel=document.getElementById('aim'); if(!sel) return; var cur=sel.value, html='<option value="">Anything useful</option>';
+  var sel=document.getElementById('aim'); if(!sel) return; var cur=sel.value, html='<option value="">Choose a statement</option>';
+  if(window.HINT&&HINT.n!==objs.length){ HINT.res=null; HINT.n=objs.length; renderHint(); }
   keys.forEach(function(k){ if(/^(sum|r2):/.test(k)) return; html+='<option value="'+esc(k)+'"'+(k===cur?' selected':'')+'>'+esc(st[k])+'</option>'; });
   sel.innerHTML=html;
 }
@@ -996,6 +1015,118 @@ function renderAux(res,label,aimText){
   }); });
 }
 document.getElementById('suggest').addEventListener('click',suggestAux);
+/* ---------- Hints: prove the chosen statement, then reveal the proof one layer at a time ----------
+   The engine in geo-prover.js chases angles and lengths from what the construction says. If the figure as
+   drawn is not enough, it tries one extra point at a time (feet, midpoints, centres, reflections,
+   intersections) and keeps a construction only if the proof then goes through. */
+var HINT={on:false,res:null,level:0,n:-1,busy:false};
+try{ HINT.on=localStorage.getItem('sbHints')==='on'; }catch(e){}
+function setHints(on){ HINT.on=on; try{ localStorage.setItem('sbHints',on?'on':'off'); }catch(e){}
+  document.querySelectorAll('#hintsw button').forEach(function(b){ var mine=(b.getAttribute('data-h')==='on')===on; b.classList.toggle('on',mine); b.setAttribute('aria-pressed',mine?'true':'false'); });
+  document.getElementById('hintwrap').hidden=!on; }
+function proveGoal(key,done,progress){
+  var undoPre=null, label=freeLabel(), pre=null;
+  compute();
+  var e=new GeoProver.Engine(), g=e.goalFrom(key);
+  /* three lines are concurrent: name where two of them meet, then show that point is on the third */
+  if(!g&&key.indexOf('con:')===0){
+    var ids=key.slice(4).split(',').map(Number);
+    pre={type:'point',kind:'inter',of:[ids[0],ids[1]],what:'the intersection of '+ln(byId(ids[0]))+' and '+ln(byId(ids[1])),extra:{},label:label};
+    undoPre=auxPush(pre,label); compute(); key='onl:'+label+':'+ids[2]; label=freeLabel();
+    e=new GeoProver.Engine(); g=e.goalFrom(key);
+  }
+  var finish=function(r){ if(undoPre){ undoPre(); compute(); } if(pre) r.pre=pre; draw(); done(r); };
+  if(!g){ finish({unsupported:true}); return; }
+  if(e.saturate(g,3000)){ var pf=e.proof(g); if(pf){ finish({proof:pf,engine:e,goal:g,aux:null}); return; } }
+  /* rank the candidate points by the exact relations they create, as the explorer does */
+  var base=relations(true), cands=auxCandidates().filter(function(c){ return c.type==='point'; });
+  cands.forEach(function(c){ var undo=auxPush(c,label); compute(); var now=relations(true); undo();
+    c.pre=0; c.coincides=false;
+    Object.keys(now).forEach(function(k){ if(base[k]) return; var t=k.split(':')[0]; if(t==='same') c.coincides=true; c.pre+=(AUX_WEIGHT[t]||1); }); });
+  compute();
+  cands=cands.filter(function(c){ return !c.coincides&&c.pre>0; }).sort(function(a,b){ return b.pre-a.pre; }).slice(0,48);
+  var i=0, found=[];
+  (function step(){
+    var t0=Date.now();
+    while(i<cands.length&&Date.now()-t0<150&&found.length<3){
+      var c=cands[i++], undo=auxPush(c,label); compute();
+      var e2=new GeoProver.Engine(), g2=e2.goalFrom(key);
+      if(g2&&e2.saturate(g2,1200)){ var pf2=e2.proof(g2); if(pf2) found.push({proof:pf2,engine:e2,goal:g2,aux:c,label:label}); }
+      undo(); compute();
+    }
+    if(i<cands.length&&found.length<3){ progress(i,cands.length); setTimeout(step,0); return; }
+    if(!found.length){ finish({none:true}); return; }
+    found.sort(function(a,b){ return a.proof.length-b.proof.length; }); finish(found[0]);
+  })();
+}
+function factLabels(r,f){ var e=r.engine, L=function(i){ return e.lab(i); };
+  switch(f.type){
+    case 'centre': return {x:L(f.args[0]),S:f.args.slice(1).map(L)};
+    case 'sim': return {A:f.args[0].map(L).join(''),B:f.args[1].map(L).join('')};
+    case 'cyc': return {t:f.args.map(L)};
+    case 'cong': return {s:L(f.args[0].i)+L(f.args[0].j),t:L(f.args[1].i)+L(f.args[1].j)};
+    case 'perp': case 'para': return {u:e.dirName(f.args[0]),w:e.dirName(f.args[1])};
+    case 'coll': return {t:f.args.map(L)};
+  } return {}; }
+/* givens worth naming: memberships of lines are part of the picture, not a hint */
+function keyGivens(list){ return list.filter(function(t){ return !/ lie on (?!circle)/.test(t); }); }
+function usingHTML(list){ var k=keyGivens(list||[]); return k.length?' <span class="why">using '+esc(k.join('; '))+'</span>':''; }
+function nudgeOf(r){
+  if(r.aux) return 'One extra point opens this up. Think about '+r.aux.what+'.';
+  var pri={centre:6,sim:5,cyc:4,cong:3,perp:2,para:2,coll:1};
+  var key=r.proof.slice().sort(function(a,b){ return (pri[b.type]||0)-(pri[a.type]||0); })[0];
+  if(!key){ var u=keyGivens(r.engine.finalUsing||[]);
+    return u.length?'Use the given facts: '+u.slice(0,3).join('; ')+'.':'Nothing new is needed: chase angles through the construction.'; }
+  var d=factLabels(r,key);
+  switch(key.type){
+    case 'centre': return 'Which point is the same distance from '+d.S.join(', ')+'?';
+    case 'sim': return 'Look for a triangle similar to △'+d.A+'.';
+    case 'cyc': return 'Look for four points on one circle. One of them is '+d.t[0]+'.';
+    case 'cong': return 'Compare the lengths '+d.s+' and '+d.t+'.';
+    case 'perp': case 'para': return 'Look at the direction of '+d.u+'.';
+    case 'coll': return 'Show first that '+d.t.join(', ')+' lie on one line.';
+  } return 'Chase angles through the construction.'; }
+function renderHint(){
+  var out=document.getElementById('hintout'); if(!out) return; var r=HINT.res;
+  if(!r){ out.innerHTML=''; return; }
+  if(r.unsupported){ out.innerHTML='<p class="hintnote">The prover cannot read this kind of statement yet. Try another statement, or explore extra constructions below.</p>'; return; }
+  if(r.none){ out.innerHTML='<p class="hintnote">No proof by angle and length chasing turned up, even with one extra point. The explorer below lists constructions that create exact relations; one of them may start a proof.</p>'; document.getElementById('explore').open=true; return; }
+  var pf=r.proof, blocks=[], pre=r.pre?'Let '+r.pre.label+' be '+r.pre.what+'; we show '+r.pre.label+' lies on the third line. ':'';
+  blocks.push('<div class="hint"><div class="lvl">Hint 1 · nudge</div><p>'+subHTML(pre+nudgeOf(r))+'</p></div>');
+  var con, btn='';
+  var centre=pf.filter(function(f){ return f.type==='centre'; })[0];
+  if(r.aux){ con='Let '+r.label+' be '+r.aux.what+'.'; btn='<button class="btn2 quiet" id="hintdraw">Add '+esc(r.label)+' to the figure</button>'; }
+  else if(centre){ var d=factLabels(r,centre); con='Draw the circle centred '+d.x+' through '+d.S.join(', ')+'.'; btn='<button class="btn2 quiet" id="hintdraw">Draw the circle</button>'; }
+  else con='No extra construction is needed. Everything happens in the figure as drawn.';
+  blocks.push('<div class="hint"><div class="lvl">Hint 2 · construction</div><p>'+subHTML(con)+'</p>'+btn+'</div>');
+  blocks.push('<div class="hint"><div class="lvl">Hint 3 · key steps</div><ol>'+pf.map(function(f){ return '<li>'+subHTML(f.text)+'</li>'; }).join('')+'</ol>'+(pf.length?'':'<p>None: the statement follows from the construction directly.</p>')+'</div>');
+  var how=(r.goal.l&&r.goal.l.length)?'chasing lengths':'chasing angles';
+  blocks.push('<div class="hint"><div class="lvl">Hint 4 · outline</div><ol>'+pf.map(function(f){ return '<li>'+subHTML(f.text)+' <span class="why">('+esc(f.reason||'')+')</span>'+usingHTML(f.using)+'</li>'; }).join('')+'<li>'+subHTML((pf.length?'From these, ':'')+r.goal.text+', by '+how+'.')+usingHTML(r.engine.finalUsing)+'</li></ol></div>');
+  var lvl=Math.min(HINT.level,blocks.length);
+  out.innerHTML='<p class="hintnote">'+(r.aux?'A proof exists with one extra construction.':'A proof exists using only the figure as drawn.')+' '+pf.length+' step'+(pf.length===1?'':'s')+'.</p>'+blocks.slice(0,lvl).join('')+
+    (lvl<blocks.length?'<div class="row" style="margin-top:.5rem"><button class="btn2" id="hintnext">'+(lvl?'Next hint':'Show the first hint')+'</button></div>':'');
+  var nx=document.getElementById('hintnext'); if(nx) nx.addEventListener('click',function(){ HINT.level++; renderHint(); });
+  var dr=document.getElementById('hintdraw'); if(dr) dr.addEventListener('click',function(){
+    var n=objs.length;
+    if(r.pre&&!objs.some(function(o){return o.label===r.pre.label;})) auxPush(r.pre,r.pre.label);
+    if(r.aux){ var lab=r.label; if(objs.some(function(o){return o.label===lab;})) lab=freeLabel(); auxPush(r.aux,lab); objs[objs.length-1].accent=true; }
+    else if(centre){ var d2=factLabels(r,centre), ids=d2.S.slice(0,3).map(function(l){ return objs.filter(function(o){return o.type==='point'&&o.label===l;})[0].id; });
+      add({type:'circle',kind:'circum',of:ids,accent:true}); }
+    var keep=HINT.res, lv=HINT.level; finish(objs.length-n); HINT.res=keep; HINT.level=lv; HINT.n=objs.length; renderHint(); });
+}
+document.querySelectorAll('#hintsw button').forEach(function(b){ b.addEventListener('click',function(){ setHints(b.getAttribute('data-h')==='on'); }); });
+setHints(HINT.on);
+document.getElementById('aim').addEventListener('change',function(){ HINT.res=null; renderHint(); });
+document.getElementById('solve').addEventListener('click',function(){
+  var key=document.getElementById('aim').value, out=document.getElementById('hintout'), btn=this;
+  if(!key){ out.innerHTML='<p class="hintnote">Choose what you are trying to prove first. The list holds every relation the page has confirmed in your figure.</p>'; return; }
+  if(HINT.busy) return; HINT.busy=true; btn.disabled=true;
+  out.innerHTML='<p class="hintnote">Chasing angles and lengths …</p>';
+  setTimeout(function(){
+    proveGoal(key,function(r){ HINT.busy=false; btn.disabled=false; HINT.res=r; HINT.level=0; HINT.n=objs.length; renderHint(); },
+      function(i,n){ out.innerHTML='<p class="hintnote">Not provable from the figure as drawn. Trying extra constructions, '+i+' of '+n+' …</p>'; });
+  },20);
+});
 document.getElementById('test').addEventListener('click',function(){ perturbTest(); renderRelations(); setStatus('Tested against 12 perturbations.'); });
 document.getElementById('copy').addEventListener('click',function(){ var t=document.getElementById('tex'); t.select(); try{ navigator.clipboard.writeText(t.value); document.getElementById('copied').textContent='Copied.'; }catch(e){ document.execCommand('copy'); } setTimeout(function(){document.getElementById('copied').textContent='';},1500); });
 
@@ -1109,6 +1240,7 @@ svg.addEventListener('pointerup',function(e){ if(!pan) return; pan=null; svg.sty
 renderTools(); draw();
 (function(){ var k=decodeURIComponent(location.hash.slice(1)); if(k&&DEMOS[k]){ DEMOS[k](); if(typeof fitView==='function') fitView(); } })();
 </script>
+<script src="geo-prover.js?v=20261122b"></script>
 <script src="site.js?v=20261118b"></script>
 </body>
 </html>
