@@ -69,6 +69,36 @@
     .sb .hint ol .why{font-family:var(--sans);font-size:.78rem;color:var(--faint)}
     .sb .hintnote{font-size:.85rem;color:var(--soft);margin:.5rem 0}
     .sb #explore{margin-top:.8rem}
+    /* hints card: sits under the canvas, as wide as the figure */
+    .sb .hintcard{border:1px solid var(--rule);background:var(--well);margin:.7rem 0 .6rem;padding:.65rem .9rem .75rem}
+    .sb .hc-head{display:flex;align-items:center;gap:.8rem;flex-wrap:wrap}
+    .sb .hc-head h2{font-family:var(--serif);font-weight:600;font-size:1.05rem;margin:0}
+    .sb .hc-head .hintsw{margin:0}
+    .sb .hc-tag{font-size:.84rem;color:var(--faint)}
+    .sb .hc-ask{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;margin-top:.7rem}
+    .sb .hc-ask label{font-size:.86rem;color:var(--soft)}
+    .sb .hc-ask select{flex:1 1 220px;min-width:0;font:inherit;font-size:.92rem;padding:.4rem .5rem;border:1px solid var(--rule);background:var(--paper);color:var(--ink)}
+    .sb .hc-status{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;margin:.6rem 0 .5rem;font-size:.86rem;color:var(--soft)}
+    .sb .hc-chip{font-size:.74rem;font-weight:600;letter-spacing:.03em;padding:.15rem .5rem;border:1px solid currentColor}
+    .sb .hc-chip.ok{color:var(--stable)} .sb .hc-chip.no{color:var(--maybe)}
+    .sb .hc-track{display:grid;grid-template-columns:repeat(4,1fr);gap:.35rem;list-style:none;margin:0 0 .6rem;padding:0}
+    .sb .hc-track button{width:100%;font:inherit;font-size:.82rem;text-align:left;padding:.3rem .55rem;border:1px solid var(--rule);background:transparent;color:var(--faint);cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .sb .hc-track button b{font-weight:600;margin-right:.35rem}
+    .sb .hc-track button.seen{color:var(--ink)}
+    .sb .hc-track button.now{border-color:var(--ink);color:var(--ink);box-shadow:inset 0 -2px 0 var(--ink)}
+    .sb .hc-track button:disabled{cursor:default;opacity:.55}
+    @media (max-width:560px){ .sb .hc-track{grid-template-columns:repeat(2,1fr)} }
+    .sb .hc-body{padding-top:.2rem;max-height:300px;overflow:auto}
+    .sb .hc-big{font-family:var(--serif);font-size:1.08rem;line-height:1.5;margin:.1rem 0 .6rem}
+    .sb .hc-small{font-size:.84rem;color:var(--faint);margin:.3rem 0}
+    .sb .hc-list,.sb .hc-outline{margin:0;padding-left:1.4rem;font-family:var(--serif)}
+    .sb .hc-list li,.sb .hc-outline li{padding:.25rem .3rem;margin:0 0 .15rem;cursor:default}
+    .sb .hc-list li:hover,.sb .hc-outline li:hover,.sb .hc-list li:focus,.sb .hc-outline li:focus{background:rgba(255,197,61,.12);outline:none}
+    .sb .hc-outline .why{display:block;font-family:var(--sans);font-size:.8rem;color:var(--faint);margin-top:.1rem}
+    .sb .hc-outline details{font-family:var(--sans);font-size:.78rem;color:var(--faint);margin-top:.1rem}
+    .sb .hc-outline details summary{cursor:pointer}
+    .sb .hc-outline li.concl{font-weight:600}
+    .sb .hc-nav{display:flex;gap:.5rem;justify-content:flex-end;margin-top:.5rem}
     .sb .btn2{font-family:var(--sans);font-size:.9rem;font-weight:500;color:var(--ink);background:transparent;border:1px solid var(--ink);border-radius:2px;padding:.45rem .9rem;cursor:pointer}
     .sb .btn2:hover{background:var(--ink);color:var(--onink)}
     .sb .btn2.quiet{border-color:var(--rule);color:var(--soft);font-weight:400}
@@ -103,6 +133,26 @@
           <div class="zoombar" role="group" aria-label="Zoom"><button type="button" id="zin" title="Zoom in">+</button><button type="button" id="zout" title="Zoom out">&minus;</button><button type="button" class="fit" id="zfit" title="Fit the figure to the canvas">Fit</button></div>
           <div class="status" id="status">Choose a tool, then click on the canvas.</div>
         </div>
+        <section class="hintcard" id="hintcard" aria-labelledby="hcTitle">
+          <div class="hc-head">
+            <h2 id="hcTitle">Hints</h2>
+            <div class="hintsw" id="hintsw" role="group" aria-label="Hints"><button type="button" data-h="off">Off</button><button type="button" data-h="on">On</button></div>
+            <span class="hc-tag" id="hcTag">Step-by-step help towards a proof, one hint at a time.</span>
+          </div>
+          <div id="hintwrap" hidden>
+            <div class="hc-ask">
+              <label for="aim">Prove</label>
+              <select id="aim"><option value="">Choose a statement</option></select>
+              <button class="btn2" id="solve">Find a proof</button>
+            </div>
+            <div id="hintout" aria-live="polite"></div>
+            <details id="explore"><summary>Explore extra constructions</summary>
+              <p class="hc-small">Every extra point or line that creates an exact relation, whether or not it finishes a proof.</p>
+              <div class="row"><button class="btn2 quiet" id="suggest">Suggest constructions</button></div>
+              <div id="auxout"></div>
+            </details>
+          </div>
+        </section>
         <div class="legend"><span class="f">free point (drag)</span><span class="o">point on object (drag along it)</span><span class="d">constructed point</span><span class="l">constructed line</span><span class="s">holds under perturbation</span><span class="m">true right now only</span></div>
         <div class="figinfo" id="figinfo" hidden><div class="fi-head"><span class="fi-book" id="fiBook">From <em>Beyond the Incenter</em></span><span class="fi-ch" id="fiCh"></span></div><h3 id="fiTitle"></h3><p id="fiText"></p></div>
         <div class="row">
@@ -132,21 +182,6 @@
         <div id="sims"><div class="empty">Nothing yet.</div></div>
         <h4>True right now only</h4>
         <div id="maybe"><div class="empty">Nothing yet.</div></div>
-        <h4>Hints</h4>
-        <div class="auxbox">
-          <div class="hintsw" id="hintsw" role="group" aria-label="Hints"><button type="button" data-h="off">Off</button><button type="button" data-h="on">On</button></div>
-          <div id="hintwrap" hidden>
-            <label for="aim" class="auxlab">What are you trying to prove?</label>
-            <select id="aim"><option value="">Choose a statement</option></select>
-            <div class="row" style="margin-top:.5rem"><button class="btn2" id="solve">Find a proof</button></div>
-            <div id="hintout"></div>
-            <details id="explore"><summary>Explore extra constructions</summary>
-              <p class="auxlab" style="margin-top:.4rem">Every extra point or line that creates an exact relation, whether or not it finishes a proof.</p>
-              <div class="row"><button class="btn2 quiet" id="suggest">Suggest constructions</button></div>
-              <div id="auxout"></div>
-            </details>
-          </div>
-        </div>
         <h4>Measurements</h4>
         <div id="meas"><div class="empty">Use the measure tools.</div></div>
         <p style="font-size:.82rem;color:var(--faint);margin-top:1rem">A relation listed as holding is exact, not just close: it is re-checked to about one part in ten million in twelve randomly nudged copies of the figure, and has to hold in most of them. One that does not is an accident of placement, which tells you what to construct next. Lengths between any two named points are compared too, so relations such as BX = AX + CX appear even when no segment is drawn. Relations that hold by construction are not listed. Similar triangles are found among all named points, drawn or not, and grouped into chains with matching vertex order. Suggest constructions tries every natural extra point or line (feet, midpoints, circumcentres, orthocentres, reflections, intersections, second intersections, antipodes) and lists those that create exact relations, ranked for what you are trying to prove. A construction that lands on a point already in the figure is usually the key step. Hints, when switched on, go further: choose a statement and the page searches for a proof by chasing angles and lengths from what the construction says (never from the measurements), trying one extra point at a time if the figure as drawn is not enough. The proof is then revealed in four layers: a nudge, the construction, the key steps, and an outline with the angles behind each step.</p>
@@ -644,6 +679,8 @@ function draw(){
       s+='<line x1="'+o.g.x1+'" y1="'+o.g.y1+'" x2="'+o.g.x2+'" y2="'+o.g.y2+'" stroke="'+(sel?'#5BE3A6':col)+'" stroke-width="1.6"/>';
     } else { var c2=clipLine(o.g,'line'); if(c2) s+='<line x1="'+c2[0].x+'" y1="'+c2[0].y+'" x2="'+c2[1].x+'" y2="'+c2[1].y+'" stroke="'+(sel?'#5BE3A6':col)+'" stroke-width="1.1" stroke-dasharray="6 3" opacity=".85"/>'; }
   });
+  if(typeof HILITE!=='undefined'&&HILITE.length) objs.forEach(function(o){ if(o.type==='point'&&!o.hidden&&isFinite(o.g.x)&&HILITE.indexOf(o.label)>=0)
+    s+='<circle cx="'+o.g.x+'" cy="'+o.g.y+'" r="'+12*z+'" fill="rgba(255,197,61,.28)" stroke="#FFC53D" stroke-width="2"/>'; });
   objs.forEach(function(o){ if(o.type!=='point'||o.hidden||!isFinite(o.g.x)) return;
     var sel=picks.indexOf(o.id)>=0;
     if(o.kind==='free') s+='<circle cx="'+o.g.x+'" cy="'+o.g.y+'" r="'+(sel?7:5)*z+'" fill="#F3F1FF" stroke="'+(sel?'#5BE3A6':'#121316')+'" stroke-width="2" style="cursor:grab"/>';
@@ -1047,7 +1084,9 @@ var HINT={on:false,res:null,level:0,n:-1,busy:false};
 try{ HINT.on=localStorage.getItem('sbHints')==='on'; }catch(e){}
 function setHints(on){ HINT.on=on; try{ localStorage.setItem('sbHints',on?'on':'off'); }catch(e){}
   document.querySelectorAll('#hintsw button').forEach(function(b){ var mine=(b.getAttribute('data-h')==='on')===on; b.classList.toggle('on',mine); b.setAttribute('aria-pressed',mine?'true':'false'); });
-  document.getElementById('hintwrap').hidden=!on; }
+  document.getElementById('hintwrap').hidden=!on;
+  var tag=document.getElementById('hcTag'); if(tag) tag.textContent=on?'Choose what to prove, then reveal one hint at a time.':'Step-by-step help towards a proof, one hint at a time.';
+  if(!on&&typeof HILITE!=='undefined'&&HILITE.length) hilite([]); }
 function proveGoal(key,done,progress){
   var undoPre=null, label=freeLabel(), pre=null;
   compute();
@@ -1110,48 +1149,76 @@ function nudgeOf(r){
     case 'perp': case 'para': return 'Look at the direction of '+d.u+'.';
     case 'coll': return 'Show first that '+d.t.join(', ')+' lie on one line.';
   } return 'Chase angles through the construction.'; }
+/* the points a step is about, to light them up in the figure */
+function factPts(r,f){ var e=r.engine, out=[], add=function(i){ if(typeof i==='number'&&e.pts[i]) out.push(e.lab(i)); };
+  (function walk(x){ if(x==null) return; if(typeof x==='number') add(x); else if(Array.isArray(x)) x.forEach(walk); else if(typeof x==='object'){ if('i' in x) add(x.i); if('j' in x) add(x.j); } })(f.args);
+  return out.filter(function(l,k){ return out.indexOf(l)===k; }); }
+var HILITE=[];
+function hilite(labels){ HILITE=labels||[]; draw(); }
+var HSTEPS=['Nudge','Construction','Key steps','Outline'];
+/* hints are shown one at a time: a track of four steps, the open step below it, and Back / Next */
+function reduceMo(){ try{ return window.matchMedia('(prefers-reduced-motion: reduce)').matches; }catch(e){ return false; } }
 function renderHint(){
   var out=document.getElementById('hintout'); if(!out) return; var r=HINT.res;
+  if(HILITE.length) hilite([]);
   if(!r){ out.innerHTML=''; return; }
-  if(r.unsupported){ out.innerHTML='<p class="hintnote">The prover cannot read this kind of statement yet. Try another statement, or explore extra constructions below.</p>'; return; }
-  if(r.none){ out.innerHTML='<p class="hintnote">No proof by angle and length chasing turned up, even with one extra point. The explorer below lists constructions that create exact relations; one of them may start a proof.</p>'; document.getElementById('explore').open=true; return; }
-  var pf=r.proof, blocks=[], pre=r.pre?'Let '+r.pre.label+' be '+r.pre.what+'; we show '+r.pre.label+' lies on the third line. ':'';
-  blocks.push('<div class="hint"><div class="lvl">Hint 1 · nudge</div><p>'+subHTML(pre+nudgeOf(r))+'</p></div>');
-  var con, btn='';
-  var centre=pf.filter(function(f){ return f.type==='centre'; })[0];
-  if(r.aux){ con='Let '+r.label+' be '+r.aux.what+'.'; btn='<button class="btn2 quiet" id="hintdraw">Add '+esc(r.label)+' to the figure</button>'; }
-  else if(centre){ var d=factLabels(r,centre); con='Draw the circle centred '+d.x+' through '+d.S.join(', ')+'.'; btn='<button class="btn2 quiet" id="hintdraw">Draw the circle</button>'; }
-  else con='No extra construction is needed. Everything happens in the figure as drawn.';
-  blocks.push('<div class="hint"><div class="lvl">Hint 2 · construction</div><p>'+subHTML(con)+'</p>'+btn+'</div>');
+  if(r.unsupported){ out.innerHTML='<div class="hc-status"><span class="hc-chip no">Not readable yet</span>The prover cannot read this kind of statement. Try another one, or explore extra constructions below.</div>'; return; }
+  if(r.none){ out.innerHTML='<div class="hc-status"><span class="hc-chip no">No proof found</span>Angle and length chasing did not finish, even with one extra point. The explorer below lists constructions that create exact relations; one may start a proof.</div>'; document.getElementById('explore').open=true; return; }
+  var pf=r.proof, pre=r.pre?'Let '+r.pre.label+' be '+r.pre.what+'; we show '+r.pre.label+' lies on the third line. ':'';
   /* the claim itself is the last line of the outline, not a key step */
-  var sameClaim=function(t){ var k=function(x){ return String(x).split(/ = | \u2225 | \u27C2 /).map(function(y){return y.trim();}).sort().join('|'); }; return k(t)===k(r.goal.text); };
+  var sameClaim=function(t){ var k=function(x){ return String(x).split(/ = | ∥ | ⟂ /).map(function(y){return y.trim();}).sort().join('|'); }; return k(t)===k(r.goal.text); };
   pf=pf.filter(function(f,i){ return !(i===pf.length-1&&sameClaim(f.text)); });
-  blocks.push('<div class="hint"><div class="lvl">Hint 3 · key steps</div><ol>'+pf.map(function(f){ return '<li>'+subHTML(f.text)+'</li>'; }).join('')+'</ol>'+(pf.length?'':'<p>None: the statement follows from the construction directly.</p>')+'</div>');
+  var centre=pf.filter(function(f){ return f.type==='centre'; })[0];
   var how=(r.goal.l&&r.goal.l.length)?'chasing lengths':'chasing angles';
-  blocks.push('<div class="hint"><div class="lvl">Hint 4 · outline</div><ol>'+pf.map(function(f){ return '<li>'+subHTML(f.text)+' <span class="why">('+esc(f.reason||'')+')</span>'+usingHTML(f.using)+'</li>'; }).join('')+'<li>'+subHTML((pf.length?'From these, ':'')+r.goal.text+', by '+how+'.')+usingHTML(r.engine.finalUsing)+'</li></ol></div>');
-  var lvl=Math.min(HINT.level,blocks.length);
-  out.innerHTML='<p class="hintnote">'+(r.aux?'A proof exists with one extra construction.':'A proof exists using only the figure as drawn.')+' '+pf.length+' step'+(pf.length===1?'':'s')+'.</p>'+blocks.slice(0,lvl).join('')+
-    (lvl<blocks.length?'<div class="row" style="margin-top:.5rem"><button class="btn2" id="hintnext">'+(lvl?'Next hint':'Show the first hint')+'</button></div>':'');
-  var nx=document.getElementById('hintnext'); if(nx) nx.addEventListener('click',function(){ HINT.level++; renderHint(); });
+  var lvl=Math.min(HINT.level,4), view=Math.min(HINT.view==null?lvl:HINT.view,lvl);
+  var body='';
+  if(view===0) body='<p class="hc-small">Each hint gives away a little more: a nudge, the construction, the key steps, then the full outline. Stop as soon as you can finish on your own.</p>';
+  if(view===1) body='<p class="hc-big">'+subHTML(pre+nudgeOf(r))+'</p>';
+  if(view===2){ var con, btn='';
+    if(r.aux){ con='Let '+r.label+' be '+r.aux.what+'.'; btn='<button class="btn2 quiet" id="hintdraw">Add '+esc(r.label)+' to the figure</button>'; }
+    else if(centre){ var d=factLabels(r,centre); con='Draw the circle centred '+d.x+' through '+d.S.join(', ')+'.'; btn='<button class="btn2 quiet" id="hintdraw">Draw the circle</button>'; }
+    else con='No extra construction is needed: everything happens in the figure as drawn.';
+    body='<p class="hc-big">'+subHTML(con)+'</p>'+btn; }
+  if(view===3) body=pf.length?'<ol class="hc-list">'+pf.map(function(f,i){ return '<li tabindex="0" data-step="'+i+'">'+subHTML(f.text)+'</li>'; }).join('')+'</ol><p class="hc-small">Point at a step to see its points in the figure.</p>'
+                            :'<p class="hc-big">None: the statement follows from the construction directly.</p>';
+  if(view===4){ var giv=function(list){ var k=keyGivens(list||[]); return k.length?'<details><summary>Givens used</summary>'+esc(k.join('; '))+'</details>':''; };
+    body='<ol class="hc-outline">'+pf.map(function(f,i){ return '<li tabindex="0" data-step="'+i+'">'+subHTML(f.text)+'<span class="why">'+esc(f.reason||'')+'</span>'+giv(f.using)+'</li>'; }).join('')
+      +'<li class="concl" tabindex="0" data-step="goal">'+subHTML((pf.length?'From these, ':'')+r.goal.text+', by '+how+'.')+giv(r.engine.finalUsing)+'</li></ol>'; }
+  var track='<ol class="hc-track" aria-label="Hint steps">'+HSTEPS.map(function(t,i){ var k=i+1;
+    return '<li><button type="button" data-v="'+k+'" aria-current="'+(k===view?'step':'false')+'" class="'+(k===view?'now':k<=lvl?'seen':'')+'"'+(k>lvl?' disabled':'')+'><b>'+k+'</b>'+t+'</button></li>'; }).join('')+'</ol>';
+  var next=lvl<4?'<button class="btn2" id="hintnext">'+(lvl===0?'Show hint 1: nudge':'Reveal hint '+(lvl+1)+': '+HSTEPS[lvl].toLowerCase())+'</button>':'';
+  var back=view>1?'<button class="btn2 quiet" id="hintback">Back</button>':'';
+  out.innerHTML='<div class="hc-status"><span class="hc-chip ok">Proof found</span>'+pf.length+' step'+(pf.length===1?'':'s')+' · '+(r.aux?'one extra construction':'uses the figure as drawn')+'</div>'
+    +track+'<div class="hc-body">'+body+'</div><div class="hc-nav">'+back+next+'</div>';
+  out.querySelectorAll('.hc-track button').forEach(function(bt){ bt.addEventListener('click',function(){ HINT.view=+bt.dataset.v; renderHint(); }); });
+  var keepInView=function(){ var c=document.getElementById('hintcard'); if(c&&c.getBoundingClientRect().bottom>window.innerHeight) c.scrollIntoView({block:'end',behavior:reduceMo()?'auto':'smooth'}); };
+  var nx=document.getElementById('hintnext'); if(nx) nx.addEventListener('click',function(){ HINT.level=lvl+1; HINT.view=HINT.level; renderHint(); keepInView(); });
+  var bk=document.getElementById('hintback'); if(bk) bk.addEventListener('click',function(){ HINT.view=view-1; renderHint(); });
+  /* steps light up their points */
+  out.querySelectorAll('[data-step]').forEach(function(li){ var k=li.dataset.step;
+    var labels=k==='goal'?(r.goal.text.match(/[A-Z][A-Za-z0-9_']*/g)||[]):factPts(r,pf[+k]);
+    var on=function(){ hilite(labels); }, off=function(){ hilite([]); };
+    li.addEventListener('mouseenter',on); li.addEventListener('focus',on); li.addEventListener('mouseleave',off); li.addEventListener('blur',off); });
   var dr=document.getElementById('hintdraw'); if(dr) dr.addEventListener('click',function(){
     var n=objs.length;
     if(r.pre&&!objs.some(function(o){return o.label===r.pre.label;})) auxPush(r.pre,r.pre.label);
     if(r.aux){ var lab=r.label; if(objs.some(function(o){return o.label===lab;})) lab=freeLabel(); auxPush(r.aux,lab); objs[objs.length-1].accent=true; }
     else if(centre){ var d2=factLabels(r,centre), ids=d2.S.slice(0,3).map(function(l){ return objs.filter(function(o){return o.type==='point'&&o.label===l;})[0].id; });
       add({type:'circle',kind:'circum',of:ids,accent:true}); }
-    var keep=HINT.res, lv=HINT.level; finish(objs.length-n); HINT.res=keep; HINT.level=lv; HINT.n=objs.length; renderHint(); });
+    var keep=HINT.res, lv=HINT.level, vw=HINT.view; finish(objs.length-n); HINT.res=keep; HINT.level=lv; HINT.view=vw; HINT.n=objs.length; renderHint(); });
 }
 document.querySelectorAll('#hintsw button').forEach(function(b){ b.addEventListener('click',function(){ setHints(b.getAttribute('data-h')==='on'); }); });
 setHints(HINT.on);
 document.getElementById('aim').addEventListener('change',function(){ HINT.res=null; renderHint(); });
 document.getElementById('solve').addEventListener('click',function(){
   var key=document.getElementById('aim').value, out=document.getElementById('hintout'), btn=this;
-  if(!key){ out.innerHTML='<p class="hintnote">Choose what you are trying to prove first. The list holds every relation the page has confirmed in your figure.</p>'; return; }
+  if(!key){ out.innerHTML='<p class="hc-small">Choose a statement first. The list holds every relation the page has confirmed in your figure.</p>'; document.getElementById('aim').focus(); return; }
   if(HINT.busy) return; HINT.busy=true; btn.disabled=true;
-  out.innerHTML='<p class="hintnote">Chasing angles and lengths …</p>';
+  out.innerHTML='<div class="hc-status">Chasing angles and lengths …</div>';
   setTimeout(function(){
-    proveGoal(key,function(r){ HINT.busy=false; btn.disabled=false; HINT.res=r; HINT.level=0; HINT.n=objs.length; renderHint(); },
-      function(i,n){ out.innerHTML='<p class="hintnote">Not provable from the figure as drawn. Trying extra constructions, '+i+' of '+n+' …</p>'; });
+    proveGoal(key,function(r){ HINT.busy=false; btn.disabled=false; HINT.res=r; HINT.level=0; HINT.view=0; HINT.n=objs.length; renderHint();
+      var c=document.getElementById('hintcard'); if(c&&c.getBoundingClientRect().bottom>window.innerHeight) c.scrollIntoView({block:'end',behavior:reduceMo()?'auto':'smooth'}); },
+      function(i,n){ out.innerHTML='<div class="hc-status">Not provable from the figure as drawn. Trying extra constructions, '+i+' of '+n+' …</div>'; });
   },20);
 });
 document.getElementById('test').addEventListener('click',function(){ perturbTest(); renderRelations(); setStatus('Tested against 12 perturbations.'); });
