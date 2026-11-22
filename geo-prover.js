@@ -47,7 +47,7 @@ Span.prototype.implied=function(v){
 function Engine(){
   var self=this;
   /* hidden helper points of a known kind (a circumcentre used to draw a line, say) take part too; visible ones win a tie */
-  var KNOWN={ccen:1,mid:1,foot:1,orth:1,inc:1,cent:1,refl:1,reflp:1,inter:1,ilc:1,icc:1,tanpt:1};
+  var KNOWN={ccen:1,mid:1,foot:1,orth:1,inc:1,exc:1,cent:1,refl:1,reflp:1,inter:1,ilc:1,icc:1,tanpt:1,lin:1,parpt:1,rot:1};
   var P=objs.filter(function(o){ return o.type==='point'&&o.g&&isFinite(o.g.x)&&(!o.hidden||(KNOWN[o.kind]&&o.label)); });
   P.sort(function(a,b){ return (a.hidden?1:0)-(b.hidden?1:0); });
   var xs=P.map(function(p){return p.g.x;}), ys=P.map(function(p){return p.g.y;});
@@ -175,9 +175,25 @@ E.hypotheses=function(){
       case 'orth': { if(!of.every(has)) break; var t=of.map(I), ar2=[];
         for(k=0;k<3;k++) ar2.push({v:vec([[1,self.d(t[k],pi)],[-1,self.d(t[(k+1)%3],t[(k+2)%3])]]),c:0.5});
         self.addFact({key:'orth:'+p.id,type:'hyp',hyp:true,aRows:ar2,text:p.label+' is the orthocentre of '+self.names(t).join('')}); break; }
-      case 'inc': { if(!of.every(has)) break; var t2=of.map(I), ar3=[];
+      /* an excentre lies on one internal and two external bisectors; mod 180 both bisectors satisfy the same doubled equation */
+      case 'exc': case 'inc': { if(!of.every(has)) break; var t2=of.map(I), ar3=[];
         for(k=0;k<3;k++) ar3.push({v:vec([[2,self.d(t2[k],pi)],[-1,self.d(t2[k],t2[(k+1)%3])],[-1,self.d(t2[k],t2[(k+2)%3])]]),c:0});
-        self.addFact({key:'inc:'+p.id,type:'hyp',hyp:true,aRows:ar3,text:p.label+' is the incentre of '+self.names(t2).join('')}); break; }
+        self.addFact({key:'inc:'+p.id,type:'hyp',hyp:true,aRows:ar3,text:p.label+' is the '+(p.kind==='exc'?'excentre':'incentre')+' of '+self.names(t2).join('')}); break; }
+      /* X = C + (B - A): ABXC is a parallelogram */
+      case 'parpt': { if(!of.every(has)) break; var pc=I(of[0]),pa=I(of[1]),pb=I(of[2]);
+        self.addFact({key:'parpt:'+p.id,type:'hyp',hyp:true,aRows:[{v:vec([[1,self.d(pc,pi)],[-1,self.d(pa,pb)]]),c:0},{v:vec([[1,self.d(pa,pc)],[-1,self.d(pb,pi)]]),c:0}],
+          lRows:[self.rowLenEq(pc,pi,pa,pb),self.rowLenEq(pa,pc,pb,pi)],text:self.lab(pa)+self.lab(pb)+p.label+self.lab(pc)+' is a parallelogram'}); break; }
+      /* X is A turned about O through a fixed angle */
+      case 'rot': { if(!of.every(has)||!isFinite(p.a)) break; var ro=I(of[0]),ra=I(of[1]), rv=vec([[1,self.d(ro,pi)],[-1,self.d(ro,ra)]]), rc=mod1(self.aValue(rv));
+        var want=mod1(p.a/180), ok2=nearC(rc,want)||nearC(rc,mod1(-p.a/180));
+        self.addFact({key:'rot:'+p.id,type:'hyp',hyp:true,aRows:ok2?[{v:rv,c:rc}]:[],lRows:[self.rowLenEq(ro,pi,ro,ra)],text:p.label+' is '+self.lab(ra)+' rotated about '+self.lab(ro)+' through '+p.a+'\u00B0'}); break; }
+      /* P divides AB in a given ratio: collinear, with fixed length ratios; two points built with the same ratio share it */
+      case 'lin': { if(!has(of[0])||!has(of[1])||!isFinite(p.k)||p.k===0||p.k===1) break; var la=I(of[0]),lb=I(of[1]);
+        var lr2=[{v:vec([[1,self.q(la,pi)],[-1,self.q(la,lb)]]),c:Math.log(Math.abs(p.k))},{v:vec([[1,self.q(pi,lb)],[-1,self.q(la,lb)]]),c:Math.log(Math.abs(1-p.k))}];
+        pts.forEach(function(p2,pj){ if(pj>=pi||p2.kind!=='lin'||p2.k!==p.k||!p2.of||!has(p2.of[0])||!has(p2.of[1])) return; var ma=I(p2.of[0]),mb=I(p2.of[1]);
+          lr2.push({v:vec([[1,self.q(la,pi)],[-1,self.q(la,lb)],[-1,self.q(ma,pj)],[1,self.q(ma,mb)]]),c:0});
+          lr2.push({v:vec([[1,self.q(pi,lb)],[-1,self.q(la,lb)],[-1,self.q(pj,mb)],[1,self.q(ma,mb)]]),c:0}); });
+        self.addFact({key:'lin:'+p.id,type:'hyp',hyp:true,aRows:self.rowsColl(la,pi,lb),lRows:lr2,text:p.label+' divides '+byId(of[0]).label+byId(of[1]).label+' in a fixed ratio'}); break; }
       case 'cent': { if(!of.every(has)) break; var t3=of.map(I);
         objs.forEach(function(mo){ if(mo.type!=='point'||mo.kind!=='mid'||!has(mo.id)) return;
           for(var v=0;v<3;v++){ var rest=of.filter(function(_,w){return w!==v;}); if(!sameSet(mo.of,rest)) continue;
