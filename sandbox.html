@@ -923,9 +923,11 @@ document.getElementById('clear').addEventListener('click',function(){ hideFigInf
    relations it creates that survive the perturbation test, and rank them. A coincidence with a point
    already in the figure is worth the most, since it usually names the key step of a proof. */
 function fillAims(keys,st){
-  var sel=document.getElementById('aim'); if(!sel) return; var cur=sel.value, html='<option value="">Choose a statement</option>';
+  /* keep the claim being worked on, even if a recount briefly drops it from the list */
+  var sel=document.getElementById('aim'); if(!sel) return; var cur=sel.value||(window.HINT&&HINT.res&&HINT.res.goal&&HINT.res.goal.key)||'', html='<option value="">Choose a statement</option>';
+  var subs=function(t){ return String(t).replace(/_([0-9]+)/g,function(_,d){ return d.split('').map(function(c){ return '\u2080\u2081\u2082\u2083\u2084\u2085\u2086\u2087\u2088\u2089'.charAt(+c); }).join(''); }); };
   if(window.HINT&&HINT.n!==objs.length){ HINT.res=null; HINT.n=objs.length; renderHint(); }
-  keys.forEach(function(k){ if(/^(sum|r2):/.test(k)) return; html+='<option value="'+esc(k)+'"'+(k===cur?' selected':'')+'>'+esc(st[k])+'</option>'; });
+  keys.forEach(function(k){ if(/^(sum|r2):/.test(k)) return; html+='<option value="'+esc(k)+'"'+(k===cur?' selected':'')+'>'+esc(subs(st[k]))+'</option>'; });
   sel.innerHTML=html;
 }
 function freeLabel(){ var used={}; objs.forEach(function(o){ if(o.label) used[o.label]=1; });
@@ -1235,9 +1237,9 @@ function renderHint(){
   var gl=goalLabels(r), holds=function(f){ if(f.type!=='centre'&&f.type!=='cyc') return false; var q=factPts(r,f); return gl.length>=2&&gl.every(function(l){ return q.indexOf(l)>=0; }); };
   pf=pf.filter(function(f,i){ return !(i===pf.length-1&&(sameClaim(f.text)||holds(f))); });
   /* the circle worth drawing is the one closest to the claim */
-  var circ=pf.map(function(f,i){ var ok=(f.type==='centre'||f.type==='cyc')&&!circleDrawn(factPts(r,f).slice(f.type==='centre'?1:0));
-    return {f:f,s:ok?goalOverlap(r,f)*10+(f.type==='centre'?1:0)+(basicStep(r,f)?0:5)+i*0.01:-1}; }).filter(function(x){return x.s>=0;}).sort(function(a,b){ return b.s-a.s; }).map(function(x){return x.f;})[0];
-  r.shown=pf;
+  var circ=r.circ!==undefined?r.circ:pf.map(function(f,i){ var ok=(f.type==='centre'||f.type==='cyc')&&!circleDrawn(factPts(r,f).slice(f.type==='centre'?1:0));
+    return {f:f,s:ok?goalOverlap(r,f)*10+(f.type==='centre'?1:0)+(basicStep(r,f)?0:5)+i*0.01:-1}; }).filter(function(x){return x.s>=0;}).sort(function(a,b){ return b.s-a.s; }).map(function(x){return x.f;})[0]||null;
+  r.circ=circ; r.shown=pf;
   var centre=circ&&circ.type==='centre'?circ:null, cycl=circ&&circ.type==='cyc'?circ:null;
   var how=(r.goal.l&&r.goal.l.length)?'length':'angle';
   var allPts=[]; pf.forEach(function(f){ factPts(r,f).forEach(function(l){ if(allPts.indexOf(l)<0) allPts.push(l); }); });
@@ -1246,7 +1248,8 @@ function renderHint(){
   var lvl=Math.min(HINT.level,4), view=Math.min(HINT.view==null?lvl:HINT.view,lvl);
   var body='';
   if(view===0) body='<p class="hc-small">Each hint gives away a little more than the last. Start with the nudge, and stop as soon as you can finish the proof yourself.</p>';
-  if(view===1) body='<p class="hc-big">'+subHTML(pre+nudgeOf(r))+'</p>';
+  if(r.nudge===undefined) r.nudge=nudgeOf(r);
+  if(view===1) body='<p class="hc-big">'+subHTML(pre+r.nudge)+'</p>';
   if(view===2){ var con, btn='';
     if(r.aux){ con='Let '+r.label+' be '+r.aux.what+'.'; btn='<button class="btn2 quiet" id="hintdraw">Add '+esc(r.label)+' to the figure</button>'; }
     else if(centre){ var d=factLabels(r,centre); con='Draw the circle centred '+d.x+' through '+d.S.join(', ')+'.'; btn='<button class="btn2 quiet" id="hintdraw">Draw the circle</button>'; }
@@ -1283,7 +1286,9 @@ function renderHint(){
     if(r.aux){ var lab=r.label; if(objs.some(function(o){return o.label===lab;})) lab=freeLabel(); auxPush(r.aux,lab); objs[objs.length-1].accent=true; }
     else if(centre||cycl){ var d2=factLabels(r,centre||cycl), pts3=(centre?d2.S:d2.t).slice(0,3), ids=pts3.map(function(l){ var q=objs.filter(function(o){return o.type==='point'&&o.label===l;})[0]; return q&&q.id; });
       if(ids.every(function(x){return x!=null;})){ ids.forEach(function(id){ var q=byId(id); if(q&&q.hidden) q.hidden=false; }); add({type:'circle',kind:'circum',of:ids,accent:true}); } }
-    var keep=HINT.res, lv=HINT.level, vw=HINT.view; finish(objs.length-n); HINT.res=keep; HINT.level=lv; HINT.view=vw; HINT.n=objs.length; renderHint(); });
+    var keep=HINT.res, lv=HINT.level, vw=HINT.view; finish(objs.length-n); HINT.res=keep; HINT.level=lv; HINT.view=vw; HINT.n=objs.length;
+    var sel=document.getElementById('aim'); if(keep.goal&&keep.goal.key&&sel.querySelector('option[value="'+keep.goal.key+'"]')) sel.value=keep.goal.key;
+    renderHint(); });
 }
 document.querySelectorAll('#hintsw button').forEach(function(b){ b.addEventListener('click',function(){ setHints(b.getAttribute('data-h')==='on'); }); });
 setHints(HINT.on);
