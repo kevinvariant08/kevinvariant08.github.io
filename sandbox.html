@@ -1134,17 +1134,27 @@ function factLabels(r,f){ var e=r.engine, L=function(i){ return e.lab(i); };
 /* givens worth naming: memberships of lines are part of the picture, not a hint */
 function keyGivens(list){ return list.filter(function(t){ return !/ lie on (?!circle)/.test(t); }); }
 function usingHTML(list){ var k=keyGivens(list||[]); return k.length?' <span class="why">using '+esc(k.join('; '))+'</span>':''; }
+/* points named in the claim, and how many a step shares with it */
+function goalLabels(r){
+  /* claims glue names together (BP, O_1O_2): split each word into the figure's own point names, longest first */
+  var names=r.engine.pts.map(function(p){return p.label;}).filter(Boolean).sort(function(x,y){return y.length-x.length;}), out=[];
+  (r.goal.text.match(/[A-Za-z0-9_']+/g)||[]).forEach(function(w){ var k=0, guard=0;
+    while(k<w.length&&guard++<40){ var hit=names.filter(function(n){ return w.substr(k,n.length)===n; })[0]; if(!hit){ k++; continue; } out.push(hit); k+=hit.length; } });
+  return out; }
+function goalOverlap(r,f){ var g=goalLabels(r); return factPts(r,f).filter(function(l){ return g.indexOf(l)>=0; }).length; }
 function nudgeOf(r){
   if(r.aux) return 'One extra point opens this up. Think about '+r.aux.what+'.';
   var pri={centre:6,sim:5,cyc:4,cong:3,perp:2,para:2,coll:1};
-  var key=r.proof.slice().sort(function(a,b){ return (pri[b.type]||0)-(pri[a.type]||0); })[0];
+  /* the most telling step: one that shares points with the claim, then the more striking kind, then the later step */
+  var key=r.proof.map(function(f,i){ return {f:f,s:goalOverlap(r,f)*10+(pri[f.type]||0)+i*0.01}; }).sort(function(a,b){ return b.s-a.s; }).map(function(x){return x.f;})[0];
   if(!key){ var u=keyGivens(r.engine.finalUsing||[]);
     return u.length?'Use the given facts: '+u.slice(0,3).join('; ')+'.':'Nothing new is needed: chase angles through the construction.'; }
   var d=factLabels(r,key);
   switch(key.type){
     case 'centre': return 'Which point is the same distance from '+d.S.join(', ')+'?';
     case 'sim': return 'Look for a triangle similar to '+d.A+'.';
-    case 'cyc': return 'Look for four points on one circle. One of them is '+d.t[0]+'.';
+    case 'cyc': { var sh=d.t.filter(function(l){ return goalLabels(r).indexOf(l)>=0; });
+      return sh.length>=2?'Look for a circle through '+sh.slice(0,2).join(' and ')+' and two other points of the figure.':'Look for four points on one circle. One of them is '+(sh[0]||d.t[0])+'.'; }
     case 'cong': return 'Compare the lengths '+d.s+' and '+d.t+'.';
     case 'perp': case 'para': return 'Look at the direction of '+d.u+'.';
     case 'coll': return 'Show first that '+d.t.join(', ')+' lie on one line.';
@@ -1168,7 +1178,9 @@ function renderHint(){
   /* the claim itself is the last line of the outline, not a key step */
   var sameClaim=function(t){ var k=function(x){ return String(x).split(/ = | ∥ | ⟂ /).map(function(y){return y.trim();}).sort().join('|'); }; return k(t)===k(r.goal.text); };
   pf=pf.filter(function(f,i){ return !(i===pf.length-1&&sameClaim(f.text)); });
-  var centre=pf.filter(function(f){ return f.type==='centre'; })[0];
+  /* the circle worth drawing is the one closest to the claim */
+  var circ=pf.map(function(f,i){ return {f:f,s:(f.type==='centre'||f.type==='cyc')?goalOverlap(r,f)*10+(f.type==='centre'?1:0)+i*0.01:-1}; }).filter(function(x){return x.s>=0;}).sort(function(a,b){ return b.s-a.s; }).map(function(x){return x.f;})[0];
+  var centre=circ&&circ.type==='centre'?circ:null, cycl=circ&&circ.type==='cyc'?circ:null;
   var how=(r.goal.l&&r.goal.l.length)?'chasing lengths':'chasing angles';
   var lvl=Math.min(HINT.level,4), view=Math.min(HINT.view==null?lvl:HINT.view,lvl);
   var body='';
@@ -1177,6 +1189,7 @@ function renderHint(){
   if(view===2){ var con, btn='';
     if(r.aux){ con='Let '+r.label+' be '+r.aux.what+'.'; btn='<button class="btn2 quiet" id="hintdraw">Add '+esc(r.label)+' to the figure</button>'; }
     else if(centre){ var d=factLabels(r,centre); con='Draw the circle centred '+d.x+' through '+d.S.join(', ')+'.'; btn='<button class="btn2 quiet" id="hintdraw">Draw the circle</button>'; }
+    else if(cycl){ var dc=factLabels(r,cycl); con='Nothing new to construct, but draw the circle through '+dc.t.join(', ')+': the proof runs through it.'; btn='<button class="btn2 quiet" id="hintdraw">Draw the circle</button>'; }
     else con='No extra construction is needed: everything happens in the figure as drawn.';
     body='<p class="hc-big">'+subHTML(con)+'</p>'+btn; }
   if(view===3) body=pf.length?'<ol class="hc-list">'+pf.map(function(f,i){ return '<li tabindex="0" data-step="'+i+'">'+subHTML(f.text)+'</li>'; }).join('')+'</ol><p class="hc-small">Point at a step to see its points in the figure.</p>'
@@ -1196,15 +1209,15 @@ function renderHint(){
   var bk=document.getElementById('hintback'); if(bk) bk.addEventListener('click',function(){ HINT.view=view-1; renderHint(); });
   /* steps light up their points */
   out.querySelectorAll('[data-step]').forEach(function(li){ var k=li.dataset.step;
-    var labels=k==='goal'?(r.goal.text.match(/[A-Z][A-Za-z0-9_']*/g)||[]):factPts(r,pf[+k]);
+    var labels=k==='goal'?goalLabels(r):factPts(r,pf[+k]);
     var on=function(){ hilite(labels); }, off=function(){ hilite([]); };
     li.addEventListener('mouseenter',on); li.addEventListener('focus',on); li.addEventListener('mouseleave',off); li.addEventListener('blur',off); });
   var dr=document.getElementById('hintdraw'); if(dr) dr.addEventListener('click',function(){
     var n=objs.length;
     if(r.pre&&!objs.some(function(o){return o.label===r.pre.label;})) auxPush(r.pre,r.pre.label);
     if(r.aux){ var lab=r.label; if(objs.some(function(o){return o.label===lab;})) lab=freeLabel(); auxPush(r.aux,lab); objs[objs.length-1].accent=true; }
-    else if(centre){ var d2=factLabels(r,centre), ids=d2.S.slice(0,3).map(function(l){ return objs.filter(function(o){return o.type==='point'&&o.label===l;})[0].id; });
-      add({type:'circle',kind:'circum',of:ids,accent:true}); }
+    else if(centre||cycl){ var d2=factLabels(r,centre||cycl), pts3=(centre?d2.S:d2.t).slice(0,3), ids=pts3.map(function(l){ var q=objs.filter(function(o){return o.type==='point'&&o.label===l;})[0]; return q&&q.id; });
+      if(ids.every(function(x){return x!=null;})) add({type:'circle',kind:'circum',of:ids,accent:true}); }
     var keep=HINT.res, lv=HINT.level, vw=HINT.view; finish(objs.length-n); HINT.res=keep; HINT.level=lv; HINT.view=vw; HINT.n=objs.length; renderHint(); });
 }
 document.querySelectorAll('#hintsw button').forEach(function(b){ b.addEventListener('click',function(){ setHints(b.getAttribute('data-h')==='on'); }); });
