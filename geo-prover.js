@@ -237,8 +237,12 @@ E.candidates=function(){
   /* parallel and perpendicular directions, among lines through two points and line objects */
   var dirs=[]; for(i=0;i<n;i++)for(j=i+1;j<n;j++) dirs.push({v:this.d(i,j),i:i,j:j});
   this.lines.forEach(function(l){ dirs.push({v:self.dl(l),l:l}); });
+  dirs.forEach(function(d){ d.P=d.l?(self.members[d.l.id]||[]):[d.i,d.j]; });
   for(i=0;i<dirs.length;i++)for(j=i+1;j<dirs.length;j++){
+    if(dirs[i].v===dirs[j].v) continue;
+    var shareP=dirs[i].P.some(function(x){ return dirs[j].P.indexOf(x)>=0; });
     var dv=mod1(this.aval[dirs[i].v]-this.aval[dirs[j].v]);
+    if(shareP&&Math.min(dv,1-dv)<1e-9) continue;          /* same line through a common point: a collinearity, handled above */
     if(Math.min(dv,1-dv)<1e-9) out.push({type:'para',u:dirs[i],w:dirs[j]});
     else if(Math.abs(dv-0.5)<1e-9) out.push({type:'perp',u:dirs[i],w:dirs[j]});
   }
@@ -285,8 +289,11 @@ E.tryCand=function(c){
   switch(c.type){
     case 'coll': {
       var key='coll:'+c.t.join(','); if(this.fkey[key]!==undefined) return false;
-      var rows=this.rowsColl(c.t[0],c.t[1],c.t[2]); s=this.need(rows); if(!s) return false;
-      f=this.addFact({key:key,type:'coll',args:c.t,aRows:rows,deps:Array.from(s),need:{a:rows},reason:'angle chase',text:this.names(c.t).join(', ')+' are collinear'});
+      /* two lines through a common point with the same direction are one line, so any one equality is enough */
+      var rows=this.rowsColl(c.t[0],c.t[1],c.t[2]), t0=c.t, alt=[rows[0],rows[1],{v:vec([[1,this.d(t0[0],t0[2])],[-1,this.d(t0[1],t0[2])]]),c:0}], used=null;
+      for(var ai=0;ai<3&&!s;ai++){ s=this.need([alt[ai]]); if(s) used=alt[ai]; }
+      if(!s) return false;
+      f=this.addFact({key:key,type:'coll',args:c.t,aRows:alt,deps:Array.from(s),need:{a:[used]},reason:'angle chase',text:this.names(c.t).join(', ')+' are collinear'});
       return !!f; }
     case 'para': case 'perp': {
       var key2=c.type+':'+c.u.v+','+c.w.v; if(this.fkey[key2]!==undefined) return false;
@@ -297,9 +304,11 @@ E.tryCand=function(c){
       return !!f; }
     case 'cyc': {
       var key3='cyc:'+c.t.join(','); if(this.fkey[key3]!==undefined) return false;
-      var rs=this.rowsCyc(c.t); s=this.need([rs[0]]); if(!s) return false;
-      var q=c.t, why3=this.angEq([q[0],q[2],q[1]],[q[0],q[3],q[1]]);
-      f=this.addFact({key:key3,type:'cyc',args:c.t,aRows:rs,deps:Array.from(s),need:{a:[rs[0]]},reason:(why3.indexOf('180')>=0?'opposite angles: ':'angles on the same chord: ')+why3,text:this.names(c.t).join(', ')+' are concyclic'});
+      /* each of the six equal-angle equations says the same thing on its own (no three of the points are collinear) */
+      var rs=this.rowsCyc(c.t), ri=-1; for(var z=0;z<rs.length&&!s;z++){ s=this.need([rs[z]]); if(s) ri=z; }
+      if(!s) return false;
+      var CH=[[0,1,2,3],[0,2,1,3],[0,3,1,2],[2,3,0,1],[1,3,0,2],[1,2,0,3]][ri], q=c.t.map(function(_,w){ return c.t[CH[w]]; }), why3=this.angEq([q[0],q[2],q[1]],[q[0],q[3],q[1]]);
+      f=this.addFact({key:key3,type:'cyc',args:c.t,aRows:rs,deps:Array.from(s),need:{a:[rs[ri]]},reason:(why3.indexOf('180')>=0?'opposite angles: ':'angles on the same chord: ')+why3,text:this.names(c.t).join(', ')+' are concyclic'});
       return !!f; }
     case 'cong': {
       var a=c.s, b=c.t, key4='cong:'+[a.i+'_'+a.j,b.i+'_'+b.j].sort().join(','); if(this.fkey[key4]!==undefined) return false;
@@ -383,15 +392,28 @@ E.goalFrom=function(key){
   var g={a:[],l:[],key:key};
   if(type==='perp'||type==='par'){ var ids=k[1].split(','), l1=line(ids[0]), l2=line(ids[1]); if(!l1||!l2) return null;
     g.a.push({v:vec([[1,this.dl(l1)],[-1,this.dl(l2)]]),c:type==='perp'?0.5:0}); g.text=ln(l1)+(type==='perp'?' ⟂ ':' ∥ ')+ln(l2); return g; }
-  if(type==='col'){ var t=k[1].split(',').map(byLabel); if(t.some(function(x){return x===undefined;})) return null; g.a=this.rowsColl(t[0],t[1],t[2]); g.text=k[1].split(',').join(', ')+' are collinear'; return g; }
-  if(type==='cyc'){ var t2=k[1].split(',').map(byLabel); if(t2.some(function(x){return x===undefined;})) return null; g.a=[this.rowsCyc(t2)[0]]; g.text=k[1].split(',').join(', ')+' are concyclic'; return g; }
+  if(type==='col'){ var t=k[1].split(',').map(byLabel); if(t.some(function(x){return x===undefined;})) return null;
+    var cr=this.rowsColl(t[0],t[1],t[2]); g.alts=[[cr[0]],[cr[1]],[{v:vec([[1,this.d(t[0],t[2])],[-1,this.d(t[1],t[2])]]),c:0}]]; g.a=g.alts[0]; g.text=k[1].split(',').join(', ')+' are collinear'; return g; }
+  if(type==='cyc'){ var t2=k[1].split(',').map(byLabel); if(t2.some(function(x){return x===undefined;})) return null;
+    g.alts=this.rowsCyc(t2).map(function(r){ return [r]; }); g.a=g.alts[0]; g.text=k[1].split(',').join(', ')+' are concyclic'; return g; }
   if(type==='onl'){ var p=byLabel(k[1]), l=line(k[2]); if(p===undefined||!l) return null; var m=(this.members[l.id]||[]).filter(function(x){return x!==p;});
     if(!m.length) return null; g.a.push({v:vec([[1,this.d(p,m[0])],[-1,this.dl(l)]]),c:0}); g.text=k[1]+' lies on '+ln(l); return g; }
   if(type==='onc'){ var p2=byLabel(k[1]), c=objs.filter(function(o){return o.type==='circle'&&o.id===+k[2];})[0]; if(p2===undefined||!c) return null;
     var cm=(this.cmembers[c.id]||[]).filter(function(x){return x!==p2;});
-    if(cm.length>=3) g.a.push(this.rowsCyc([cm[0],cm[1],cm[2],p2])[0]);
+    if(cm.length>=3){ g.alts=this.rowsCyc([cm[0],cm[1],cm[2],p2]).map(function(r){ return [r]; }); g.a=g.alts[0]; }
     else { var cen=null; if(c.kind==='cp') cen=ix[c.c]; if(cen===undefined||cen===null||!cm.length) return null; g.l.push(this.rowLenEq(cen,cm[0],cen,p2)); }
     g.text=k[1]+' lies on '+cn(c); return g; }
+  /* tangency: the radius to the point of contact is perpendicular, or the tangent-chord angle when no centre is named */
+  if(type==='tan'){ var ids3=k[1].split(','), lt=line(ids3[0]), ct=objs.filter(function(o){return o.type==='circle'&&o.id===+ids3[1];})[0]; if(!lt||!ct) return null;
+    var lm=this.members[lt.id]||[], cmm=this.cmembers[ct.id]||[], T=lm.filter(function(x){ return cmm.indexOf(x)>=0; })[0]; if(T===undefined) return null;
+    var cen2=null; if(ct.kind==='cp'&&ix[ct.c]!==undefined) cen2=ix[ct.c];
+    if(ct.kind==='circum') objs.forEach(function(z){ if(z.type==='point'&&z.kind==='ccen'&&sameSet(z.of,ct.of)&&ix[z.id]!==undefined) cen2=ix[z.id]; });
+    if(ct.kind==='inc') objs.forEach(function(z){ if(z.type==='point'&&z.kind==='inc'&&sameSet(z.of,ct.of)&&ix[z.id]!==undefined) cen2=ix[z.id]; });
+    if(cen2!==null) g.a.push({v:vec([[1,this.d(cen2,T)],[-1,this.dl(lt)]]),c:0.5});
+    else { var oth=cmm.filter(function(x){return x!==T;}); if(oth.length<2) return null;
+      var v1=vec([[1,this.dl(lt)],[-1,this.d(T,oth[0])],[-1,this.d(oth[1],T)],[1,this.d(oth[1],oth[0])]]), v2=vec([[1,this.dl(lt)],[-1,this.d(T,oth[0])],[1,this.d(oth[1],T)],[-1,this.d(oth[1],oth[0])]]);
+      g.a.push(nearC(this.aValue(v1),0)?{v:v1,c:0}:{v:v2,c:0}); }
+    g.text=ln(lt)+' is tangent to '+cn(ct); return g; }
   if(type==='eq'){ var segs=k[1].split(',').map(function(s){ for(var i=1;i<s.length;i++){ var a=byLabel(s.slice(0,i)), b=byLabel(s.slice(i)); if(a!==undefined&&b!==undefined) return [a,b]; } return null; });
     if(segs.some(function(s){return !s;})) return null;
     for(var i=1;i<segs.length;i++) g.l.push(this.rowLenEq(segs[0][0],segs[0][1],segs[i][0],segs[i][1])); g.text=k[1].split(',').join(' = '); return g; }
@@ -405,7 +427,10 @@ E.goalFrom=function(key){
     return null; }
   return null;
 };
-E.goalMet=function(g){ return !!this.need(g.a,g.l); };
+/* a goal with several equivalent forms is met when any one form follows; that form is then the goal */
+E.goalMet=function(g){
+  if(g.alts){ for(var i=0;i<g.alts.length;i++) if(this.need(g.alts[i],g.l)){ g.a=g.alts[i]; return true; } return false; }
+  return !!this.need(g.a,g.l); };
 
 /* ---------- the proof: keep only the facts the goal needs ---------- */
 E.proof=function(g){
@@ -426,6 +451,7 @@ E.proof=function(g){
   var visit=function(need,pool){ var m=minimal(need,pool);
     m.forEach(function(id){ if(used[id]) return; used[id]=1; var f=self.facts[id];
       visit(f.need||{},derivedBefore(id)); order.push(id); }); };
+  if(!this.goalMet(g)) return null;
   var src=this.need(g.a,g.l); if(!src) return null;
   visit({a:g.a,l:g.l},closure(Array.from(src)));
   var seen={}; order=order.filter(function(id){ if(seen[id]) return false; seen[id]=1; return true; }).sort(function(a,b){return a-b;});

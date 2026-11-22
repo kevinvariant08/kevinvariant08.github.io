@@ -367,7 +367,11 @@ function tanByConstruction(l,c){
   if(c.kind==='inc'&&l.kind==='two'&&c.of.indexOf(l.a)>=0&&c.of.indexOf(l.b)>=0) return true;
   return false;
 }
-function ln(l){ if(l.name) return l.name; return l.kind==='two'?byId(l.a).label+byId(l.b).label:l.label; }
+function ln(l){ if(l.name) return l.name;
+  if(l.kind!=='two') return l.label;
+  /* a helper point some book figures use only to aim a line has no name worth showing */
+  var nm=function(id){ var p=byId(id); return p&&p.label&&!/^dummy/i.test(p.label)?p.label:null; }, a=nm(l.a), b=nm(l.b);
+  return a&&b?a+b:'the line through '+(a||b||'?'); }
 function cn(c){ return c.kind==='cp'?'circle centre '+byId(c.c).label:(c.kind==='circum'?'circle ':'incircle ')+c.of.map(function(id){return byId(id).label;}).join(''); }
 
 /* Relations. With strict=false the tolerance is visual (what looks true right now); with strict=true
@@ -1240,7 +1244,7 @@ svg.addEventListener('pointerup',function(e){ if(!pan) return; pan=null; svg.sty
 renderTools(); draw();
 (function(){ var k=decodeURIComponent(location.hash.slice(1)); if(k&&DEMOS[k]){ DEMOS[k](); if(typeof fitView==='function') fitView(); } })();
 </script>
-<script src="geo-prover.js?v=20261122b"></script>
+<script src="geo-prover.js?v=20261122c"></script>
 <script src="site.js?v=20261118b"></script>
 </body>
 </html>
