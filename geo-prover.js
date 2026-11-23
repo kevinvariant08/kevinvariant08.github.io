@@ -182,7 +182,7 @@ E.hypotheses=function(){
       /* an excentre lies on one internal and two external bisectors; mod 180 both bisectors satisfy the same doubled equation */
       case 'exc': case 'inc': { if(!of.every(has)) break; var t2=of.map(I), ar3=[];
         for(k=0;k<3;k++) ar3.push({v:vec([[2,self.d(t2[k],pi)],[-1,self.d(t2[k],t2[(k+1)%3])],[-1,self.d(t2[k],t2[(k+2)%3])]]),c:0});
-        self.addFact({key:'inc:'+p.id,type:'hyp',hyp:true,aRows:ar3,text:p.label+' is the '+(p.kind==='exc'?'excentre':'incentre')+' of '+self.names(t2).join('')}); break; }
+        self.addFact({key:'inc:'+p.id,type:'hyp',hyp:true,aRows:ar3,text:p.label+' is the '+(p.kind==='exc'?'excentre':'incentre')+' of triangle '+self.names(t2).join('')+(p.kind==='exc'?' opposite '+self.names(t2)[0]:'')}); break; }
       /* X = C + (B - A): ABXC is a parallelogram */
       case 'parpt': { if(!of.every(has)) break; var pc=I(of[0]),pa=I(of[1]),pb=I(of[2]);
         self.addFact({key:'parpt:'+p.id,type:'hyp',hyp:true,aRows:[{v:vec([[1,self.d(pc,pi)],[-1,self.d(pa,pb)]]),c:0},{v:vec([[1,self.d(pa,pc)],[-1,self.d(pb,pi)]]),c:0}],
