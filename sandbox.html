@@ -976,7 +976,7 @@ function auxCandidates(){
   }
   /* second intersections: a line through a point of the figure meets a circle again */
   L.forEach(function(l){ C.forEach(function(c){ for(var x=0;x<2;x++){ var g=lineCircle(l.g,c.g,x); if(!inView(g)||at(g)) continue;
-    pt('ilc',[l.id,c.id],'where '+ln(l)+' meets '+cn(c)+' again',{idx:x}); } }); });
+    pt('ilc',[l.id,c.id],'the point where '+ln(l)+' meets '+cn(c)+' again',{idx:x}); } }); });
   /* antipodes on circles whose centre is a named point */
   C.forEach(function(c){ var cen=c.kind==='cp'?byId(c.c):null;
     if(c.kind==='circum') cen=Pts.filter(function(p){return p.kind==='ccen'&&sameSet(p.of,c.of);})[0]||null;
@@ -986,11 +986,16 @@ function auxCandidates(){
      vertex and a centre, and take antipodes on a circumcircle whose centre is not drawn */
   var special=function(p){ return ['mid','inc','exc','ccen','orth','cent','foot'].indexOf(p.kind)>=0; };
   var tech=function(c,prior){ c.prior=prior; c.extra=c.extra||{}; out.push(c); };
+  /* join two points the figure does not join, and see where that line meets a drawn line: let AP meet BC at Q */
+  for(i=0;i<Pts.length;i++)for(j=i+1;j<Pts.length;j++){ var pa=Pts[i], pb=Pts[j]; if(drawnPair(pa,pb)) continue;
+    var lg0={x1:pa.g.x,y1:pa.g.y,x2:pb.g.x,y2:pb.g.y}; if(Math.hypot(pb.g.x-pa.g.x,pb.g.y-pa.g.y)<D*1e-4) continue;
+    L.forEach(function(l){ if(onLineByConstruction(pa,l)||onLineByConstruction(pb,l)||nearPar(lg0,l.g)) return; var X=lineLine(lg0,l.g); if(!inView(X)||at(X)) return;
+      tech({type:'point',kind:'inter',via:[pa.id,pb.id],line:l.id,what:'the point where '+pa.label+pb.label+' meets '+ln(l)},0); }); }
   C.forEach(function(c){ Pts.forEach(function(p){ if(!onCircleByConstruction(p,c)) return;
-    Pts.forEach(function(q){ if(q===p||!special(q)||drawnPair(p,q)) return;
+    Pts.forEach(function(q){ if(q===p||drawnPair(p,q)) return;
       var lg={x1:p.g.x,y1:p.g.y,x2:q.g.x,y2:q.g.y}, med=q.kind==='mid'&&q.of.indexOf(p.id)<0;
       for(var x=0;x<2;x++){ var g=lineCircle(lg,c.g,x); if(!inView(g)||at(g)) continue;
-        tech({type:'point',kind:'ilc',via:[p.id,q.id],circ:c.id,extra:{idx:x},what:'the point where '+(med?'the median ':'')+p.label+q.label+', extended, meets '+cn(c)+' again'},med?7:5); } }); }); });
+        tech({type:'point',kind:'ilc',via:[p.id,q.id],circ:c.id,extra:{idx:x},what:'the point where '+(med?'the median ':'')+p.label+q.label+', extended, meets '+cn(c)+' again'},med?7:special(q)?5:0); } }); }); });
   Pts.forEach(function(m){ if(m.kind!=='mid') return; var b1=byId(m.of[0]), c1=byId(m.of[1]); if(!b1||!c1) return;
     Pts.forEach(function(p){ if(p===m||m.of.indexOf(p.id)>=0||same('reflp',[p.id,m.id])) return;
       var vtx=drawnPair(p,b1)&&drawnPair(p,c1); if(!vtx&&!special(p)) return;
@@ -1003,12 +1008,37 @@ function auxCandidates(){
     Pts.forEach(function(p){ if(onCircleByConstruction(p,c)) tech({type:'point',kind:'reflp',cenOf:c.of.slice(),p:p.id,what:'the antipode of '+p.label+' on '+cn(c)},4); }); });
   return out;
 }
+/* ---------- Which constructions to try first ----------
+   Each candidate gets a technique (foot, midpoint, join two points and meet a line, double the median...)
+   and a context (foot from the incentre onto a side, midpoint of two vertices...). The weights in
+   construction-weights.js count, over the Beyond the Incenter diagrams, how often a candidate of each
+   kind turned out to be a point the book's solution adds. */
+function candKey(c){
+  var cls=function(p){ return !p?'none':p.kind==='free'?'free':['inc','exc','ccen','orth','cent'].indexOf(p.kind)>=0?p.kind:p.kind==='mid'?'mid':p.kind==='foot'?'foot':['ilc','icc','on','onc'].indexOf(p.kind)>=0?'oncirc':'other'; };
+  var lineCls=function(l){ return !l?'none':l.kind==='two'?'two-'+[cls(byId(l.a)),cls(byId(l.b))].sort().join('/'):l.kind; };
+  var circCls=function(k){ return !k?'none':k.kind==='circum'?(k.of.every(function(id){ return byId(id)&&byId(id).kind==='free'; })?'circumABC':'circum'):k.kind; };
+  var tag=c.kind, sub='';
+  if(c.kind==='refl') tag=c.via?'refl-vertex-centre':'refl-line';
+  if(c.kind==='inter'&&c.via) tag='inter-join';
+  if(c.kind==='ilc') tag=c.via?(/median/.test(c.what)?'ilc-median':c.prior?'ilc-centre-line':'ilc-join'):'ilc-drawn';
+  if(c.kind==='reflp') tag=/antipode/.test(c.what)?(c.cenOf?'antipode-hidden':'antipode'):/parallelogram/.test(c.what)?'double-median':'reflp-mid';
+  if(c.via) sub=[cls(byId(c.via[0])),cls(byId(c.via[1]))].sort().join('/')+(c.circ!=null?'@'+circCls(byId(c.circ)):'')+(c.line!=null?'&'+lineCls(byId(c.line)):'');
+  else if(c.kind==='foot'||c.kind==='refl') sub=cls(byId(c.of[0]))+'>'+lineCls(byId(c.of[1]));
+  else if(c.kind==='mid') sub=[cls(byId(c.of[0])),cls(byId(c.of[1]))].sort().join('/');
+  else if(c.kind==='inter') sub=[lineCls(byId(c.of[0])),lineCls(byId(c.of[1]))].sort().join('&');
+  else if(c.kind==='ilc') sub=lineCls(byId(c.of[0]))+'@'+circCls(byId(c.of[1]));
+  else if(c.kind==='reflp') sub=c.cenOf?cls(byId(c.p))+'>hiddenO':cls(byId(c.of[0]))+'>'+cls(byId(c.of[1]));
+  else if(c.kind==='ccen'||c.kind==='orth') sub=c.of.map(function(id){ return cls(byId(id)); }).sort().join('/');
+  return {tag:tag,key:tag+'|'+sub}; }
+/* log-odds that a candidate is the construction a solution would use, shrunk towards its technique's rate */
+function learnedScore(c){ var W=window.AUX_LEARNED; if(!W) return 0; var k=candKey(c), t=W.t[k.tag]||[0,0], s=W.s[k.key]||[0,0];
+  var pt=(t[0]+30*W.g)/(t[1]+30), ps=(s[0]+16*pt)/(s[1]+16); return Math.log(ps/(1-ps)); }
 /* Add one candidate for a moment; returns a function that takes it away again. */
 function auxPush(c,label){
   var n=objs.length;
   if(c.type==='point'){ var of=c.of?c.of.slice():[];
     /* a construction that needs a line or centre first: the extended median, the reflecting line, the hidden circumcentre */
-    if(c.via){ var hl=add({type:'line',kind:'two',style:'line',a:c.via[0],b:c.via[1],w:1.1,dash:true}); of=c.kind==='ilc'?[hl.id,c.circ]:[c.p,hl.id]; }
+    if(c.via){ var hl=add({type:'line',kind:'two',style:'line',a:c.via[0],b:c.via[1],w:1.1,dash:true}); of=c.kind==='ilc'?[hl.id,c.circ]:c.kind==='inter'?[hl.id,c.line]:[c.p,hl.id]; }
     if(c.cenOf){ var used={}; objs.forEach(function(q){ if(q.label) used[q.label]=1; }); var cl=used.O?'O_'+nextId:'O';
       var cc=add({type:'point',kind:'ccen',of:c.cenOf.slice(),hidden:true,label:cl}); of=[c.p,cc.id]; }
     var o={type:'point',kind:c.kind,of:of,label:label}; for(var k in (c.extra||{})) o[k]=c.extra[k]; add(o); }
@@ -1143,15 +1173,21 @@ function proveGoal(key,done,progress){
   if(!g){ finish({unsupported:true}); return; }
   if(e.saturate(g,3000)){ var pf=e.proof(g); if(pf){ finish({proof:pf,engine:e,goal:g,aux:null}); return; } }
   /* a figure from a solution: its own constructions come first, cut down to the points the proof uses */
-  var bk=PROB.on&&!PROB.shown&&PROB.stash.length?bookConstruction(key):null;
+  var bk=PROB.on&&!PROB.shown&&PROB.stash.length&&!window.KV_NO_BOOK?bookConstruction(key):null;
   if(bk){ finish(bk); return; }
   /* rank the candidate points by the exact relations they create, as the explorer does */
   var base=relations(true), cands=auxCandidates().filter(function(c){ return c.type==='point'; });
-  cands.forEach(function(c){ var undo=auxPush(c,label); compute(); var now=relations(true); undo();
+  cands.forEach(function(c){ var undo=auxPush(c,label); compute(); var np=objs[objs.length-1]; c.gpos=np&&np.g&&isFinite(np.g.x)?{x:np.g.x,y:np.g.y}:null; var now=relations(true); undo();
     c.pre=0; c.coincides=false;
     Object.keys(now).forEach(function(k){ if(base[k]) return; var t=k.split(':')[0]; if(t==='same') c.coincides=true; c.pre+=(AUX_WEIGHT[t]||1); }); });
   compute();
-  cands=cands.filter(function(c){ return !c.coincides&&c.pre>0; }).sort(function(a,b){ return (b.prior||0)*6+b.pre-(a.prior||0)*6-a.pre; }).slice(0,60);
+  /* order by the weights learned from the book plus the relations each point creates; the standard moves
+     (extend or double a median, reflect, antipode) are always tried, whatever their weight */
+  cands=cands.filter(function(c){ return !c.coincides; });
+  cands.forEach(function(c){ c.score=learnedScore(c)+2*Math.log(1+c.pre); });
+  cands.sort(function(a,b){ return b.score-a.score; });
+  var top=cands.slice(0,60), moves=cands.slice(60).filter(function(c){ return c.prior>0; }).slice(0,12);
+  cands=top.concat(moves);
   var i=0, found=[];
   (function step(){
     var t0=Date.now();
@@ -1164,7 +1200,17 @@ function proveGoal(key,done,progress){
     if(i<cands.length&&found.length<3){ progress(i,cands.length); setTimeout(step,0); return; }
     if(!found.length){ finish({none:true}); return; }
     /* among proofs found, prefer the standard move, then the shorter proof */
-    found.sort(function(a,b){ return (b.aux.prior||0)-(a.aux.prior||0)||a.proof.length-b.proof.length; }); finish(found[0]);
+    var val=function(f){ return (f.aux.score||0)+(f.aux.prior?1:0)-0.15*f.proof.length; };
+    found.sort(function(a,b){ return val(b)-val(a); });
+    /* the same point can come from several constructions: lead with the standard move, mention the others */
+    var best=found[0], gp=best.aux.gpos, span=1;
+    objs.forEach(function(o){ if(o.type==='point'&&o.g&&isFinite(o.g.x)) span=Math.max(span,Math.abs(o.g.x),Math.abs(o.g.y)); });
+    if(gp){ var eq=cands.filter(function(c){ return c.gpos&&Math.hypot(c.gpos.x-gp.x,c.gpos.y-gp.y)<span*1e-6; }), seen={}, alts=[];
+      eq.sort(function(a,b){ return (b.prior||0)-(a.prior||0)||(b.score||0)-(a.score||0); });
+      eq.forEach(function(c){ var w=c.what.replace(/\{L\}/g,best.label); if(seen[w]) return; seen[w]=1; alts.push(Object.assign({},c,{what:w})); });
+      if(alts.length&&alts[0].what!==best.aux.what) best.show=alts[0];
+      best.also=alts.filter(function(c){ return c.what!==(best.show||best.aux).what; }).slice(0,2).map(function(c){ return c.what; }); }
+    finish(best);
   })();
 }
 function describePt(o){ var L=function(id){ var q=byId(id); return !q?'?':q.type==='point'?q.label:q.type==='line'?ln(q):cn(q); };
@@ -1242,7 +1288,7 @@ function goalLabels(r){
   return out; }
 function goalOverlap(r,f){ var g=goalLabels(r); return factPts(r,f).filter(function(l){ return g.indexOf(l)>=0; }).length; }
 function nudgeOf(r){
-  if(r.aux) return 'One extra point helps here. '+techniqueOf(r.aux);
+  if(r.aux) return 'One extra point helps here. '+techniqueOf(r.show||r.aux);
   if(r.book){ var nb=r.book.length, first=r.bookKinds&&r.bookKinds[0];
     return 'The figure as given is not enough. '+(first?techniqueOf(first):'Look for a point the figure is missing.')+(nb>1?' More than one new point is needed.':''); }
   var pri={centre:6,sim:5,cyc:4,cong:3,perp:2,para:2,coll:1};
@@ -1352,7 +1398,7 @@ function renderHint(){
   if(view===2){ var con, btn='';
     if(r.book){ con=r.book.map(function(id,k){ return (k?'':'Let ')+r.bookLabels[k]+' be '+r.bookWhat[id]; }).join(', and ')+'.';
       btn=r.bookShown?'<p class="hc-small">Added to the figure.</p>':'<button class="btn2 quiet" id="hintdraw">Add '+andList(r.bookLabels)+' to the figure</button>'; }
-    else if(r.aux){ con='Let '+r.label+' be '+r.aux.what+'.'; btn='<button class="btn2 quiet" id="hintdraw">Add '+esc(r.label)+' to the figure</button>'; }
+    else if(r.aux){ con='Let '+r.label+' be '+(r.show||r.aux).what+'.'+(r.also&&r.also.length?' Notice that '+r.label+' is also '+andList(r.also)+'.':''); btn='<button class="btn2 quiet" id="hintdraw">Add '+esc(r.label)+' to the figure</button>'; }
     else if(centre){ var d=factLabels(r,centre); con='Draw the circle centred '+d.x+' through '+d.S.join(', ')+'.'; btn='<button class="btn2 quiet" id="hintdraw">Draw the circle</button>'; }
     else if(cycl){ var dc=factLabels(r,cycl); con='Nothing new to construct. Draw the circle through '+andList(dc.t)+', though, because the proof runs through that circle.'; btn='<button class="btn2 quiet" id="hintdraw">Draw the circle</button>'; }
     else con='No extra construction is needed. Everything happens in the figure as drawn.';
@@ -1386,7 +1432,7 @@ function renderHint(){
     if(r.book){ var back=revealStash(r.book); back.forEach(function(o){ if(r.book.indexOf(o.id)>=0&&o.type==='point') o.hidden=false; }); r.bookShown=true; }
     if(r.pre&&!objs.some(function(o){return o.label===r.pre.label;})) auxPush(r.pre,r.pre.label);
     if(r.book){}
-    else if(r.aux){ var lab=r.label; if(objs.some(function(o){return o.label===lab;})) lab=freeLabel(); auxPush(r.aux,lab); objs[objs.length-1].accent=true; }
+    else if(r.aux){ var lab=r.label; if(objs.some(function(o){return o.label===lab;})) lab=freeLabel(); auxPush(r.show||r.aux,lab); objs[objs.length-1].accent=true; }
     else if(centre||cycl){ var d2=factLabels(r,centre||cycl), pts3=(centre?d2.S:d2.t).slice(0,3), ids=pts3.map(function(l){ var q=objs.filter(function(o){return o.type==='point'&&o.label===l;})[0]; return q&&q.id; });
       if(ids.every(function(x){return x!=null;})){ ids.forEach(function(id){ var q=byId(id); if(q&&q.hidden) q.hidden=false; }); add({type:'circle',kind:'circum',of:ids,accent:true}); } }
     var keep=HINT.res, lv=HINT.level, vw=HINT.view; finish(objs.length-n); HINT.res=keep; HINT.level=lv; HINT.view=vw; HINT.n=objs.length;
@@ -1598,7 +1644,8 @@ svg.addEventListener('pointerup',function(e){ if(!pan) return; pan=null; svg.sty
 renderTools(); draw();
 (function(){ var k=decodeURIComponent(location.hash.slice(1)); if(k&&DEMOS[k]){ DEMOS[k](); if(typeof fitView==='function') fitView(); } })();
 </script>
-<script src="geo-prover.js?v=20261123a"></script>
+<script src="construction-weights.js?v=20261123a"></script>
+<script src="geo-prover.js?v=20261124a"></script>
 <script src="tkz-import.js?v=20261122h"></script>
 <script src="site.js?v=20261118b"></script>
 </body>
