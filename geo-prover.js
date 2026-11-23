@@ -213,8 +213,12 @@ E.hypotheses=function(){
   for(var u=0;u<cens.length;u++)for(var w=u+1;w<cens.length;w++){ var P=pts[cens[u]], Q=pts[cens[w]]; if(!sameSet(P.of,Q.of)) continue;
     P.of.forEach(function(vid){ var v=I(vid), A=pts[v].g, B=P.g, C=Q.g;
       var cr=(B.x-A.x)*(C.y-A.y)-(B.y-A.y)*(C.x-A.x), sc=Math.hypot(B.x-A.x,B.y-A.y)*Math.hypot(C.x-A.x,C.y-A.y);
-      if(sc>0&&Math.abs(cr)<1e-9*sc) self.addFact({key:'bis:'+P.id+':'+Q.id+':'+vid,type:'hyp',hyp:true,aRows:self.rowsColl(v,cens[u],cens[w]),
-        text:pts[v].label+', '+P.label+' and '+Q.label+' lie on a bisector of the angle at '+pts[v].label}); }); }
+      if(!(sc>0)) return;
+      if(Math.abs(cr)<1e-9*sc) self.addFact({key:'bis:'+P.id+':'+Q.id+':'+vid,type:'hyp',hyp:true,aRows:self.rowsColl(v,cens[u],cens[w]),
+        text:pts[v].label+', '+P.label+' and '+Q.label+' lie on a bisector of the angle at '+pts[v].label});
+      /* otherwise one is on the internal bisector and the other on the external one, and those are perpendicular */
+      else{ var dot=(B.x-A.x)*(C.x-A.x)+(B.y-A.y)*(C.y-A.y); if(Math.abs(dot)<1e-9*sc) self.addFact({key:'bisp:'+P.id+':'+Q.id+':'+vid,type:'hyp',hyp:true,
+        aRows:[{v:vec([[1,self.d(v,cens[u])],[-1,self.d(v,cens[w])]]),c:0.5}],text:pts[v].label+P.label+' and '+pts[v].label+Q.label+' are the two bisectors at '+pts[v].label+', so they are perpendicular'}); } }); }
   /* lines built from other lines */
   this.lines.forEach(function(l){
     var of=l.of||[];

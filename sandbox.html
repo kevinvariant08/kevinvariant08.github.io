@@ -1175,42 +1175,83 @@ function proveGoal(key,done,progress){
   /* a figure from a solution: its own constructions come first, cut down to the points the proof uses */
   var bk=PROB.on&&!PROB.shown&&PROB.stash.length&&!window.KV_NO_BOOK?bookConstruction(key):null;
   if(bk){ finish(bk); return; }
-  /* rank the candidate points by the exact relations they create, as the explorer does */
-  var base=relations(true), cands=auxCandidates().filter(function(c){ return c.type==='point'; });
-  cands.forEach(function(c){ var undo=auxPush(c,label); compute(); var np=objs[objs.length-1]; c.gpos=np&&np.g&&isFinite(np.g.x)?{x:np.g.x,y:np.g.y}:null; var now=relations(true); undo();
-    c.pre=0; c.coincides=false;
-    Object.keys(now).forEach(function(k){ if(base[k]) return; var t=k.split(':')[0]; if(t==='same') c.coincides=true; c.pre+=(AUX_WEIGHT[t]||1); }); });
-  compute();
-  /* order by the weights learned from the book plus the relations each point creates; the standard moves
-     (extend or double a median, reflect, antipode) are always tried, whatever their weight */
-  cands=cands.filter(function(c){ return !c.coincides; });
-  cands.forEach(function(c){ c.score=learnedScore(c)+2*Math.log(1+c.pre); });
-  cands.sort(function(a,b){ return b.score-a.score; });
-  var top=cands.slice(0,60), moves=cands.slice(60).filter(function(c){ return c.prior>0; }).slice(0,12);
-  cands=top.concat(moves);
-  var i=0, found=[];
+  /* ---------- the construction search: one new point, then sequences of two and three ----------
+     Each level ranks every candidate on the figure as it then stands (book-trained weights plus the exact
+     relations a point creates) and keeps the best few as the start of deeper sequences. The search stops at
+     the first proof, or when its time budget runs out. */
+  var T0=Date.now(), BUDGET=60000, span=1;
+  objs.forEach(function(o){ if(o.type==='point'&&o.g&&isFinite(o.g.x)) span=Math.max(span,Math.abs(o.g.x),Math.abs(o.g.y)); });
+  var rankCands=function(lab,limit){
+    var base=relations(true), cs=auxCandidates().filter(function(c){ return c.type==='point'; });
+    if(limit&&cs.length>limit){ cs.forEach(function(c){ c.ls=learnedScore(c); }); cs.sort(function(a,b){ return b.ls-a.ls; });
+      cs=cs.slice(0,limit).concat(cs.slice(limit).filter(function(c){ return c.prior>0; }).slice(0,12)); }
+    cs.forEach(function(c){ var undo=auxPush(c,lab); compute(); var np=objs[objs.length-1]; c.gpos=np&&np.g&&isFinite(np.g.x)?{x:np.g.x,y:np.g.y}:null; var now=relations(true); undo();
+      c.pre=0; c.coincides=!c.gpos;
+      Object.keys(now).forEach(function(k){ if(base[k]) return; var t=k.split(':')[0]; if(t==='same') c.coincides=true; c.pre+=(AUX_WEIGHT[t]||1); }); });
+    compute();
+    cs=cs.filter(function(c){ return !c.coincides; });
+    cs.forEach(function(c){ c.score=learnedScore(c)+2*Math.log(1+c.pre); });
+    cs.sort(function(a,b){ return b.score-a.score; });
+    /* one candidate per point: the same point built two ways is tried once */
+    var seen=[], out=[]; cs.forEach(function(c){ if(seen.some(function(g){ return Math.hypot(g.x-c.gpos.x,g.y-c.gpos.y)<span*1e-6; })) return; seen.push(c.gpos); out.push(c); });
+    out.all=cs; return out; };
+  var tryList=function(cs,n,moves){ return cs.slice(0,n).concat(cs.slice(n).filter(function(c){ return c.prior>0; }).slice(0,moves)); };
+  var pushChain=function(chain){ var us=[]; chain.forEach(function(s){ us.push(auxPush(s.c,s.label)); compute(); });
+    return function(){ for(var k=us.length-1;k>=0;k--) us[k](); compute(); }; };
+  var attempt=function(){ var e2=new GeoProver.Engine(), g2=e2.goalFrom(key); if(g2&&e2.saturate(g2,1500)){ var pf2=e2.proof(g2); if(pf2) return {proof:pf2,engine:e2,goal:g2}; } return null; };
+  var named=function(c,lab){ return Object.assign({},c,{what:c.what.replace(/\{L\}/g,lab)}); };
+  /* the level being searched: chains to extend, and the candidates for the next point after each */
+  var c1=rankCands(label,0), level=1, queue=[{chain:[],cands:tryList(c1,60,12),label:label}], qi=0, ci=0, found=null, tried=0;
+  var nextLevel=function(){
+    if(level===1){ /* the best first points, each the start of a two-point sequence */
+      var firsts=tryList(c1,14,3); queue=firsts.map(function(c){ return {chain:[{c:c,label:label}],cands:null}; }); }
+    else if(level===2){ /* the best pairs, each the start of a three-point sequence */
+      var pairs=[]; queue.slice(0,6).forEach(function(q){ (q.ranked||[]).slice(0,3).forEach(function(c){ pairs.push({chain:q.chain.concat([{c:c,label:q.label}]),cands:null}); }); });
+      queue=pairs; }
+    else return false;
+    level++; qi=0; ci=0; return queue.length>0; };
   (function step(){
     var t0=Date.now();
-    while(i<cands.length&&Date.now()-t0<150&&found.length<3){
-      var c=cands[i++], undo=auxPush(c,label); compute();
-      var e2=new GeoProver.Engine(), g2=e2.goalFrom(key);
-      if(g2&&e2.saturate(g2,1200)){ var pf2=e2.proof(g2); if(pf2){ var cw=Object.assign({},c,{what:c.what.replace(/\{L\}/g,label)}); found.push({proof:pf2,engine:e2,goal:g2,aux:cw,label:label}); } }
-      undo(); compute();
+    while(!found&&Date.now()-t0<120){
+      if(Date.now()-T0>BUDGET) break;
+      var q=queue[qi];
+      if(!q){ if(!nextLevel()) break; continue; }
+      if(!q.cands){ /* rank the next point on the figure with this chain in place */
+        var undoR=pushChain(q.chain); q.label=freeLabel(); var rk=rankCands(q.label,170); undoR();
+        q.ranked=rk; q.cands=tryList(rk,level===2?36:24,6); ci=0; }
+      if(ci>=q.cands.length){ qi++; ci=0; continue; }
+      var c=q.cands[ci++], lab=level===1?q.label:q.label, undo=pushChain(q.chain), u2=auxPush(c,lab); compute(); tried++;
+      var r=attempt(); u2(); undo();
+      if(r){ r.chain=q.chain.map(function(s){ return {aux:named(s.c,s.label),label:s.label}; }).concat([{aux:named(c,lab),label:lab}]); found=r; }
     }
-    if(i<cands.length&&found.length<3){ progress(i,cands.length); setTimeout(step,0); return; }
-    if(!found.length){ finish({none:true}); return; }
-    /* among proofs found, prefer the standard move, then the shorter proof */
-    var val=function(f){ return (f.aux.score||0)+(f.aux.prior?1:0)-0.15*f.proof.length; };
-    found.sort(function(a,b){ return val(b)-val(a); });
-    /* the same point can come from several constructions: lead with the standard move, mention the others */
-    var best=found[0], gp=best.aux.gpos, span=1;
-    objs.forEach(function(o){ if(o.type==='point'&&o.g&&isFinite(o.g.x)) span=Math.max(span,Math.abs(o.g.x),Math.abs(o.g.y)); });
-    if(gp){ var eq=cands.filter(function(c){ return c.gpos&&Math.hypot(c.gpos.x-gp.x,c.gpos.y-gp.y)<span*1e-6; }), seen={}, alts=[];
-      eq.sort(function(a,b){ return (b.prior||0)-(a.prior||0)||(b.score||0)-(a.score||0); });
-      eq.forEach(function(c){ var w=c.what.replace(/\{L\}/g,best.label); if(seen[w]) return; seen[w]=1; alts.push(Object.assign({},c,{what:w})); });
-      if(alts.length&&alts[0].what!==best.aux.what) best.show=alts[0];
-      best.also=alts.filter(function(c){ return c.what!==(best.show||best.aux).what; }).slice(0,2).map(function(c){ return c.what; }); }
-    finish(best);
+    if(!found&&Date.now()-T0<=BUDGET&&(queue[qi]||level<3)){ progress(level,tried); setTimeout(step,0); return; }
+    if(!found){ finish({none:true,deep:level}); return; }
+    /* drop any earlier point the proof never uses, when the later points do not depend on it */
+    if(found.chain.length>1){ var used={}; found.proof.forEach(function(f){ factPts({engine:found.engine},f).forEach(function(l){ used[l]=1; }); });
+      var keep=found.chain.filter(function(s,k){ return k===found.chain.length-1||used[s.label]; });
+      if(keep.length<found.chain.length){ var undoK=pushChain(keep.map(function(s){ return {c:s.aux,label:s.label}; })), r2=null;
+        try{ var eK=new GeoProver.Engine(), gK=eK.goalFrom(key); if(gK&&eK.saturate(gK,1500)){ var pK=eK.proof(gK); if(pK) r2={proof:pK,engine:eK,goal:gK}; } }catch(err){}
+        undoK(); if(r2){ r2.chain=keep; found=r2; } } }
+    /* each new point in its plainest form: a point found as "where BX meets AF" may also be the reflection of A in BC */
+    if(found.chain.length>1){ var nice=function(c){ var k=candKey(c).tag; return {'refl-line':6,'double-median':6,'antipode':6,'antipode-hidden':6,'reflp-mid':5,'refl-vertex-centre':5,mid:5,foot:5,'ilc-median':5,ccen:4,orth:4,'ilc-centre-line':3,'ilc-drawn':2,'ilc-join':2,icc:2,inter:1,'inter-join':1}[k]||0; };
+      found.chain.forEach(function(s,k){ var undoP=pushChain(found.chain.slice(0,k).map(function(t){ return {c:t.aux,label:t.label}; })), u=auxPush(s.aux,s.label); compute();
+        var me=objs[objs.length-1], gp=me&&me.g?{x:me.g.x,y:me.g.y}:null; u(); compute(); if(!gp){ undoP(); return; }
+        var eq=[]; auxCandidates().filter(function(c){ return c.type==='point'; }).forEach(function(c){ var u2=auxPush(c,s.label); compute(); var q=objs[objs.length-1];
+          if(q&&q.g&&Math.hypot(q.g.x-gp.x,q.g.y-gp.y)<span*1e-6) eq.push(named(c,s.label)); u2(); });
+        compute(); undoP();
+        eq.sort(function(a,b){ return nice(b)-nice(a); });
+        if(eq.length&&nice(eq[0])>nice(s.aux)) s.show=eq[0];
+        var main=(s.show||s.aux).what, seen={}; seen[main]=1;
+        s.also=eq.map(function(c){ return c.what; }).concat([s.aux.what]).filter(function(w){ if(seen[w]) return false; seen[w]=1; return true; }).slice(0,1); }); }
+    found.aux=found.chain[0].show||found.chain[0].aux; found.label=found.chain[0].label;
+    if(found.chain.length===1){ /* the same point can come from several constructions: lead with the standard move, mention the others */
+      var best=found, gp=best.aux.gpos;
+      if(gp){ var eq=(c1.all||c1).filter(function(c){ return c.gpos&&Math.hypot(c.gpos.x-gp.x,c.gpos.y-gp.y)<span*1e-6; }), seen={}, alts=[];
+        eq.sort(function(a,b){ return (b.prior||0)-(a.prior||0)||(b.score||0)-(a.score||0); });
+        eq.forEach(function(c){ var w=c.what.replace(/\{L\}/g,best.label); if(seen[w]) return; seen[w]=1; alts.push(Object.assign({},c,{what:w})); });
+        if(alts.length&&alts[0].what!==best.aux.what) best.show=alts[0];
+        best.also=alts.filter(function(c){ return c.what!==(best.show||best.aux).what; }).slice(0,2).map(function(c){ return c.what; }); } }
+    finish(found);
   })();
 }
 function describePt(o){ var L=function(id){ var q=byId(id); return !q?'?':q.type==='point'?q.label:q.type==='line'?ln(q):cn(q); };
@@ -1289,6 +1330,8 @@ function goalLabels(r){
   return out; }
 function goalOverlap(r,f){ var g=goalLabels(r); return factPts(r,f).filter(function(l){ return g.indexOf(l)>=0; }).length; }
 function nudgeOf(r){
+  if(r.chain&&r.chain.length>1){ var firstMove=r.chain.map(function(s){ return s.show||s.aux; }).sort(function(a,b){ return (/reflection|antipode|midpoint|median/.test(b.what)?1:0)-(/reflection|antipode|midpoint|median/.test(a.what)?1:0); })[0];
+    return 'One extra point is not enough here. '+techniqueOf(firstMove)+' You will need '+(r.chain.length===2?'one more point':'two more points')+' as well.'; }
   if(r.aux) return 'One extra point helps here. '+techniqueOf(r.show||r.aux);
   if(r.book){ var nb=r.book.length, rankK=function(k){ return {refl:0,reflp:1,mid:2,foot:3,ilc:4,inter:5,icc:6}[k.kind]; },
       first=r.bookKinds&&r.bookKinds.slice().sort(function(a,b){ return (rankK(a)==null?9:rankK(a))-(rankK(b)==null?9:rankK(b)); })[0];
@@ -1376,7 +1419,7 @@ function renderHint(){
   if(HILITE.length) hilite([]);
   if(!r){ out.innerHTML=''; return; }
   if(r.unsupported){ out.innerHTML='<div class="hc-status"><span class="hc-chip no">Not readable yet</span>The prover cannot read this kind of statement yet. Try another one, or look through the extra constructions below.</div>'; return; }
-  if(r.none){ out.innerHTML='<div class="hc-status"><span class="hc-chip no">No proof found</span>Chasing angles and lengths did not get there, even with one extra point. The constructions below create exact relations in the figure, and one of them may start a proof.</div>'; document.getElementById('explore').open=true; return; }
+  if(r.none){ out.innerHTML='<div class="hc-status"><span class="hc-chip no">No proof found</span>Chasing angles and lengths did not get there, even with up to three extra points. The constructions below create exact relations in the figure, and one of them may start a proof.</div>'; document.getElementById('explore').open=true; return; }
   var pf=r.proof, pre=r.pre?'Let '+r.pre.label+' be '+r.pre.what+'. We show that '+r.pre.label+' lies on the third line. ':'';
   /* the claim itself is the last line of the outline, not a key step */
   var sameClaim=function(t){ var k=function(x){ return String(x).split(/ = | ∥ | ⟂ /).map(function(y){return y.trim();}).sort().join('|'); }; return k(t)===k(r.goal.text); };
@@ -1400,6 +1443,8 @@ function renderHint(){
   if(view===2){ var con, btn='';
     if(r.book){ con=r.book.map(function(id,k){ return (k?'':'Let ')+r.bookLabels[k]+' be '+r.bookWhat[id]; }).join(', and ')+'.';
       btn=r.bookShown?'<p class="hc-small">Added to the figure.</p>':'<button class="btn2 quiet" id="hintdraw">Add '+andList(r.bookLabels)+' to the figure</button>'; }
+    else if(r.chain&&r.chain.length>1){ con=r.chain.map(function(s,k){ return (k?'Then let ':'Let ')+s.label+' be '+(s.show||s.aux).what+'.'+(s.also&&s.also.length?' Notice that '+s.label+' is also '+s.also[0]+'.':''); }).join(' ');
+      btn=r.chainShown?'<p class="hc-small">Added to the figure.</p>':'<button class="btn2 quiet" id="hintdraw">Add '+andList(r.chain.map(function(s){ return s.label; }))+' to the figure</button>'; }
     else if(r.aux){ con='Let '+r.label+' be '+(r.show||r.aux).what+'.'+(r.also&&r.also.length?' Notice that '+r.label+' is also '+andList(r.also)+'.':''); btn='<button class="btn2 quiet" id="hintdraw">Add '+esc(r.label)+' to the figure</button>'; }
     else if(centre){ var d=factLabels(r,centre); con='Draw the circle centred '+d.x+' through '+d.S.join(', ')+'.'; btn='<button class="btn2 quiet" id="hintdraw">Draw the circle</button>'; }
     else if(cycl){ var dc=factLabels(r,cycl); con='Nothing new to construct. Draw the circle through '+andList(dc.t)+', though, because the proof runs through that circle.'; btn='<button class="btn2 quiet" id="hintdraw">Draw the circle</button>'; }
@@ -1418,7 +1463,7 @@ function renderHint(){
     return '<li><button type="button" data-v="'+k+'" aria-current="'+(k===view?'step':'false')+'" class="'+(k===view?'now':k<=lvl?'seen':'')+'"'+(k>lvl?' disabled':'')+'><b>'+k+'</b>'+t+'</button></li>'; }).join('')+'</ol>';
   var next=lvl<4?'<button class="btn2" id="hintnext">'+(lvl===0?'Show hint 1: nudge':'Reveal hint '+(lvl+1)+': '+HSTEPS[lvl].toLowerCase())+'</button>':'';
   var back=view>1?'<button class="btn2 quiet" id="hintback">Back</button>':'';
-  out.innerHTML='<div class="hc-status"><span class="hc-chip ok">Proof found</span>'+pf.length+' step'+(pf.length===1?'':'s')+' · '+(r.book?(r.book.length===1?'one extra point':r.book.length+' extra points'):r.aux?'one extra point':'no new points needed')+'</div>'
+  out.innerHTML='<div class="hc-status"><span class="hc-chip ok">Proof found</span>'+pf.length+' step'+(pf.length===1?'':'s')+' · '+(r.book?(r.book.length===1?'one extra point':r.book.length+' extra points'):r.chain&&r.chain.length>1?r.chain.length+' extra points':r.aux?'one extra point':'no new points needed')+'</div>'
     +track+((back||next)?'<div class="hc-nav">'+back+next+'</div>':'')+'<div class="hc-body">'+body+'</div>';   /* buttons sit above the hint, so they never move with its length */
   out.querySelectorAll('.hc-track button').forEach(function(bt){ bt.addEventListener('click',function(){ HINT.view=+bt.dataset.v; renderHint(); }); });
   /* no scrolling on a reveal: the button just pressed stays under the pointer */
@@ -1434,6 +1479,7 @@ function renderHint(){
     if(r.book){ var back=revealStash(r.book); back.forEach(function(o){ if(r.book.indexOf(o.id)>=0&&o.type==='point'){ o.hidden=false; o.accent=true; } else if(o.type!=='point'&&!o.invis) o.accent=true; }); r.bookShown=true; }
     if(r.pre&&!objs.some(function(o){return o.label===r.pre.label;})) auxPush(r.pre,r.pre.label);
     if(r.book){}
+    else if(r.chain&&r.chain.length>1){ r.chain.forEach(function(s){ var lab=s.label; if(objs.some(function(o){return o.label===lab;})) lab=freeLabel(); auxPush(s.show||s.aux,lab); compute(); objs[objs.length-1].accent=true; }); r.chainShown=true; }
     else if(r.aux){ var lab=r.label; if(objs.some(function(o){return o.label===lab;})) lab=freeLabel(); auxPush(r.show||r.aux,lab); objs[objs.length-1].accent=true; }
     else if(centre||cycl){ var d2=factLabels(r,centre||cycl), pts3=(centre?d2.S:d2.t).slice(0,3), ids=pts3.map(function(l){ var q=objs.filter(function(o){return o.type==='point'&&o.label===l;})[0]; return q&&q.id; });
       if(ids.every(function(x){return x!=null;})){ ids.forEach(function(id){ var q=byId(id); if(q&&q.hidden) q.hidden=false; }); add({type:'circle',kind:'circum',of:ids,accent:true}); } }
@@ -1456,7 +1502,7 @@ document.getElementById('solve').addEventListener('click',function(){
     proveGoal(key,function(r){ HINT.busy=false; btn.disabled=false; HINT.res=r; HINT.level=0; HINT.view=0; HINT.n=objs.length; renderHint();
       /* after Find a proof, scroll only if the first hint button is out of sight, and only as far as that */
       var st=document.querySelector('#hintout .hc-nav')||document.querySelector('#hintout .hc-status'); if(st&&st.getBoundingClientRect().bottom>window.innerHeight) st.scrollIntoView({block:'nearest',behavior:reduceMo()?'auto':'smooth'}); },
-      function(i,n){ out.innerHTML='<div class="hc-status">Not provable from the figure as drawn. Trying extra constructions, '+i+' of '+n+' …</div>'; });
+      function(level,tried){ out.innerHTML='<div class="hc-status">Not provable from the figure as drawn. Searching constructions of '+level+' new point'+(level>1?'s':'')+', '+tried+' tried so far \u2026</div>'; });
   },20);
 });
 document.getElementById('test').addEventListener('click',function(){ perturbTest(); renderRelations(); setStatus('Tested against 12 perturbations.'); });
@@ -1651,7 +1697,7 @@ renderTools(); draw();
   else if(k&&BOOKFIGS.some(function(f){ return f.key===k; })){ loadBook(k); var sel=document.getElementById('demo'); if(sel) sel.value='bk:'+k; if(typeof fitView==='function') fitView(); } })();
 </script>
 <script src="construction-weights.js?v=20261123a"></script>
-<script src="geo-prover.js?v=20261124a"></script>
+<script src="geo-prover.js?v=20261124b"></script>
 <script src="tkz-import.js?v=20261122h"></script>
 <script src="site.js?v=20261118b"></script>
 </body>
