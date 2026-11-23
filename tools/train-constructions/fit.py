@@ -28,5 +28,5 @@ report('relations only (before)',lambda f: first_hit(f,lambda r: r['pre']))
 report('learned, held out',lambda f: first_hit(f,lambda r,w=scorer([g for g in T if g['i']!=f['i']],MINC): w(r)+BETA*math.log(1+r['pre'])))
 tc,th,sc,sh=counts(T); g=(sum(th.values())+1)/(sum(tc.values())+2)
 W={'g':g,'t':{k:[th[k],tc[k]] for k in tc},'s':{k:[sh[k],sc[k]] for k in sc if sc[k]>=MINC}}
-open(sys.argv[2],'w').write('/* Construction weights for the sandbox, fitted by tools/train-constructions/fit.py on '+str(len(T))+' Beyond the Incenter diagrams.\n   [hits, candidates] per technique (t) and per technique in context (s). */\nwindow.AUX_LEARNED='+json.dumps(W,separators=(',',':'))+';\n')
+open(sys.argv[2],'w').write('/* Construction weights for the sandbox, fitted by tools/train-constructions/fit.py on '+str(len(T))+' olympiad diagrams (Beyond the Incenter and solved textbook problems).\n   [hits, candidates] per technique (t) and per technique in context (s). */\nwindow.AUX_LEARNED='+json.dumps(W,separators=(',',':'))+';\n')
 print('wrote',sys.argv[2],len(W['s']),'context keys')
