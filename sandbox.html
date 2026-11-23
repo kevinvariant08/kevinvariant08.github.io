@@ -241,7 +241,7 @@ function esc(t){ return String(t).replace(/[&<>]/g,function(c){return {'&':'&amp
 function labSVG(l){ var q=labParts(l); return esc(q.b+q.p)+(q.s?'<tspan baseline-shift="sub" font-size="72%">'+esc(q.s)+'</tspan>':''); }
 function labHTML(l){ var q=labParts(l); return esc(q.b+q.p)+(q.s?'<sub>'+esc(q.s)+'</sub>':''); }
 function labTeX(l){ var q=labParts(l); return q.b+q.p+(q.s?'_{'+q.s+'}':''); }
-function subHTML(t){ return esc(t).replace(/\b([A-Z][a-z]?'*)_?([0-9]+)\b/g,'$1<sub>$2</sub>').replace(/\b([A-Z]'*)_([A-Za-z0-9]{1,3})\b/g,'$1<sub>$2</sub>'); }
+function subHTML(t){ return esc(t).replace(/([A-Z]'*)_([0-9]+)/g,'$1<sub>$2</sub>').replace(/\b([A-Z][a-z]?'*)_?([0-9]+)\b/g,'$1<sub>$2</sub>').replace(/\b([A-Z]'*)_([A-Za-z0-9]{1,3})\b/g,'$1<sub>$2</sub>'); }
 function byId(id){ for(var i=0;i<objs.length;i++) if(objs[i].id===id) return objs[i]; return null; }
 function P(id){ return byId(id).g; }
 
@@ -1198,6 +1198,9 @@ function sayStep(r,f){
     if((m=/^equal base angles (.+) = (.+)$/.exec(why))) return 'Since '+m[1]+' = '+m[2]+', we get '+eq+'.';
     return 'Chasing lengths, we get '+eq+'.'; }
   if(f.type==='sim'){ var c=why.indexOf(', '); return 'Since '+(c>=0?why.slice(c+2):why)+', '+st.charAt(0).toLowerCase()+st.slice(1)+'.'; }
+  if(f.type==='centre'){ var mid=(f.using||[]).map(function(u){ return new RegExp('^'+d.x.replace(/[^A-Za-z0-9_]/g,'')+' is the midpoint of (\\S+)$').exec(u); }).filter(Boolean)[0];
+    if(mid){ var ends=d.S.filter(function(l){ return mid[1].indexOf(l)===0||mid[1].slice(-l.length)===l; });
+      if(ends.length===2&&ends.join('').length===mid[1].length) return d.x+' is the midpoint of the diameter '+mid[1]+', so '+st+'.'; } }
   if(f.type==='centre') return why==='angle at the centre'?'The angle at '+d.x+' is twice the angle on the circle, so '+st+'.'
                                                              :d.x+' is equally far from '+andList(d.S)+', so '+d.x+' is their centre.';
   if((m=/^both equidistant from (\S+) and (\S+)$/.exec(why))) return 'Both ends of '+(d.u||'')+' are equidistant from '+m[1]+' and '+m[2]+', so '+st+'.';
