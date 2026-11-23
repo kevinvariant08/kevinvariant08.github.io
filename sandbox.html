@@ -1074,7 +1074,7 @@ function auxCandidates(){
 /* ---------- Which constructions to try first ----------
    Each candidate gets a technique (foot, midpoint, join two points and meet a line, double the median...)
    and a context (foot from the incentre onto a side, midpoint of two vertices...). The weights in
-   construction-weights.js count, over Beyond the Incenter and solved textbook diagrams, how often a candidate of each
+   construction-weights.js count, over Beyond the Incenter, textbook and Sharygin diagrams, how often a candidate of each
    kind turned out to be a point the book's solution adds. */
 function candKey(c){
   if(c.tag) return {tag:c.tag,key:c.tag+'|'+(c.sub||'')};
@@ -1204,7 +1204,8 @@ document.getElementById('texload').addEventListener('click',function(){
   try{ r=TKZ.build(code); }catch(e){ note.textContent='Could not read that code: '+e; return; }
   hideFigInfo(); document.getElementById('demo').value='';
   var ptxt=(document.getElementById('texprob')||{}).value||'';
-  if(ptxt.trim()){ var pt=ptxt.trim(); if(pt.indexOf('$')<0) pt=pt.replace(/(^|[^A-Za-z])((?:[A-Z](?:'|_\{[^}]*\}|_[A-Za-z0-9])*)+)(?![a-z])/g,function(_,a,b){ return a+'$'+b+'$'; }); problemCard('Problem',ptxt.trim()); splitProblem(pt,'code'); }
+  if(ptxt.trim()){ var pt=ptxt.trim(); /* labels written as plain text (outside any $...$) are wrapped too, so a statement may mix both */
+    pt=pt.split(/(\$[^$]*\$)/).map(function(seg){ return seg.charAt(0)==='$'?seg:seg.replace(/(^|[^A-Za-z\\])((?:[A-Z](?:'|_\{[^}]*\}|_[A-Za-z0-9])*)+)(?![a-z])/g,function(_,a,b){ return a+'$'+b+'$'; }); }).join(''); problemCard('Problem',ptxt.trim()); splitProblem(pt,'code'); }
   else splitProblem('',''); 
   stableSet=null; fitView(); draw(); perturbTest(); renderRelations();
   var shown=objs.filter(function(o){return o.type==='point'&&!o.hidden;}).length;
@@ -1768,7 +1769,7 @@ renderTools(); draw();
 (function(){ var k=decodeURIComponent(location.hash.slice(1)); if(k&&DEMOS[k]){ DEMOS[k](); if(typeof fitView==='function') fitView(); }
   else if(k&&BOOKFIGS.some(function(f){ return f.key===k; })){ loadBook(k); var sel=document.getElementById('demo'); if(sel) sel.value='bk:'+k; if(typeof fitView==='function') fitView(); } })();
 </script>
-<script src="construction-weights.js?v=20261123b"></script>
+<script src="construction-weights.js?v=20261123c"></script>
 <script src="geo-prover.js?v=20261124b"></script>
 <script src="tkz-import.js?v=20261122h"></script>
 <script src="site.js?v=20261118b"></script>
