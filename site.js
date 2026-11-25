@@ -8,8 +8,8 @@
     {label:'Pathways', sec:'path', items:[
       {href:'pathways.html', name:'Pathways course', note:'Five levels, from JMC to IMO selection'},
       {href:'olympiad.html', name:'Olympiad library', note:'Mock papers, solutions, the HU Collection'},
+      {href:'sandbox.html', name:'Phantom Point', note:'Find the construction, then the proof'},
       {href:'book.html', name:'Beyond the Incenter', note:'Kevin\u2019s olympiad geometry book'}]},
-    {label:'Phantom Point', sec:'path', href:'sandbox.html'},
     {label:'Calendar', sec:'cal', href:'calendar.html'},
     {label:'Admissions', sec:'tmua', items:[
       {href:'admissions.html', name:'Admissions plan', note:'What to do, and when'},
