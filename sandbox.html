@@ -204,7 +204,7 @@ var LIGHT_COLS={'#F3F1FF':'#16171A','#121316':'#FFFFFF','#4FD8E8':'#1F7A94','#5B
 function themeCols(str){ if(document.documentElement.getAttribute('data-mode')==='dark') return str; return str.replace(/#[0-9A-Fa-f]{6}\b/g,function(c){ return LIGHT_COLS[c.toUpperCase()]||c; }); }
 try{ new MutationObserver(function(){ if(typeof draw==='function') draw(); }).observe(document.documentElement,{attributes:true,attributeFilter:['data-mode']}); }catch(e){}
 var W=760,H=520,objs=[],labels=0,tool='point',picks=[],drag=null,stableSet=null,groups=[],nextId=1;
-var VB={x:0,y:0,w:760,h:520}; function Z(){ return VB.w/W; }
+var VB={x:0,y:0,w:760,h:520}, UIK=1; function Z(){ return VB.w/W*UIK; }
 function setVB(v){ VB=v; svg.setAttribute('viewBox',VB.x+' '+VB.y+' '+VB.w+' '+VB.h); }
 var TOOLS=[
  {h:'Points'},
@@ -737,6 +737,12 @@ function perturbTest(){
 }
 
 var svg=document.getElementById('cv');
+/* On a narrow screen the canvas is taller, and points, labels and tap targets are drawn larger: at phone width a
+   label was under 8px and a point could only be picked within 6px. */
+function fitScreen(first){ var w=svg.getBoundingClientRect().width||760; UIK=Math.max(1,Math.min(1.55,700/w));
+  if(first&&window.matchMedia&&window.matchMedia('(max-width:640px)').matches){ H=700; setVB({x:0,y:0,w:W,h:H}); } }
+fitScreen(true);
+window.addEventListener('resize',function(){ var k=UIK; fitScreen(false); if(k!==UIK&&typeof draw==='function') draw(); });
 function clipLine(l,mode){
   var dx=l.x2-l.x1,dy=l.y2-l.y1,ts=[];
   var X0=VB.x,Y0=VB.y,X1=VB.x+VB.w,Y1=VB.y+VB.h,e=Z();
@@ -986,7 +992,8 @@ svg.addEventListener('pointerdown',function(e){
   construct(tool,picks.slice()); setStatus('Added. Drag a free point to see what holds.');
 });
 svg.addEventListener('pointermove',function(e){ if(!drag) return; var pt=svgPoint(e);
-  if(drag.kind==='free'){ drag.x=Math.max(6,Math.min(W-6,pt.x)); drag.y=Math.max(6,Math.min(H-6,pt.y)); }
+  /* a dragged point stays inside what is on screen, wherever the view has been moved or fitted to */
+  if(drag.kind==='free'){ var mg=6*Z(); drag.x=Math.max(VB.x+mg,Math.min(VB.x+VB.w-mg,pt.x)); drag.y=Math.max(VB.y+mg,Math.min(VB.y+VB.h-mg,pt.y)); }
   else if(drag.kind==='onl'){ var l=P(drag.of[0]),dx=l.x2-l.x1,dy=l.y2-l.y1,L=dx*dx+dy*dy; if(L>1e-9) drag.t=((pt.x-l.x1)*dx+(pt.y-l.y1)*dy)/L; }
   else { var c=P(drag.of[0]); drag.ang=Math.atan2(pt.y-c.cy,pt.x-c.cx); }
   draw(); });
@@ -1707,6 +1714,11 @@ function hiliteSVG(z){ var H=HILITE; if(!H) return '';
         s+='<circle cx="'+ox+'" cy="'+oy+'" r="'+Math.hypot(a.x-ox,a.y-oy)+'" fill="none" stroke="'+COL[0]+'" stroke-width="3"/>'; } }
     cg.forEach(function(p){ s+='<circle cx="'+p.x+'" cy="'+p.y+'" r="'+7*z+'" fill="none" stroke="'+COL[0]+'" stroke-width="2"/>'; }); }
   (H.pts||[]).forEach(function(l){ var p=G(l); if(p) s+='<circle cx="'+p.x+'" cy="'+p.y+'" r="'+12*z+'" fill="rgba(255,197,61,.28)" stroke="#FFC53D" stroke-width="2"/>'; });
+  /* a helper point that is not drawn on the figure (the centre of a circle, say) is named while its step is lit */
+  var named={}; (H.tris||[]).forEach(function(t){ t.forEach(function(l){ named[l]=1; }); }); (H.segs||[]).forEach(function(sg){ named[sg[0]]=1; named[sg[1]]=1; });
+  (H.circ||[]).forEach(function(l){ named[l]=1; }); if(H.centre) named[H.centre]=1; (H.pts||[]).forEach(function(l){ named[l]=1; });
+  Object.keys(named).forEach(function(l){ var o=objs.filter(function(q){ return q.type==='point'&&q.label===l&&q.hidden&&q.g&&isFinite(q.g.x); })[0]; if(!o) return;
+    s+='<circle cx="'+o.g.x+'" cy="'+o.g.y+'" r="'+3.5*z+'" fill="#121316"/><text x="'+(o.g.x+11*z)+'" y="'+(o.g.y-9*z)+'" text-anchor="middle" dominant-baseline="central" font-family="IBM Plex Serif,serif" font-style="italic" font-size="'+15*z+'" fill="#F3F1FF">'+labSVG(o.label)+'</text>'; });
   return s; }
 var HSTEPS=['Nudge','Construction','Key steps','Outline'];
 /* hints are shown one at a time: a track of four steps, the open step below it, and Back / Next */
