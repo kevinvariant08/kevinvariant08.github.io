@@ -1369,7 +1369,7 @@ document.getElementById('texload').addEventListener('click',function(){
    drawn is not enough, it tries one extra point at a time (feet, midpoints, centres, reflections,
    intersections) and keeps a construction only if the proof then goes through. */
 var HINT={on:false,res:null,level:0,n:-1,busy:false};
-try{ HINT.on=localStorage.getItem('sbHints')==='on'; }catch(e){}
+HINT.on=true; try{ HINT.on=localStorage.getItem('sbHints')!=='off'; }catch(e){}
 function setHints(on){ HINT.on=on; try{ localStorage.setItem('sbHints',on?'on':'off'); }catch(e){}
   document.querySelectorAll('#hintsw button').forEach(function(b){ var mine=(b.getAttribute('data-h')==='on')===on; b.classList.toggle('on',mine); b.setAttribute('aria-pressed',mine?'true':'false'); });
   document.getElementById('hintwrap').hidden=!on;
@@ -2074,6 +2074,6 @@ renderTools(); draw();
 <script src="construction-weights.js?v=20261125a"></script>
 <script src="geo-prover.js?v=20261125b"></script>
 <script src="tkz-import.js?v=20261122h"></script>
-<script src="site.js?v=20261118b"></script>
+<script src="site.js?v=20261125a"></script>
 </body>
 </html>

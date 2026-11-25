@@ -9,6 +9,7 @@
       {href:'pathways.html', name:'Pathways course', note:'Five levels, from JMC to IMO selection'},
       {href:'olympiad.html', name:'Olympiad library', note:'Mock papers, solutions, the HU Collection'},
       {href:'book.html', name:'Beyond the Incenter', note:'Kevin\u2019s olympiad geometry book'}]},
+    {label:'Phantom Point', sec:'path', href:'sandbox.html'},
     {label:'Calendar', sec:'cal', href:'calendar.html'},
     {label:'Admissions', sec:'tmua', items:[
       {href:'admissions.html', name:'Admissions plan', note:'What to do, and when'},
@@ -23,7 +24,7 @@
       {href:'classes.html', name:'Classes', note:'Join a class, or set work for one'}]}
   ];
   var FOOT='<div class="foot-grid">'
-    +'<div><b>Pathways</b><a href="pathways.html">All levels</a><a href="pathways.html#start">Find your level</a><a href="olympiad.html">Olympiad library</a><a href="geometry.html">Geometry Lab</a></div>'
+    +'<div><b>Pathways</b><a href="pathways.html">All levels</a><a href="pathways.html#start">Find your level</a><a href="olympiad.html">Olympiad library</a><a href="sandbox.html">Phantom Point</a><a href="geometry.html">Geometry Lab</a></div>'
     +'<div><b>Calendar</b><a href="calendar.html">Competition dates</a><a href="calendar.html#all-h">Entry deadlines</a></div>'
     +'<div><b>Admissions</b><a href="admissions.html">Admissions plan</a><a href="tmua.html">TMUA</a><a href="esat.html">ESAT</a><a href="interviews.html">Mock interviews</a></div>'
     +'<div><b>Extras</b><a href="qotw.html">Problem of the week</a><a href="/cevian/">Cevian</a><a href="progress.html">My progress</a><a href="classes.html">Classes</a><a href="compete.html">Everything else</a></div>'

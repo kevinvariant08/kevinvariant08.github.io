@@ -48,6 +48,12 @@
     .bookband img{border-radius:var(--r-sm);width:100%;background:#121316}
     .bookband h2{margin:.2rem 0 .4rem}
     .bookband p{color:var(--ink-soft)}
+    .ppband{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,26rem);gap:1.4rem 2.2rem;align-items:center;background:var(--surface);border:1px solid var(--line-soft);border-radius:var(--r-lg);padding:1.4rem}
+    @media (max-width:760px){.ppband{grid-template-columns:1fr}}
+    .ppband img{width:100%;height:auto;border-radius:var(--r-sm);border:1px solid var(--line-soft);background:#fff}
+    .ppband h2{margin:.2rem 0 .4rem}
+    .ppband p{color:var(--ink-soft)}
+    .ppband .btn{margin:.3rem .4rem .3rem 0}
     .elsewhere{display:flex;flex-wrap:wrap;align-items:baseline;gap:.3rem 1rem;padding:1rem 0;border-top:1px solid var(--line-soft);color:var(--ink-soft);font-size:.95rem}
     .elsewhere b{color:var(--ink)}
     .lockline{color:var(--ink-faint);font-size:.9rem}
@@ -84,6 +90,18 @@
       </div>
     </section>
 
+
+    <section aria-labelledby="pp-h" id="phantom-point">
+      <div class="ppband" data-sec="path">
+        <div>
+          <h2 id="pp-h">Phantom Point</h2>
+          <p>Draw an olympiad geometry figure, or paste a problem with its tkz-euclide code, and drag the points to see which relations really hold. Choose the claim you want and Phantom Point searches for the point or line you would add on paper, then proves the claim step by step, one hint at a time.</p>
+          <a class="btn" href="sandbox.html#antipar"><span>Try a problem</span></a>
+          <a class="btn secondary" href="sandbox.html">Open a blank canvas</a>
+        </div>
+        <a href="sandbox.html#antipar" aria-label="Open Phantom Point on a sample problem"><img src="phantom-point.webp" width="1002" height="954" alt="Phantom Point with a triangle, a circle through A, O and C, and the claim AC perpendicular to BL marked as proved in two steps." loading="lazy"></a>
+      </div>
+    </section>
 
     <section aria-labelledby="demo-h" id="demo" class="demo" data-sec="path">
       <h2 id="demo-h">Try a problem from Level 3</h2>
@@ -158,7 +176,7 @@
     </div>
   </main>
 
-<script src="site.js?v=20261118b"></script>
+<script src="site.js?v=20261125a"></script>
 <script src="path.js?v=20261114a"></script>
 <script src="pathways-data.js?v=20261112c"></script>
 <script src="calendar-data.js?v=20261108e"></script>
