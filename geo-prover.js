@@ -451,9 +451,33 @@ E.goalFrom=function(key){
       var v1=vec([[1,this.dl(lt)],[-1,this.d(T,oth[0])],[-1,this.d(oth[1],T)],[1,this.d(oth[1],oth[0])]]), v2=vec([[1,this.dl(lt)],[-1,this.d(T,oth[0])],[1,this.d(oth[1],T)],[-1,this.d(oth[1],oth[0])]]);
       g.a.push(nearC(this.aValue(v1),0)?{v:v1,c:0}:{v:v2,c:0}); }
     g.text=ln(lt)+' is tangent to '+cn(ct); return g; }
+  /* two circles touch at a point they share: their tangents there are one line. Each tangent is read off its circle,
+     as the perpendicular to the radius when the centre is named and by the tangent-chord angle otherwise */
+  if(type==='tcc'){ var cs=k[1].split(',').map(function(id){ return objs.filter(function(o){return o.type==='circle'&&o.id===+id;})[0]; }); if(!cs[0]||!cs[1]) return null;
+    var mm=cs.map(function(c){ return self.cmembers[c.id]||[]; }), Tc=mm[0].filter(function(x){ return mm[1].indexOf(x)>=0; })[0]; if(Tc===undefined) return null;
+    var tanAt=function(c,mem){ var cen=null; if(c.kind==='cp'&&ix[c.c]!==undefined) cen=ix[c.c];
+      objs.forEach(function(z){ if(z.type==='point'&&((c.kind==='circum'&&z.kind==='ccen')||(c.kind==='inc'&&z.kind==='inc'))&&sameSet(z.of,c.of)&&ix[z.id]!==undefined) cen=ix[z.id]; });
+      if(cen!==null&&cen!==Tc) return {t:[[1,self.d(cen,Tc)]],c:0.5};
+      var o=mem.filter(function(x){return x!==Tc;}); if(o.length<2) return null;
+      return {t:[[1,self.d(Tc,o[0])],[1,self.d(Tc,o[1])],[-1,self.d(o[0],o[1])]],c:0}; };
+    var ta=tanAt(cs[0],mm[0]), tb=tanAt(cs[1],mm[1]); if(!ta||!tb) return null;
+    var vt=vec(ta.t.concat(tb.t.map(function(t){ return [-t[0],t[1]]; }))), ctc=mod1(ta.c-tb.c);
+    if(!nearC(this.aValue(vt),ctc)) return null;
+    g.a.push({v:vt,c:ctc}); g.text=cn(cs[0])+' is tangent to '+cn(cs[1]); return g; }
   if(type==='eq'){ var segs=k[1].split(',').map(function(s){ for(var i=1;i<s.length;i++){ var a=byLabel(s.slice(0,i)), b=byLabel(s.slice(i)); if(a!==undefined&&b!==undefined) return [a,b]; } return null; });
     if(segs.some(function(s){return !s;})) return null;
     for(var i=1;i<segs.length;i++) g.l.push(this.rowLenEq(segs[0][0],segs[0][1],segs[i][0],segs[i][1])); g.text=k[1].split(',').join(' = '); return g; }
+  /* one length is twice another */
+  if(type==='r2'){ var sd=k[1].split('=').map(function(s){ for(var i=1;i<s.length;i++){ var a=byLabel(s.slice(0,i)), b=byLabel(s.slice(i)); if(a!==undefined&&b!==undefined) return [a,b]; } return null; });
+    if(sd.length!==2||!sd[0]||!sd[1]) return null;
+    g.l.push({v:vec([[1,this.q(sd[0][0],sd[0][1])],[-1,this.q(sd[1][0],sd[1][1])]]),c:Math.log(2)}); g.text=k[1].split('=').join(' = 2·'); return g; }
+  /* two angles are equal (or add up to 180 degrees): as angles between lines these are one statement, and the
+     figure says which way round the second angle is read */
+  if(type==='ang'){ var qa=k[1].split('|'), A1=qa[0].split(',').map(byLabel), B1=qa[1].split(',').map(byLabel); if(A1.length!==3||B1.length!==3||A1.concat(B1).some(function(x){return x===undefined;})) return null;
+    var va=vec([[1,this.d(A1[1],A1[0])],[-1,this.d(A1[1],A1[2])],[-1,this.d(B1[1],B1[0])],[1,this.d(B1[1],B1[2])]]),
+        vb=vec([[1,this.d(A1[1],A1[0])],[-1,this.d(A1[1],A1[2])],[1,this.d(B1[1],B1[0])],[-1,this.d(B1[1],B1[2])]]);
+    g.a.push({v:nearC(this.aValue(va),0)?va:vb,c:0});
+    g.text='∠'+qa[0].split(',').join('')+(qa[2]==='s'?' + ∠'+qa[1].split(',').join('')+' = 180°':' = ∠'+qa[1].split(',').join('')); return g; }
   if(type==='sim'){ var q=k[1].split('|'), A=q[0].split(',').map(byLabel), B=q[1].split(',').map(byLabel); if(A.concat(B).some(function(x){return x===undefined;})) return null;
     g.a=this.rowsSim(A,B,q[2]==='o').slice(0,2); g.text='△'+q[0].split(',').join('')+' ∼ △'+q[1].split(',').join(''); return g; }
   if(type==='con'){ var ids2=k[1].split(',').map(line); if(ids2.some(function(x){return !x;})) return null;
@@ -461,6 +485,11 @@ E.goalFrom=function(key){
       var X=this.pts.map(function(_,i){return i;}).filter(function(i){ return onLineByConstruction(self.pts[i],l1b)&&onLineByConstruction(self.pts[i],l2b); })[0];
       if(X===undefined) continue; var m3=(this.members[l3.id]||[]).filter(function(x){return x!==X;}); if(!m3.length) continue;
       g.a.push({v:vec([[1,this.d(X,m3[0])],[-1,this.dl(l3)]]),c:0}); g.text='lines '+ids2.map(ln).join(', ')+' are concurrent'; return g; }
+    /* the lines meet at a point already in the figure, built on at most one of them: show it is on the others */
+    var Z=null; for(var zi=0;zi<this.pts.length&&Z===null;zi++){ var pz=this.pts[zi]; if(ids2.every(function(l){ return distPL(pz.g,l.g)<self.D*1e-6; })) Z=zi; }
+    if(Z!==null){ var okc=true; ids2.forEach(function(l){ var mem=self.members[l.id]||[]; if(mem.indexOf(Z)>=0) return; var o=mem.filter(function(x){ return x!==Z; })[0]; if(o===undefined){ okc=false; return; }
+        g.a.push({v:vec([[1,self.d(Z,o)],[-1,self.dl(l)]]),c:0}); });
+      if(okc&&g.a.length){ g.text='lines '+ids2.map(ln).join(', ')+' are concurrent'; return g; } }
     return null; }
   return null;
 };
