@@ -167,6 +167,16 @@ E.hypotheses=function(){
   pts.forEach(function(p,pi){
     var of=(p.of||[]);
     switch(p.kind){
+      case 'tanpt': { /* the tangent from X touches the circle here: at right angles to the radius, making the tangent-chord angle, and as long as the other tangent from X */
+        var cT=byId(of[1]); if(!has(of[0])||!cT) break; var xT=I(of[0]), arT=[], lrT=[], cenT=null, cmT=self.cmembers[cT.id]||[];
+        if(cT.kind==='cp'&&has(cT.c)) cenT=I(cT.c);
+        objs.forEach(function(z){ if(z.type==='point'&&((cT.kind==='circum'&&z.kind==='ccen')||(cT.kind==='inc'&&z.kind==='inc'))&&z.of&&cT.of&&sameSet(z.of,cT.of)&&has(z.id)) cenT=I(z.id); });
+        if(cenT!==null&&cenT!==pi) arT.push({v:vec([[1,self.d(xT,pi)],[-1,self.d(cenT,pi)]]),c:0.5});
+        cmT.forEach(function(x){ cmT.forEach(function(y){ if(x===pi||y===pi||x===y) return;
+          var v1=vec([[1,self.d(xT,pi)],[-1,self.d(pi,x)],[-1,self.d(y,pi)],[1,self.d(y,x)]]), v2=vec([[1,self.d(xT,pi)],[-1,self.d(pi,x)],[1,self.d(y,pi)],[-1,self.d(y,x)]]);
+          if(nearC(self.aValue(v1),0)) arT.push({v:v1,c:0}); else if(nearC(self.aValue(v2),0)) arT.push({v:v2,c:0}); }); });
+        pts.forEach(function(p2,pj){ if(pj!==pi&&p2.kind==='tanpt'&&p2.of&&p2.of[0]===of[0]&&p2.of[1]===of[1]) lrT.push(self.rowLenEq(xT,pi,xT,pj)); });
+        self.addFact({key:'tanpt:'+p.id,type:'hyp',hyp:true,aRows:arT,lRows:lrT,text:byId(of[0]).label+p.label+' is tangent to '+cn(cT)+' at '+p.label}); break; }
       case 'foot': { var l=byId(of[1]); if(has(of[0])&&l) self.addFact({key:'foot:'+p.id,type:'hyp',hyp:true,aRows:[{v:vec([[1,self.d(I(of[0]),pi)],[-1,self.dl(l)]]),c:0.5}],text:p.label+' is the foot of the perpendicular from '+byId(of[0]).label+' to '+ln(l)}); break; }
       case 'refl': { var l2=byId(of[1]); if(!has(of[0])||!l2) break; var x=I(of[0]), ar=[{v:vec([[1,self.d(x,pi)],[-1,self.dl(l2)]]),c:0.5}], lr=[];
         (self.members[l2.id]||[]).forEach(function(qm){ if(qm===pi||qm===x) return; lr.push(self.rowLenEq(qm,pi,qm,x)); ar.push({v:vec([[1,self.d(qm,pi)],[1,self.d(qm,x)],[-2,self.dl(l2)]]),c:0}); });
@@ -219,6 +229,23 @@ E.hypotheses=function(){
       /* otherwise one is on the internal bisector and the other on the external one, and those are perpendicular */
       else{ var dot=(B.x-A.x)*(C.x-A.x)+(B.y-A.y)*(C.y-A.y); if(Math.abs(dot)<1e-9*sc) self.addFact({key:'bisp:'+P.id+':'+Q.id+':'+vid,type:'hyp',hyp:true,
         aRows:[{v:vec([[1,self.d(v,cens[u])],[-1,self.d(v,cens[w])]]),c:0.5}],text:pts[v].label+P.label+' and '+pts[v].label+Q.label+' are the two bisectors at '+pts[v].label+', so they are perpendicular'}); } }); }
+  /* what the problem itself states as given (read from its text): a premise whatever construction the figure
+     used for it. Each is taken only where it holds in the figure, like every other premise */
+  ((typeof PROB!=='undefined'&&PROB&&PROB.givens)||[]).forEach(function(gv,gi){
+    var P=function(l){ for(var z=0;z<n;z++) if(pts[z].label&&!pts[z].hidden&&normLab(pts[z].label)===l) return z; return undefined; };
+    var a=(gv.a||[]).map(P), b=(gv.b||[]).map(P); if(a.concat(b).some(function(x){ return x===undefined; })) return;
+    var ar=[], lr=[], nm=function(t){ return t.map(function(z){ return pts[z].label; }).join(''); }, txt='';
+    if(gv.t==='ang'){ if(a[1]===a[0]||a[1]===a[2]||b[1]===b[0]||b[1]===b[2]) return;
+      ar=[{v:vec([[1,self.d(a[1],a[0])],[-1,self.d(a[1],a[2])],[-1,self.d(b[1],b[0])],[1,self.d(b[1],b[2])]]),c:0},{v:vec([[1,self.d(a[1],a[0])],[-1,self.d(a[1],a[2])],[1,self.d(b[1],b[0])],[-1,self.d(b[1],b[2])]]),c:0}];
+      txt='\u2220'+nm(a)+' = \u2220'+nm(b); }
+    else if(gv.t==='right'){ if(a[1]===a[0]||a[1]===a[2]) return; ar=[{v:vec([[1,self.d(a[1],a[0])],[-1,self.d(a[1],a[2])]]),c:0.5}]; txt='\u2220'+nm(a)+' = 90\u00B0'; }
+    else if(gv.t==='eq'){ lr=[self.rowLenEq(a[0],a[1],b[0],b[1])]; txt=nm(a)+' = '+nm(b); }
+    else if(gv.t==='r2'){ lr=[{v:vec([[1,self.q(a[0],a[1])],[-1,self.q(b[0],b[1])]]),c:Math.log(2)}]; txt=nm(a)+' = 2\u00B7'+nm(b); }
+    else if(gv.t==='par'||gv.t==='perp'){ ar=[{v:vec([[1,self.d(a[0],a[1])],[-1,self.d(b[0],b[1])]]),c:gv.t==='perp'?0.5:0}]; txt=nm(a)+(gv.t==='perp'?' \u27C2 ':' \u2225 ')+nm(b); }
+    else return;
+    ar=ar.filter(function(r){ return Object.keys(r.v).length&&self.okA(r); }); lr=lr.filter(function(r){ return Object.keys(r.v).length&&self.okL(r); });
+    if(ar.length||lr.length) self.addFact({key:'given:'+gi,type:'hyp',hyp:true,given:true,aRows:ar,lRows:lr,text:txt+', as the problem states'});
+  });
   /* lines built from other lines */
   this.lines.forEach(function(l){
     var of=l.of||[];
@@ -299,7 +326,7 @@ E.candidates=function(){
 };
 E.simCands=function(out){
   var pts=this.pts, n=pts.length, T=[], i,j,k;
-  if(n>16) return;
+  if(n>(this.simMax||16)) return;
   for(i=0;i<n;i++)for(j=i+1;j<n;j++)for(k=j+1;k<n;k++){ var a=pts[i].g,b=pts[j].g,c=pts[k].g, s=[Math.hypot(b.x-c.x,b.y-c.y),Math.hypot(a.x-c.x,a.y-c.y),Math.hypot(a.x-b.x,a.y-b.y)], mx=Math.max(s[0],s[1],s[2]);
     if(Math.abs((b.x-a.x)*(c.y-a.y)-(b.y-a.y)*(c.x-a.x))<mx*mx*2e-3) continue; T.push({v:[i,j,k],s:s,mx:mx}); }
   var PERMS=[[0,1,2],[1,0,2],[0,2,1],[2,0,1],[1,2,0],[2,1,0]], Es=[];

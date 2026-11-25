@@ -1251,7 +1251,7 @@ function auxPush(c,label){
       var cc=add({type:'point',kind:'ccen',of:c.cenOf.slice(),hidden:true,label:cl}); of=[c.p,cc.id]; }
     var o={type:'point',kind:c.kind,of:of,label:label}; for(var k in (c.extra||{})) o[k]=c.extra[k]; add(o); }
   else add({type:'line',kind:'two',style:'line',a:c.a,b:c.b,name:c.what.replace('the line ','')});
-  return function(){ objs.length=n; nextId=objs.reduce(function(m,o){return Math.max(m,o.id);},0)+1; };
+  return function(){ objs.length=n; nextId=objs.concat((typeof PROB!=='undefined'&&PROB&&PROB.stash)||[]).reduce(function(m,o){return Math.max(m,o.id);},0)+1; };
 }
 var AUX_WEIGHT={same:10,col:3,cyc:3,onc:3,onl:3,perp:3,par:3,con:3,tan:3,tcc:3,eq:2,sim:1,sum:1,r2:1};
 function suggestAux(){
@@ -1407,7 +1407,9 @@ function proveGoal(key,done,progress){
   var rankCands=function(lab,limit){
     var base=relations(true), cs=auxCandidates().filter(function(c){ return c.type==='point'; });
     if(limit&&cs.length>limit){ cs.forEach(function(c){ c.ls=learnedScore(c)+0.4*(c.prior||0)+goalBonus(goalFeat(c,GP,null,span)); }); cs.sort(function(a,b){ return b.ls-a.ls; });
-      cs=cs.slice(0,limit).concat(cs.slice(limit).filter(function(c){ return c.prior>=3; }).slice(0,40)); }
+      /* past the cut, keep the strong moves and the named centres of a triangle of free points: few, and often the point a proof needs */
+      var refCentre=function(c){ return ['inc','exc','ccen','orth','cent'].indexOf(c.kind)>=0&&c.of&&c.of.length===3&&c.of.every(function(id){ var q=byId(id); return q&&q.kind==='free'; }); };
+      cs=cs.slice(0,limit).concat(cs.slice(limit).filter(function(c){ return c.prior>=3||refCentre(c); }).slice(0,40)); }
     cs.forEach(function(c){ var undo=auxPush(c,lab); compute(); var np=objs[objs.length-1]; c.gpos=np&&np.g&&isFinite(np.g.x)?{x:np.g.x,y:np.g.y}:null; var now=relations(true); undo();
       c.pre=0; c.coincides=!c.gpos;
       Object.keys(now).forEach(function(k){ if(base[k]) return; var t=k.split(':')[0]; if(t==='ang') return; if(t==='same') c.coincides=true; c.pre+=(AUX_WEIGHT[t]||1); }); });
@@ -1415,8 +1417,15 @@ function proveGoal(key,done,progress){
     cs=cs.filter(function(c){ return !c.coincides; });
     cs.forEach(function(c){ c.gf=goalFeat(c,GP,c.gpos,span); c.score=learnedScore(c)+2*Math.log(1+c.pre)+goalBonus(c.gf); });
     cs.sort(function(a,b){ return b.score-a.score; });
-    /* one candidate per point: the same point built two ways is tried once */
-    var seen=[], out=[]; cs.forEach(function(c){ if(seen.some(function(g){ return Math.hypot(g.x-c.gpos.x,g.y-c.gpos.y)<span*1e-6; })) return; seen.push(c.gpos); out.push(c); });
+    /* one candidate per point and kind: the same point built the same way twice is tried once, but a named centre
+       or a midpoint carries premises that a meeting of two lines does not, so each kind keeps its best version */
+    var seen=[], out=[], kcls=function(c){ return ['inter','ilc','icc'].indexOf(c.kind)>=0?'x':c.kind; };
+    cs.forEach(function(c){ var k=kcls(c), at=seen.filter(function(g){ return Math.hypot(g.x-c.gpos.x,g.y-c.gpos.y)<span*1e-6; });
+      if(at.some(function(g){ return g.k===k; })||at.length>=3) return;
+      /* a point that two different constructions land on is worth trying both ways: the second version takes the place just after the first */
+      if(at.length) c.score=Math.max(c.score,at[0].s-1e-6);
+      seen.push({x:c.gpos.x,y:c.gpos.y,k:k,s:c.score}); out.push(c); });
+    out.sort(function(a,b){ return b.score-a.score; });
     out.all=cs; return out; };
   var tryList=function(cs,n,moves){ return cs.slice(0,n).concat(cs.slice(n).filter(function(c){ return c.prior>0; }).slice(0,moves)); };
   var pushChain=function(chain){ var us=[]; chain.forEach(function(s){ us.push(auxPush(s.c,s.label)); compute(); });
@@ -1424,7 +1433,7 @@ function proveGoal(key,done,progress){
   var attempt=function(){ var e2=new GeoProver.Engine(), g2=e2.goalFrom(key); if(g2&&e2.saturate(g2,1500)){ var pf2=e2.proof(g2); if(pf2) return {proof:pf2,engine:e2,goal:g2}; } return null; };
   var named=function(c,lab){ return Object.assign({},c,{what:c.what.replace(/\{L\}/g,lab)}); };
   /* the level being searched: chains to extend, and the candidates for the next point after each */
-  var c1=rankCands(label,900), level=1, queue=[{chain:[],cands:tryList(c1,60,12),label:label}], qi=0, ci=0, found=null, tried=0;
+  var c1=rankCands(label,900), level=1, queue=[{chain:[],cands:c1.slice(),label:label}], qi=0, ci=0, found=null, tried=0, L1CAP=5000;
   var pass=1, firstRound=null;
   var nextLevel=function(){
     if(level===1){ /* the best first points, each the start of a two-point sequence */
@@ -1444,6 +1453,8 @@ function proveGoal(key,done,progress){
     while(!found&&Date.now()-t0<120){
       if(Date.now()-T0>BUDGET) break;
       var q=queue[qi];
+      /* the single points get a share of the time: past it, or past the best sixty when they are slow, move on */
+      if(q&&level===1&&pass===1&&Date.now()-T0>L1CAP&&ci>=Math.min(60,q.cands.length)){ qi++; ci=0; q=queue[qi]; }
       if(!q){ if(!nextLevel()) break; continue; }
       if(!q.cands){ /* rank the next point on the figure with this chain in place */
         var undoR=pushChain(q.chain); q.label=freeLabel(); var rk=rankCands(q.label,170); undoR();
@@ -1892,7 +1903,7 @@ function loadBook(key){ var f=BOOKFIGS.filter(function(x){return x.key===key;})[
    A figure from a solution already carries the solution's constructions. The labels named in the
    statement, and everything they are built from, make the problem figure. The rest is kept back:
    the prover tries it first when a construction is needed, and the construction hint brings it out. */
-var PROB={on:false,stash:[],src:'',shown:false};
+var PROB={on:false,stash:[],src:'',shown:false,givens:[]};
 function normLab(t){ return String(t).replace(/[_{}\\\s]/g,'').replace(/'/g,'p'); }
 function statementTokens(text){ var out={labels:{},pairs:{},circles:{},lines:{}}, re=/\$([^$]+)\$/g, m;
   var pk=function(a,b){ return [a,b].sort().join('|'); }, LAB=/[A-Z]'*(?:_\{[^}]*\}|_[A-Za-z0-9])?'*/g, RUN=/^[∠△]?(?:[A-Z]'*(?:_\{[^}]*\}|_[A-Za-z0-9])?'*)+$/;
@@ -1923,25 +1934,38 @@ function wrapLabels(t){ return t.split(/(\$[^$]*\$)/).map(function(seg){ return 
        .replace(/\b(triangles?\s+)\$([^$]+)\$/gi,function(_,a,b){ return a+'$\\triangle '+b+'$'; }); }).join(''); }
 function splitProblem(text,src){
   tidyHelperLabels();
-  PROB.on=false; PROB.stash=[]; PROB.shown=false; PROB.src=src||''; PROB.angles=[]; PROB.ratios=[]; PROB.added=[]; problemBar();
+  PROB.on=false; PROB.stash=[]; PROB.shown=false; PROB.src=src||''; PROB.angles=[]; PROB.ratios=[]; PROB.added=[]; PROB.givens=[]; problemBar();
   if(!text) return false;
   var tok=statementTokens(text), keep={}, byIdM={};
   /* angle equalities the statement asks for (any two vertices): they join the list of claims when they hold */
-  PROB.angles=[]; PROB.ratios=[]; (function(){ var flat=text.replace(/\$/g,' ').replace(/\\angle\s*/g,'∠').replace(/\bangles?\s+∠/gi,'∠'), LAB=/[A-Z]'*(?:_\{[^}]*\}|_[A-Za-z0-9])?'*/g;
-    var TOK="((?:[A-Z]'*(?:_\\{[^}]*\\}|_[A-Za-z0-9])?'*\\s*){3})", re=new RegExp('∠\\s*'+TOK+'\\s*(?:=|\\+|equals|is equal to)\\s*∠\\s*'+TOK,'g'), m;
-    while((m=re.exec(flat))){ var l1=(m[1].match(LAB)||[]).map(normLab), l2=(m[2].match(LAB)||[]).map(normLab); if(l1.length===3&&l2.length===3) PROB.angles.push([l1,l2]); re.lastIndex=m.index+1; }
+  PROB.angles=[]; PROB.ratios=[]; PROB.givens=[]; (function(){ var flat=text.replace(/\$/g,' ').replace(/\\angle\s*/g,'∠').replace(/\bangles?\s+∠/gi,'∠'), LAB=/[A-Z]'*(?:_\{[^}]*\}|_[A-Za-z0-9])?'*/g;
+    /* what stands before the first "prove" or "show" is given, and becomes a premise for the prover; what follows is asked, and becomes a claim */
+    var firstAsk=function(str){ var k=str.search(/\b(?:prove|show)\b/i); return k; }, cut=firstAsk(flat), given=function(ix){ return cut>=0&&ix<cut; };
+    var TOK="((?:[A-Z]'*(?:_\\{[^}]*\\}|_[A-Za-z0-9])?'*\\s*){3})", re=new RegExp('∠\\s*'+TOK+'\\s*(=|\\+|equals|is equal to)\\s*∠\\s*'+TOK,'g'), m;
+    while((m=re.exec(flat))){ var l1=(m[1].match(LAB)||[]).map(normLab), l2=(m[3].match(LAB)||[]).map(normLab);
+      if(l1.length===3&&l2.length===3){ if(!given(m.index)) PROB.angles.push([l1,l2]); else if(m[2]!=='+') PROB.givens.push({t:'ang',a:l1,b:l2}); } re.lastIndex=m.index+1; }
+    /* a right angle that is given: "angle AIM = 90 degrees", "angle AFC is a right angle" */
+    var rr9=new RegExp('∠\\s*'+TOK+'\\s*(?:=\\s*90(?![0-9])|(?:is|being)\\s+(?:a\\s+)?right\\b)','g');
+    while((m=rr9.exec(flat))){ var l9=(m[1].match(LAB)||[]).map(normLab); if(l9.length===3&&given(m.index)) PROB.givens.push({t:'right',a:l9}); }
     /* "OB bisects angle AOC" and "OB is the bisector of angle AOC" ask for two equal angles at O */
     var ONE="([A-Z]'*(?:_\\{[^}]*\\}|_[A-Za-z0-9])?'*)", rb=new RegExp(ONE+'\\s*'+ONE+'\\s+(?:bisects|is\\s+(?:the|a|an)\\s+(?:internal\\s+|interior\\s+|angle\\s+)?bisector\\s+of)\\s+(?:the\\s+)?(?:angle\\s+)?∠?\\s*'+ONE+'\\s*'+ONE+'\\s*'+ONE+"(?![A-Za-z_'])",'g');
-    while((m=rb.exec(flat))){ var q=m.slice(1,6).map(normLab), v=q[3], y=q[0]===v?q[1]:q[1]===v?q[0]:null; if(y&&y!==q[2]&&y!==q[4]) PROB.angles.push([[q[2],v,y],[y,v,q[4]]]); }
+    while((m=rb.exec(flat))){ var q=m.slice(1,6).map(normLab), v=q[3], y=q[0]===v?q[1]:q[1]===v?q[0]:null; if(y&&y!==q[2]&&y!==q[4]){ if(given(m.index)) PROB.givens.push({t:'ang',a:[q[2],v,y],b:[y,v,q[4]]}); else PROB.angles.push([[q[2],v,y],[y,v,q[4]]]); } }
     /* "a point Z on the bisector of angle ABC" */
     var ro=new RegExp(ONE+'\\s+(?:(?:lies|is)\\s+)?on\\s+(?:the|a|an)\\s+(?:internal\\s+|interior\\s+|angle\\s+)?bisector\\s+of\\s+(?:the\\s+)?(?:angle\\s+)?∠?\\s*'+ONE+'\\s*'+ONE+'\\s*'+ONE+"(?![A-Za-z_'])",'g');
-    while((m=ro.exec(flat))){ var z=m.slice(1,5).map(normLab); if(z[0]!==z[1]&&z[0]!==z[2]&&z[0]!==z[3]) PROB.angles.push([[z[1],z[2],z[0]],[z[0],z[2],z[3]]]); }
+    while((m=ro.exec(flat))){ var z=m.slice(1,5).map(normLab); if(z[0]!==z[1]&&z[0]!==z[2]&&z[0]!==z[3]){ if(given(m.index)) PROB.givens.push({t:'ang',a:[z[1],z[2],z[0]],b:[z[0],z[2],z[3]]}); else PROB.angles.push([[z[1],z[2],z[0]],[z[0],z[2],z[3]]]); } }
     /* "AN = 2MB", "AN is twice MB", "MB is half of AN": one length is twice another */
     var fl2=flat.replace(/\\[dt]?frac\s*\{?1\}?\s*\{?2\}?/g,' ½ ').replace(/\\(?:cdot|times)/g,'·').replace(/\\[,;!]/g,' ').replace(/[{}]/g,' ').replace(/\s+/g,' '), SEG='('+ONE.slice(1,-1)+'\\s*'+ONE.slice(1,-1)+')', END="(?![A-Za-z_'0-9])";
-    var two=function(str){ return (str.match(LAB)||[]).map(normLab); }, addR=function(lng,sht){ var a2=two(lng), b2=two(sht); if(a2.length===2&&b2.length===2) PROB.ratios.push([a2,b2]); };
+    var cut2=firstAsk(fl2), two=function(str){ return (str.match(LAB)||[]).map(normLab); }, addR=function(lng,sht,ix){ var a2=two(lng), b2=two(sht); if(a2.length!==2||b2.length!==2) return;
+      if(cut2>=0&&ix<cut2) PROB.givens.push({t:'r2',a:a2,b:b2}); else PROB.ratios.push([a2,b2]); };
+    /* given equal lengths, parallels and perpendiculars: "AB = AC", "AD is parallel to BC", "PQ is perpendicular to AC" */
+    var PRE="(?:^|[^A-Za-z0-9_'∠½·*/=.])", gv2=function(src,t){ var g2=new RegExp(src,'g'); while((m=g2.exec(fl2))){ var a2=two(m[1]), b2=two(m[2]);
+        if(a2.length===2&&b2.length===2&&cut2>=0&&m.index<cut2&&a2.join()!==b2.join()) PROB.givens.push({t:t,a:a2,b:b2}); g2.lastIndex=Math.max(m.index+1,m.index+m[0].length-m[2].length-1); } };
+    gv2(PRE+SEG+'\\s*=\\s*'+SEG+END+'(?!\\s*[·*/])','eq');
+    gv2(PRE+SEG+'\\s*(?:(?:is|are|being)\\s+)?(?:∥|\\\\parallel|parallel\\s+to)\\s*(?:the\\s+)?(?:line\\s+|side\\s+|segment\\s+)?'+SEG+END,'par');
+    gv2(PRE+SEG+'\\s*(?:(?:is|are|being)\\s+)?(?:⟂|⊥|\\\\perp|perpendicular\\s+to)\\s*(?:the\\s+)?(?:line\\s+|side\\s+|segment\\s+)?'+SEG+END,'perp');
     [[SEG+'\\s*=\\s*2\\s*[·*]?\\s*'+SEG+END,1,2],['(?:^|[^A-Za-z0-9_.])2\\s*[·*]?\\s*'+SEG+'\\s*=\\s*'+SEG+END,2,1],[SEG+'\\s+is\\s+(?:twice|double)(?:\\s+as\\s+long\\s+as|\\s+the\\s+length\\s+of)?\\s+'+SEG+END,1,2],
      [SEG+'\\s*=\\s*½\\s*'+SEG+END,2,1],[SEG+'\\s*=\\s*'+SEG+'\\s*/\\s*2'+END,2,1],[SEG+'\\s+is\\s+half(?:\\s+of|\\s+the\\s+length\\s+of|\\s+as\\s+long\\s+as)?\\s+'+SEG+END,2,1]]
-      .forEach(function(pt){ var rr=new RegExp(pt[0],'g'); while((m=rr.exec(fl2))){ addR(m[pt[1]],m[pt[2]]); rr.lastIndex=m.index+1; } }); })();
+      .forEach(function(pt){ var rr=new RegExp(pt[0],'g'); while((m=rr.exec(fl2))){ addR(m[pt[1]],m[pt[2]],m.index); rr.lastIndex=m.index+1; } }); })();
   objs.forEach(function(o){ byIdM[o.id]=o; });
   var need=function(id){ if(keep[id]||!byIdM[id]) return; keep[id]=1; depsOf(byIdM[id]).forEach(need); };
   var named=objs.filter(function(o){ return o.type==='point'&&o.label&&tok.labels[normLab(o.label)]; });
@@ -2035,7 +2059,7 @@ renderTools(); draw();
   else if(k&&BOOKFIGS.some(function(f){ return f.key===k; })){ loadBook(k); var sel=document.getElementById('demo'); if(sel) sel.value='bk:'+k; if(typeof fitView==='function') fitView(); } })();
 </script>
 <script src="construction-weights.js?v=20261125a"></script>
-<script src="geo-prover.js?v=20261125a"></script>
+<script src="geo-prover.js?v=20261125b"></script>
 <script src="tkz-import.js?v=20261122h"></script>
 <script src="site.js?v=20261118b"></script>
 </body>
