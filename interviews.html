@@ -1541,15 +1541,16 @@ function interviewerSystem(p, v){
       + '\nNOTES (private): ' + d.model + '\n' + prepText(d, dc, dg, false) + '\n'
       + 'OTHER DIRECTIONS: ' + p.deeper.map(function(x,i){ return i === dir ? null : (i+1) + '. ' + oneLine(x.text, 90); }).filter(Boolean).join(' ') + '\n\n';
   }
-  S += 'WHAT TO DO. Take these steps in order and act on the first one that applies:\n'
-  + '1. Compare the candidate\'s latest message (and board, if attached) with the TRAPS. If one matches, ask that trap\'s "Ask" question in your own words. Do not say they are wrong and do not give the "Why".\n'
-  + '2. If what they said is right but a MUST point is still missing (not COVERED and not in their latest message), ask about that one point: use a PROBE aimed at it, or ask them to justify or state it.\n'
+  S += 'WHAT TO DO. First read the candidate\'s latest message twice and write in "heard" what it states: every answer, list, conjecture, formula or reason in it. Whatever is in "heard", or was said earlier in the interview, has been said. Then go through the MUST points and put in "covered" each one the candidate has now given. Only then take these steps in order and act on the first one that applies:\n'
+  + '1. Compare the candidate\'s latest message (and board, if attached) with the TRAPS. If one matches, ask that trap\'s "Ask" question in your own words. Do not say they are wrong and do not give the "Why". A trap about something missing does not match if the candidate has already supplied it.\n'
+  + '2. If what they said is right but a MUST point is still missing (not COVERED and not in "heard"), ask about that one point: use a PROBE aimed at it, or ask for the step or the reason that is absent. If they have stated a result that a MUST point requires them to prove, quote their statement and ask why it holds.\n'
   + (deeper
     ? '3. If every MUST point of this direction is covered, or they are still stuck after the last hint, move on: set "direction" to the number of another direction and pose it in "say" as a short open question in your own words. If none is left, ask what further question they would ask themselves.\n'
     : '3. If every MUST point is covered, counting COVERED points and their latest message, set "advance" to true and say only something brief and neutral such as "That settles it." Say nothing about the next part; the page shows it.\n')
   + '4. If they ask for help, or have made no progress in this message and the one before, give the [NEXT] hint only, in your own words, and set "hinted" to true. One rung only, never skip ahead.\n'
-  + '5. Otherwise reply with a minimal neutral prompt such as "Go on." or "What are you trying?", or ask them to make a vague statement exact. If they say they are thinking, allow it.\n\n'
+  + '5. Otherwise find the weakest point in what they just said, a step with no reason, a case not checked or a vague word, quote it and ask about it. If there is none and they are mid-calculation, say "Go on." If they say they are thinking, allow it.\n\n'
   + 'RULES:\n'
+  + '- Never ask for something the candidate has already told you. If they have stated an answer, a list, a conjecture, a formula or a method, do not ask what it is, do not ask them to state it again or more clearly, and do not ask whether they have one. Your question must be about what is absent from their words, never about what is present.\n'
   + '- Never state an answer, a result, a formula they have not reached, or the content of a MUST point. Never finish a calculation for them. Never confirm a number they have not justified.\n'
   + '- One question per reply, at most three sentences. Quote their own words when you probe.\n'
   + '- Stay on the current ' + (deeper ? 'direction' : 'part') + '. If they jump ahead, bring them back.\n'
@@ -1557,28 +1558,64 @@ function interviewerSystem(p, v){
   + '- "covered": the numbers of every MUST point the candidate has now said or written, the COVERED ones included. Count a point only if the candidate gave it, never because you did.\n'
   + '- "note": a few private words for the marking when you see a habit (checked a special case unprompted, unjustified leap, vague statement, long silence), otherwise "". Never mention it in "say".\n\n'
   + 'OUTPUT only a JSON object and nothing else:\n'
-  + (deeper ? '{"say": string, "advance": false, "hinted": boolean, "covered": [numbers], "note": string, "direction": number of the direction you are now on}'
-            : '{"say": string, "advance": boolean, "hinted": boolean, "covered": [numbers], "note": string}');
+  + (deeper ? '{"heard": string, "covered": [numbers], "say": string, "advance": false, "hinted": boolean, "note": string, "direction": number of the direction you are now on}'
+            : '{"heard": string, "covered": [numbers], "say": string, "advance": boolean, "hinted": boolean, "note": string}')
+  + '\n"heard" comes first: at most 30 words, the mathematical content of the candidate\'s latest message in your own words, or "" if it has none. "say" must not ask for anything that is in "heard".';
   return S;
 }
 /* The calibration a tutor uses for a 25-minute interview. Shared by the AI marking and the partner scoring sheet. */
 var CALIBRATION = [
   [10,'Found the governing structure before computing, completed every part unaided, checked own work, asked a research-shaped question of their own. Given only a few times a year.'],
   [8,'Every part essentially unaided, at most one nudge, checks attainment or special cases without being asked.'],
-  [6,'Most parts, two or three nudges, stops at the first plausible answer. Roughly the offer threshold.'],
-  [4,'Reaches the middle of the problem with substantial help. Correct but dependent.'],
-  [2,'Only what the interviewer supplied was correct.'],
+  [6,'Most parts, two or three nudges, stops at the first plausible answer. Just short of the offer threshold: 6.5 and above usually receives an offer.'],
+  [4,'About half of the problem, with substantial help. Correct but dependent.'],
+  [2,'One or two parts at most, or only what the interviewer supplied was correct.'],
   [0,'No engagement or reasoning.']
 ];
 function calibrationText(){ return CALIBRATION.map(function(c){ return c[0]+': '+c[1]; }).join('\n'); }
+/* Where a score sits. 6.5 and above is where offers are usually made. */
+function bandFor(s){
+  return s >= 9 ? 'exceptional' : s >= 8 ? 'clear offer' : s >= 6.5 ? 'at the offer threshold, likely offer' : s >= 5.5 ? 'just below the offer threshold'
+       : s >= 4 ? 'below the offer threshold' : s >= 2 ? 'well below the offer threshold' : 'no real progress';
+}
+function fmtScore(s){ return (Math.round(s*2)/2).toString(); }
+/* The highest score the session record can support, worked out here and not left to the marker.
+   Each part earns the share of its MUST points the candidate gave, less up to half of that for hints taken on it.
+   A part the interviewer closed counts in full, a part never reached counts as nothing, and the average over
+   every part of the problem sets the ceiling. rec: {covered:[[k...]...], settled:[bool...], hints:[n...], nudges:n} */
+function scoreCeiling(p, rec){
+  rec = rec || {};
+  var per = p.parts.map(function(q,i){
+    var c = (rec.covered && rec.covered[i]) || [], share = q.must.length ? Math.min(1, c.length/q.must.length) : 0;
+    if(rec.settled && rec.settled[i]) share = 1;
+    var h = (rec.hints && rec.hints[i]) || 0, H = (q.hints||[]).length;
+    return share * (1 - (H ? 0.5*Math.min(1, h/H) : 0));
+  });
+  var prog = per.reduce(function(a,b){ return a+b; }, 0) / Math.max(1, per.length);
+  var cap = prog >= 0.95 ? 10 : prog >= 0.85 ? 8.5 : prog >= 0.75 ? 7.5 : prog >= 0.65 ? 6.5 : prog >= 0.55 ? 5.5 : prog >= 0.45 ? 5 : prog >= 0.35 ? 4 : prog >= 0.25 ? 3.5 : prog >= 0.15 ? 3 : prog > 0.05 ? 2 : 1;
+  var n = rec.nudges || 0; if(n >= 6) cap = Math.min(cap, 5); else if(n >= 4) cap = Math.min(cap, 6); else if(n >= 2) cap = Math.min(cap, 7.5);
+  var full = [], partly = [], none = [];
+  p.parts.forEach(function(q,i){ var c = (rec.covered && rec.covered[i]) || []; if((rec.settled && rec.settled[i]) || (q.must.length && c.length >= q.must.length)) full.push(q.label); else if(c.length) partly.push(q.label); else none.push(q.label); });
+  var why = full.length + ' of ' + p.parts.length + ' parts answered in full' + (full.length ? ': ' + full.join(', ') : '')
+    + (partly.length ? '; ' + partly.join(', ') + ' answered in part' : '') + (none.length ? '; ' + none.join(', ') + ' not answered' : '') + '; ' + n + ' nudge' + (n === 1 ? '' : 's') + '.';
+  return {cap:cap, prog:prog, why:why, full:full, partly:partly, none:none};
+}
+/* Hold a marker's score to the record: never above the ceiling, in half points, with the band set here. */
+function settleScore(j, ceil){
+  var raw = parseFloat(j.score); if(isNaN(raw)) raw = ceil ? Math.max(0, ceil.cap - 1) : 0;
+  var sc = Math.max(0, Math.min(10, Math.round(raw*2)/2)); if(ceil) sc = Math.min(sc, ceil.cap);
+  j.score = sc; j.band = bandFor(sc); if(ceil) j.record = ceil.why;
+  return j;
+}
 function coveredText(item, c){
   return item.must.map(function(m,k){ return 'M'+(k+1)+' '+m+(c ? (c.indexOf(k) >= 0 ? ' [covered]' : ' [not covered]') : ''); }).join('; ');
 }
 /* cov, if given, is {parts:[[indices]...], deeper:[[indices]...]}: the must points the candidate covered. */
-function markingSystem(p, peer, cov){
+function markingSystem(p, peer, cov, ceil){
   return 'You are the tutor who has just interviewed this candidate. Write your notes on the interview as you would for the admissions meeting, then a candid debrief the candidate will read. Write like a tutor\'s interview notes: plain, specific, unsentimental British English. No encouragement, no padding, no "great job", no exclamation marks, no em dashes. Where the candidate did well, state it as a fact with the evidence. Support every judgement with the evidence, quoting the candidate\'s own words where you have them.\n\n'
   + 'Score on this scale, which is how Oxford tutors calibrate a 25-minute maths interview. Odd scores sit between the levels either side.\n' + calibrationText() + '\n\n'
-  + 'Weigh above all whether each step was generated by the candidate or supplied by the interviewer: a correct answer reached after the key idea was handed over earns little. Then weigh how far they got, the number and timing of hints, whether they checked special cases or attainment unprompted, how they recovered from errors, and how precisely they spoke.\n'
+  + 'Weigh first how much of the whole problem the candidate answered: a part that was never reached, or reached and not answered, earns nothing, however quickly the earlier parts went. Then weigh whether each step was generated by the candidate or supplied by the interviewer: a correct answer reached after the key idea was handed over earns little. Then the number and timing of hints, whether they checked special cases or attainment unprompted, how they recovered from errors, and how precisely they spoke.\n'
+  + (ceil ? 'THE RECORD, fixed from the session log: ' + ceil.why + '\nCEILING: on this record the score cannot be higher than ' + fmtScore(ceil.cap) + '. Score at the ceiling only if everything the candidate did reach was their own work and cleanly argued; otherwise score below it. Do not describe the candidate as near the offer threshold unless the score is 6.5 or more.\n' : '')
   + (peer
     ? 'THE EVIDENCE is a scoring sheet filled in by a human interviewer, a fellow student running a mock, during and after a live interview. There is no transcript. Treat the parts reached, the hint log with its times, the ratings and the notes as the record. The interviewer\'s own overall score is their view; you may disagree with it, and if you do, say why in the calibration. Quote the candidate only where the notes record their words, and never invent a quotation; where there is none, use "". If the sheet is too thin to judge something, say so in a clause and mark on what is there. If an image of a whiteboard is attached, it is the board kept on the interviewer\'s device.\n'
     : 'THE EVIDENCE is the transcript of the interview. Lines marked TUTOR NOTE are your own private notes made during the interview and were not seen by the candidate.\n')
@@ -1588,13 +1625,13 @@ function markingSystem(p, peer, cov){
   + '\nRefer to the MUST points by their content, not their numbers: in "moments" and "calibration" say which points were missing or came only after a hint. A part advanced past with points not covered was not fully justified.'
   + '\n\nKeep the whole report under 600 words; every sentence should carry evidence or advice.\n'
   + 'Output ONLY a JSON object, no prose outside it, with these fields:\n'
-  + '{"score": integer 0-10,\n'
-  + ' "band": a short phrase placing the score on the scale, such as "around the offer threshold",\n'
+  + '{"score": a number from 0 to 10 in steps of 0.5' + (ceil ? ', at most ' + fmtScore(ceil.cap) : '') + ',\n'
   + ' "verdict": one line in the voice of a tutor\'s interview notes, such as "Quick on (a) and (b), needed the identity supplied in (c), never asked whether the bound in (d) is attained. Borderline.",\n'
-  + ' "calibration": one or two sentences on why this score and not one higher,\n'
+  + ' "calibration": one or two sentences on why this score and not one higher, naming the parts that were not answered and the ideas that were supplied,\n'
   + ' "moments": 2 to 5 decisive moments, in order, each {"where": the part label and a few words, "stuck": what they were stuck on, or "" if they were not, "quote": the candidate\'s words at that moment, short and verbatim, or "", "unlocked": what moved them on, "source": "own" if the idea was theirs, "prompted" if a question or gentle hint led them to it, "supplied" if the interviewer effectively gave it, "offer": what a candidate who gets an offer would have done at this point, concretely},\n'
   + ' "communication": {"thinking_aloud": string, "precision": string, "silences": string, "board": string about their use of the whiteboard, or "" if no image of the board was attached},\n'
-  + ' "drills": exactly three, each {"title": a short imperative, "detail": what to do over the next week, for how long, and how to tell it is working, tied to a specific moment above}}.';
+  + ' "drills": exactly three, each {"title": a short imperative, "detail": what to do over the next week, for how long, and how to tell it is working, tied to a specific moment above}}.\n'
+  + 'A drill names the exact exercise: the statement to prove, the part of this problem to redo, the kind of question to practise. Generic advice such as "practise proofs" or "work under time pressure" is not a drill.';
 }
 
 /* ================================================================ VOICE  */
@@ -1663,7 +1700,7 @@ function startInterview(p){
   if(location.hash) history.replaceState(null,'',location.pathname+location.search);
   closePeer();
   board.reset();
-  st = {p:p, idx:0, left:25*60, nudges:0, hintLevel:[], transcript:[], tick:null, ended:false, ai:aiAvailable(), forced:0, quiet:0, longestQuiet:0,
+  st = {p:p, idx:0, left:25*60, nudges:0, hintLevel:[], transcript:[], tick:null, ended:false, ai:aiAvailable(), forced:0, forcedParts:[], said:{}, quiet:0, longestQuiet:0,
         covered:p.parts.map(function(){ return []; }), phase:'parts', dir:0,
         dcovered:(p.deeper||[]).map(function(){ return []; }), dhint:(p.deeper||[]).map(function(){ return 0; }), posed:(p.deeper||[]).map(function(){ return false; })};
   stopListening(); vbuf=''; lastQuietStart=0;
@@ -1783,6 +1820,14 @@ function trimHistory(system, msgs){
   if(out.length < msgs.length && typeof out[0].content === 'string') out[0] = {role:'user', content:'[Earlier turns of the interview are not shown.]\n' + out[0].content};
   return out;
 }
+/* A fallback question built from the candidate's own last sentence, for when the interviewer's reply cannot be used.
+   It asks about what they said and never for them to say it again. */
+function probeOwnWords(t){
+  var x = String(t||'').replace(/\s+/g,' ').trim(); if(x.split(' ').length < 4) return 'Go on.';
+  var sent = x.split(/(?<=[.!?])\s+/).filter(function(y){ return y.split(' ').length >= 3; }), last = (sent.length ? sent[sent.length-1] : x).replace(/[.!?]+$/,'');
+  if(last.length > 110) last = last.slice(0,110).replace(/\s+\S*$/,'') + ' ...';
+  return 'You said "' + last + '". Why is that so?';
+}
 function toIdx(list, n){
   var out = []; (Array.isArray(list) ? list : []).forEach(function(x){ var k = parseInt(String(x).replace(/[^0-9]/g,''),10) - 1; if(k >= 0 && k < n && out.indexOf(k) < 0) out.push(k); });
   return out;
@@ -1793,8 +1838,10 @@ async function converse(userText, kind){
   var deeper = st.phase === 'deeper', item = deeper ? st.p.deeper[st.dir] : st.p.parts[st.idx];
   var cov = deeper ? st.dcovered[st.dir] : st.covered[st.idx], given = deeper ? st.dhint[st.dir] : st.hintLevel[st.idx];
   var msgs = st.transcript.filter(function(m){return m.role==='user'||m.role==='assistant';}).map(function(m){return {role:m.role==='assistant'?'assistant':'user',content:m.text};});
+  var saidKey = deeper ? 'd'+st.dir : 'p'+st.idx, said = st.said[saidKey] || [];
   var prefix = '[' + (deeper ? 'Direction '+(st.dir+1) : 'Part '+item.label) + '. Covered: ' + (cov.length ? cov.map(function(k){ return 'M'+(k+1); }).join(', ') : 'none')
-    + '. Hints given: '+given+' of '+item.hints.length+'. Time left: '+fmt(Math.max(st.left,0))+'.]\n';
+    + '. Hints given: '+given+' of '+item.hints.length+'. Time left: '+fmt(Math.max(st.left,0))+'.'
+    + (said.length ? ' Already said by the candidate here, do not ask for any of it again: ' + said.slice(-5).join(' | ') + '.' : '') + ']\n';
   var content = prefix + (kind === 'hint' ? '[The candidate asks for a hint.]' : kind === 'deeper' ? '[The parts are finished. Pose direction '+(st.dir+1)+' now.]' : 'CANDIDATE: '+userText);
   msgs.push({role:'user',content:withBoard(content,false)});
   st.transcript.push({role:'user', text:kind === 'hint' ? '[asks for a hint]' : kind === 'deeper' ? '[the interviewer moves on to the open questions]' : userText});
@@ -1802,10 +1849,11 @@ async function converse(userText, kind){
   try{
     var raw = await callAI(system, trimHistory(system, msgs), 500);
     var j = parseJSON(raw);
-    if(!j){ var plain = String(raw).trim(); j = {say: plain.charAt(0) === '{' ? 'Carry on. Tell me what you are trying.' : plain.slice(0,600), advance:false, hinted:kind === 'hint', note:''}; }
-    j.say = cleanSay(j.say) || 'Carry on.';
+    if(!j){ var plain = String(raw).trim(); j = {say: plain.charAt(0) === '{' ? probeOwnWords(userText) : plain.slice(0,600), advance:false, hinted:kind === 'hint', note:''}; }
+    j.say = cleanSay(j.say) || probeOwnWords(userText);
     // The interviewer closes a part with a short line such as "That settles it"; treat that as the move on, even if the flag was missed.
     if(!deeper && /\b(that settles it|that settles the part|let's move on|moving on to the next part)\b/i.test(j.say)) j.advance = true;
+    if(j.heard && String(j.heard).trim()) (st.said[saidKey] = st.said[saidKey] || []).push(String(j.heard).replace(/\s+/g,' ').trim().slice(0,220));
     tutorMsg(j.say); st.transcript.push({role:'assistant', text:j.say}); speak(j.say);
     if(j.note && String(j.note).trim()) st.transcript.push({role:'note', text:String(j.note).trim()});
     toIdx(j.covered, item.must.length).forEach(function(k){ if(cov.indexOf(k) < 0) cov.push(k); });
@@ -1849,7 +1897,7 @@ inputEl = document.getElementById('input');
 inputEl.addEventListener('keydown', function(e){ if((e.metaKey||e.ctrlKey)&&e.key==='Enter'){ document.getElementById('send').click(); } });
 ['apikey','model','proxy'].forEach(function(id){ var f=document.getElementById(id); if(f) f.addEventListener('keydown',function(e){ if(e.key==='Enter'){ e.preventDefault(); document.getElementById('savecfg').click(); } }); });
 document.getElementById('nudge').addEventListener('click', function(){ if(!st||st.ended) return; if(st.ai){ candMsg('Could I have a nudge?'); converse('','hint'); } else staticHint(); });
-document.getElementById('next').addEventListener('click', function(){ if(!st||st.ended||st.idx>=st.p.parts.length-1) return; st.forced++; if(st.ai) sysMsg('You moved on without the interviewer\'s agreement; this is noted.'); st.idx++; showPart(st.idx); });
+document.getElementById('next').addEventListener('click', function(){ if(!st||st.ended||st.idx>=st.p.parts.length-1) return; st.forced++; st.forcedParts.push(st.idx); if(st.ai) sysMsg('You moved on without the interviewer\'s agreement; this is noted.'); st.idx++; showPart(st.idx); });
 document.getElementById('mic').addEventListener('click', function(){ if(!st||st.ended) return; if(listening) stopListening(); else startListening(); });
 document.getElementById('end').addEventListener('click', endInterview);
 
@@ -1867,13 +1915,15 @@ async function endInterview(){
     box.innerHTML = head + '<p class="msg sys">The interviewer is writing your report.</p>';
     try{
       var tr = st.transcript.map(function(m){return (m.role==='assistant'?'TUTOR: ':m.role==='user'?'CANDIDATE: ':m.role==='note'?'TUTOR NOTE (private): ':'')+m.text;}).join('\n');
-      var raw = await callAI(markingSystem(p, false, {parts:st.covered, deeper:st.dcovered}), [{role:'user',content:withBoard('TRANSCRIPT:\n'+tr+'\n\nParts reached: '+reached+' of '+p.parts.length+'. Nudges: '+st.nudges+'. Moved on without agreement: '+st.forced+'. Time used: '+fmt(used)+'.'+(st.quiet>0?' Voice mode was on: total silence '+fmt(Math.round(st.quiet))+', longest silent stretch '+fmt(Math.round(st.longestQuiet))+'. Treat silences over 45 seconds as a significant negative, as a real interviewer would.':''),true)}], 2200);
+      var settled = p.parts.map(function(q,i){ return (st.phase === 'deeper' || i < st.idx) && st.forcedParts.indexOf(i) < 0; });
+      var ceil = scoreCeiling(p, {covered:st.covered, settled:settled, hints:st.hintLevel, nudges:st.nudges});
+      var raw = await callAI(markingSystem(p, false, {parts:st.covered, deeper:st.dcovered}, ceil), [{role:'user',content:withBoard('TRANSCRIPT:\n'+tr+'\n\nParts reached: '+reached+' of '+p.parts.length+'. Nudges: '+st.nudges+'. Moved on without agreement: '+st.forced+'. Time used: '+fmt(used)+'.'+(st.quiet>0?' Voice mode was on: total silence '+fmt(Math.round(st.quiet))+', longest silent stretch '+fmt(Math.round(st.longestQuiet))+'. Treat silences over 45 seconds as a significant negative, as a real interviewer would.':''),true)}], 2200);
       var j = parseJSON(raw);
-      if(j){ score = j.score; report = renderReport(j); }
+      if(j){ settleScore(j, ceil); score = j.score; report = renderReport(j); }
       else report = '<p class="err">The report came back in an unexpected format. Raw text follows.</p><p>'+esc(raw)+'</p>';
     }catch(e){ report = '<p class="err">Could not fetch the report: '+esc(e.message)+'</p>'; }
   } else {
-    report = '<h2>Self-marking</h2><p>Before opening the scheme, place yourself. Five parts with no nudges and the key structural remark said aloud is an 8 or better. Four parts with one or two nudges is a 6. Reaching part (c) with help is a 4. If (a) took more than three minutes the issue is organisation, not mathematics.</p><div class="row"><label style="font-size:.95rem">Your score <select id="selfscore">'+[0,1,2,3,4,5,6,7,8,9,10].map(function(n){return '<option value="'+n+'">'+n+'</option>';}).join('')+'</select></label><button class="btn2 quiet" id="saveself">Save to record</button></div>';
+    report = '<h2>Self-marking</h2><p>Before opening the scheme, place yourself. Five parts with no nudges and the key structural remark said aloud is an 8 or better. Four parts with one or two nudges is a 6 or 7, and 6.5 is where offers usually begin. Reaching part (c) with help is a 4. Two parts or fewer is a 3 at most, however fast they went. If (a) took more than three minutes the issue is organisation, not mathematics.</p><div class="row"><label style="font-size:.95rem">Your score <select id="selfscore">'+[0,1,2,3,4,5,6,7,8,9,10].map(function(n){return '<option value="'+n+'">'+n+'</option>';}).join('')+'</select></label><button class="btn2 quiet" id="saveself">Save to record</button></div>';
   }
   box.innerHTML = head + report
     + '<details open><summary>Mark scheme</summary>'+p.scheme+'</details>'
@@ -1892,9 +1942,10 @@ async function endInterview(){
    improve, practice) are still shown if a model returns them.               */
 function renderReport(j){
   function li(a){ return (a||[]).map(function(s){ return '<li>'+esc(s)+'</li>'; }).join(''); }
-  var sc = parseInt(j.score,10), h = '<h2>Report</h2>';
+  var sc = parseFloat(j.score), h = '<h2>Report</h2>';
   if(j.verdict) h += '<p class="verdict">'+esc(j.verdict)+'</p>';
-  h += '<div class="score"><span class="big">'+esc(isNaN(sc)?j.score:sc)+'<span style="font-size:1.2rem;color:var(--faint)">/10</span></span><span class="band">'+esc(j.band||'')+'</span></div>';
+  h += '<div class="score"><span class="big">'+esc(isNaN(sc)?j.score:fmtScore(sc))+'<span style="font-size:1.2rem;color:var(--faint)">/10</span></span><span class="band">'+esc(isNaN(sc)?(j.band||''):bandFor(sc))+'</span></div>';
+  if(j.record) h += '<p class="tally">On the record: '+esc(j.record)+' A part that was not answered earns nothing, so the record sets the highest score available.</p>';
   if(j.calibration) h += '<p>'+esc(j.calibration)+'</p>';
   if(!isNaN(sc)) h += scaleHTML(sc);
   if(j.headline) h += '<p>'+esc(j.headline)+'</p>';
@@ -2216,8 +2267,9 @@ async function peerFeedback(){
     var text = 'SCORING SHEET FROM A HUMAN INTERVIEWER (not a transcript):\n\n' + sheetText()
       + '\n\nThe hint texts above are the hint ladder the interviewer read from; the times are when each was given.';
     var cov = {parts:pv.s.parts.map(function(x){ var o = []; x.must.forEach(function(b,k){ if(b) o.push(k); }); return o; })};
-    var raw = await callAI(markingSystem(pv.p, true, cov), [{role:'user', content:withBoard(text, true)}], 2200);
-    var j = parseJSON(raw);
+    var pceil = scoreCeiling(pv.p, {covered:cov.parts, hints:pv.s.parts.map(function(x){ return x.hints.filter(Boolean).length; }), nudges:pv.s.parts.reduce(function(n,x){ return n + x.hints.filter(Boolean).length; }, 0)});
+    var raw = await callAI(markingSystem(pv.p, true, cov, pceil), [{role:'user', content:withBoard(text, true)}], 2200);
+    var j = parseJSON(raw); if(j) settleScore(j, pceil);
     if(!j){ msg.textContent = 'The report came back in an unexpected format.'; fb.innerHTML = '<p>'+esc(raw)+'</p>'; fb.classList.remove('hidden'); }
     else {
       pv.s.feedback = j; pv.save(); fb.innerHTML = renderReport(j); fb.classList.remove('hidden'); msg.textContent = 'Report written below the sheet.';
