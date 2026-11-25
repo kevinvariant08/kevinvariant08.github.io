@@ -327,8 +327,8 @@
    scheme (HTML mark scheme), sample0 / sample10 (HTML transcripts).            */
 var PROBLEMS = [
 {
-  id:"shadow", title:"An unfamiliar operation on functions", topics:"Integration, inequalities",
-  blurb:"You are handed a definition nobody has taught you and asked to work with it. The last part has an answer that is not what the obvious bound suggests.",
+  id:"shadow", title:"An unfamiliar operation on functions", topics:"Calculus",
+  blurb:"A definition you have not met before, and a run of questions asking you to work with it.",
   setup:'For a continuous function <i>f</i> on [0,1], define its <i>shadow</i> S(<i>f</i>) = &int;<sub>0</sub><sup>1</sup> max(<i>f</i>(<i>x</i>), <i>f</i>(1&minus;<i>x</i>)) d<i>x</i>.',
   parts:[
    {label:"(a)", text:"Compute S(f) when f(x) = x.",
@@ -450,8 +450,8 @@ var PROBLEMS = [
   ]
 },
 {
-  id:"hyperbola", title:"Pairs with a small product", topics:"Number theory, counting, estimation",
-  blurb:"A count so simple it can be done by hand for n = 10. Getting from there to a formula you could run on n = a trillion takes four ideas, none of which is on any syllabus.",
+  id:"hyperbola", title:"Pairs with a small product", topics:"Number theory, counting",
+  blurb:"A counting question that starts small enough to do by hand and keeps asking for more.",
   setup:'For a positive integer <i>n</i>, let A(<i>n</i>) be the number of ordered pairs of positive integers (<i>a</i>, <i>b</i>) with <i>ab</i> &le; <i>n</i>.',
   parts:[
    {label:"(a)", text:"Find A(10).",
@@ -563,8 +563,8 @@ var PROBLEMS = [
   ]
 },
 {
-  id:"repeat", title:"Tossing until something happens", topics:"Probability, expectation",
-  blurb:"A fair coin, no tricks, and two questions at the end whose answers differ when everything about them looks the same. Applied-style; expect to be asked why as well as how much.",
+  id:"repeat", title:"Tossing until something happens", topics:"Probability",
+  blurb:"A fair coin is tossed again and again, and the questions are about how long you wait.",
   setup:'A fair coin is tossed repeatedly. Let N be the number of tosses made up to and including the first time two consecutive tosses show the same face.',
   parts:[
    {label:"(a)", text:"Find P(N = 2) and P(N = 3).",
@@ -674,8 +674,8 @@ var PROBLEMS = [
   ]
 },
 {
-  id:"secretary", title:"Choosing the best candidate", topics:"Probability, optimal stopping",
-  blurb:"One chance to say yes and no going back. Three candidates can be handled by hand in a minute, and the answer for a thousand candidates involves the number e.",
+  id:"secretary", title:"Choosing the best candidate", topics:"Probability",
+  blurb:"Candidates arrive one at a time and each must be accepted or turned away on the spot. How well can you do?",
   setup:'There are <i>n</i> candidates for a job, all of different strengths, and they are interviewed one at a time in a uniformly random order. After each interview you learn only how the candidate ranks against those already seen. You must then either accept the candidate, which ends the process, or reject the candidate for ever. You win if the candidate you accept is the strongest of all <i>n</i>.',
   parts:[
    {label:"(a)", text:"Take n = 3. Find a strategy that wins with probability 1/2, and explain why no strategy does better.",
@@ -789,8 +789,8 @@ var PROBLEMS = [
   ]
 },
 {
-  id:"till", title:"Change at the box office", topics:"Probability, counting, reflection",
-  blurb:"A queue, a till with no float, and the question of whether anyone has to wait for change. Small cases are quick. The general answer comes from one geometric trick, and the last part asks how much cash the manager should leave in the till.",
+  id:"till", title:"Change at the box office", topics:"Probability, counting",
+  blurb:"A queue of customers paying at a till, and the question of whether anyone has to wait for change.",
   setup:'A cinema sells tickets at &pound;5. A queue of 2<i>n</i> people forms in a uniformly random order. Exactly <i>n</i> of them pay with a &pound;5 note and the other <i>n</i> pay with a &pound;10 note. The till starts empty, and a &pound;10 customer can be served only if the till holds a &pound;5 note to give as change. Let <i>p<sub>n</sub></i> be the probability that nobody ever has to wait for change.',
   parts:[
    {label:"(a)", text:"Find p₁ and p₂.",
@@ -900,8 +900,8 @@ var PROBLEMS = [
   ]
 },
 {
-  id:"painter", title:"The last corner to be painted", topics:"Probability, random walks",
-  blurb:"A token wanders round a polygon painting each corner on the first visit, and the question is which corner is painted last. The answer looks wrong when you first see the numbers. The proof needs one classical fact, which you derive along the way.",
+  id:"painter", title:"The last corner to be painted", topics:"Probability",
+  blurb:"A token wanders round a polygon, painting each corner on its first visit. Which corner is painted last?",
   setup:'The vertices of a regular <i>n</i>-gon, <i>n</i> &ge; 3, are labelled 0, 1, &hellip;, <i>n</i>&minus;1 in order round the polygon. A token starts at vertex 0, which is painted. Each second the token moves to one of the two neighbouring vertices, each with probability &frac12;, independently of all earlier moves, and a vertex is painted the first time the token lands on the vertex. Eventually one vertex is the last to be painted.',
   parts:[
    {label:"(a)", text:"Take n = 4. Find the probability that each of the vertices 1, 2 and 3 is the last to be painted.",
@@ -1011,8 +1011,8 @@ var PROBLEMS = [
   ]
 },
 {
-  id:"stern", title:"A sequence that lists the fractions", topics:"Recursion, number theory, induction",
-  blurb:"A two-line recursive definition. Fill in a table, spot what you can and then prove what you spotted. The fourth part is a statement about every positive rational number at once.",
+  id:"stern", title:"A two-line recursive sequence", topics:"Sequences, number theory",
+  blurb:"A sequence defined by a short recursive rule. Explore the sequence, then prove what you find.",
   setup:'A function <i>f</i> on the positive integers is defined by <i>f</i>(1) = 1 and, for every <i>n</i> &ge; 1, <i>f</i>(2<i>n</i>) = <i>f</i>(<i>n</i>) and <i>f</i>(2<i>n</i>+1) = <i>f</i>(<i>n</i>) + <i>f</i>(<i>n</i>+1).',
   parts:[
    {label:"(a)", text:"Compute f(n) for n from 1 to 16 and describe the patterns you see.",
@@ -1122,8 +1122,8 @@ var PROBLEMS = [
   ]
 },
 {
-  id:"powers", title:"When does x to the y equal y to the x?", topics:"Sketching, logarithms, limits",
-  blurb:"An equation with one solution everyone knows. Logarithms turn the question into a sketch, the sketch settles a famous comparison, and the last part asks for the angle at which two curves cross.",
+  id:"powers", title:"When does x to the y equal y to the x?", topics:"Algebra, calculus",
+  blurb:"An equation with one solution most people know. The questions ask what else is true.",
   setup:'This problem is about pairs of positive real numbers <i>x</i> and <i>y</i> with <i>x</i><sup><i>y</i></sup> = <i>y</i><sup><i>x</i></sup>. Every pair with <i>x</i> = <i>y</i> works, and the interest is in the other pairs.',
   parts:[
    {label:"(a)", text:"Find a pair of different positive integers that works. Show that the equation is equivalent to (ln x)/x = (ln y)/y.",
@@ -1234,8 +1234,8 @@ var PROBLEMS = [
   ]
 },
 {
-  id:"polite", title:"Sums of consecutive numbers", topics:"Number theory, counting, bijections",
-  blurb:"Some numbers are sums of consecutive positive integers and some are not. Which ones, and in how many ways? The counting part needs a bijection that turns sums into divisors.",
+  id:"polite", title:"Sums of consecutive numbers", topics:"Number theory",
+  blurb:"Some numbers are sums of consecutive positive integers and some are not. Which ones, and in how many ways?",
   setup:'Call a positive integer <i>n</i> <i>polite</i> if <i>n</i> is a sum of two or more consecutive positive integers. For example 9 = 4 + 5 = 2 + 3 + 4, so 9 is polite, and 9 has exactly two such representations.',
   parts:[
    {label:"(a)", text:"Find which of the integers 1 to 16 are polite, and make a conjecture.",
@@ -1345,8 +1345,8 @@ var PROBLEMS = [
   ]
 },
 {
-  id:"swap", title:"Swapping balls between two bags", topics:"Probability, recurrences, expectation",
-  blurb:"Two bags and one swap per move. The recurrences are routine to set up. The interview turns on why one combination of them is far simpler than the rest, and on finding the one-line reason behind that.",
+  id:"swap", title:"Swapping balls between two bags", topics:"Probability",
+  blurb:"Balls are swapped at random between two bags. Where do the black balls end up?",
   setup:'Bag A contains two black balls and one white ball, and bag B contains three white balls. A <i>move</i> consists of each player drawing one ball uniformly at random from their own bag, independently of each other, and the two balls being swapped, so each bag still holds three balls. Let X<sub><i>n</i></sub> be the number of black balls in bag A after <i>n</i> moves, and write p<sub><i>n</i></sub> = P(X<sub><i>n</i></sub> = 2) and q<sub><i>n</i></sub> = P(X<sub><i>n</i></sub> = 1).',
   parts:[
    {label:"(a)", text:"Find p₁ and q₁.",
