@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- 2026-11-28. Olympiad Mock I: six original IMO-style problems over two days of 4.5 hours, with a full solutions booklet (tkz-euclide diagrams, comments and marking schemes), as watermarked PDFs under CC BY-NC-ND 4.0. RMO 2026 drops the New label.
 - 2026-11-20. Olympiad library: full solutions to all six problems of BMO Round 1 2026, with diagrams, as a watermarked PDF under CC BY-NC-ND 4.0.
 - 2026-11-18. TMUA Sets E to H are free for everyone: on the TMUA page, in Drill, Smart Practice, the question bank (now 280 questions from Sets B to H) and the technique index (Sets A to H). Sets I to L stay locked.
 - 2026-11-14. Olympiad library: full solutions to the 2026 AMC 12B, with diagrams, as a watermarked PDF under CC BY-NC-ND 4.0.
